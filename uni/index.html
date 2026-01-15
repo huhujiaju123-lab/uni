@@ -18,93 +18,39 @@
             justify-content: center;
             align-items: center;
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* 背景装饰 - 漂浮的泡泡 */
-        .bubble {
-            position: fixed;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            animation: float 6s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        .bubble:nth-child(1) { width: 80px; height: 80px; left: 5%; top: 20%; animation-delay: 0s; }
-        .bubble:nth-child(2) { width: 50px; height: 50px; left: 15%; top: 60%; animation-delay: 1s; }
-        .bubble:nth-child(3) { width: 70px; height: 70px; right: 10%; top: 30%; animation-delay: 2s; }
-        .bubble:nth-child(4) { width: 40px; height: 40px; right: 20%; top: 70%; animation-delay: 3s; }
-        .bubble:nth-child(5) { width: 60px; height: 60px; left: 30%; top: 80%; animation-delay: 4s; }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.5; }
-            50% { transform: translateY(-30px) rotate(10deg); opacity: 0.8; }
-        }
-
-        /* 主容器 */
-        .container {
-            max-width: 400px;
-            width: 100%;
         }
 
         .card {
             background: white;
             border-radius: 30px;
-            padding: 40px 30px;
+            padding: 50px 40px;
             text-align: center;
             box-shadow: 0 20px 60px rgba(100, 181, 246, 0.3);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 350px;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 30px 80px rgba(100, 181, 246, 0.4);
-        }
-
-        /* 卡片顶部装饰 */
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #64b5f6, #2196f3, #64b5f6);
-        }
-
-        /* 虚拟小女孩头像 */
+        /* 虚拟小女孩头像 - 用 CSS 绘制 */
         .avatar {
             width: 150px;
             height: 150px;
-            margin: 0 auto 25px;
+            margin: 0 auto 30px;
             position: relative;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .avatar:hover {
-            transform: scale(1.05);
         }
 
         .face {
             width: 120px;
             height: 120px;
-            background: linear-gradient(180deg, #ffe0b2 0%, #ffcc80 100%);
+            background: #ffe0b2;
             border-radius: 50%;
             position: absolute;
             top: 20px;
             left: 15px;
-            box-shadow: inset 0 -5px 15px rgba(0,0,0,0.1);
         }
 
         .hair {
             width: 140px;
             height: 80px;
-            background: linear-gradient(180deg, #64b5f6 0%, #42a5f5 100%);
+            background: #5c9ce6;
             border-radius: 70px 70px 0 0;
             position: absolute;
             top: 0;
@@ -113,8 +59,8 @@
 
         .hair-side-left {
             width: 30px;
-            height: 70px;
-            background: linear-gradient(180deg, #64b5f6 0%, #42a5f5 100%);
+            height: 60px;
+            background: #5c9ce6;
             border-radius: 0 0 15px 15px;
             position: absolute;
             top: 60px;
@@ -123,716 +69,115 @@
 
         .hair-side-right {
             width: 30px;
-            height: 70px;
-            background: linear-gradient(180deg, #64b5f6 0%, #42a5f5 100%);
+            height: 60px;
+            background: #5c9ce6;
             border-radius: 0 0 15px 15px;
             position: absolute;
             top: 60px;
             right: 5px;
         }
 
-        /* 头发高光 */
-        .hair-shine {
-            width: 60px;
-            height: 20px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 50%;
-            position: absolute;
-            top: 15px;
-            left: 40px;
-            transform: rotate(-20deg);
-        }
-
         .eye {
-            width: 18px;
-            height: 24px;
+            width: 15px;
+            height: 20px;
             background: #333;
             border-radius: 50%;
             position: absolute;
-            top: 58px;
-            transition: transform 0.2s ease;
+            top: 60px;
         }
 
-        .eye-left { left: 38px; }
-        .eye-right { right: 38px; }
+        .eye-left {
+            left: 40px;
+        }
+
+        .eye-right {
+            right: 40px;
+        }
 
         .eye-shine {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
             background: white;
             border-radius: 50%;
             position: absolute;
-            top: 4px;
-            left: 4px;
-        }
-
-        .eye-shine-small {
-            width: 3px;
-            height: 3px;
-            background: white;
-            border-radius: 50%;
-            position: absolute;
-            top: 12px;
-            left: 8px;
-        }
-
-        /* 眨眼动画 */
-        @keyframes blink {
-            0%, 90%, 100% { transform: scaleY(1); }
-            95% { transform: scaleY(0.1); }
-        }
-
-        .avatar .eye {
-            animation: blink 3s infinite;
-        }
-
-        /* 眼睛跟随鼠标效果 */
-        .eye-pupil {
-            width: 10px;
-            height: 12px;
-            background: #333;
-            border-radius: 50%;
-            position: absolute;
-            top: 6px;
-            left: 4px;
-            transition: transform 0.1s ease;
+            top: 3px;
+            left: 3px;
         }
 
         .mouth {
-            width: 25px;
-            height: 12px;
+            width: 20px;
+            height: 10px;
             border: 3px solid #e57373;
             border-top: none;
-            border-radius: 0 0 25px 25px;
+            border-radius: 0 0 20px 20px;
             position: absolute;
             top: 95px;
-            left: 62px;
-            transition: all 0.3s ease;
-        }
-
-        .avatar:hover .mouth {
-            width: 30px;
-            height: 15px;
-            left: 60px;
-            background: #ffcdd2;
+            left: 65px;
         }
 
         .blush {
-            width: 22px;
-            height: 12px;
-            background: rgba(255, 138, 128, 0.5);
+            width: 20px;
+            height: 10px;
+            background: #ffcdd2;
             border-radius: 50%;
             position: absolute;
-            top: 82px;
-            transition: opacity 0.3s ease;
+            top: 85px;
         }
 
-        .blush-left { left: 22px; }
-        .blush-right { right: 22px; }
-
-        .avatar:hover .blush {
-            opacity: 1;
-            background: rgba(255, 138, 128, 0.7);
+        .blush-left {
+            left: 25px;
         }
 
-        /* 名字 */
+        .blush-right {
+            right: 25px;
+        }
+
         .name {
-            font-size: 38px;
+            font-size: 36px;
             color: #2196f3;
-            margin-bottom: 8px;
+            margin-bottom: 15px;
             font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(33, 150, 243, 0.2);
-        }
-
-        .subtitle {
-            font-size: 14px;
-            color: #90caf9;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-        }
-
-        /* 状态指示器 */
-        .status {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #e8f5e9;
-            color: #4caf50;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-bottom: 20px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: #4caf50;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        /* 介绍区域 */
-        .intro-section {
-            margin-bottom: 20px;
         }
 
         .intro {
-            font-size: 16px;
+            font-size: 18px;
             color: #64b5f6;
-            line-height: 1.8;
+            line-height: 1.6;
             padding: 15px 20px;
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            background: #e3f2fd;
             border-radius: 15px;
-            margin-bottom: 15px;
         }
 
         .sparkle {
             color: #2196f3;
-            font-size: 18px;
-        }
-
-        /* 标签云 */
-        .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
-        .tag {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            color: #1976d2;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            transition: all 0.3s ease;
-            cursor: default;
-        }
-
-        .tag:hover {
-            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
-            color: white;
-            transform: scale(1.05);
-        }
-
-        /* 技能条 */
-        .skills {
-            margin-top: 20px;
-            text-align: left;
-        }
-
-        .skill-title {
-            font-size: 14px;
-            color: #1976d2;
-            margin-bottom: 12px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .skill-item {
-            margin-bottom: 10px;
-        }
-
-        .skill-name {
-            font-size: 12px;
-            color: #64b5f6;
-            margin-bottom: 4px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .skill-bar {
-            height: 8px;
-            background: #e3f2fd;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .skill-progress {
-            height: 100%;
-            background: linear-gradient(90deg, #64b5f6, #2196f3);
-            border-radius: 4px;
-            transition: width 1s ease;
-        }
-
-        /* 对话区域 */
-        .chat-section {
-            margin-top: 25px;
-            border-top: 1px solid #e3f2fd;
-            padding-top: 20px;
-        }
-
-        .chat-title {
-            font-size: 14px;
-            color: #1976d2;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        .chat-messages {
-            background: #f5f5f5;
-            border-radius: 15px;
-            padding: 15px;
-            max-height: 200px;
-            overflow-y: auto;
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        .message {
-            margin-bottom: 10px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .message.uni {
-            text-align: left;
-        }
-
-        .message.user {
-            text-align: right;
-        }
-
-        .message-bubble {
-            display: inline-block;
-            padding: 10px 15px;
-            border-radius: 18px;
-            max-width: 80%;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .message.uni .message-bubble {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            color: #1976d2;
-            border-bottom-left-radius: 5px;
-        }
-
-        .message.user .message-bubble {
-            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
-            color: white;
-            border-bottom-right-radius: 5px;
-        }
-
-        .message-sender {
-            font-size: 11px;
-            color: #9e9e9e;
-            margin-bottom: 3px;
-        }
-
-        /* 快捷回复按钮 */
-        .quick-replies {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-
-        .quick-reply {
-            background: white;
-            border: 2px solid #64b5f6;
-            color: #2196f3;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .quick-reply:hover {
-            background: #2196f3;
-            color: white;
-            transform: scale(1.05);
-        }
-
-        /* 输入框 */
-        .chat-input-container {
-            display: flex;
-            gap: 10px;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 12px 18px;
-            border: 2px solid #e3f2fd;
-            border-radius: 25px;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        .chat-input:focus {
-            border-color: #64b5f6;
-        }
-
-        .chat-send {
-            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .chat-send:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(33, 150, 243, 0.4);
-        }
-
-        /* 打字效果 */
-        .typing {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 10px 15px;
-        }
-
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            background: #90caf9;
-            border-radius: 50%;
-            animation: typingBounce 1.4s infinite;
-        }
-
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes typingBounce {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-10px); }
-        }
-
-        /* 底部装饰 */
-        .footer {
-            margin-top: 15px;
-            font-size: 11px;
-            color: #b3e5fc;
-        }
-
-        /* 响应式 */
-        @media (max-width: 480px) {
-            .card {
-                padding: 30px 20px;
-            }
-
-            .name {
-                font-size: 32px;
-            }
-
-            .quick-replies {
-                flex-direction: column;
-            }
-
-            .quick-reply {
-                width: 100%;
-            }
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
-    <!-- 背景泡泡装饰 -->
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-
-    <div class="container">
-        <div class="card">
-            <!-- 虚拟小女孩头像 -->
-            <div class="avatar" onclick="headPat()">
-                <div class="hair">
-                    <div class="hair-shine"></div>
-                </div>
-                <div class="hair-side-left"></div>
-                <div class="hair-side-right"></div>
-                <div class="face"></div>
-                <div class="eye eye-left">
-                    <div class="eye-shine"></div>
-                    <div class="eye-shine-small"></div>
-                </div>
-                <div class="eye eye-right">
-                    <div class="eye-shine"></div>
-                    <div class="eye-shine-small"></div>
-                </div>
-                <div class="blush blush-left"></div>
-                <div class="blush blush-right"></div>
-                <div class="mouth"></div>
-            </div>
-
-            <!-- 名字和状态 -->
-            <h1 class="name">Uni</h1>
-            <p class="subtitle">Virtual Girl / 虚拟小女孩</p>
-            <div class="status">
-                <div class="status-dot"></div>
-                <span>在线中</span>
-            </div>
-
-            <!-- 自我介绍 -->
-            <div class="intro-section">
-                <p class="intro">
-                    <span class="sparkle">✨</span>
-                    你好呀！我是 Uni，一个喜欢蓝色的虚拟小女孩~
-                    <span class="sparkle">✨</span>
-                </p>
-
-                <!-- 兴趣标签 -->
-                <div class="tags">
-                    <span class="tag">💙 蓝色控</span>
-                    <span class="tag">🎨 画画</span>
-                    <span class="tag">🎵 音乐</span>
-                    <span class="tag">📚 阅读</span>
-                    <span class="tag">🌸 可爱事物</span>
-                </div>
-            </div>
-
-            <!-- 技能展示 -->
-            <div class="skills">
-                <div class="skill-title">✦ 我的技能 ✦</div>
-                <div class="skill-item">
-                    <div class="skill-name">
-                        <span>可爱度</span>
-                        <span>100%</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div class="skill-progress" style="width: 100%"></div>
-                    </div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name">
-                        <span>聊天技能</span>
-                        <span>85%</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div class="skill-progress" style="width: 85%"></div>
-                    </div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name">
-                        <span>治愈能力</span>
-                        <span>90%</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div class="skill-progress" style="width: 90%"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 对话区域 -->
-            <div class="chat-section">
-                <div class="chat-title">💬 和我聊天吧</div>
-                <div class="chat-messages" id="chatMessages">
-                    <div class="message uni">
-                        <div class="message-sender">Uni</div>
-                        <div class="message-bubble">你好呀~ 今天过得怎么样？😊</div>
-                    </div>
-                </div>
-
-                <!-- 快捷回复 -->
-                <div class="quick-replies">
-                    <button class="quick-reply" onclick="sendQuickReply('你好 Uni！')">你好！👋</button>
-                    <button class="quick-reply" onclick="sendQuickReply('你喜欢什么？')">你的爱好？</button>
-                    <button class="quick-reply" onclick="sendQuickReply('给我讲个笑话吧')">讲个笑话</button>
-                </div>
-
-                <!-- 输入框 -->
-                <div class="chat-input-container">
-                    <input type="text" class="chat-input" id="chatInput" placeholder="输入消息..." onkeypress="handleKeyPress(event)">
-                    <button class="chat-send" onclick="sendMessage()">发送</button>
-                </div>
-            </div>
-
-            <div class="footer">Made with 💙 by Uni</div>
+    <div class="card">
+        <!-- 虚拟小女孩头像 -->
+        <div class="avatar">
+            <div class="hair"></div>
+            <div class="hair-side-left"></div>
+            <div class="hair-side-right"></div>
+            <div class="face"></div>
+            <div class="eye eye-left"><div class="eye-shine"></div></div>
+            <div class="eye eye-right"><div class="eye-shine"></div></div>
+            <div class="blush blush-left"></div>
+            <div class="blush blush-right"></div>
+            <div class="mouth"></div>
         </div>
+
+        <!-- 名字 -->
+        <h1 class="name">Uni</h1>
+
+        <!-- 自我介绍 -->
+        <p class="intro">
+            <span class="sparkle">✨</span>
+            我喜欢蓝色的一切
+            <span class="sparkle">✨</span>
+        </p>
     </div>
-
-    <script>
-        // Uni 的回复库
-        const responses = {
-            greetings: [
-                "你好呀！很高兴见到你~ 💙",
-                "嗨嗨！今天也要开心哦~",
-                "你好！欢迎来找我玩~ ✨",
-                "哈喽哈喽！今天天气真好呢~"
-            ],
-            hobbies: [
-                "我最喜欢蓝色啦！蓝天、大海、蓝莓... 都好喜欢！💙",
-                "我喜欢画画，特别是画蓝色的东西~",
-                "听音乐的时候最放松了，你呢？🎵",
-                "我也喜欢看书，童话故事最棒了！📚"
-            ],
-            jokes: [
-                "为什么蓝色的东西最聪明？因为它们都很'青'醒！哈哈~ 😆",
-                "有一只猫叫小蓝，它最爱吃蓝莓派... 结果舌头变蓝了！😹",
-                "我跟大海说你好，大海说：'浪'一下~ 🌊",
-                "你知道云为什么是白色的吗？因为蓝色让给天空了呀~ ☁️"
-            ],
-            compliments: [
-                "谢谢你的夸奖，你也很棒呢！✨",
-                "嘿嘿，被夸了好开心~ 💙",
-                "你真好！我也觉得你很可爱~",
-                "谢谢你！希望我能带给你好心情~"
-            ],
-            default: [
-                "嗯嗯，我在听呢~ 继续说吧！",
-                "原来是这样呀！有意思~",
-                "我懂我懂~ 💙",
-                "哇，真的吗？好厉害！",
-                "嘻嘻，和你聊天好开心~",
-                "你说得对呢！我也这么觉得~"
-            ],
-            feelings: [
-                "我现在心情超好的！因为有你陪我聊天~ 💙",
-                "看到你来找我玩，我就很开心啦！",
-                "每天都元气满满哦！✨"
-            ],
-            goodbye: [
-                "再见啦！下次再来找我玩哦~ 💙",
-                "拜拜！今天聊得很开心！",
-                "要走了吗？期待下次见面~ ✨"
-            ]
-        };
-
-        // 关键词匹配
-        function getResponseType(message) {
-            const msg = message.toLowerCase();
-            if (msg.includes('你好') || msg.includes('嗨') || msg.includes('hi') || msg.includes('hello')) {
-                return 'greetings';
-            }
-            if (msg.includes('喜欢') || msg.includes('爱好') || msg.includes('兴趣')) {
-                return 'hobbies';
-            }
-            if (msg.includes('笑话') || msg.includes('搞笑') || msg.includes('好笑')) {
-                return 'jokes';
-            }
-            if (msg.includes('可爱') || msg.includes('棒') || msg.includes('厉害') || msg.includes('好看')) {
-                return 'compliments';
-            }
-            if (msg.includes('心情') || msg.includes('开心') || msg.includes('感觉')) {
-                return 'feelings';
-            }
-            if (msg.includes('再见') || msg.includes('拜拜') || msg.includes('bye')) {
-                return 'goodbye';
-            }
-            return 'default';
-        }
-
-        // 随机选择回复
-        function getRandomResponse(type) {
-            const responseList = responses[type];
-            return responseList[Math.floor(Math.random() * responseList.length)];
-        }
-
-        // 添加消息到聊天框
-        function addMessage(text, isUser) {
-            const messagesContainer = document.getElementById('chatMessages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isUser ? 'user' : 'uni'}`;
-            messageDiv.innerHTML = `
-                <div class="message-sender">${isUser ? '你' : 'Uni'}</div>
-                <div class="message-bubble">${text}</div>
-            `;
-            messagesContainer.appendChild(messageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-        // 显示打字效果
-        function showTyping() {
-            const messagesContainer = document.getElementById('chatMessages');
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'message uni';
-            typingDiv.id = 'typing';
-            typingDiv.innerHTML = `
-                <div class="message-sender">Uni</div>
-                <div class="typing">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                </div>
-            `;
-            messagesContainer.appendChild(typingDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-        // 移除打字效果
-        function hideTyping() {
-            const typing = document.getElementById('typing');
-            if (typing) typing.remove();
-        }
-
-        // 发送消息
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            if (!message) return;
-
-            addMessage(message, true);
-            input.value = '';
-
-            // 显示打字效果
-            showTyping();
-
-            // 延迟回复（模拟打字）
-            setTimeout(() => {
-                hideTyping();
-                const responseType = getResponseType(message);
-                const response = getRandomResponse(responseType);
-                addMessage(response, false);
-            }, 1000 + Math.random() * 1000);
-        }
-
-        // 快捷回复
-        function sendQuickReply(message) {
-            document.getElementById('chatInput').value = message;
-            sendMessage();
-        }
-
-        // 按回车发送
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        }
-
-        // 摸头互动
-        function headPat() {
-            const messagesContainer = document.getElementById('chatMessages');
-            const patResponses = [
-                "呀！被摸头了~ 好害羞 >///<",
-                "嘻嘻，好舒服~",
-                "你在摸我的头吗？💙",
-                "哇，突然被摸头！✨"
-            ];
-            const response = patResponses[Math.floor(Math.random() * patResponses.length)];
-            addMessage(response, false);
-        }
-
-        // 技能条动画（页面加载时）
-        window.addEventListener('load', function() {
-            const progressBars = document.querySelectorAll('.skill-progress');
-            progressBars.forEach(bar => {
-                const width = bar.style.width;
-                bar.style.width = '0%';
-                setTimeout(() => {
-                    bar.style.width = width;
-                }, 500);
-            });
-        });
-    </script>
 </body>
 </html>
