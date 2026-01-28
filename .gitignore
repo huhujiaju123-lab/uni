@@ -12,3 +12,8 @@ package-lock.json
 # Temp files
 *.tmp
 *.log
+
+# 独立项目（各自有 git 仓库）
+growth-tracker/
+langtons-ant/
+notion-skill/
