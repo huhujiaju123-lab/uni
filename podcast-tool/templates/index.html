@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>播客可视化</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --bg2: #12121c;
+  --bg3: #1a1a28;
+  --gold: #d4a017;
+  --gold-light: #f0c040;
+  --text: #e8e0d0;
+  --text-dim: #8a8070;
+  --danger: #e05050;
+  --radius: 12px;
+  --font: 'Hiragino Mincho ProN', 'Source Han Serif CN', Georgia, serif;
+  --sans: 'PingFang SC', 'Hiragino Sans GB', system-ui, sans-serif;
+}
+
+html { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+.logo {
+  font-size: 2.4rem;
+  margin-bottom: 8px;
+}
+
+h1 {
+  font-family: var(--font);
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  color: var(--gold);
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+
+.subtitle {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-bottom: 48px;
+}
+
+.input-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+input[type="url"] {
+  flex: 1;
+  padding: 14px 20px;
+  background: var(--bg2);
+  border: 1px solid rgba(212, 160, 23, 0.2);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 1rem;
+  font-family: var(--sans);
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input[type="url"]:focus {
+  border-color: var(--gold);
+}
+
+input[type="url"]::placeholder {
+  color: var(--text-dim);
+  opacity: 0.6;
+}
+
+button[type="submit"] {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border: none;
+  border-radius: var(--radius);
+  color: #0a0a0f;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--sans);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 160, 23, 0.3);
+}
+
+button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+.error {
+  color: var(--danger);
+  font-size: 0.9rem;
+  margin-bottom: 24px;
+  padding: 12px 16px;
+  background: rgba(224, 80, 80, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(224, 80, 80, 0.2);
+}
+
+.hint {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  margin-bottom: 48px;
+}
+
+.history {
+  text-align: left;
+}
+
+.history h3 {
+  font-family: var(--font);
+  font-size: 1rem;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.history-item {
+  display: block;
+  padding: 14px 18px;
+  margin-bottom: 8px;
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.2s;
+}
+
+.history-item:hover {
+  border-color: rgba(212, 160, 23, 0.3);
+  transform: translateX(4px);
+}
+
+.history-item .title {
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+}
+
+.history-item .podcast {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.footer {
+  position: fixed;
+  bottom: 20px;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  opacity: 0.4;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="logo">🎙️</div>
+  <h1>播客可视化</h1>
+  <p class="subtitle">粘贴小宇宙链接，生成交互式可视化网页</p>
+
+  {% if error %}
+  <div class="error">{{ error }}</div>
+  {% endif %}
+
+  <form action="/process" method="POST">
+    <div class="input-group">
+      <input type="url" name="url" placeholder="https://www.xiaoyuzhoufm.com/episode/..." required autofocus>
+      <button type="submit">开始</button>
+    </div>
+  </form>
+  <p class="hint">支持小宇宙单集页面链接</p>
+
+  {% if history %}
+  <div class="history">
+    <h3>已生成</h3>
+    {% for item in history %}
+    <a class="history-item" href="/view/{{ item.episode_id }}">
+      <div class="title">{{ item.title }}</div>
+      <div class="podcast">{{ item.podcast_name }}</div>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+<div class="footer">Podcast Visualization Tool</div>
+
+</body>
+</html>

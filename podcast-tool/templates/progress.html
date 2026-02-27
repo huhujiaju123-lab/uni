@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>处理中... | 播客可视化</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --bg2: #12121c;
+  --bg3: #1a1a28;
+  --gold: #d4a017;
+  --gold-light: #f0c040;
+  --green: #40c060;
+  --text: #e8e0d0;
+  --text-dim: #8a8070;
+  --danger: #e05050;
+  --sans: 'PingFang SC', 'Hiragino Sans GB', system-ui, sans-serif;
+  --font: 'Hiragino Mincho ProN', 'Source Han Serif CN', Georgia, serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 520px;
+  width: 100%;
+}
+
+h1 {
+  font-family: var(--font);
+  font-size: 1.6rem;
+  color: var(--gold);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.meta-preview {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin-bottom: 40px;
+  min-height: 1.4em;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 12px;
+  transition: all 0.4s ease;
+}
+
+.step.running {
+  border-color: rgba(212, 160, 23, 0.4);
+  background: var(--bg3);
+}
+
+.step.done {
+  border-color: rgba(64, 192, 96, 0.3);
+}
+
+.step.error {
+  border-color: rgba(224, 80, 80, 0.3);
+}
+
+.step-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.04);
+  transition: all 0.4s;
+}
+
+.step.running .step-icon {
+  background: rgba(212, 160, 23, 0.15);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.step.done .step-icon {
+  background: rgba(64, 192, 96, 0.15);
+}
+
+.step.error .step-icon {
+  background: rgba(224, 80, 80, 0.15);
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.step.pending .step-name { color: var(--text-dim); }
+.step.running .step-name { color: var(--gold); }
+.step.done .step-name { color: var(--green); }
+.step.error .step-name { color: var(--danger); }
+
+.step-detail {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  min-height: 1em;
+}
+
+.step-num {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  opacity: 0.5;
+}
+
+.error-box {
+  padding: 16px 20px;
+  background: rgba(224, 80, 80, 0.08);
+  border: 1px solid rgba(224, 80, 80, 0.2);
+  border-radius: 10px;
+  color: var(--danger);
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  display: none;
+}
+
+.actions {
+  text-align: center;
+  display: none;
+}
+
+.actions a {
+  display: inline-block;
+  padding: 12px 32px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: #0a0a0f;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.actions a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 160, 23, 0.3);
+}
+
+.back-link {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.back-link a {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.back-link a:hover {
+  color: var(--gold);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>处理中</h1>
+  <div class="meta-preview" id="meta-preview">正在启动...</div>
+
+  <div class="steps" id="steps">
+    <div class="step pending" data-index="0">
+      <div class="step-icon">📡</div>
+      <div class="step-content">
+        <div class="step-name">获取元数据</div>
+        <div class="step-detail"></div>
+      </div>
+      <div class="step-num">1/4</div>
+    </div>
+    <div class="step pending" data-index="1">
+      <div class="step-icon">🎙️</div>
+      <div class="step-content">
+        <div class="step-name">音频转录</div>
+        <div class="step-detail"></div>
+      </div>
+      <div class="step-num">2/4</div>
+    </div>
+    <div class="step pending" data-index="2">
+      <div class="step-icon">🧠</div>
+      <div class="step-content">
+        <div class="step-name">AI 内容分析</div>
+        <div class="step-detail"></div>
+      </div>
+      <div class="step-num">3/4</div>
+    </div>
+    <div class="step pending" data-index="3">
+      <div class="step-icon">🎨</div>
+      <div class="step-content">
+        <div class="step-name">生成可视化</div>
+        <div class="step-detail"></div>
+      </div>
+      <div class="step-num">4/4</div>
+    </div>
+  </div>
+
+  <div class="error-box" id="error-box"></div>
+
+  <div class="actions" id="actions">
+    <a id="view-link" href="#">查看可视化网页</a>
+  </div>
+
+  <div class="back-link">
+    <a href="/">← 返回首页</a>
+  </div>
+</div>
+
+<script>
+const taskId = "{{ task_id }}";
+const stepsEl = document.querySelectorAll('.step');
+const metaEl = document.getElementById('meta-preview');
+const errorBox = document.getElementById('error-box');
+const actionsEl = document.getElementById('actions');
+const viewLink = document.getElementById('view-link');
+
+const icons = { pending: '⏳', running: '⏳', done: '✅', error: '❌' };
+
+const source = new EventSource(`/stream/${taskId}`);
+
+source.onmessage = function(e) {
+  const data = JSON.parse(e.data);
+
+  // 更新步骤状态
+  if (data.steps) {
+    data.steps.forEach((step, i) => {
+      const el = stepsEl[i];
+      el.className = `step ${step.status}`;
+      const iconEl = el.querySelector('.step-icon');
+      iconEl.textContent = icons[step.status] || '⏳';
+      el.querySelector('.step-detail').textContent = step.detail || '';
+    });
+  }
+
+  // 更新元数据预览
+  if (data.metadata && data.metadata.title) {
+    metaEl.textContent = `${data.metadata.podcast_name} · ${data.metadata.title}`;
+  }
+
+  // 错误
+  if (data.error) {
+    errorBox.textContent = data.error;
+    errorBox.style.display = 'block';
+  }
+
+  // 完成
+  if (data.done && !data.error && data.episode_id) {
+    source.close();
+    viewLink.href = `/view/${data.episode_id}`;
+    actionsEl.style.display = 'block';
+    document.title = '完成！ | 播客可视化';
+    // 3 秒后自动跳转
+    setTimeout(() => {
+      window.location.href = `/view/${data.episode_id}`;
+    }, 3000);
+  }
+
+  if (data.done && data.error) {
+    source.close();
+    document.title = '出错了 | 播客可视化';
+  }
+};
+
+source.onerror = function() {
+  source.close();
+};
+</script>
+
+</body>
+</html>

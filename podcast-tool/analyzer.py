@@ -1,0 +1,263 @@
+#!/usr/bin/env python3
+"""
+播客内容分析器 — 用 Claude API 将转录文本转为结构化 JSON
+输入：转录文本文件路径（.txt）
+输出：符合通用数据模型的 episode.json
+"""
+
+import os
+import sys
+import json
+import re
+
+try:
+    from openai import OpenAI
+except ImportError:
+    print("❌ 缺少依赖，请运行：pip install openai")
+    sys.exit(1)
+
+# 通义千问 API 配置
+QWEN_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+QWEN_MODEL = "qwen-plus"
+
+SYSTEM_PROMPT = """你是一位专业的播客内容分析师，擅长将播客转录文本提炼为结构化内容。
+
+你的任务：分析播客转录文本，输出严格的 JSON 格式数据。
+
+## 输出格式
+
+必须输出合法的 JSON，不加任何多余文字，严格按照以下结构：
+
+```json
+{
+  "meta": {
+    "podcast_name": "播客名称",
+    "episode_number": 59,
+    "title": "本期标题",
+    "subtitle": "一句话描述本期主题",
+    "total_duration_sec": 5400,
+    "language": "zh"
+  },
+  "participants": [
+    {
+      "id": "host1",
+      "name": "主持人名字",
+      "role": "host",
+      "bio": "简短介绍（可选）"
+    }
+  ],
+  "featured_work": {
+    "type": "book",
+    "title": "书名（若本期讨论了某本书/电影）",
+    "author": "作者名"
+  },
+  "sections": [
+    {
+      "id": "intro",
+      "title": "章节主标题",
+      "subtitle": "章节副标题",
+      "start_sec": 0,
+      "end_sec": 480,
+      "is_ad": false,
+      "key_points": ["核心观点1", "核心观点2", "核心观点3"],
+      "quotes": ["金句1", "金句2"],
+      "stories": [
+        {
+          "narrator_id": "host1",
+          "text": "个人故事或案例描述"
+        }
+      ]
+    }
+  ],
+  "core_quotes": [
+    "精选金句1（最有力量的5-10条，跨章节提取）",
+    "精选金句2"
+  ],
+  "recommendations": [
+    {
+      "type": "book",
+      "title": "书名",
+      "author": "作者",
+      "quote": "推荐理由"
+    }
+  ],
+  "quiz": {
+    "intro": "与本期主题相关的自测引导语",
+    "questions": [
+      {
+        "id": "q1",
+        "text": "问题文字",
+        "type": "choice",
+        "options": [
+          {"label": "选项A", "score": 0},
+          {"label": "选项B", "score": 1},
+          {"label": "选项C", "score": 2},
+          {"label": "选项D", "score": 3}
+        ]
+      }
+    ],
+    "result_levels": [
+      {
+        "max_avg_score": 1.0,
+        "level_label": "新手级",
+        "description": "结果描述"
+      },
+      {
+        "max_avg_score": 2.0,
+        "level_label": "进阶级",
+        "description": "结果描述"
+      },
+      {
+        "max_avg_score": 3.0,
+        "level_label": "高手级",
+        "description": "结果描述"
+      }
+    ]
+  }
+}
+```
+
+## 注意事项
+
+1. **时间戳**：转录文本中有 [MM:SS - MM:SS] 格式，将其转为秒数（如 [08:08] = 488秒）
+2. **章节划分**：按话题转换自然划分，通常 6-10 个章节，广告段标记 is_ad: true
+3. **参与者 ID**：使用简洁 ID（如 "host", "guest", "via", 或说话人名字的拼音缩写）
+4. **key_points**：每章节 3-6 条，简洁有力
+5. **core_quotes**：全集最精彩的 5-10 句话，可直接作为分享金句
+6. **quiz**：5 道与本期主题紧密相关的自测题，让听众反思自身
+7. **featured_work**：仅当本期明确围绕某书/电影/作品展开时填写，否则省略该字段
+8. **recommendations**：收集节目中提到的书单/影单/播客推荐，可为空数组
+9. **输出纯 JSON**：不要加 ```json 代码块标记，不要加解释文字
+"""
+
+
+def analyze_transcript(transcript_path: str, output_path: str = None, metadata: dict = None) -> dict:
+    """
+    使用 Claude 分析转录文本，生成结构化 JSON
+
+    Args:
+        transcript_path: 转录文本文件路径（.txt）
+        output_path: 输出 JSON 文件路径，None 则自动推断
+        metadata: 可选的元数据 dict（podcast_name, cover_url 等）
+
+    Returns:
+        dict: 结构化的 episode 数据
+    """
+    api_key = os.getenv("DASHSCOPE_API_KEY")
+    if not api_key:
+        raise RuntimeError("❌ DASHSCOPE_API_KEY 环境变量未设置（通义千问 API Key）")
+
+    if not os.path.exists(transcript_path):
+        raise FileNotFoundError(f"转录文件不存在：{transcript_path}")
+
+    print(f"📖 读取转录文本：{transcript_path}")
+    with open(transcript_path, "r", encoding="utf-8") as f:
+        transcript_text = f.read()
+
+    char_count = len(transcript_text)
+    print(f"   字符数：{char_count:,}")
+
+    # 构建用户消息
+    meta_hint = ""
+    if metadata:
+        meta_hint = f"""
+## 已知元数据（直接使用，无需从文本中推断）
+- 播客名称：{metadata.get('podcast_name', '未知')}
+- 本期标题：{metadata.get('title', '未知')}
+- 简介：{metadata.get('description', '无')[:200]}
+
+"""
+
+    user_message = f"""{meta_hint}## 转录文本
+
+{transcript_text}
+
+请分析以上转录文本，输出符合要求的 JSON 结构。"""
+
+    print(f"🤖 调用通义千问分析中（{QWEN_MODEL}）...")
+    print(f"   预计耗时：30-120 秒...")
+
+    client = OpenAI(api_key=api_key, base_url=QWEN_BASE_URL)
+
+    try:
+        response = client.chat.completions.create(
+            model=QWEN_MODEL,
+            max_tokens=8192,
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_message},
+            ],
+        )
+    except Exception as e:
+        raise RuntimeError(f"通义千问 API 调用失败：{e}")
+
+    raw_output = response.choices[0].message.content.strip()
+
+    # 解析 JSON（有时 Claude 会加 ```json 代码块）
+    episode_data = _parse_json_output(raw_output)
+
+    # 注入封面 URL（Claude 无法从文本中获取）
+    if metadata:
+        if "meta" not in episode_data:
+            episode_data["meta"] = {}
+        if metadata.get("cover_url"):
+            episode_data["meta"]["cover_url"] = metadata["cover_url"]
+        if metadata.get("audio_url"):
+            episode_data["meta"]["audio_url"] = metadata["audio_url"]
+        if metadata.get("source_url"):
+            episode_data["meta"]["platform_links"] = {
+                "xiaoyuzhou": metadata["source_url"]
+            }
+
+    # 确定输出路径
+    if not output_path:
+        base = os.path.splitext(transcript_path)[0]
+        output_path = base.replace("transcript", "episode") + ".json"
+        if output_path == transcript_path:
+            output_path = os.path.splitext(transcript_path)[0] + "_episode.json"
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(episode_data, f, ensure_ascii=False, indent=2)
+
+    sections_count = len(episode_data.get("sections", []))
+    quotes_count = len(episode_data.get("core_quotes", []))
+    print(f"✅ 内容分析完成")
+    print(f"   章节数：{sections_count}")
+    print(f"   精选金句：{quotes_count} 条")
+    print(f"   输出文件：{output_path}")
+
+    return episode_data
+
+
+def _parse_json_output(raw: str) -> dict:
+    """解析 Claude 的 JSON 输出，兼容带代码块的情况"""
+    # 去除 ```json ... ``` 包裹
+    cleaned = re.sub(r"^```(?:json)?\s*\n?", "", raw.strip(), flags=re.MULTILINE)
+    cleaned = re.sub(r"\n?```\s*$", "", cleaned.strip(), flags=re.MULTILINE)
+    cleaned = cleaned.strip()
+
+    try:
+        return json.loads(cleaned)
+    except json.JSONDecodeError as e:
+        # 尝试找到第一个 { 到最后一个 } 之间的内容
+        start = cleaned.find("{")
+        end = cleaned.rfind("}") + 1
+        if start >= 0 and end > start:
+            try:
+                return json.loads(cleaned[start:end])
+            except json.JSONDecodeError:
+                pass
+        raise ValueError(f"无法解析 Claude 输出为 JSON：{e}\n原始输出前 500 字符：\n{raw[:500]}")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("用法：python3 analyzer.py <转录文本路径> [输出JSON路径]")
+        print("示例：python3 analyzer.py ./output/abc123/transcript.txt")
+        sys.exit(1)
+
+    transcript_path = sys.argv[1]
+    output_path = sys.argv[2] if len(sys.argv) > 2 else None
+
+    result = analyze_transcript(transcript_path, output_path)
+    print(f"\n分析结果摘要：{result.get('meta', {}).get('title', '无标题')}")

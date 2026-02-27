@@ -1,19 +1,28 @@
-# macOS
 .DS_Store
-
-# Dependencies
 node_modules/
-package-lock.json
-
-# IDE
-.idea/
-*.swp
-
-# Temp files
-*.tmp
+.vercel/
 *.log
 
-# 独立项目（各自有 git 仓库）
-growth-tracker/
-langtons-ant/
-notion-skill/
+# Claude Code 本地配置
+.claude/*.local.*
+.claude/settings.local.json
+CLAUDE.local.md
+
+# 敏感文件
+.env
+.env.*
+auth.json
+credentials.json
+secrets/
+
+# 数据分析临时文件
+*.csv
+*.xlsx
+result_*.csv
+daily_*.csv
+weekly_*.csv
+
+# 播客工具生成文件
+podcast-tool/output/
+__pycache__/
+*.pyc

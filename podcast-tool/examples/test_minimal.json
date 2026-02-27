@@ -1,0 +1,161 @@
+{
+  "meta": {
+    "podcast_name": "进步是一件性感的事",
+    "episode_number": 59,
+    "title": "一生之敌",
+    "subtitle": "没有天赋、不谈热爱，凡人的突围只有与自我的持久厮杀",
+    "published_date": "2024-01-01",
+    "language": "zh"
+  },
+  "participants": [
+    {"id": "via", "name": "维亚", "role": "host", "bio": "准妈妈，跑者"},
+    {"id": "guxin", "name": "股心", "role": "host", "bio": "写作者"}
+  ],
+  "featured_work": {
+    "type": "book",
+    "title": "The War of Art（一生之敌）",
+    "author": "Steven Pressfield",
+    "year": 2002,
+    "description": "将个人对抗拖延与自我怀疑的血泪，炼成普世方法论"
+  },
+  "sections": [
+    {
+      "id": "intro",
+      "title": "两个人生之间的那道墙",
+      "subtitle": "书籍介绍与作者生平",
+      "start_sec": 0,
+      "end_sec": 488,
+      "is_ad": false,
+      "key_points": [
+        "内阻力（Resistance）：阻止我们坐下来开始的那股力量",
+        "真正的作家知道的秘密：写作不是写作，而是坐下来开始写",
+        "作者52岁才出版第一本书，坚持写作数十年"
+      ],
+      "quotes": [
+        "我们中的大多数人都有两个人生——我们正在活的，和从来没有活过的。那两个人生之间，就是内阻力",
+        "有一个秘密，真正的作家知道，想成为作家的人不知道：不是写作，而是坐下来开始写"
+      ],
+      "stories": [
+        {"narrator_id": "via", "text": "每天明明知道该健身、该学习，但就是无法开始，是读这本书的原动力"},
+        {"narrator_id": "guxin", "text": "作家朋友推荐，重读后因个人经历产生了更深共鸣"}
+      ]
+    },
+    {
+      "id": "resistance-nature",
+      "title": "内阻力的三大特点",
+      "subtitle": "单向障碍、恐惧为食、终点前最强",
+      "start_sec": 488,
+      "end_sec": 983,
+      "is_ad": false,
+      "key_points": [
+        "特点1【单向】：内阻力只在往上坡走时存在，顺势而为时感受不到",
+        "特点2【恐惧为食】：内阻力本身没有力量，我们的每一次恐惧都在喂养它",
+        "特点3【终点前最强】：越接近完成，内阻力越大——完成需要勇气"
+      ],
+      "quotes": [
+        "恐惧是内阻力的食粮——你每一次害怕，都在壮大它",
+        "完成是需要勇气的。最后那1%需要的勇气，可能是前面80%的权重完全不一样"
+      ],
+      "stories": [
+        {"narrator_id": "via", "text": "有个想创业的朋友，三年来写了无数创业计划，因为怕失败一直没行动"}
+      ]
+    },
+    {
+      "id": "ad-test",
+      "title": "广告：测试广告段",
+      "subtitle": "赞助商内容",
+      "start_sec": 983,
+      "end_sec": 1200,
+      "is_ad": true,
+      "key_points": [],
+      "quotes": [],
+      "stories": []
+    },
+    {
+      "id": "professional-mindset",
+      "title": "职业选手思维",
+      "subtitle": "把热爱当上班，用手艺代替艺术",
+      "start_sec": 1200,
+      "end_sec": 1800,
+      "is_ad": false,
+      "key_points": [
+        "职业选手做法：把需要克服内阻力的事，当成上班",
+        "去神秘化：毛姆说灵感会在每天9点到来——因为他每天9点准时写",
+        "完成比完美更重要"
+      ],
+      "quotes": [
+        "职业选手不谈论灵感与天赋，他只管做他的工作",
+        "手艺人在重复大量的练习后涌现出来的意识，就成为了艺术"
+      ],
+      "stories": [
+        {"narrator_id": "via", "text": "好友贾晓萌参加超百公里比赛，把跑步当上班，最终跑了400多公里"}
+      ]
+    }
+  ],
+  "core_quotes": [
+    "我们中的大多数人都有两个人生——我们正在活的，和从来没有活过的。那两个人生之间，就是内阻力",
+    "创作不是天才的特权，而是凡人与自我厮杀的战场",
+    "职业选手不谈论灵感与天赋，他只管做他的工作",
+    "完成是需要勇气的——最后那1%需要的勇气，可能是之前80%的权重完全不一样",
+    "如果你没有被你的梦想震慑，说明你的梦做得不够大"
+  ],
+  "recommendations": [
+    {
+      "type": "book",
+      "title": "The War of Art（一生之敌）",
+      "author": "Steven Pressfield",
+      "quote": "创作不是天才的特权，而是凡人与自我厮杀的战场",
+      "recommender_id": "guxin"
+    },
+    {
+      "type": "book",
+      "title": "On Writing（谈写作）",
+      "author": "Stephen King",
+      "quote": "通往地狱的路是副词铺就的",
+      "recommender_id": "guxin"
+    }
+  ],
+  "quiz": {
+    "intro_title": "你的内阻力水平？",
+    "intro": "诚实地回答下面几个问题，看看内阻力在你生命中的存在感有多强（不评判，纯好奇）",
+    "questions": [
+      {
+        "id": "q1",
+        "type": "choice",
+        "text": "你有多少个「明天就开始」的计划？",
+        "options": [
+          {"label": "0个，我都做了", "score": 0},
+          {"label": "1-2个", "score": 1},
+          {"label": "3-5个", "score": 2},
+          {"label": "太多了数不清", "score": 3}
+        ]
+      },
+      {
+        "id": "q2",
+        "type": "choice",
+        "text": "接近完成一件重要的事时，你通常……",
+        "options": [
+          {"label": "冲刺完成它", "score": 0},
+          {"label": "拖慢节奏", "score": 1},
+          {"label": "找借口暂停", "score": 2},
+          {"label": "永远差那么一步", "score": 3}
+        ]
+      },
+      {
+        "id": "q3",
+        "type": "slider",
+        "text": "你对灵感的依赖程度？",
+        "slider_labels": ["从不等灵感", "偶尔", "经常等", "没灵感就不干"]
+      }
+    ],
+    "result_levels": [
+      {"max_avg_score": 0.8, "level_label": "🏆 职业选手级", "description": "你已建立克服内阻力的习惯，继续保持。"},
+      {"max_avg_score": 1.5, "level_label": "✨ 觉醒中的业余选手", "description": "意识到内阻力是最关键的一步，试着把目标安排进日程。"},
+      {"max_avg_score": 2.2, "level_label": "😅 内阻力的常客", "description": "今天选一件小事，花10分钟开始——不是完成，只是开始。"},
+      {"max_avg_score": 99, "level_label": "🔥 重度患者（但这很正常）", "description": "你越害怕一件事，那件事对你就越重要。先坐下来。"}
+    ]
+  },
+  "theme": {
+    "final_slogan": "进步是一件性感的事"
+  }
+}

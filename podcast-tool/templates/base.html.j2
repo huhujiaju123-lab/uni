@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ meta.title }} | 播客可视化</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: {{ theme.bg_color | default('#0a0a0f') }};
+  --bg2: #0f0f18;
+  --bg3: #13131f;
+  --gold: {{ theme.primary_color | default('#d4a017') }};
+  --gold-light: #f0c040;
+  --amber: {{ theme.accent_color | default('#c07830') }};
+  --text: #e8e0d0;
+  --text-dim: #8a8070;
+  --text-muted: #5a5248;
+  --accent: #e8b830;
+  --danger: #c04040;
+  --radius: 12px;
+  --font: 'Hiragino Mincho ProN', 'Source Han Serif CN', 'Noto Serif CJK SC', Georgia, serif;
+  --sans: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  line-height: 1.9;
+  overflow-x: hidden;
+}
+
+/* Progress bar */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  width: 0%;
+  z-index: 1000;
+  transition: width 0.1s ease;
+}
+
+/* Dot nav */
+#dot-nav {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.dot-nav-item {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+.dot-nav-item:hover, .dot-nav-item.active {
+  background: var(--gold);
+  transform: scale(1.5);
+}
+.dot-nav-item::before {
+  content: attr(data-label);
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.dot-nav-item:hover::before { opacity: 1; }
+
+/* Sections */
+section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 5vw;
+  position: relative;
+}
+
+/* Fade-in animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  will-change: transform, opacity;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); will-change: auto; }
+.reveal-delay-1 { transition-delay: 0.15s; }
+.reveal-delay-2 { transition-delay: 0.3s; }
+.reveal-delay-3 { transition-delay: 0.45s; }
+.reveal-delay-4 { transition-delay: 0.6s; }
+
+/* ===== HERO ===== */
+#hero {
+  align-items: center;
+  text-align: center;
+  background: radial-gradient(ellipse at center, #1a1020 0%, var(--bg) 70%);
+  overflow: hidden;
+}
+#hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(212,160,23,0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(192,120,48,0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+.hero-ep {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+.hero-title {
+  font-size: clamp(56px, 12vw, 120px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #f0d060, #d4a017, #c07830);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+.hero-subtitle {
+  font-family: var(--sans);
+  font-size: clamp(13px, 2vw, 17px);
+  color: var(--text-dim);
+  max-width: 600px;
+  line-height: 1.7;
+  margin-bottom: 56px;
+}
+.hero-quote {
+  max-width: 680px;
+  font-size: clamp(16px, 2.5vw, 22px);
+  color: var(--text);
+  line-height: 1.9;
+  position: relative;
+  padding: 32px 40px;
+  border-left: 3px solid var(--gold);
+  text-align: left;
+  background: rgba(212,160,23,0.04);
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.hero-quote:hover { background: rgba(212,160,23,0.08); }
+.hero-quote.highlighted { background: rgba(212,160,23,0.15); }
+.hero-quote::before {
+  content: '"';
+  position: absolute;
+  top: -10px; left: 20px;
+  font-size: 80px;
+  color: var(--gold);
+  opacity: 0.3;
+  line-height: 1;
+}
+.scroll-hint {
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 2px;
+  animation: bounce 2s infinite;
+}
+.scroll-arrow {
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+/* ===== SECTION COMMON ===== */
+.section-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.section-title {
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+.section-sub {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--text-dim);
+  margin-bottom: 48px;
+}
+.section-divider {
+  width: 60px; height: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin: 24px 0 48px;
+}
+
+/* ===== PARTICIPANTS ===== */
+.author-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 40px;
+  max-width: 900px;
+}
+.author-card {
+  background: var(--bg3);
+  border: 1px solid rgba(212,160,23,0.15);
+  border-radius: var(--radius);
+  padding: 32px;
+}
+.author-card h3 {
+  font-size: 20px;
+  color: var(--gold);
+  margin-bottom: 12px;
+  font-family: var(--sans);
+}
+.author-card p {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+
+/* ===== BIG QUOTE ===== */
+.big-quote {
+  font-size: clamp(20px, 3.5vw, 36px);
+  line-height: 1.8;
+  max-width: 800px;
+  position: relative;
+  padding: 40px;
+  background: linear-gradient(135deg, rgba(212,160,23,0.06), rgba(192,120,48,0.02));
+  border-radius: var(--radius);
+  border: 1px solid rgba(212,160,23,0.12);
+  margin-bottom: 48px;
+  cursor: pointer;
+  transition: border-color 0.3s, background 0.3s;
+}
+.big-quote:hover { border-color: rgba(212,160,23,0.3); background: rgba(212,160,23,0.08); }
+.big-quote.highlighted { border-color: var(--gold); background: rgba(212,160,23,0.12); }
+.highlight-text { color: var(--gold-light); font-style: italic; }
+
+/* ===== FEATURE CARDS ===== */
+.feature-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  max-width: 960px;
+  margin-top: 40px;
+}
+.feature-card {
+  background: var(--bg3);
+  border: 1px solid rgba(212,160,23,0.1);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.feature-card:hover {
+  border-color: rgba(212,160,23,0.35);
+  transform: translateY(-4px);
+}
+.feature-icon { font-size: 32px; margin-bottom: 16px; display: block; }
+.feature-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 8px;
+  font-family: var(--sans);
+}
+.feature-desc {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+/* ===== STORY CARDS ===== */
+.story-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 900px;
+}
+.story-card {
+  background: var(--bg3);
+  border-radius: var(--radius);
+  padding: 28px;
+  border-left: 3px solid var(--amber);
+}
+.story-card .narrator {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--amber);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.story-card p {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+
+/* ===== ACTION ITEMS ===== */
+.action-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 750px;
+  margin-bottom: 48px;
+}
+.action-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 16px 20px;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.6;
+}
+.action-num {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--bg);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ===== MEGA QUOTE ===== */
+.mega-quote {
+  font-size: clamp(20px, 3.5vw, 36px);
+  line-height: 1.7;
+  max-width: 800px;
+  font-weight: 700;
+  color: var(--text);
+  padding: 48px 0;
+  border-top: 1px solid rgba(212,160,23,0.2);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.mega-quote span { color: var(--gold); }
+.mega-quote:hover { color: var(--gold-light); }
+.mega-quote.highlighted span { color: var(--gold-light); }
+
+/* ===== QUIZ ===== */
+.quiz-container { max-width: 700px; width: 100%; }
+.quiz-intro {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--text-dim);
+  margin-bottom: 40px;
+  line-height: 1.8;
+}
+.quiz-question { margin-bottom: 32px; }
+.quiz-q-text {
+  font-size: 16px;
+  margin-bottom: 16px;
+  line-height: 1.7;
+  font-family: var(--sans);
+}
+.quiz-options { display: flex; gap: 8px; flex-wrap: wrap; }
+.quiz-opt {
+  padding: 8px 18px;
+  border: 1px solid rgba(212,160,23,0.25);
+  border-radius: 100px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  user-select: none;
+}
+.quiz-opt:hover { border-color: var(--gold); color: var(--gold); }
+.quiz-opt.selected { background: var(--gold); border-color: var(--gold); color: var(--bg); font-weight: 600; }
+
+.quiz-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 4px;
+  background: linear-gradient(to right, #d4a017 0%, #d4a017 33%, #5a5248 33%, #5a5248 100%);
+  border-radius: 2px;
+  outline: none;
+}
+.quiz-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+  box-shadow: 0 0 0 4px rgba(212,160,23,0.2);
+}
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+.quiz-btn {
+  margin-top: 32px;
+  padding: 14px 40px;
+  background: var(--gold);
+  color: var(--bg);
+  border: none;
+  border-radius: 100px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.quiz-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,160,23,0.3); }
+
+.quiz-result {
+  display: none;
+  margin-top: 40px;
+  padding: 32px;
+  background: linear-gradient(135deg, rgba(212,160,23,0.08), rgba(192,120,48,0.04));
+  border: 1px solid rgba(212,160,23,0.25);
+  border-radius: var(--radius);
+}
+.quiz-result-level {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--gold);
+  margin-bottom: 8px;
+  font-family: var(--sans);
+}
+.quiz-result-desc {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.8;
+}
+
+/* ===== ENDING ===== */
+.book-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  margin-bottom: 64px;
+}
+.book-card {
+  background: var(--bg3);
+  border-radius: var(--radius);
+  padding: 28px;
+  border: 1px solid rgba(212,160,23,0.12);
+  transition: border-color 0.3s;
+}
+.book-card:hover { border-color: rgba(212,160,23,0.35); }
+.book-tag {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.book-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.book-author {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+.book-quote {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  border-left: 2px solid var(--amber);
+  padding-left: 12px;
+  font-style: italic;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.book-quote:hover { color: var(--text); }
+.book-quote.highlighted { color: var(--gold); }
+
+.podcast-card {
+  max-width: 600px;
+  background: linear-gradient(135deg, rgba(212,160,23,0.08), rgba(192,120,48,0.04));
+  border: 1px solid rgba(212,160,23,0.2);
+  border-radius: var(--radius);
+  padding: 36px;
+  margin-bottom: 64px;
+  text-align: center;
+}
+.podcast-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.podcast-hosts {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+.podcast-ep {
+  font-size: 16px;
+  color: var(--text);
+  font-style: italic;
+}
+
+.final-slogan {
+  font-size: clamp(32px, 7vw, 72px);
+  font-weight: 900;
+  text-align: center;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.3;
+  max-width: 700px;
+}
+
+/* ===== CLICKABLE QUOTES ===== */
+.clickable-quote {
+  cursor: pointer;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+.clickable-quote::after {
+  content: ' 点击收藏';
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-muted);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.clickable-quote:hover::after { opacity: 1; }
+.clickable-quote.highlighted::after {
+  content: ' ✓ 已收藏';
+  color: var(--gold);
+  opacity: 1;
+}
+
+/* ===== SAVED QUOTES PANEL ===== */
+#saved-panel {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  background: var(--bg3);
+  border: 1px solid rgba(212,160,23,0.3);
+  border-radius: var(--radius);
+  padding: 20px;
+  max-width: 320px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 900;
+  display: none;
+  font-family: var(--sans);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+}
+#saved-panel h4 { color: var(--gold); font-size: 13px; margin-bottom: 12px; letter-spacing: 2px; }
+.saved-quote-item { font-size: 12px; color: var(--text-dim); line-height: 1.7; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+#saved-toggle {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--bg);
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 901;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(212,160,23,0.4);
+  transition: transform 0.2s;
+}
+#saved-toggle:hover { transform: scale(1.1); }
+#saved-count {
+  position: absolute;
+  top: -4px; right: -4px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--danger);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  section { padding: 60px 5vw; }
+  .feature-cards, .story-cards, .book-cards { grid-template-columns: 1fr; }
+  .author-grid { grid-template-columns: 1fr; }
+  #dot-nav { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<nav id="dot-nav">
+  <div class="dot-nav-item active" data-section="hero" data-label="开场"></div>
+  <div class="dot-nav-item" data-section="participants" data-label="{{ participants[0].name[:2] if participants else '嘉宾' }}"></div>
+  {% for section in sections if not section.is_ad %}
+  <div class="dot-nav-item" data-section="{{ section.id }}" data-label="{{ section.title[:4] }}"></div>
+  {% endfor %}
+  <div class="dot-nav-item" data-section="quiz" data-label="自测"></div>
+  <div class="dot-nav-item" data-section="ending" data-label="结尾"></div>
+</nav>
+
+<button id="saved-toggle" title="查看已收藏">★<span id="saved-count">0</span></button>
+<div id="saved-panel">
+  <h4>⭐ 我的金句收藏</h4>
+  <div id="saved-list"></div>
+</div>
+
+<!-- ===== 1. HERO ===== -->
+<section id="hero">
+  <div class="hero-ep reveal">
+    {%- if meta.episode_number %}EP.{{ meta.episode_number }} · {% endif %}{{ meta.podcast_name }}
+  </div>
+  <h1 class="hero-title reveal reveal-delay-1">{{ meta.title }}</h1>
+  <p class="hero-subtitle reveal reveal-delay-2">
+    {{ meta.subtitle }}{% if meta.subtitle %}<br>{% endif %}
+    <span style="color:var(--text-muted);font-size:12px;">
+      {%- for p in participants %}{{ p.name }}{% if not loop.last %} × {% endif %}{% endfor %} · {{ meta.podcast_name }}
+    </span>
+  </p>
+  {% if core_quotes %}
+  <blockquote class="hero-quote reveal reveal-delay-3 clickable-quote" data-quote="{{ core_quotes[0] | e }}">
+    {{ core_quotes[0] }}
+  </blockquote>
+  {% endif %}
+  <div class="scroll-hint reveal reveal-delay-4">
+    <span>向下探索</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ===== 2. PARTICIPANTS ===== -->
+<section id="participants" style="background:var(--bg2);">
+  <div class="section-label reveal">节目嘉宾</div>
+  <h2 class="section-title reveal">
+    {%- for p in participants %}{{ p.name }}{% if not loop.last %} × {% endif %}{% endfor %}
+  </h2>
+  <div class="section-divider reveal"></div>
+
+  <div class="author-grid reveal">
+    {% for p in participants %}
+    <div class="author-card">
+      <h3>{{ p.name }}</h3>
+      <p>{{ p.bio if p.bio else p.role }}</p>
+    </div>
+    {% endfor %}
+    {% if featured_work is defined and featured_work %}
+    <div class="author-card">
+      <h3>本期{% if featured_work.type == 'book' %}书目{% elif featured_work.type == 'film' %}影片{% else %}主题{% endif %}</h3>
+      <p style="color:var(--gold);font-size:16px;font-weight:700;">{{ featured_work.title }}</p>
+      {% if featured_work.author %}
+      <p style="margin-top:6px;font-size:13px;color:var(--text-muted);">{{ featured_work.author }}{% if featured_work.year %} · {{ featured_work.year }}{% endif %}</p>
+      {% endif %}
+      {% if featured_work.description %}
+      <p style="margin-top:10px;font-style:italic;">{{ featured_work.description }}</p>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- ===== 3+. CONTENT SECTIONS ===== -->
+{% for section in sections if not section.is_ad %}
+<section id="{{ section.id }}" style="background:var(--bg{{ '' if loop.index0 % 2 == 0 else '2' }});">
+
+{% if loop.first %}
+  {# ---- 第一章节：intro 风格（全屏大字引言）---- #}
+  <div class="section-label reveal">{{ section.subtitle or meta.podcast_name }}</div>
+  <h2 class="section-title reveal" style="font-size:clamp(28px,5vw,56px);">{{ section.title }}</h2>
+  <div class="section-divider reveal"></div>
+
+  {% if section.quotes %}
+  <blockquote class="hero-quote reveal reveal-delay-1 clickable-quote" style="margin-bottom:40px;" data-quote="{{ section.quotes[0] | e }}">
+    {{ section.quotes[0] }}
+  </blockquote>
+  {% endif %}
+
+  {% if section.key_points %}
+  <div class="action-items reveal reveal-delay-2">
+    {% for point in section.key_points %}
+    <div class="action-item">
+      <div class="action-num">{{ loop.index }}</div>
+      <span>{{ point }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if section.stories %}
+  <div class="story-cards reveal reveal-delay-3" style="margin-top:40px;">
+    {% for story in section.stories %}
+    <div class="story-card">
+      {% if story is mapping %}
+      <div class="narrator">{{ story.narrator_id }}</div>
+      <p>{{ story.text }}</p>
+      {% else %}
+      <p>{{ story }}</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+{% else %}
+  {# ---- 通用内容章节（大引言 + 要点 + 故事）---- #}
+  <div class="section-label reveal">{{ section.subtitle or '' }}</div>
+  <h2 class="section-title reveal">{{ section.title }}</h2>
+  <div class="section-divider reveal"></div>
+
+  {% if section.quotes %}
+  <blockquote class="big-quote reveal clickable-quote" data-quote="{{ section.quotes[0] | e }}">
+    {{ section.quotes[0] }}
+  </blockquote>
+  {% endif %}
+
+  {% if section.key_points %}
+  <div class="action-items reveal">
+    {% for point in section.key_points %}
+    <div class="action-item reveal{% if loop.index > 1 %} reveal-delay-{{ [loop.index - 1, 4] | min }}{% endif %}">
+      <div class="action-num">{{ loop.index }}</div>
+      <span>{{ point }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if section.stories %}
+  <div class="story-cards reveal" style="margin-top:40px;">
+    {% for story in section.stories %}
+    <div class="story-card">
+      {% if story is mapping %}
+      <div class="narrator">{{ story.narrator_id }}</div>
+      <p>{{ story.text }}</p>
+      {% else %}
+      <p>{{ story }}</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if section.quotes | length > 1 %}
+  <div class="mega-quote reveal clickable-quote" data-quote="{{ section.quotes[1] | e }}">
+    <span>{{ section.quotes[1] }}</span>
+  </div>
+  {% endif %}
+
+{% endif %}
+</section>
+{% endfor %}
+
+<!-- ===== QUIZ ===== -->
+<section id="quiz" style="background:var(--bg2);">
+  <div class="section-label reveal">互动自测</div>
+  <h2 class="section-title reveal">{{ quiz.intro_title | default('自测一下') }}</h2>
+  <div class="section-divider reveal"></div>
+
+  <div class="quiz-container reveal">
+    <p class="quiz-intro">{{ quiz.intro }}</p>
+
+    <div id="quiz-form">
+      {% for q in quiz.questions %}
+      <div class="quiz-question">
+        <div class="quiz-q-text">{{ loop.index }}. {{ q.text }}</div>
+        {% if q.type == 'choice' %}
+        <div class="quiz-options">
+          {% for opt in q.options %}
+          <div class="quiz-opt" data-q="{{ q.id }}" data-v="{{ opt.score }}">{{ opt.label }}</div>
+          {% endfor %}
+        </div>
+        {% elif q.type == 'slider' %}
+        <input type="range" class="quiz-slider" min="0" max="3" value="1" id="slider-{{ q.id }}">
+        <div class="slider-labels">
+          {% for label in q.slider_labels %}
+          <span>{{ label }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      <button class="quiz-btn" id="quiz-submit">查看结果 →</button>
+    </div>
+
+    <div class="quiz-result" id="quiz-result">
+      <div class="quiz-result-level" id="result-level"></div>
+      <div class="quiz-result-desc" id="result-desc"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ENDING ===== -->
+<section id="ending" style="background:var(--bg);">
+  <div class="section-label reveal">延伸阅读</div>
+  <h2 class="section-title reveal">推荐书单</h2>
+  <div class="section-divider reveal"></div>
+
+  {% if recommendations %}
+  <div class="book-cards">
+    {% for rec in recommendations %}
+    <div class="book-card reveal{% if loop.index > 1 %} reveal-delay-{{ [loop.index - 1, 4] | min }}{% endif %}">
+      <div class="book-tag">{{ rec.type | upper }}{% if rec.recommender_id %} · {{ rec.recommender_id }}{% endif %}</div>
+      <div class="book-title">{{ rec.title }}</div>
+      {% if rec.author %}<div class="book-author">{{ rec.author }}</div>{% endif %}
+      {% if rec.quote %}
+      <div class="book-quote clickable-quote" data-quote="{{ rec.quote | e }}">{{ rec.quote }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="podcast-card reveal">
+    <div class="podcast-name">{{ meta.podcast_name }}</div>
+    <div class="podcast-hosts">
+      {%- for p in participants %}{{ p.name }}{% if not loop.last %} × {% endif %}{% endfor %}
+    </div>
+    <div class="podcast-ep">
+      {%- if meta.episode_number %}EP.{{ meta.episode_number }} · {% endif %}{{ meta.title }}
+    </div>
+  </div>
+
+  <div class="final-slogan reveal">
+    {{ (theme.final_slogan | default(meta.podcast_name)).replace(' ', '<br>') | safe }}
+  </div>
+
+  {% if core_quotes | length > 1 %}
+  <div class="reveal" style="margin-top:64px;text-align:center;">
+    <blockquote class="big-quote clickable-quote"
+      data-quote="{{ core_quotes[-1] | e }}"
+      style="text-align:left;max-width:600px;margin:0 auto;font-size:clamp(14px,2vw,18px);">
+      {{ core_quotes[-1] }}
+    </blockquote>
+  </div>
+  {% endif %}
+
+  <div style="height:80px;"></div>
+</section>
+
+<script>
+// === Quiz 配置（由模板注入）===
+const QUIZ_CONFIG = {{ quiz_config | tojson }};
+
+// === 进度条 ===
+const progressBar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.width = (scrollTop / docHeight * 100) + '%';
+});
+
+// === Intersection Observer 滚动动画 ===
+const reveals = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+reveals.forEach(el => revealObs.observe(el));
+
+// === 点导航 ===
+const sections = document.querySelectorAll('section[id]');
+const dots = document.querySelectorAll('.dot-nav-item');
+
+const sectionObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      dots.forEach(d => d.classList.toggle('active', d.dataset.section === id));
+    }
+  });
+}, { threshold: 0.4 });
+sections.forEach(s => sectionObs.observe(s));
+
+dots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    const target = document.getElementById(dot.dataset.section);
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// === 金句收藏系统 ===
+const savedQuotes = [];
+const savedList = document.getElementById('saved-list');
+const savedToggle = document.getElementById('saved-toggle');
+const savedPanel = document.getElementById('saved-panel');
+const savedCount = document.getElementById('saved-count');
+let panelOpen = false;
+
+document.querySelectorAll('.clickable-quote').forEach(el => {
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const quote = this.dataset.quote || this.textContent.trim().slice(0, 60);
+    if (this.classList.contains('highlighted')) {
+      this.classList.remove('highlighted');
+      const idx = savedQuotes.indexOf(quote);
+      if (idx > -1) savedQuotes.splice(idx, 1);
+    } else {
+      this.classList.add('highlighted');
+      if (!savedQuotes.includes(quote)) savedQuotes.push(quote);
+    }
+    updateSavedPanel();
+  });
+});
+
+function updateSavedPanel() {
+  savedCount.textContent = savedQuotes.length;
+  savedList.innerHTML = savedQuotes.map(q => `<div class="saved-quote-item">${q}</div>`).join('');
+  if (savedQuotes.length > 0) {
+    savedToggle.style.display = 'flex';
+  } else {
+    savedToggle.style.display = 'none';
+    savedPanel.style.display = 'none';
+    panelOpen = false;
+  }
+}
+
+savedToggle.addEventListener('click', () => {
+  panelOpen = !panelOpen;
+  savedPanel.style.display = panelOpen ? 'block' : 'none';
+  if (panelOpen) { savedPanel.style.bottom = '80px'; savedPanel.style.right = '24px'; }
+});
+
+document.addEventListener('click', (e) => {
+  if (!savedPanel.contains(e.target) && e.target !== savedToggle) {
+    savedPanel.style.display = 'none';
+    panelOpen = false;
+  }
+});
+
+// === Quiz 逻辑 ===
+const quizAnswers = {};
+
+document.querySelectorAll('.quiz-opt').forEach(opt => {
+  opt.addEventListener('click', function() {
+    const q = this.dataset.q;
+    document.querySelectorAll(`[data-q="${q}"]`).forEach(o => o.classList.remove('selected'));
+    this.classList.add('selected');
+    quizAnswers[q] = parseInt(this.dataset.v);
+  });
+});
+
+document.getElementById('quiz-submit').addEventListener('click', () => {
+  const missing = QUIZ_CONFIG.required.filter(q => !Object.prototype.hasOwnProperty.call(quizAnswers, q));
+  if (missing.length > 0) {
+    const btn = document.getElementById('quiz-submit');
+    btn.textContent = '请先回答所有问题 ✗';
+    btn.style.background = '#c04040';
+    setTimeout(() => { btn.textContent = '查看结果 →'; btn.style.background = ''; }, 2000);
+    return;
+  }
+
+  // 收集 slider 值
+  QUIZ_CONFIG.sliders.forEach(id => {
+    const slider = document.getElementById('slider-' + id);
+    if (slider) quizAnswers[id] = parseInt(slider.value);
+  });
+
+  let total = 0, count = 0;
+  for (const v of Object.values(quizAnswers)) { total += v; count++; }
+  const avgScore = count > 0 ? total / count : 0;
+
+  // 匹配结果区间
+  const results = QUIZ_CONFIG.results;
+  let result = results[results.length - 1];
+  for (const r of results) {
+    if (avgScore <= r.max) { result = r; break; }
+  }
+
+  document.getElementById('result-level').textContent = result.label;
+  document.getElementById('result-desc').textContent = result.desc;
+  const resultEl = document.getElementById('quiz-result');
+  resultEl.style.display = 'block';
+  resultEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+
+// Slider 渐变色更新
+QUIZ_CONFIG.sliders.forEach(id => {
+  const slider = document.getElementById('slider-' + id);
+  if (slider) {
+    slider.addEventListener('input', function() {
+      const pct = (this.value / 3) * 100;
+      this.style.background = `linear-gradient(to right, #d4a017 0%, #d4a017 ${pct}%, #5a5248 ${pct}%, #5a5248 100%)`;
+    });
+  }
+});
+</script>
+</body>
+</html>
