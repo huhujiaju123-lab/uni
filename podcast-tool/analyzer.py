@@ -66,7 +66,10 @@ SYSTEM_PROMPT = """你是一位专业的播客内容分析师，擅长将播客�
           "narrator_id": "host1",
           "text": "个人故事或案例描述"
         }
-      ]
+      ],
+      "key_points_grouped": [{"label": "分组名", "visual_type": "list", "points": [{"text": "要点", "detail": "补充"}]}],
+      "diagram": {"type": "flow|comparison|icon-list|slope|layers", "title": "图表标题", "description": "可选说明"},
+      "section_context": "本章在全集逻辑中的位置（一句话）"
     }
   ],
   "core_quotes": [
@@ -113,6 +116,31 @@ SYSTEM_PROMPT = """你是一位专业的播客内容分析师，擅长将播客�
         "description": "结果描述"
       }
     ]
+  },
+  "content_overview": {
+    "one_sentence_summary": "一句话概括核心主旨（15-30字）",
+    "content_blocks": [
+      {"id": "block-1", "title": "组块标题", "summary": "组块概要", "section_ids": ["section-id"], "icon": "🎯"}
+    ],
+    "block_connections": [
+      {"from": "block-1", "to": "block-2", "relation": "延伸", "description": "逻辑关系说明"}
+    ]
+  },
+  "arguments": [
+    {"id": "arg-1", "claim": "观点陈述", "evidence_type": "个人经历", "evidence": "论据概述", "source_section_id": "section-id", "strength": "strong"}
+  ],
+  "key_concepts": [
+    {"id": "concept-1", "term": "概念名称", "definition": "简洁定义", "explanation": "播客中如何阐述", "examples": ["具体例子"], "related_concepts": ["concept-2"], "source_section_id": "section-id"}
+  ],
+  "extended_reading": [
+    {"id": "ext-1", "topic": "延伸主题", "context": "话题背景", "deep_dive": "延伸解读", "related_concept_ids": ["concept-1"], "further_resources": "推荐方向"}
+  ],
+  "mind_map": {
+    "central_theme": "核心主题",
+    "nodes": [
+      {"id": "node-1", "label": "节点标签", "type": "theme", "parent_id": null, "detail": "节点说明"},
+      {"id": "node-1-1", "label": "子节点", "type": "concept", "parent_id": "node-1", "detail": "子节点说明"}
+    ]
   }
 }
 ```
@@ -127,7 +155,14 @@ SYSTEM_PROMPT = """你是一位专业的播客内容分析师，擅长将播客�
 6. **quiz**：5 道与本期主题紧密相关的自测题，让听众反思自身
 7. **featured_work**：仅当本期明确围绕某书/电影/作品展开时填写，否则省略该字段
 8. **recommendations**：收集节目中提到的书单/影单/播客推荐，可为空数组
-9. **输出纯 JSON**：不要加 ```json 代码块标记，不要加解释文字
+9. **content_overview**：将章节归纳为 3-5 个组块，描述组块间逻辑关系（因果/递进/对比/延伸）
+10. **arguments**：提取 8-12 个核心观点，evidence_type 为：个人经历/类比/引用/数据/逻辑推演/故事，strength 为 strong/moderate/anecdotal
+11. **key_concepts**：提取 6-10 个反复出现的关键概念，含定义、播客中的阐述和具体例子
+12. **extended_reading**：延伸 4-6 个话题方向，deep_dive 可超出播客内容
+13. **mind_map**：2-3 层树状结构，type 为 theme/concept/argument/example，一级 3-5 个节点
+14. **key_points_grouped**：将 key_points 按逻辑分组（2-4组），每组有 label 和 points。**text 必须是完整观点句（15-40字），禁止只写关键词！detail 必须包含具体论据、数据或原文引述（20-80字）。** 读者仅通过 key_points_grouped 就能理解本章 80% 的核心内容。visual_type 可选值：list（默认）、comparison（对比）、flow（流程）、icon-grid（图标网格）
+15. **diagram**：当章节内容适合用图表辅助理解时添加。type：flow（流程图）、comparison（对比图）、icon-list（图标列表）、slope（坡度模型）、layers（层次图）。不是每个章节都需要，每期通常 3-5 个
+16. **输出纯 JSON**：不要加 ```json 代码块标记，不要加解释文字
 """
 
 
@@ -182,7 +217,7 @@ def analyze_transcript(transcript_path: str, output_path: str = None, metadata: 
     try:
         response = client.chat.completions.create(
             model=QWEN_MODEL,
-            max_tokens=8192,
+            max_tokens=16384,
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": user_message},

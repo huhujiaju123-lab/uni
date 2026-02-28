@@ -45,45 +45,6 @@ body {
   transition: width 0.1s ease;
 }
 
-/* Dot nav */
-#dot-nav {
-  position: fixed;
-  right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 999;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.dot-nav-item {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-}
-.dot-nav-item:hover, .dot-nav-item.active {
-  background: var(--gold);
-  transform: scale(1.5);
-}
-.dot-nav-item::before {
-  content: attr(data-label);
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: var(--sans);
-  font-size: 11px;
-  color: var(--text-dim);
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s;
-}
-.dot-nav-item:hover::before { opacity: 1; }
-
 /* Sections */
 section {
   min-height: 100vh;
@@ -629,12 +590,609 @@ section {
   display: flex; align-items: center; justify-content: center;
 }
 
+/* ===== CONTENT OVERVIEW ===== */
+.overview-blocks { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 960px; margin-bottom: 40px; }
+.overview-block { background: var(--bg3); border: 1px solid rgba(212,160,23,0.1); border-radius: var(--radius); padding: 24px; text-align: center; transition: border-color 0.3s, transform 0.3s; }
+.overview-block:hover { border-color: rgba(212,160,23,0.35); transform: translateY(-4px); }
+.overview-block-icon { font-size: 36px; margin-bottom: 12px; display: block; }
+.overview-block-title { font-size: 18px; font-weight: 700; color: var(--gold); margin-bottom: 8px; font-family: var(--sans); }
+.overview-block-summary { font-family: var(--sans); font-size: 13px; color: var(--text-dim); line-height: 1.7; }
+
+.overview-connections { max-width: 800px; margin: 32px 0 48px; }
+.overview-connection { display: flex; align-items: center; gap: 12px; padding: 8px 0; font-family: var(--sans); font-size: 13px; color: var(--text-dim); }
+.overview-connection-arrow { color: var(--gold); font-size: 16px; }
+.overview-connection-relation { background: rgba(212,160,23,0.15); color: var(--gold); padding: 2px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; }
+
+/* ===== MIND MAP ===== */
+.mindmap-container { max-width: 900px; margin: 48px 0; }
+.mindmap-center { text-align: center; margin-bottom: 32px; }
+.mindmap-center-label { font-size: clamp(20px, 3vw, 28px); font-weight: 800; color: var(--gold); }
+.mindmap-branches { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
+.mindmap-branch { background: var(--bg3); border-radius: var(--radius); padding: 20px; border-top: 3px solid var(--gold); }
+.mindmap-branch-label { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 12px; font-family: var(--sans); }
+.mindmap-branch-detail { font-family: var(--sans); font-size: 12px; color: var(--text-dim); margin-bottom: 12px; line-height: 1.6; }
+.mindmap-leaves { display: flex; flex-direction: column; gap: 6px; }
+.mindmap-leaf { font-family: var(--sans); font-size: 12px; color: var(--text-muted); padding-left: 16px; border-left: 2px solid rgba(212,160,23,0.2); line-height: 1.5; }
+.mindmap-leaf-detail { font-size: 11px; color: var(--text-muted); opacity: 0.7; }
+
+/* ===== ARGUMENTS ===== */
+.argument-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 960px; }
+.argument-card { background: var(--bg3); border-radius: var(--radius); padding: 24px; border-left: 3px solid var(--gold); }
+.argument-card[data-strength="moderate"] { border-left-color: var(--amber); }
+.argument-card[data-strength="anecdotal"] { border-left-color: var(--text-muted); }
+.argument-claim { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 10px; line-height: 1.5; }
+.argument-badge { display: inline-block; font-family: var(--sans); font-size: 10px; letter-spacing: 1px; color: var(--gold); background: rgba(212,160,23,0.12); padding: 3px 10px; border-radius: 100px; margin-bottom: 10px; text-transform: uppercase; }
+.argument-evidence { font-family: var(--sans); font-size: 13px; color: var(--text-dim); line-height: 1.7; }
+
+/* ===== CONCEPTS ===== */
+.concept-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 960px; }
+.concept-card { background: var(--bg3); border: 1px solid rgba(212,160,23,0.1); border-radius: var(--radius); padding: 24px; }
+.concept-term { font-size: 20px; font-weight: 700; color: var(--gold); margin-bottom: 8px; font-family: var(--sans); }
+.concept-definition { font-family: var(--sans); font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 12px; }
+.concept-details { border: none; }
+.concept-details summary { font-family: var(--sans); font-size: 12px; color: var(--gold); cursor: pointer; padding: 4px 0; letter-spacing: 1px; }
+.concept-details summary:hover { color: var(--gold-light); }
+.concept-details[open] summary { margin-bottom: 12px; }
+.concept-explanation { font-family: var(--sans); font-size: 13px; color: var(--text-dim); line-height: 1.8; margin-bottom: 12px; }
+.concept-examples { list-style: none; padding: 0; }
+.concept-examples li { font-family: var(--sans); font-size: 12px; color: var(--text-muted); padding: 4px 0 4px 16px; border-left: 2px solid rgba(212,160,23,0.15); margin-bottom: 4px; line-height: 1.6; }
+.concept-related { font-family: var(--sans); font-size: 11px; color: var(--text-muted); margin-top: 8px; }
+.concept-related a, .concept-related span { color: var(--gold); text-decoration: none; cursor: default; }
+
+/* ===== EXTENDED READING ===== */
+.reading-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; max-width: 960px; }
+.reading-card { background: var(--bg3); border-radius: var(--radius); padding: 28px; border-left: 3px solid #4a9; }
+.reading-topic { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; font-family: var(--sans); }
+.reading-context { font-family: var(--sans); font-size: 12px; color: var(--amber); margin-bottom: 12px; line-height: 1.6; font-style: italic; }
+.reading-dive { font-family: var(--sans); font-size: 14px; color: var(--text-dim); line-height: 1.8; margin-bottom: 12px; }
+.reading-resources { font-family: var(--sans); font-size: 12px; color: var(--text-muted); padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.05); }
+.reading-resources::before { content: '📚 '; }
+
+/* ===== POINT GROUPS (structured key_points) ===== */
+.point-groups { display: flex; flex-direction: column; gap: 16px; max-width: 800px; margin-bottom: 48px; }
+.point-group { background: var(--bg3); border-radius: var(--radius); padding: 20px 24px; border: 1px solid rgba(212,160,23,0.08); }
+.point-group-label {
+  font-family: var(--sans); font-size: 16px; font-weight: 700; color: var(--gold);
+  letter-spacing: 1px;
+  margin-bottom: 14px; padding-bottom: 10px;
+  border-bottom: 1px solid rgba(212,160,23,0.12);
+  display: flex; align-items: center; gap: 10px;
+}
+.point-group-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 6px;
+  background: rgba(212,160,23,0.15); color: var(--gold);
+  font-size: 12px; font-weight: 700; flex-shrink: 0;
+  font-family: var(--sans);
+}
+.point-item { padding: 8px 0 8px 16px; border-left: 2px solid rgba(212,160,23,0.15); margin-bottom: 2px; transition: border-color 0.2s; }
+.point-item:hover { border-left-color: var(--gold); }
+.point-item:first-child { border-left-color: var(--gold); padding: 10px 16px; background: rgba(212,160,23,0.04); border-radius: 0 8px 8px 0; margin-bottom: 4px; }
+.point-text { font-family: var(--sans); font-size: 15px; color: var(--text); line-height: 1.6; }
+.point-item:first-child .point-text { font-size: 16px; font-weight: 600; color: var(--text); }
+.point-detail { font-family: var(--sans); font-size: 12px; color: var(--text-dim); line-height: 1.6; margin-top: 4px; display: block; }
+
+/* ===== DIAGRAM COMPONENTS ===== */
+
+/* Shared diagram wrapper */
+.diagram-box {
+  max-width: 800px;
+  margin: 32px 0 40px;
+  padding: 32px;
+  background: var(--bg3);
+  border-radius: var(--radius);
+  border: 1px solid rgba(212,160,23,0.08);
+}
+.diagram-title {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.diagram-desc {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  font-style: italic;
+}
+
+/* Flow diagram — horizontal steps with arrows */
+.diagram-flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  padding: 8px 0;
+}
+.diagram-flow-step {
+  flex: 1;
+  min-width: 100px;
+  text-align: center;
+  position: relative;
+}
+.diagram-flow-step-inner {
+  background: rgba(212,160,23,0.08);
+  border: 1px solid rgba(212,160,23,0.2);
+  border-radius: 10px;
+  padding: 16px 12px;
+  transition: border-color 0.3s;
+}
+.diagram-flow-step-inner:hover { border-color: var(--gold); }
+.diagram-flow-label {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.diagram-flow-desc {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+.diagram-flow-arrow {
+  flex-shrink: 0;
+  width: 40px;
+  text-align: center;
+  color: var(--gold);
+  font-size: 18px;
+  opacity: 0.6;
+}
+
+/* Comparison diagram — left vs right */
+.diagram-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.diagram-comparison-header {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  gap: 0;
+  margin-bottom: 16px;
+}
+.diagram-comparison-header-left,
+.diagram-comparison-header-right {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-align: center;
+}
+.diagram-comparison-header-left {
+  background: rgba(192,64,64,0.12);
+  color: #e06060;
+}
+.diagram-comparison-header-right {
+  background: rgba(212,160,23,0.12);
+  color: var(--gold);
+}
+.diagram-comparison-header-vs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+.diagram-comparison-row {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  gap: 0;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.diagram-comparison-row:last-child { border-bottom: none; }
+.diagram-comparison-left,
+.diagram-comparison-right {
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 0 16px;
+}
+.diagram-comparison-left { color: var(--text-dim); text-align: right; }
+.diagram-comparison-right { color: var(--text); }
+.diagram-comparison-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  font-size: 16px;
+  opacity: 0.5;
+}
+
+/* Icon-list diagram — emoji grid */
+.diagram-icon-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+.diagram-icon-item {
+  text-align: center;
+  padding: 16px 8px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: border-color 0.3s, transform 0.2s;
+}
+.diagram-icon-item:hover { border-color: rgba(212,160,23,0.2); transform: translateY(-2px); }
+.diagram-icon-emoji { font-size: 28px; margin-bottom: 8px; }
+.diagram-icon-label {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.diagram-icon-desc {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+/* Slope diagram — ascending visual */
+.diagram-slope {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  height: 180px;
+  padding: 0 20px 20px;
+  position: relative;
+}
+.diagram-slope::after {
+  content: '';
+  position: absolute;
+  bottom: 20px;
+  left: 20px; right: 20px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(212,160,23,0.1), rgba(212,160,23,0.3), rgba(212,160,23,0.1));
+}
+.diagram-slope-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  z-index: 1;
+}
+.diagram-slope-bar {
+  width: 60px;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 12px;
+  transition: height 0.6s ease;
+}
+.diagram-slope-bar.low { height: 40px; background: rgba(74,153,153,0.3); border: 1px solid rgba(74,153,153,0.4); border-bottom: none; }
+.diagram-slope-bar.barrier { height: 100px; background: rgba(192,64,64,0.2); border: 1px solid rgba(192,64,64,0.3); border-bottom: none; }
+.diagram-slope-bar.high { height: 140px; background: rgba(212,160,23,0.15); border: 1px solid rgba(212,160,23,0.25); border-bottom: none; }
+.diagram-slope-label {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+}
+
+/* Layers diagram — concentric depth */
+.diagram-layers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 12px 0;
+}
+.diagram-layer {
+  text-align: center;
+  padding: 16px 24px;
+  border-radius: 12px;
+  position: relative;
+  transition: transform 0.2s;
+}
+.diagram-layer:hover { transform: scale(1.02); }
+.diagram-layer-1 {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 20px 24px 50px;
+}
+.diagram-layer-2 {
+  width: 85%;
+  background: rgba(192,120,48,0.06);
+  border: 1px solid rgba(192,120,48,0.15);
+  padding: 20px 24px 50px;
+  margin-top: -36px;
+}
+.diagram-layer-3 {
+  width: 70%;
+  background: rgba(212,160,23,0.1);
+  border: 1px solid rgba(212,160,23,0.25);
+  padding: 20px 24px;
+  margin-top: -36px;
+}
+.diagram-layer-label {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.diagram-layer-desc {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* Comparison visual_type in point-groups */
+.point-group-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.pg-comparison-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+.pg-comparison-header span {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  padding: 6px;
+  border-radius: 6px;
+}
+.pg-comparison-header span:first-child { background: rgba(192,64,64,0.1); color: #e06060; }
+.pg-comparison-header span:last-child { background: rgba(212,160,23,0.1); color: var(--gold); }
+.pg-comparison-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.pg-comparison-row:last-child { border-bottom: none; }
+.pg-comparison-left, .pg-comparison-right {
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+.pg-comparison-left { background: rgba(192,64,64,0.04); color: var(--text-dim); text-decoration: line-through; text-decoration-color: rgba(192,64,64,0.3); }
+.pg-comparison-right { background: rgba(212,160,23,0.04); color: var(--text); }
+
+/* Flow visual_type in point-groups */
+.point-group-flow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  padding: 8px 0;
+}
+.pg-flow-step {
+  flex: 1;
+  min-width: 80px;
+  text-align: center;
+  padding: 12px 8px;
+  background: rgba(212,160,23,0.06);
+  border: 1px solid rgba(212,160,23,0.12);
+  border-radius: 8px;
+}
+.pg-flow-step .point-text { font-size: 13px; }
+.pg-flow-arrow {
+  color: var(--gold);
+  font-size: 14px;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+/* ===== SECTION CONTEXT ===== */
+.section-context { font-family: var(--sans); font-size: 12px; color: var(--text-muted); font-style: italic; margin-bottom: 24px; padding-left: 16px; border-left: 2px solid rgba(212,160,23,0.1); line-height: 1.6; }
+
+/* ===== SIDEBAR NAV ===== */
+#side-nav {
+  position: fixed;
+  left: 0; top: 0;
+  width: 220px; height: 100vh;
+  background: rgba(10,10,15,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(212,160,23,0.08);
+  z-index: 998;
+  padding: 24px 0 40px;
+  overflow-y: auto;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+#side-nav.hero-mode {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-20px);
+}
+#side-nav::-webkit-scrollbar { width: 2px; }
+#side-nav::-webkit-scrollbar-thumb { background: rgba(212,160,23,0.2); border-radius: 2px; }
+
+/* Nav header */
+.nav-header {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(212,160,23,0.08);
+  margin-bottom: 12px;
+}
+.nav-header-title {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+.nav-header-ep {
+  font-family: var(--sans);
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Nav toggle (mobile only) */
+.nav-toggle {
+  position: fixed;
+  left: 16px; top: 16px;
+  width: 36px; height: 36px;
+  background: rgba(10,10,15,0.85);
+  border: 1px solid rgba(212,160,23,0.2);
+  border-radius: 8px;
+  color: var(--gold);
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 999;
+  display: none;
+  align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.nav-toggle:hover { background: rgba(212,160,23,0.1); }
+
+/* Nav groups and items */
+.nav-group { margin-bottom: 4px; }
+.nav-group-label {
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  padding: 14px 20px 6px;
+  opacity: 0.7;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px 7px 20px;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-left: 2px solid transparent;
+  line-height: 1.4;
+  position: relative;
+}
+.nav-item:hover { color: var(--text); background: rgba(255,255,255,0.02); }
+.nav-item.active {
+  color: var(--gold);
+  border-left-color: var(--gold);
+  background: rgba(212,160,23,0.05);
+}
+.nav-item .nav-icon {
+  font-size: 14px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.nav-item.secondary { font-size: 11px; color: var(--text-muted); padding-left: 28px; }
+.nav-item.secondary.active { color: var(--gold); }
+
+/* Nav progress indicator per item */
+.nav-item::after {
+  content: '';
+  position: absolute;
+  right: 8px; top: 50%;
+  transform: translateY(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.nav-item.visited::after { opacity: 0.4; }
+.nav-item.active::after { opacity: 1; }
+
+/* Content offset for sidebar */
+body.nav-open section { padding-left: calc(220px + 5vw); }
+body.nav-open #progress-bar { left: 220px; }
+body.nav-open .nav-toggle { display: none; }
+
+/* ===== FOOTNOTES ===== */
+.fn-ref {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px;
+  font-family: var(--sans);
+  font-size: 10px; font-weight: 700;
+  color: var(--gold);
+  background: rgba(212,160,23,0.12);
+  border-radius: 50%;
+  cursor: help;
+  position: relative;
+  vertical-align: super;
+  margin-left: 2px;
+  transition: background 0.2s;
+}
+.fn-ref:hover { background: rgba(212,160,23,0.25); }
+.fn-ref .fn-tip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  padding: 12px 14px;
+  background: var(--bg3);
+  border: 1px solid rgba(212,160,23,0.2);
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-dim);
+  line-height: 1.7;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  z-index: 100;
+  pointer-events: none;
+  white-space: normal;
+}
+.fn-ref .fn-tip::after {
+  content: '';
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(212,160,23,0.2);
+}
+.fn-ref:hover .fn-tip { display: block; }
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   section { padding: 60px 5vw; }
   .feature-cards, .story-cards, .book-cards { grid-template-columns: 1fr; }
   .author-grid { grid-template-columns: 1fr; }
-  #dot-nav { display: none; }
+  .overview-blocks, .mindmap-branches, .argument-cards, .concept-cards, .reading-cards { grid-template-columns: 1fr; }
+  body.nav-open section { padding-left: 5vw; }
+  body.nav-open #progress-bar { left: 0; }
+  #side-nav {
+    width: 260px;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+  }
+  #side-nav.mobile-open { transform: translateX(0); }
+  .nav-toggle { display: flex !important; }
+  .fn-ref .fn-tip { width: 200px; left: auto; right: -20px; transform: none; }
+  .fn-ref .fn-tip::after { left: auto; right: 24px; }
+  .point-groups { gap: 20px; }
+  .diagram-flow { flex-direction: column; gap: 8px; }
+  .diagram-flow-arrow { transform: rotate(90deg); width: auto; }
+  .diagram-flow-step { min-width: 0; }
+  .diagram-comparison-header, .diagram-comparison-row { grid-template-columns: 1fr 24px 1fr; }
+  .diagram-icon-list { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
+  .diagram-slope { height: 140px; }
+  .diagram-layer-1, .diagram-layer-2, .diagram-layer-3 { width: 100%; }
+  .pg-comparison-header, .pg-comparison-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .point-group-flow { flex-direction: column; }
 }
 </style>
 </head>
@@ -642,14 +1200,47 @@ section {
 
 <div id="progress-bar"></div>
 
-<nav id="dot-nav">
-  <div class="dot-nav-item active" data-section="hero" data-label="开场"></div>
-  <div class="dot-nav-item" data-section="participants" data-label="{{ participants[0].name[:2] if participants else '嘉宾' }}"></div>
-  {% for section in sections if not section.is_ad %}
-  <div class="dot-nav-item" data-section="{{ section.id }}" data-label="{{ section.title[:4] }}"></div>
-  {% endfor %}
-  <div class="dot-nav-item" data-section="quiz" data-label="自测"></div>
-  <div class="dot-nav-item" data-section="ending" data-label="结尾"></div>
+<button class="nav-toggle" id="nav-toggle" aria-label="导航">☰</button>
+<nav id="side-nav">
+  <div class="nav-header">
+    <div class="nav-header-title">{{ meta.podcast_name | default('播客可视化') }}</div>
+    <div class="nav-header-ep">{%- if meta.episode_number %}EP.{{ meta.episode_number }} · {% endif %}{{ meta.title | default('') }}</div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-item" data-section="hero"><span class="nav-icon">◎</span> 开场</div>
+    <div class="nav-item" data-section="participants"><span class="nav-icon">👤</span> 嘉宾介绍</div>
+  </div>
+
+  {% if content_overview is defined and content_overview.content_blocks %}
+  <div class="nav-group">
+    <div class="nav-group-label">内容脉络</div>
+    <div class="nav-item" data-section="content-overview"><span class="nav-icon">🗺</span> 全局概览</div>
+    {% for block in content_overview.content_blocks %}
+    <div class="nav-item" data-section="{{ block.section_ids[0] }}"><span class="nav-icon">{{ block.icon | default('·') }}</span> {{ block.title }}</div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="nav-group">
+    <div class="nav-group-label">内容</div>
+    {% for section in sections if not section.is_ad %}
+    <div class="nav-item" data-section="{{ section.id }}">{{ section.title }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="nav-group">
+    <div class="nav-group-label">深度分析</div>
+    {% if arguments %}<div class="nav-item secondary" data-section="arguments">核心观点</div>{% endif %}
+    {% if key_concepts %}<div class="nav-item secondary" data-section="concepts">关键概念</div>{% endif %}
+    {% if extended_reading %}<div class="nav-item secondary" data-section="extended-reading">延伸探索</div>{% endif %}
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">互动</div>
+    <div class="nav-item secondary" data-section="quiz">自测一下</div>
+    <div class="nav-item secondary" data-section="ending">结尾</div>
+  </div>
 </nav>
 
 <button id="saved-toggle" title="查看已收藏">★<span id="saved-count">0</span></button>
@@ -711,6 +1302,80 @@ section {
   </div>
 </section>
 
+<!-- ===== CONTENT OVERVIEW ===== -->
+{% if content_overview is defined and content_overview %}
+<section id="content-overview" style="background:var(--bg);">
+  {% if content_overview.one_sentence_summary is defined and content_overview.one_sentence_summary %}
+  <blockquote class="big-quote reveal">
+    {{ content_overview.one_sentence_summary }}
+  </blockquote>
+  {% endif %}
+
+  {% if content_overview.content_blocks is defined and content_overview.content_blocks %}
+  <div class="section-label reveal">内容概览</div>
+  <div class="overview-blocks reveal">
+    {% for block in content_overview.content_blocks %}
+    <div class="overview-block">
+      <span class="overview-block-icon">{{ block.icon | default('📌') }}</span>
+      <div class="overview-block-title">{{ block.title | default('') }}</div>
+      <div class="overview-block-summary">{{ block.summary | default('') }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if content_overview.block_connections is defined and content_overview.block_connections %}
+  <div class="overview-connections reveal">
+    {% for conn in content_overview.block_connections %}
+    <div class="overview-connection">
+      <span>{{ conn.from | default('') }}</span>
+      <span class="overview-connection-arrow">→</span>
+      <span class="overview-connection-relation">{{ conn.relation | default('') }}</span>
+      <span class="overview-connection-arrow">→</span>
+      <span>{{ conn.to | default('') }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if mind_map is defined and mind_map %}
+  <div class="mindmap-container reveal">
+    <div class="mindmap-center">
+      <div class="mindmap-center-label">{{ mind_map.central_theme | default('') }}</div>
+    </div>
+    {% if mind_map.branches is defined and mind_map.branches %}
+    <div class="mindmap-branches">
+      {% for branch in mind_map.branches %}
+      <div class="mindmap-branch">
+        <div class="mindmap-branch-label">{{ branch.label | default('') }}</div>
+        {% if branch.detail is defined and branch.detail %}
+        <div class="mindmap-branch-detail">{{ branch.detail }}</div>
+        {% endif %}
+        {% if branch.children is defined and branch.children %}
+        <div class="mindmap-leaves">
+          {% for leaf in branch.children %}
+          <div class="mindmap-leaf">
+            {% if leaf is mapping %}
+            {{ leaf.label | default('') }}
+            {% if leaf.detail is defined and leaf.detail %}
+            <div class="mindmap-leaf-detail">{{ leaf.detail }}</div>
+            {% endif %}
+            {% else %}
+            {{ leaf }}
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+</section>
+{% endif %}
+
 <!-- ===== 3+. CONTENT SECTIONS ===== -->
 {% for section in sections if not section.is_ad %}
 <section id="{{ section.id }}" style="background:var(--bg{{ '' if loop.index0 % 2 == 0 else '2' }});">
@@ -721,13 +1386,91 @@ section {
   <h2 class="section-title reveal" style="font-size:clamp(28px,5vw,56px);">{{ section.title }}</h2>
   <div class="section-divider reveal"></div>
 
+  {% if section.section_context is defined and section.section_context %}
+  <div class="section-context reveal">{{ section.section_context }}</div>
+  {% endif %}
+
   {% if section.quotes %}
   <blockquote class="hero-quote reveal reveal-delay-1 clickable-quote" style="margin-bottom:40px;" data-quote="{{ section.quotes[0] | e }}">
     {{ section.quotes[0] }}
   </blockquote>
   {% endif %}
 
-  {% if section.key_points %}
+  {% if section.diagram is defined and section.diagram %}
+  <div class="diagram-box reveal reveal-delay-2">
+    <div class="diagram-title">{{ section.diagram.title }}</div>
+    {% if section.diagram.description %}<div class="diagram-desc">{{ section.diagram.description }}</div>{% endif %}
+    {% if section.diagram.type == 'flow' and section.diagram.steps is defined %}
+    <div class="diagram-flow">
+      {% for step in section.diagram.steps %}
+      {% if not loop.first %}<div class="diagram-flow-arrow">→</div>{% endif %}
+      <div class="diagram-flow-step"><div class="diagram-flow-step-inner"><div class="diagram-flow-label">{{ step.label }}</div><div class="diagram-flow-desc">{{ step.desc | default('') }}</div></div></div>
+      {% endfor %}
+    </div>
+    {% elif section.diagram.type == 'comparison' and section.diagram.left is defined %}
+    <div class="diagram-comparison">
+      <div class="diagram-comparison-header"><div class="diagram-comparison-header-left">{{ section.diagram.left.label }}</div><div class="diagram-comparison-header-vs">VS</div><div class="diagram-comparison-header-right">{{ section.diagram.right.label }}</div></div>
+      {% for item in section.diagram['items'] %}
+      <div class="diagram-comparison-row"><div class="diagram-comparison-left">{{ item.left }}</div><div class="diagram-comparison-arrow">→</div><div class="diagram-comparison-right">{{ item.right }}</div></div>
+      {% endfor %}
+    </div>
+    {% elif section.diagram.type == 'icon-list' and section.diagram['items'] is defined %}
+    <div class="diagram-icon-list">
+      {% for item in section.diagram['items'] %}
+      <div class="diagram-icon-item"><div class="diagram-icon-emoji">{{ item.icon }}</div><div class="diagram-icon-label">{{ item.label }}</div><div class="diagram-icon-desc">{{ item.desc | default('') }}</div></div>
+      {% endfor %}
+    </div>
+    {% elif section.diagram.type == 'slope' and section.diagram.elements is defined %}
+    <div class="diagram-slope">
+      {% for el in section.diagram.elements %}
+      <div class="diagram-slope-item"><div class="diagram-slope-bar {{ el.level }}"></div><div class="diagram-slope-label">{{ el.label }}</div></div>
+      {% endfor %}
+    </div>
+    {% elif section.diagram.type == 'layers' and section.diagram.layers is defined %}
+    <div class="diagram-layers">
+      {% for layer in section.diagram.layers %}
+      <div class="diagram-layer diagram-layer-{{ layer.depth }}"><div class="diagram-layer-label">{{ layer.label }}</div><div class="diagram-layer-desc">{{ layer.desc | default('') }}</div></div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if section.key_points_grouped is defined and section.key_points_grouped %}
+  {% set ns = namespace(fn_counter=1) %}
+  <div class="point-groups reveal reveal-delay-2">
+    {% for group in section.key_points_grouped %}
+    {% set vt = group.visual_type | default('list') %}
+    <div class="point-group">
+      <div class="point-group-label"><span class="point-group-num">{{ loop.index }}</span>{{ group.label | default(group.group_title | default('')) }}</div>
+      {% if vt == 'comparison' and group.comparisons is defined %}
+      <div class="point-group-comparison">
+        <div class="pg-comparison-header"><span>{{ group.left_label | default('Before') }}</span><span>{{ group.right_label | default('After') }}</span></div>
+        {% for c in group.comparisons %}
+        <div class="pg-comparison-row"><div class="pg-comparison-left">{{ c.left }}</div><div class="pg-comparison-right">{{ c.right }}</div></div>
+        {% endfor %}
+      </div>
+      {% elif vt == 'flow' and group.points is defined %}
+      <div class="point-group-flow">
+        {% for point in group.points %}
+        {% if not loop.first %}<span class="pg-flow-arrow">→</span>{% endif %}
+        <div class="pg-flow-step"><span class="point-text">{%- if point is mapping %}{{ point.text }}{% else %}{{ point }}{% endif -%}</span></div>
+        {% endfor %}
+      </div>
+      {% else %}
+      {% for point in group.points | default([]) %}
+      <div class="point-item">
+        <span class="point-text">
+          {%- if point is mapping %}{{ point.text }}{% else %}{{ point }}{% endif -%}
+          {%- if point is mapping and point.detail %}<span class="fn-ref">{{ ns.fn_counter }}<span class="fn-tip">{{ point.detail }}</span></span>{% set ns.fn_counter = ns.fn_counter + 1 %}{% endif -%}
+        </span>
+      </div>
+      {% endfor %}
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% elif section.key_points %}
   <div class="action-items reveal reveal-delay-2">
     {% for point in section.key_points %}
     <div class="action-item">
@@ -759,13 +1502,91 @@ section {
   <h2 class="section-title reveal">{{ section.title }}</h2>
   <div class="section-divider reveal"></div>
 
+  {% if section.section_context is defined and section.section_context %}
+  <div class="section-context reveal">{{ section.section_context }}</div>
+  {% endif %}
+
   {% if section.quotes %}
   <blockquote class="big-quote reveal clickable-quote" data-quote="{{ section.quotes[0] | e }}">
     {{ section.quotes[0] }}
   </blockquote>
   {% endif %}
 
-  {% if section.key_points %}
+  {% if section.diagram is defined and section.diagram %}
+  <div class="diagram-box reveal">
+    <div class="diagram-title">{{ section.diagram.title }}</div>
+    {% if section.diagram.description %}<div class="diagram-desc">{{ section.diagram.description }}</div>{% endif %}
+    {% if section.diagram.type == 'flow' and section.diagram.steps is defined %}
+    <div class="diagram-flow">
+      {% for step in section.diagram.steps %}
+      {% if not loop.first %}<div class="diagram-flow-arrow">→</div>{% endif %}
+      <div class="diagram-flow-step"><div class="diagram-flow-step-inner"><div class="diagram-flow-label">{{ step.label }}</div><div class="diagram-flow-desc">{{ step.desc | default('') }}</div></div></div>
+      {% endfor %}
+    </div>
+    {% elif section.diagram.type == 'comparison' and section.diagram.left is defined %}
+    <div class="diagram-comparison">
+      <div class="diagram-comparison-header"><div class="diagram-comparison-header-left">{{ section.diagram.left.label }}</div><div class="diagram-comparison-header-vs">VS</div><div class="diagram-comparison-header-right">{{ section.diagram.right.label }}</div></div>
+      {% for item in section.diagram['items'] %}
+      <div class="diagram-comparison-row"><div class="diagram-comparison-left">{{ item.left }}</div><div class="diagram-comparison-arrow">→</div><div class="diagram-comparison-right">{{ item.right }}</div></div>
+      {% endfor %}
+    </div>
+    {% elif section.diagram.type == 'icon-list' and section.diagram['items'] is defined %}
+    <div class="diagram-icon-list">
+      {% for item in section.diagram['items'] %}
+      <div class="diagram-icon-item"><div class="diagram-icon-emoji">{{ item.icon }}</div><div class="diagram-icon-label">{{ item.label }}</div><div class="diagram-icon-desc">{{ item.desc | default('') }}</div></div>
+      {% endfor %}
+    </div>
+    {% elif section.diagram.type == 'slope' and section.diagram.elements is defined %}
+    <div class="diagram-slope">
+      {% for el in section.diagram.elements %}
+      <div class="diagram-slope-item"><div class="diagram-slope-bar {{ el.level }}"></div><div class="diagram-slope-label">{{ el.label }}</div></div>
+      {% endfor %}
+    </div>
+    {% elif section.diagram.type == 'layers' and section.diagram.layers is defined %}
+    <div class="diagram-layers">
+      {% for layer in section.diagram.layers %}
+      <div class="diagram-layer diagram-layer-{{ layer.depth }}"><div class="diagram-layer-label">{{ layer.label }}</div><div class="diagram-layer-desc">{{ layer.desc | default('') }}</div></div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if section.key_points_grouped is defined and section.key_points_grouped %}
+  {% set ns = namespace(fn_counter=1) %}
+  <div class="point-groups reveal">
+    {% for group in section.key_points_grouped %}
+    {% set vt = group.visual_type | default('list') %}
+    <div class="point-group reveal{% if loop.index > 1 %} reveal-delay-{{ [loop.index - 1, 4] | min }}{% endif %}">
+      <div class="point-group-label"><span class="point-group-num">{{ loop.index }}</span>{{ group.label | default(group.group_title | default('')) }}</div>
+      {% if vt == 'comparison' and group.comparisons is defined %}
+      <div class="point-group-comparison">
+        <div class="pg-comparison-header"><span>{{ group.left_label | default('Before') }}</span><span>{{ group.right_label | default('After') }}</span></div>
+        {% for c in group.comparisons %}
+        <div class="pg-comparison-row"><div class="pg-comparison-left">{{ c.left }}</div><div class="pg-comparison-right">{{ c.right }}</div></div>
+        {% endfor %}
+      </div>
+      {% elif vt == 'flow' and group.points is defined %}
+      <div class="point-group-flow">
+        {% for point in group.points %}
+        {% if not loop.first %}<span class="pg-flow-arrow">→</span>{% endif %}
+        <div class="pg-flow-step"><span class="point-text">{%- if point is mapping %}{{ point.text }}{% else %}{{ point }}{% endif -%}</span></div>
+        {% endfor %}
+      </div>
+      {% else %}
+      {% for point in group.points | default([]) %}
+      <div class="point-item">
+        <span class="point-text">
+          {%- if point is mapping %}{{ point.text }}{% else %}{{ point }}{% endif -%}
+          {%- if point is mapping and point.detail %}<span class="fn-ref">{{ ns.fn_counter }}<span class="fn-tip">{{ point.detail }}</span></span>{% set ns.fn_counter = ns.fn_counter + 1 %}{% endif -%}
+        </span>
+      </div>
+      {% endfor %}
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% elif section.key_points %}
   <div class="action-items reveal">
     {% for point in section.key_points %}
     <div class="action-item reveal{% if loop.index > 1 %} reveal-delay-{{ [loop.index - 1, 4] | min }}{% endif %}">
@@ -800,6 +1621,96 @@ section {
 {% endif %}
 </section>
 {% endfor %}
+
+<!-- ===== ARGUMENTS ===== -->
+{% if arguments is defined and arguments %}
+<section id="arguments" style="background:var(--bg);">
+  <div class="section-label reveal">深度解析</div>
+  <h2 class="section-title reveal">核心观点</h2>
+  <div class="section-divider reveal"></div>
+
+  <div class="argument-cards">
+    {% for arg in arguments %}
+    <div class="argument-card reveal{% if loop.index > 1 %} reveal-delay-{{ [loop.index - 1, 4] | min }}{% endif %}" data-strength="{{ arg.strength | default('strong') }}">
+      <div class="argument-claim">{{ arg.claim | default('') }}</div>
+      {% if arg.evidence_type is defined and arg.evidence_type %}
+      <div class="argument-badge">{{ arg.evidence_type }}</div>
+      {% endif %}
+      {% if arg.evidence is defined and arg.evidence %}
+      <div class="argument-evidence">{{ arg.evidence }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- ===== CONCEPTS ===== -->
+{% if key_concepts is defined and key_concepts %}
+<section id="concepts" style="background:var(--bg2);">
+  <div class="section-label reveal">知识图谱</div>
+  <h2 class="section-title reveal">关键概念</h2>
+  <div class="section-divider reveal"></div>
+
+  <div class="concept-cards">
+    {% for concept in key_concepts %}
+    <div class="concept-card reveal{% if loop.index > 1 %} reveal-delay-{{ [loop.index - 1, 4] | min }}{% endif %}">
+      <div class="concept-term">{{ concept.term | default('') }}</div>
+      <div class="concept-definition">{{ concept.definition | default('') }}</div>
+      {% if concept.explanation is defined or concept.examples is defined or concept.related_concepts is defined %}
+      <details class="concept-details">
+        <summary>展开详情 ▸</summary>
+        {% if concept.explanation is defined and concept.explanation %}
+        <div class="concept-explanation">{{ concept.explanation }}</div>
+        {% endif %}
+        {% if concept.examples is defined and concept.examples %}
+        <ul class="concept-examples">
+          {% for example in concept.examples %}
+          <li>{{ example }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+        {% if concept.related_concepts is defined and concept.related_concepts %}
+        <div class="concept-related">
+          相关概念：
+          {% for rel in concept.related_concepts %}
+          <span>{{ rel }}</span>{% if not loop.last %}、{% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+      </details>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- ===== EXTENDED READING ===== -->
+{% if extended_reading is defined and extended_reading %}
+<section id="extended-reading" style="background:var(--bg);">
+  <div class="section-label reveal">拓展视野</div>
+  <h2 class="section-title reveal">延伸探索</h2>
+  <div class="section-divider reveal"></div>
+
+  <div class="reading-cards">
+    {% for item in extended_reading %}
+    <div class="reading-card reveal{% if loop.index > 1 %} reveal-delay-{{ [loop.index - 1, 4] | min }}{% endif %}">
+      <div class="reading-topic">{{ item.topic | default('') }}</div>
+      {% if item.context is defined and item.context %}
+      <div class="reading-context">{{ item.context }}</div>
+      {% endif %}
+      {% if item.deep_dive is defined and item.deep_dive %}
+      <div class="reading-dive">{{ item.deep_dive }}</div>
+      {% endif %}
+      {% if item.further_resources is defined and item.further_resources %}
+      <div class="reading-resources">{{ item.further_resources }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
 
 <!-- ===== QUIZ ===== -->
 <section id="quiz" style="background:var(--bg2);">
@@ -910,26 +1821,73 @@ const revealObs = new IntersectionObserver((entries) => {
 }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 reveals.forEach(el => revealObs.observe(el));
 
-// === 点导航 ===
-const sections = document.querySelectorAll('section[id]');
-const dots = document.querySelectorAll('.dot-nav-item');
+// === 侧边导航 ===
+const sideNav = document.getElementById('side-nav');
+const navToggle = document.getElementById('nav-toggle');
+const navItems = document.querySelectorAll('.nav-item');
+const allSections = document.querySelectorAll('section[id]');
+const heroSection = document.getElementById('hero');
 
+// 桌面端：默认展开
+const isDesktop = window.innerWidth > 768;
+if (isDesktop) {
+  document.body.classList.add('nav-open');
+  sideNav.classList.add('hero-mode'); // 初始在 hero 区时隐藏
+}
+
+// Hero 区可见性检测：离开 hero 后显示导航
+const heroObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (isDesktop) {
+      sideNav.classList.toggle('hero-mode', e.isIntersecting);
+    }
+  });
+}, { threshold: 0.3 });
+if (heroSection) heroObs.observe(heroSection);
+
+// 移动端：汉堡菜单切换
+navToggle.addEventListener('click', () => {
+  sideNav.classList.toggle('mobile-open');
+  navToggle.textContent = sideNav.classList.contains('mobile-open') ? '✕' : '☰';
+});
+
+// 点击导航项
+navItems.forEach(item => {
+  item.addEventListener('click', () => {
+    const target = document.getElementById(item.dataset.section);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+      // 移动端自动关闭
+      if (!isDesktop) {
+        sideNav.classList.remove('mobile-open');
+        navToggle.textContent = '☰';
+      }
+    }
+  });
+});
+
+// 滚动高亮 + 已访问标记
+const visitedSections = new Set();
 const sectionObs = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if (e.isIntersecting) {
       const id = e.target.id;
-      dots.forEach(d => d.classList.toggle('active', d.dataset.section === id));
+      visitedSections.add(id);
+      navItems.forEach(n => {
+        n.classList.remove('active');
+        if (visitedSections.has(n.dataset.section)) n.classList.add('visited');
+      });
+      // 找匹配的导航项
+      const match = document.querySelector(`.nav-item[data-section="${id}"]`);
+      if (match) {
+        match.classList.add('active');
+        // 自动滚动导航让当前项可见
+        match.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
     }
   });
-}, { threshold: 0.4 });
-sections.forEach(s => sectionObs.observe(s));
-
-dots.forEach(dot => {
-  dot.addEventListener('click', () => {
-    const target = document.getElementById(dot.dataset.section);
-    if (target) target.scrollIntoView({ behavior: 'smooth' });
-  });
-});
+}, { threshold: 0.3, rootMargin: '0px 0px -50% 0px' });
+allSections.forEach(s => sectionObs.observe(s));
 
 // === 金句收藏系统 ===
 const savedQuotes = [];

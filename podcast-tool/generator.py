@@ -158,12 +158,68 @@ def render(episode_json_path: str, output_path: str = None) -> str:
     data.setdefault("participants", [])
     data.setdefault("sections", [])
 
+    # v2.0 新字段默认值
+    data.setdefault("content_overview", {
+        "one_sentence_summary": "",
+        "content_blocks": [],
+        "block_connections": []
+    })
+    data.setdefault("arguments", [])
+    data.setdefault("key_concepts", [])
+    data.setdefault("extended_reading", [])
+    data.setdefault("mind_map", {"central_theme": "", "nodes": []})
+
+    # 将 mind_map.nodes（扁平 parent_id 格式）转为模板需要的 branches（嵌套格式）
+    mind_map = data["mind_map"]
+    if "branches" not in mind_map and mind_map.get("nodes"):
+        nodes = mind_map["nodes"]
+        if nodes and isinstance(nodes[0], dict):
+            if "parent_id" in nodes[0]:
+                # 扁平格式：按 parent_id 构建树
+                by_id = {n["id"]: n for n in nodes}
+                roots = [n for n in nodes if not n.get("parent_id")]
+                branches = []
+                for root in roots:
+                    children_l2 = [n for n in nodes if n.get("parent_id") == root["id"]]
+                    branch = {
+                        "label": root.get("label", ""),
+                        "detail": root.get("detail", ""),
+                        "children": [],
+                    }
+                    for c in children_l2:
+                        leaves = [n for n in nodes if n.get("parent_id") == c["id"]]
+                        if leaves:
+                            for lf in leaves:
+                                branch["children"].append({"label": lf.get("label", ""), "detail": lf.get("detail", "")})
+                        else:
+                            branch["children"].append({"label": c.get("label", ""), "detail": c.get("detail", "")})
+                    branches.append(branch)
+                mind_map["branches"] = branches
+            elif "children" in nodes[0]:
+                # 嵌套格式：直接转为 branches
+                branches = []
+                for node in nodes:
+                    branch = {"label": node.get("label", ""), "detail": node.get("detail", ""), "children": []}
+                    for child in node.get("children", []):
+                        for leaf in child.get("children", []):
+                            branch["children"].append({"label": leaf.get("label", ""), "detail": leaf.get("detail", "")})
+                        if not child.get("children"):
+                            branch["children"].append({"label": child.get("label", ""), "detail": child.get("detail", "")})
+                    branches.append(branch)
+                mind_map["branches"] = branches
+
     # 确保每个 section 都有完整字段
     for s in data["sections"]:
         s.setdefault("is_ad", False)
         s.setdefault("quotes", [])
         s.setdefault("key_points", [])
         s.setdefault("stories", [])
+        s.setdefault("key_points_grouped", [])
+        # 为 key_points_grouped 中的 group 设置默认 visual_type
+        for g in s.get("key_points_grouped", []):
+            g.setdefault("visual_type", "list")
+        s.setdefault("diagram", None)
+        s.setdefault("section_context", "")
 
     # Quiz 配置
     quiz = data.get("quiz") or DEFAULT_QUIZ
