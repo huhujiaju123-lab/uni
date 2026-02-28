@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.0.2 (2026-02-28)
+修复 Deepgram 转录超时
+
+### 修复
+- **转录超时参数无效**：Deepgram SDK v6 的超时参数为 `timeout_in_seconds`（int），之前误用 `timeout`/`httpx.Timeout` 被 SDK 忽略，导致长音频转录超时。改为 `timeout_in_seconds=3600`（1小时）
+
+---
+
 ## v2.0.1 (2026-02-28)
 Diagram 渲染修复 + 健壮性加固
 

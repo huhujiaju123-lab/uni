@@ -81,7 +81,7 @@ def transcribe_audio(url, language="zh", output_prefix="transcript", output_dir=
                 punctuate=True,
                 paragraphs=True,
                 diarize=True,
-                request_options=RequestOptions(timeout=600),
+                request_options=RequestOptions(timeout_in_seconds=3600),
             )
 
         # 尝试 Nova-3，不支持则自动回退 Nova-2
