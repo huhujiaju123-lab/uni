@@ -94,6 +94,45 @@ DEFAULT_QUIZ = {
 }
 
 
+def _validate_diagram(d: dict) -> bool:
+    """校验 diagram 数据完整性：每种类型必须有对应的数据字段且至少2个条目"""
+    dtype = d.get("type", "")
+    min_items = 2
+
+    if dtype == "flow":
+        items = d.get("steps", [])
+        return len(items) >= min_items and all(i.get("label") for i in items)
+
+    elif dtype == "comparison":
+        entries = d.get("entries", [])
+        return (d.get("left") and d.get("right") and len(entries) >= min_items
+                and all(i.get("left") and i.get("right") for i in entries))
+
+    elif dtype in ("icon-list", "timeline", "cycle", "stats"):
+        items = d.get("entries", [])
+        if dtype == "stats":
+            return len(items) >= min_items and all(i.get("value") and i.get("label") for i in items)
+        return len(items) >= min_items and all(i.get("label") for i in items)
+
+    elif dtype == "slope":
+        items = d.get("elements", [])
+        valid_levels = {"low", "barrier", "high"}
+        return (len(items) >= min_items
+                and all(i.get("label") and i.get("level") in valid_levels for i in items))
+
+    elif dtype == "layers":
+        items = d.get("layers", [])
+        return len(items) >= min_items and all(i.get("label") for i in items)
+
+    elif dtype == "matrix":
+        items = d.get("entries", [])
+        valid_quads = {"top-left", "top-right", "bottom-left", "bottom-right"}
+        return (len(items) >= 2 and d.get("x_axis") and d.get("y_axis")
+                and all(i.get("label") and i.get("quadrant") in valid_quads for i in items))
+
+    return False
+
+
 def _normalize_legacy(data: dict) -> dict:
     """兼容旧版 podcast_content_outline.json 格式（以 `podcast` 为顶层字段）"""
     if "podcast" not in data or "meta" in data:
@@ -132,33 +171,16 @@ def _normalize_legacy(data: dict) -> dict:
     return data
 
 
-def render(episode_json_path: str, output_path: str = None) -> str:
-    """
-    将 episode.json 渲染为可视化 HTML 文件。
-
-    Args:
-        episode_json_path: episode.json 的路径
-        output_path: 输出 HTML 路径（默认与 json 同名，后缀改为 _visualization.html）
-
-    Returns:
-        输出文件的绝对路径
-    """
-    episode_path = Path(episode_json_path).resolve()
-
-    with open(episode_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-
-    # 兼容旧格式
+def prepare_episode_data(data: dict) -> dict:
+    """预处理 episode.json 数据：兼容旧格式、填充默认值、转换 mind_map 等。
+    供 HTML 渲染和 API 共用。"""
     data = _normalize_legacy(data)
 
-    # 确保可选字段有默认值
     data.setdefault("theme", {})
     data.setdefault("recommendations", [])
     data.setdefault("core_quotes", [])
     data.setdefault("participants", [])
     data.setdefault("sections", [])
-
-    # v2.0 新字段默认值
     data.setdefault("content_overview", {
         "one_sentence_summary": "",
         "content_blocks": [],
@@ -169,13 +191,35 @@ def render(episode_json_path: str, output_path: str = None) -> str:
     data.setdefault("extended_reading", [])
     data.setdefault("mind_map", {"central_theme": "", "nodes": []})
 
-    # 将 mind_map.nodes（扁平 parent_id 格式）转为模板需要的 branches（嵌套格式）
+    # ===== v2.1 新模块默认值 =====
+    data.setdefault("detailed_timeline", [])
+    data.setdefault("featured_quotes", [])
+    data.setdefault("dialogue_flow", [])
+    data.setdefault("knowledge_cards", [])
+
+    # 自动补全 label（防止 AI 漏填）
+    for item in data["detailed_timeline"]:
+        if not item.get("label") and item.get("start_sec") is not None:
+            s = int(item["start_sec"])
+            e = int(item.get("end_sec", s))
+            item["label"] = f"{s // 60:02d}:{s % 60:02d} – {e // 60:02d}:{e % 60:02d}"
+
+    for item in data["featured_quotes"]:
+        if not item.get("label") and item.get("start_sec") is not None:
+            sec = int(item["start_sec"])
+            item["label"] = f"{sec // 60:02d}:{sec % 60:02d}"
+
+    for item in data["dialogue_flow"]:
+        if not item.get("label") and item.get("start_sec") is not None:
+            sec = int(item["start_sec"])
+            item["label"] = f"{sec // 60:02d}:{sec % 60:02d}"
+
+    # 将 mind_map.nodes（扁平 parent_id 格式）转为 branches（嵌套格式）
     mind_map = data["mind_map"]
     if "branches" not in mind_map and mind_map.get("nodes"):
         nodes = mind_map["nodes"]
         if nodes and isinstance(nodes[0], dict):
             if "parent_id" in nodes[0]:
-                # 扁平格式：按 parent_id 构建树
                 by_id = {n["id"]: n for n in nodes}
                 roots = [n for n in nodes if not n.get("parent_id")]
                 branches = []
@@ -196,7 +240,6 @@ def render(episode_json_path: str, output_path: str = None) -> str:
                     branches.append(branch)
                 mind_map["branches"] = branches
             elif "children" in nodes[0]:
-                # 嵌套格式：直接转为 branches
                 branches = []
                 for node in nodes:
                     branch = {"label": node.get("label", ""), "detail": node.get("detail", ""), "children": []}
@@ -208,35 +251,231 @@ def render(episode_json_path: str, output_path: str = None) -> str:
                     branches.append(branch)
                 mind_map["branches"] = branches
 
-    # 确保每个 section 都有完整字段
+    # 收集广告段 section id，用于过滤 knowledge_cards
+    ad_section_ids = set()
+
     for s in data["sections"]:
         s.setdefault("is_ad", False)
         s.setdefault("quotes", [])
         s.setdefault("key_points", [])
         s.setdefault("stories", [])
         s.setdefault("key_points_grouped", [])
-        # 为 key_points_grouped 中的 group 设置默认 visual_type
+
+        # 广告段：清空详细内容，只保留标题和时间信息
+        if s.get("is_ad"):
+            ad_section_ids.add(s.get("id", ""))
+            s["key_points"] = []
+            s["key_points_grouped"] = []
+            s["diagram"] = None
+            s["stories"] = []
+            s["quotes"] = []
+            s.setdefault("section_context", "赞助广告")
+            continue
         for g in s.get("key_points_grouped", []):
             g.setdefault("visual_type", "list")
+            vt = g.get("visual_type", "list")
+
+            # key_points_grouped 只支持这几种 visual_type，其他的 fallback 到 list
+            SUPPORTED_KPG_TYPES = {"list", "comparison", "flow", "icon-list", "icon-grid"}
+            if vt not in SUPPORTED_KPG_TYPES:
+                g["visual_type"] = "list"
+                vt = "list"
+
+            # 空 points 的分组强制 fallback 到 list（避免只显示标题）
+            if vt != "comparison" and not g.get("points"):
+                g["visual_type"] = "list"
+                vt = "list"
+
+            if vt == "comparison":
+                # AI 用 entries 而模板期望 comparisons
+                if "entries" in g and "comparisons" not in g:
+                    g["comparisons"] = g.pop("entries")
+                if isinstance(g.get("left"), dict):
+                    g["left_label"] = g["left"].get("label", "")
+                if isinstance(g.get("right"), dict):
+                    g["right_label"] = g["right"].get("label", "")
+
+            elif vt == "flow":
+                # AI 用 steps 而模板期望 points
+                if "steps" in g and "points" not in g:
+                    g["points"] = [
+                        {"text": step.get("label", ""), "detail": step.get("desc", "")}
+                        for step in g.pop("steps")
+                    ]
+
+            elif vt == "icon-list":
+                # AI 用 entries 而模板 fallback 到 points
+                if "entries" in g and "points" not in g:
+                    g["points"] = [
+                        {"text": entry.get("label", ""), "detail": entry.get("desc", "")}
+                        for entry in g.pop("entries")
+                    ]
         s.setdefault("diagram", None)
         s.setdefault("section_context", "")
-        # diagram 预处理：重命名 items → entries（避免 Jinja2 与 dict.items 冲突）
-        # 并移除只有 type/title/description 但无实际数据的空 diagram
         if s.get("diagram") and isinstance(s["diagram"], dict):
             d = s["diagram"]
             if "items" in d:
                 d["entries"] = d.pop("items")
-            has_data = any(k in d for k in ("steps", "entries", "elements", "layers", "left"))
+            if d.get("type") == "cycle" and "steps" in d and "entries" not in d:
+                d["entries"] = d.pop("steps")
+            has_data = any(k in d for k in ("steps", "entries", "elements", "layers", "left", "x_axis"))
             if not has_data:
                 s["diagram"] = None
 
-    # Quiz 配置
+    # ===== 全局数据清洗 =====
+    # 原则：有标题无内容→删除，类型越界→fallback，广告→全链路过滤，数据不完整→删除
+
+    # -- 广告全链路过滤 --
+    ad_time_ranges = [(s.get("start_sec", 0), s.get("end_sec", 0)) for s in data["sections"] if s.get("is_ad")]
+
+    # 识别广告 timeline 段（按时间重叠比例 >50% 或 headline 含"广告"）
+    ad_tl_ids = set()
+    if ad_time_ranges:
+        for tl in data.get("detailed_timeline", []):
+            tl_start, tl_end = tl.get("start_sec", 0), tl.get("end_sec", tl.get("start_sec", 0))
+            headline = tl.get("headline", "")
+            tl_duration = max(tl_end - tl_start, 1)
+            overlap = sum(max(0, min(tl_end, ae) - max(tl_start, as_)) for as_, ae in ad_time_ranges)
+            if overlap / tl_duration > 0.5 or "广告" in headline:
+                ad_tl_ids.add(tl.get("id", ""))
+                tl["headline"] = "📢 " + headline.replace("📢 ", "")
+                tl["narrative"] = "本段为赞助广告内容。"
+
+    # 合并所有广告相关 ID（section id + timeline id）
+    all_ad_ids = ad_section_ids | ad_tl_ids
+
+    def _from_ad(item):
+        """判断一个带 source_section_id 的条目是否来自广告段"""
+        return item.get("source_section_id", "") in all_ad_ids
+
+    # 过滤所有引用 source_section_id 的模块
+    if all_ad_ids:
+        data["knowledge_cards"] = [kc for kc in data.get("knowledge_cards", []) if not _from_ad(kc)]
+        data["arguments"] = [a for a in data.get("arguments", []) if not _from_ad(a)]
+
+    # content_overview: 过滤引用广告 section 的 blocks 和 connections
+    if ad_section_ids:
+        co = data.get("content_overview", {})
+        if co.get("content_blocks"):
+            co["content_blocks"] = [
+                b for b in co["content_blocks"]
+                if not any(sid in ad_section_ids for sid in b.get("section_ids", []))
+            ]
+            valid_block_ids = {b.get("id") for b in co["content_blocks"]}
+            if co.get("block_connections"):
+                co["block_connections"] = [
+                    c for c in co["block_connections"]
+                    if c.get("from") in valid_block_ids and c.get("to") in valid_block_ids
+                ]
+
+    # -- 空内容过滤：删除必要字段缺失的条目 --
+
+    # core_quotes: 去掉空字符串
+    data["core_quotes"] = [q for q in data.get("core_quotes", []) if q and q.strip()]
+
+    # arguments: claim 不能为空
+    data["arguments"] = [a for a in data.get("arguments", []) if a.get("claim", "").strip()]
+
+    # arguments.strength: 校验枚举值
+    for a in data["arguments"]:
+        if a.get("strength") not in ("strong", "moderate", "anecdotal"):
+            a["strength"] = "moderate"
+
+    # key_concepts: term 和 definition 不能为空
+    data["key_concepts"] = [
+        kc for kc in data.get("key_concepts", [])
+        if kc.get("term", "").strip() and kc.get("definition", "").strip()
+    ]
+
+    # extended_reading: topic 不能为空
+    data["extended_reading"] = [
+        er for er in data.get("extended_reading", [])
+        if er.get("topic", "").strip()
+    ]
+
+    # knowledge_cards: claim 不能为空
+    data["knowledge_cards"] = [
+        kc for kc in data.get("knowledge_cards", [])
+        if kc.get("claim", "").strip()
+    ]
+
+    # detailed_timeline: headline 和 narrative 不能为空
+    data["detailed_timeline"] = [
+        tl for tl in data.get("detailed_timeline", [])
+        if tl.get("headline", "").strip() and tl.get("narrative", "").strip()
+    ]
+
+    # recommendations: title 不能为空
+    data["recommendations"] = [
+        r for r in data.get("recommendations", [])
+        if r.get("title", "").strip()
+    ]
+
+    # content_overview.content_blocks: title 和 summary 不能为空
+    co = data.get("content_overview", {})
+    if co.get("content_blocks"):
+        co["content_blocks"] = [
+            b for b in co["content_blocks"]
+            if b.get("title", "").strip() and b.get("summary", "").strip()
+        ]
+
+    # mind_map.branches: label 不能为空，过滤空 children
+    mm = data.get("mind_map", {})
+    if mm.get("branches"):
+        cleaned_branches = []
+        for branch in mm["branches"]:
+            if not branch.get("label", "").strip():
+                continue
+            if branch.get("children"):
+                branch["children"] = [
+                    c for c in branch["children"]
+                    if (c.get("label", "").strip() if isinstance(c, dict) else str(c).strip())
+                ]
+            cleaned_branches.append(branch)
+        mm["branches"] = cleaned_branches
+
+    # sections 内部清洗（非广告段）
+    SUPPORTED_DIAGRAM_TYPES = {"flow", "comparison", "icon-list", "slope", "layers", "timeline", "cycle", "matrix", "stats"}
+    for s in data["sections"]:
+        if s.get("is_ad"):
+            continue
+
+        # quotes: 去掉空字符串
+        s["quotes"] = [q for q in s.get("quotes", []) if q and q.strip()]
+
+        # stories: text 不能为空
+        stories = s.get("stories", [])
+        s["stories"] = [
+            st for st in stories
+            if (st.get("text", "").strip() if isinstance(st, dict) else str(st).strip())
+        ]
+
+        # key_points_grouped: 删除空分组（comparison 看 comparisons，其他看 points）
+        cleaned_groups = []
+        for g in s.get("key_points_grouped", []):
+            vt = g.get("visual_type", "list")
+            if vt == "comparison":
+                if g.get("comparisons") or g.get("entries"):
+                    cleaned_groups.append(g)
+            else:
+                if g.get("points"):
+                    cleaned_groups.append(g)
+        s["key_points_grouped"] = cleaned_groups
+
+        # diagram: 校验 type 白名单 + 每种类型必要字段
+        d = s.get("diagram")
+        if d and isinstance(d, dict):
+            dtype = d.get("type", "")
+            if dtype not in SUPPORTED_DIAGRAM_TYPES:
+                s["diagram"] = None
+            elif not _validate_diagram(d):
+                s["diagram"] = None
+
     quiz = data.get("quiz") or DEFAULT_QUIZ
     if not quiz.get("questions"):
         quiz = DEFAULT_QUIZ
     data["quiz"] = quiz
 
-    # 预计算 quiz_config（供 JS 使用）
     required_ids = [q["id"] for q in quiz["questions"] if q["type"] == "choice"]
     slider_ids = [q["id"] for q in quiz["questions"] if q["type"] == "slider"]
     data["quiz_config"] = {
@@ -251,6 +490,27 @@ def render(episode_json_path: str, output_path: str = None) -> str:
             for level in quiz["result_levels"]
         ],
     }
+
+    return data
+
+
+def render(episode_json_path: str, output_path: str = None) -> str:
+    """
+    将 episode.json 渲染为可视化 HTML 文件。
+
+    Args:
+        episode_json_path: episode.json 的路径
+        output_path: 输出 HTML 路径（默认与 json 同名，后缀改为 _visualization.html）
+
+    Returns:
+        输出文件的绝对路径
+    """
+    episode_path = Path(episode_json_path).resolve()
+
+    with open(episode_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    data = prepare_episode_data(data)
 
     # 确定输出路径
     if output_path is None:

@@ -598,10 +598,6 @@ section {
 .overview-block-title { font-size: 18px; font-weight: 700; color: var(--gold); margin-bottom: 8px; font-family: var(--sans); }
 .overview-block-summary { font-family: var(--sans); font-size: 13px; color: var(--text-dim); line-height: 1.7; }
 
-.overview-connections { max-width: 800px; margin: 32px 0 48px; }
-.overview-connection { display: flex; align-items: center; gap: 12px; padding: 8px 0; font-family: var(--sans); font-size: 13px; color: var(--text-dim); }
-.overview-connection-arrow { color: var(--gold); font-size: 16px; }
-.overview-connection-relation { background: rgba(212,160,23,0.15); color: var(--gold); padding: 2px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; }
 
 /* ===== MIND MAP ===== */
 .mindmap-container { max-width: 900px; margin: 48px 0; }
@@ -629,11 +625,7 @@ section {
 .concept-card { background: var(--bg3); border: 1px solid rgba(212,160,23,0.1); border-radius: var(--radius); padding: 24px; }
 .concept-term { font-size: 20px; font-weight: 700; color: var(--gold); margin-bottom: 8px; font-family: var(--sans); }
 .concept-definition { font-family: var(--sans); font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 12px; }
-.concept-details { border: none; }
-.concept-details summary { font-family: var(--sans); font-size: 12px; color: var(--gold); cursor: pointer; padding: 4px 0; letter-spacing: 1px; }
-.concept-details summary:hover { color: var(--gold-light); }
-.concept-details[open] summary { margin-bottom: 12px; }
-.concept-explanation { font-family: var(--sans); font-size: 13px; color: var(--text-dim); line-height: 1.8; margin-bottom: 12px; }
+.concept-explanation { font-family: var(--sans); font-size: 13px; color: var(--text-dim); line-height: 1.8; margin-top: 12px; margin-bottom: 12px; }
 .concept-examples { list-style: none; padding: 0; }
 .concept-examples li { font-family: var(--sans); font-size: 12px; color: var(--text-muted); padding: 4px 0 4px 16px; border-left: 2px solid rgba(212,160,23,0.15); margin-bottom: 4px; line-height: 1.6; }
 .concept-related { font-family: var(--sans); font-size: 11px; color: var(--text-muted); margin-top: 8px; }
@@ -665,11 +657,12 @@ section {
   font-size: 12px; font-weight: 700; flex-shrink: 0;
   font-family: var(--sans);
 }
-.point-item { padding: 8px 0 8px 16px; border-left: 2px solid rgba(212,160,23,0.15); margin-bottom: 2px; transition: border-color 0.2s; }
+.point-item { padding: 10px 0 10px 16px; border-left: 2px solid rgba(212,160,23,0.15); margin-bottom: 4px; transition: border-color 0.2s; }
 .point-item:hover { border-left-color: var(--gold); }
-.point-item:first-child { border-left-color: var(--gold); padding: 10px 16px; background: rgba(212,160,23,0.04); border-radius: 0 8px 8px 0; margin-bottom: 4px; }
+.point-item:first-child { border-left-color: var(--gold); }
+.point-label { display: block; font-family: var(--sans); font-size: 15px; font-weight: 600; color: var(--gold-light); line-height: 1.5; }
+.point-desc { display: block; font-family: var(--sans); font-size: 13.5px; color: var(--text-dim); line-height: 1.7; margin-top: 3px; }
 .point-text { font-family: var(--sans); font-size: 15px; color: var(--text); line-height: 1.6; }
-.point-item:first-child .point-text { font-size: 16px; font-weight: 600; color: var(--text); }
 .point-detail { font-family: var(--sans); font-size: 12px; color: var(--text-dim); line-height: 1.6; margin-top: 4px; display: block; }
 
 /* ===== DIAGRAM COMPONENTS ===== */
@@ -930,6 +923,154 @@ section {
   line-height: 1.5;
 }
 
+/* Timeline diagram -- vertical timeline with dots */
+.diagram-timeline {
+  position: relative;
+  padding-left: 32px;
+}
+.diagram-timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 8px; bottom: 8px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--gold), rgba(212,160,23,0.15));
+}
+.diagram-timeline-entry {
+  position: relative;
+  padding: 12px 0 20px 24px;
+}
+.diagram-timeline-entry::before {
+  content: '';
+  position: absolute;
+  left: -28px; top: 18px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--bg3);
+  box-shadow: 0 0 0 3px rgba(212,160,23,0.2);
+}
+.diagram-timeline-marker {
+  font-family: var(--sans);
+  font-size: 11px; font-weight: 700;
+  color: var(--gold); letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.diagram-timeline-label {
+  font-family: var(--sans);
+  font-size: 15px; font-weight: 700;
+  color: var(--text); margin-bottom: 4px;
+}
+.diagram-timeline-desc {
+  font-family: var(--sans);
+  font-size: 12px; color: var(--text-dim); line-height: 1.6;
+}
+
+/* Cycle diagram -- loop process with return arrow */
+.diagram-cycle { display: flex; flex-direction: column; align-items: center; }
+.diagram-cycle-steps { display: flex; align-items: center; gap: 0; width: 100%; }
+.diagram-cycle-step {
+  flex: 1; min-width: 80px; text-align: center;
+  padding: 16px 12px;
+  background: rgba(212,160,23,0.06);
+  border: 1px solid rgba(212,160,23,0.15);
+  border-radius: 10px;
+}
+.diagram-cycle-step-label {
+  font-family: var(--sans); font-size: 14px; font-weight: 700;
+  color: var(--text); margin-bottom: 4px;
+}
+.diagram-cycle-step-desc {
+  font-family: var(--sans); font-size: 11px;
+  color: var(--text-dim); line-height: 1.5;
+}
+.diagram-cycle-arrow {
+  flex-shrink: 0; width: 32px; text-align: center;
+  color: var(--gold); font-size: 16px; opacity: 0.6;
+}
+.diagram-cycle-return {
+  width: 80%; margin-top: 16px; text-align: center;
+  position: relative; padding-top: 12px;
+}
+.diagram-cycle-return::before {
+  content: '';
+  position: absolute; top: 0; left: 10%; right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(212,160,23,0.4), transparent);
+}
+.diagram-cycle-return-label {
+  font-family: var(--sans); font-size: 12px;
+  color: var(--gold); opacity: 0.6;
+}
+
+/* Matrix diagram -- 2x2 quadrant grid */
+.diagram-matrix-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 3px; min-height: 200px;
+}
+.diagram-matrix-quadrant {
+  padding: 20px 16px; border-radius: 8px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.diagram-matrix-quadrant.top-left {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+}
+.diagram-matrix-quadrant.top-right {
+  background: rgba(212,160,23,0.08); border: 1px solid rgba(212,160,23,0.15);
+}
+.diagram-matrix-quadrant.bottom-left {
+  background: rgba(192,64,64,0.06); border: 1px solid rgba(192,64,64,0.1);
+}
+.diagram-matrix-quadrant.bottom-right {
+  background: rgba(74,153,153,0.06); border: 1px solid rgba(74,153,153,0.1);
+}
+.diagram-matrix-quadrant-title {
+  font-family: var(--sans); font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; color: var(--text-muted); margin-bottom: 4px;
+}
+.diagram-matrix-item {
+  font-family: var(--sans); font-size: 13px;
+  color: var(--text); line-height: 1.5; padding: 2px 0;
+}
+.diagram-matrix-axes {
+  display: flex; justify-content: space-between; margin-top: 8px;
+}
+.diagram-matrix-x-label {
+  font-family: var(--sans); font-size: 11px;
+  color: var(--text-muted); letter-spacing: 1px;
+}
+
+/* Stats diagram -- key metric highlights */
+.diagram-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 20px;
+}
+.diagram-stat-item {
+  text-align: center; padding: 20px 12px;
+  background: rgba(212,160,23,0.04); border-radius: 10px;
+  border: 1px solid rgba(212,160,23,0.1);
+  transition: border-color 0.3s, transform 0.2s;
+}
+.diagram-stat-item:hover { border-color: rgba(212,160,23,0.3); transform: translateY(-3px); }
+.diagram-stat-value {
+  font-family: var(--sans);
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 900; color: var(--gold); line-height: 1.2; margin-bottom: 8px;
+}
+.diagram-stat-label {
+  font-family: var(--sans); font-size: 13px; font-weight: 600;
+  color: var(--text); margin-bottom: 4px;
+}
+.diagram-stat-desc {
+  font-family: var(--sans); font-size: 11px;
+  color: var(--text-dim); line-height: 1.5;
+}
+
+/* Arrow direction helpers for responsive */
+.arrow-v { display: none; }
+
 /* Comparison visual_type in point-groups */
 .point-group-comparison {
   display: flex;
@@ -982,12 +1123,13 @@ section {
   flex: 1;
   min-width: 80px;
   text-align: center;
-  padding: 12px 8px;
+  padding: 12px 10px;
   background: rgba(212,160,23,0.06);
   border: 1px solid rgba(212,160,23,0.12);
   border-radius: 8px;
 }
-.pg-flow-step .point-text { font-size: 13px; }
+.pg-flow-step .point-text { display: block; font-size: 13.5px; font-weight: 600; color: var(--gold-light); }
+.pg-flow-step .point-desc { display: block; font-size: 11.5px; color: var(--text-dim); margin-top: 4px; line-height: 1.5; }
 .pg-flow-arrow {
   color: var(--gold);
   font-size: 14px;
@@ -1119,53 +1261,6 @@ body.nav-open section { padding-left: calc(220px + 5vw); }
 body.nav-open #progress-bar { left: 220px; }
 body.nav-open .nav-toggle { display: none; }
 
-/* ===== FOOTNOTES ===== */
-.fn-ref {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 16px; height: 16px;
-  font-family: var(--sans);
-  font-size: 10px; font-weight: 700;
-  color: var(--gold);
-  background: rgba(212,160,23,0.12);
-  border-radius: 50%;
-  cursor: help;
-  position: relative;
-  vertical-align: super;
-  margin-left: 2px;
-  transition: background 0.2s;
-}
-.fn-ref:hover { background: rgba(212,160,23,0.25); }
-.fn-ref .fn-tip {
-  display: none;
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 260px;
-  padding: 12px 14px;
-  background: var(--bg3);
-  border: 1px solid rgba(212,160,23,0.2);
-  border-radius: 8px;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--text-dim);
-  line-height: 1.7;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-  z-index: 100;
-  pointer-events: none;
-  white-space: normal;
-}
-.fn-ref .fn-tip::after {
-  content: '';
-  position: absolute;
-  top: 100%; left: 50%;
-  transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-top-color: rgba(212,160,23,0.2);
-}
-.fn-ref:hover .fn-tip { display: block; }
-
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   section { padding: 60px 5vw; }
@@ -1185,14 +1280,147 @@ body.nav-open .nav-toggle { display: none; }
   .fn-ref .fn-tip::after { left: auto; right: 24px; }
   .point-groups { gap: 20px; }
   .diagram-flow { flex-direction: column; gap: 8px; }
-  .diagram-flow-arrow { transform: rotate(90deg); width: auto; }
+  .diagram-flow-arrow { transform: none; width: auto; }
+  .arrow-h { display: none; }
+  .arrow-v { display: inline; }
   .diagram-flow-step { min-width: 0; }
+  .diagram-box { padding: 20px 16px; }
   .diagram-comparison-header, .diagram-comparison-row { grid-template-columns: 1fr 24px 1fr; }
+  .diagram-comparison-left, .diagram-comparison-right { font-size: 12px; padding: 0 10px; }
+  .diagram-comparison-header-left, .diagram-comparison-header-right { font-size: 12px; padding: 8px 10px; }
   .diagram-icon-list { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
   .diagram-slope { height: 140px; }
+  .diagram-slope-bar { width: 48px; }
   .diagram-layer-1, .diagram-layer-2, .diagram-layer-3 { width: 100%; }
   .pg-comparison-header, .pg-comparison-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .pg-flow-step { min-width: 0; }
   .point-group-flow { flex-direction: column; }
+  .diagram-cycle-steps { flex-direction: column; }
+  .diagram-cycle-arrow { transform: rotate(90deg); width: auto; }
+  .diagram-stats { grid-template-columns: repeat(2, 1fr); }
+  .diagram-matrix-quadrant { padding: 14px 12px; }
+  .timeline-list::before { left: 56px; }
+  .timeline-item { grid-template-columns: 64px 1fr; gap: 0 16px; }
+  .kc-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  section { padding: 40px 4vw; }
+  .diagram-box { padding: 16px 12px; margin: 24px 0 32px; }
+  .diagram-icon-list { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .diagram-slope { height: 120px; padding: 0 8px 16px; }
+  .diagram-slope-bar { width: 36px; }
+  .diagram-slope-bar.low { height: 30px; }
+  .diagram-slope-bar.barrier { height: 70px; }
+  .diagram-slope-bar.high { height: 100px; }
+  .diagram-slope-label { font-size: 11px; }
+  .diagram-layer-2 { width: 92%; }
+  .diagram-layer-3 { width: 84%; }
+  .diagram-comparison-header { grid-template-columns: 1fr; gap: 8px; }
+  .diagram-comparison-header-vs { display: none; }
+  .diagram-comparison-row { grid-template-columns: 1fr; gap: 4px; }
+  .diagram-comparison-arrow { display: none; }
+  .diagram-comparison-left { text-align: left; }
+  .diagram-flow-step-inner { padding: 12px 8px; }
+  .diagram-flow-label { font-size: 13px; }
+  .pg-flow-step { padding: 10px 8px; }
+  .pg-flow-step .point-text { font-size: 12px; }
+  .pg-flow-step .point-desc { font-size: 10px; }
+  .pg-comparison-left, .pg-comparison-right { font-size: 12px; padding: 6px 8px; }
+  .diagram-matrix-quadrant { padding: 12px 8px; }
+  .diagram-matrix-item { font-size: 12px; }
+  .diagram-stats { gap: 12px; }
+  .diagram-stat-value { font-size: 28px; }
+  .big-quote { padding: 24px; }
+  .section-title { font-size: clamp(24px, 6vw, 40px); }
+}
+
+/* ===== DETAILED TIMELINE ===== */
+.timeline-list {
+  display: flex; flex-direction: column; gap: 0;
+  max-width: 860px; position: relative;
+}
+.timeline-list::before {
+  content: ''; position: absolute;
+  left: 72px; top: 0; bottom: 0; width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(212,160,23,0.2) 10%, rgba(212,160,23,0.2) 90%, transparent);
+}
+.timeline-item {
+  display: grid; grid-template-columns: 80px 1fr;
+  gap: 0 24px; padding: 24px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.timeline-item:last-child { border-bottom: none; }
+.timeline-stamp {
+  font-family: var(--sans); font-size: 11px;
+  color: var(--gold); letter-spacing: 1px;
+  padding-top: 4px; text-align: right;
+}
+.timeline-dot { position: relative; }
+.timeline-dot::before {
+  content: ''; position: absolute;
+  left: -28px; top: 6px; width: 8px; height: 8px;
+  border-radius: 50%; background: var(--gold); opacity: 0.5;
+}
+.timeline-headline {
+  font-family: var(--sans); font-size: 15px; font-weight: 700;
+  color: var(--text); margin-bottom: 10px; line-height: 1.4;
+}
+.timeline-narrative {
+  font-family: var(--sans); font-size: 13.5px;
+  color: var(--text-dim); line-height: 1.9; margin-bottom: 12px;
+}
+.timeline-topics { display: flex; flex-wrap: wrap; gap: 6px; }
+.timeline-topic {
+  font-family: var(--sans); font-size: 11px; color: var(--amber);
+  background: rgba(192,120,48,0.08); border: 1px solid rgba(192,120,48,0.15);
+  border-radius: 100px; padding: 2px 10px;
+}
+
+/* ===== KNOWLEDGE CARDS ===== */
+.kc-filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+.kc-filter-btn {
+  font-family: var(--sans); font-size: 12px; color: var(--text-dim);
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 100px;
+  padding: 4px 16px; cursor: pointer; background: transparent;
+  transition: all 0.2s;
+}
+.kc-filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+.kc-filter-btn.active { background: var(--gold); border-color: var(--gold); color: var(--bg); font-weight: 600; }
+.kc-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px; max-width: 960px;
+}
+.kc-card {
+  background: var(--bg3); border-radius: var(--radius); padding: 24px;
+  border: 1px solid rgba(212,160,23,0.08);
+  transition: border-color 0.3s, transform 0.2s;
+}
+.kc-card:hover { border-color: rgba(212,160,23,0.25); transform: translateY(-3px); }
+.kc-claim {
+  font-size: 15px; font-weight: 700; color: var(--text);
+  line-height: 1.5; margin-bottom: 12px;
+}
+.kc-evidence {
+  font-family: var(--sans); font-size: 13px; color: var(--text-dim);
+  line-height: 1.75; margin-bottom: 14px;
+  padding-left: 12px; border-left: 2px solid rgba(212,160,23,0.15);
+}
+.kc-extension {
+  font-family: var(--sans); font-size: 13px; color: var(--text-dim);
+  line-height: 1.75; padding: 12px;
+  background: rgba(212,160,23,0.04); border-radius: 8px; margin-bottom: 14px;
+}
+.kc-extension::before {
+  content: '延伸 · '; color: var(--gold); font-size: 10px; letter-spacing: 1px;
+}
+.kc-footer { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.kc-tag {
+  font-family: var(--sans); font-size: 10px; color: var(--text-muted);
+  background: rgba(255,255,255,0.04); border-radius: 4px; padding: 2px 8px;
+}
+.kc-relation {
+  font-family: var(--sans); font-size: 10px; color: var(--amber); margin-left: auto;
 }
 </style>
 </head>
@@ -1229,10 +1457,20 @@ body.nav-open .nav-toggle { display: none; }
   </div>
   {% endif %}
 
+  {% if detailed_timeline or dialogue_flow %}
+  <div class="nav-group">
+    <div class="nav-group-label">内容导览</div>
+    {% if detailed_timeline %}<div class="nav-item secondary" data-section="detailed-timeline">📍 详细时间轴</div>{% endif %}
+    {% if dialogue_flow %}<div class="nav-item secondary" data-section="dialogue-flow">💬 对话结构</div>{% endif %}
+  </div>
+  {% endif %}
+
   <div class="nav-group">
     <div class="nav-group-label">深度分析</div>
     {% if arguments %}<div class="nav-item secondary" data-section="arguments">核心观点</div>{% endif %}
     {% if key_concepts %}<div class="nav-item secondary" data-section="concepts">关键概念</div>{% endif %}
+    {% if featured_quotes %}<div class="nav-item secondary" data-section="featured-quotes">✦ 精选金句</div>{% endif %}
+    {% if knowledge_cards %}<div class="nav-item secondary" data-section="knowledge-cards">知识卡片</div>{% endif %}
     {% if extended_reading %}<div class="nav-item secondary" data-section="extended-reading">延伸探索</div>{% endif %}
   </div>
 
@@ -1324,20 +1562,6 @@ body.nav-open .nav-toggle { display: none; }
   </div>
   {% endif %}
 
-  {% if content_overview.block_connections is defined and content_overview.block_connections %}
-  <div class="overview-connections reveal">
-    {% for conn in content_overview.block_connections %}
-    <div class="overview-connection">
-      <span>{{ conn.from | default('') }}</span>
-      <span class="overview-connection-arrow">→</span>
-      <span class="overview-connection-relation">{{ conn.relation | default('') }}</span>
-      <span class="overview-connection-arrow">→</span>
-      <span>{{ conn.to | default('') }}</span>
-    </div>
-    {% endfor %}
-  </div>
-  {% endif %}
-
   {% if mind_map is defined and mind_map %}
   <div class="mindmap-container reveal">
     <div class="mindmap-center">
@@ -1403,7 +1627,7 @@ body.nav-open .nav-toggle { display: none; }
     {% if section.diagram.type == 'flow' and section.diagram.steps is defined %}
     <div class="diagram-flow">
       {% for step in section.diagram.steps %}
-      {% if not loop.first %}<div class="diagram-flow-arrow">→</div>{% endif %}
+      {% if not loop.first %}<div class="diagram-flow-arrow"><span class="arrow-h">→</span><span class="arrow-v">↓</span></div>{% endif %}
       <div class="diagram-flow-step"><div class="diagram-flow-step-inner"><div class="diagram-flow-label">{{ step.label }}</div><div class="diagram-flow-desc">{{ step.desc | default('') }}</div></div></div>
       {% endfor %}
     </div>
@@ -1432,6 +1656,56 @@ body.nav-open .nav-toggle { display: none; }
       <div class="diagram-layer diagram-layer-{{ layer.depth }}"><div class="diagram-layer-label">{{ layer.label }}</div><div class="diagram-layer-desc">{{ layer.desc | default('') }}</div></div>
       {% endfor %}
     </div>
+    {% elif section.diagram.type == 'timeline' and section.diagram.entries is defined %}
+    <div class="diagram-timeline">
+      {% for entry in section.diagram.entries %}
+      <div class="diagram-timeline-entry">
+        {% if entry.marker %}<div class="diagram-timeline-marker">{{ entry.marker }}</div>{% endif %}
+        <div class="diagram-timeline-label">{{ entry.label }}</div>
+        {% if entry.desc %}<div class="diagram-timeline-desc">{{ entry.desc }}</div>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% elif section.diagram.type == 'cycle' and section.diagram.entries is defined %}
+    <div class="diagram-cycle">
+      <div class="diagram-cycle-steps">
+        {% for entry in section.diagram.entries %}
+        {% if not loop.first %}<div class="diagram-cycle-arrow"><span class="arrow-h">→</span><span class="arrow-v">↓</span></div>{% endif %}
+        <div class="diagram-cycle-step"><div class="diagram-cycle-step-label">{{ entry.label }}</div><div class="diagram-cycle-step-desc">{{ entry.desc | default('') }}</div></div>
+        {% endfor %}
+      </div>
+      <div class="diagram-cycle-return"><div class="diagram-cycle-return-label">↺ 循环</div></div>
+    </div>
+    {% elif section.diagram.type == 'matrix' and section.diagram.entries is defined %}
+    <div class="diagram-matrix">
+      <div class="diagram-matrix-grid">
+        <div class="diagram-matrix-quadrant top-left">
+          {% if section.diagram.y_axis is defined %}<div class="diagram-matrix-quadrant-title">{{ section.diagram.y_axis.high }} · {{ section.diagram.x_axis.low }}</div>{% endif %}
+          {% for entry in section.diagram.entries if entry.quadrant == 'top-left' %}<div class="diagram-matrix-item">{{ entry.label }}</div>{% endfor %}
+        </div>
+        <div class="diagram-matrix-quadrant top-right">
+          {% if section.diagram.y_axis is defined %}<div class="diagram-matrix-quadrant-title">{{ section.diagram.y_axis.high }} · {{ section.diagram.x_axis.high }}</div>{% endif %}
+          {% for entry in section.diagram.entries if entry.quadrant == 'top-right' %}<div class="diagram-matrix-item">{{ entry.label }}</div>{% endfor %}
+        </div>
+        <div class="diagram-matrix-quadrant bottom-left">
+          {% if section.diagram.y_axis is defined %}<div class="diagram-matrix-quadrant-title">{{ section.diagram.y_axis.low }} · {{ section.diagram.x_axis.low }}</div>{% endif %}
+          {% for entry in section.diagram.entries if entry.quadrant == 'bottom-left' %}<div class="diagram-matrix-item">{{ entry.label }}</div>{% endfor %}
+        </div>
+        <div class="diagram-matrix-quadrant bottom-right">
+          {% if section.diagram.y_axis is defined %}<div class="diagram-matrix-quadrant-title">{{ section.diagram.y_axis.low }} · {{ section.diagram.x_axis.high }}</div>{% endif %}
+          {% for entry in section.diagram.entries if entry.quadrant == 'bottom-right' %}<div class="diagram-matrix-item">{{ entry.label }}</div>{% endfor %}
+        </div>
+      </div>
+      {% if section.diagram.x_axis is defined %}
+      <div class="diagram-matrix-axes"><span class="diagram-matrix-x-label">← {{ section.diagram.x_axis.low }}</span><span class="diagram-matrix-x-label">{{ section.diagram.x_axis.high }} →</span></div>
+      {% endif %}
+    </div>
+    {% elif section.diagram.type == 'stats' and section.diagram.entries is defined %}
+    <div class="diagram-stats">
+      {% for entry in section.diagram.entries %}
+      <div class="diagram-stat-item"><div class="diagram-stat-value">{{ entry.value }}</div><div class="diagram-stat-label">{{ entry.label }}</div>{% if entry.desc %}<div class="diagram-stat-desc">{{ entry.desc }}</div>{% endif %}</div>
+      {% endfor %}
+    </div>
     {% endif %}
   </div>
   {% endif %}
@@ -1454,16 +1728,23 @@ body.nav-open .nav-toggle { display: none; }
       <div class="point-group-flow">
         {% for point in group.points %}
         {% if not loop.first %}<span class="pg-flow-arrow">→</span>{% endif %}
-        <div class="pg-flow-step"><span class="point-text">{%- if point is mapping %}{{ point.text }}{% else %}{{ point }}{% endif -%}</span></div>
+        <div class="pg-flow-step">
+          <span class="point-text">{%- if point is mapping %}{{ point.text }}{% else %}{{ point }}{% endif -%}</span>
+          {%- if point is mapping and point.detail %}<span class="point-desc">{{ point.detail }}</span>{% endif -%}
+        </div>
         {% endfor %}
       </div>
       {% else %}
       {% for point in group.points | default([]) %}
       <div class="point-item">
-        <span class="point-text">
-          {%- if point is mapping %}{{ point.text }}{% else %}{{ point }}{% endif -%}
-          {%- if point is mapping and point.detail %}<span class="fn-ref">{{ ns.fn_counter }}<span class="fn-tip">{{ point.detail }}</span></span>{% set ns.fn_counter = ns.fn_counter + 1 %}{% endif -%}
-        </span>
+        {%- if point is mapping and point.detail %}
+        <span class="point-label">{{ point.text }}</span>
+        <span class="point-desc">{{ point.detail }}</span>
+        {%- elif point is mapping %}
+        <span class="point-text">{{ point.text }}</span>
+        {%- else %}
+        <span class="point-text">{{ point }}</span>
+        {%- endif %}
       </div>
       {% endfor %}
       {% endif %}
@@ -1486,7 +1767,8 @@ body.nav-open .nav-toggle { display: none; }
     {% for story in section.stories %}
     <div class="story-card">
       {% if story is mapping %}
-      <div class="narrator">{{ story.narrator_id }}</div>
+      {% set matched = participants | selectattr('id', 'eq', story.narrator_id) | list %}
+      <div class="narrator">{{ matched[0].name if matched else story.narrator_id }}</div>
       <p>{{ story.text }}</p>
       {% else %}
       <p>{{ story }}</p>
@@ -1519,7 +1801,7 @@ body.nav-open .nav-toggle { display: none; }
     {% if section.diagram.type == 'flow' and section.diagram.steps is defined %}
     <div class="diagram-flow">
       {% for step in section.diagram.steps %}
-      {% if not loop.first %}<div class="diagram-flow-arrow">→</div>{% endif %}
+      {% if not loop.first %}<div class="diagram-flow-arrow"><span class="arrow-h">→</span><span class="arrow-v">↓</span></div>{% endif %}
       <div class="diagram-flow-step"><div class="diagram-flow-step-inner"><div class="diagram-flow-label">{{ step.label }}</div><div class="diagram-flow-desc">{{ step.desc | default('') }}</div></div></div>
       {% endfor %}
     </div>
@@ -1548,6 +1830,56 @@ body.nav-open .nav-toggle { display: none; }
       <div class="diagram-layer diagram-layer-{{ layer.depth }}"><div class="diagram-layer-label">{{ layer.label }}</div><div class="diagram-layer-desc">{{ layer.desc | default('') }}</div></div>
       {% endfor %}
     </div>
+    {% elif section.diagram.type == 'timeline' and section.diagram.entries is defined %}
+    <div class="diagram-timeline">
+      {% for entry in section.diagram.entries %}
+      <div class="diagram-timeline-entry">
+        {% if entry.marker %}<div class="diagram-timeline-marker">{{ entry.marker }}</div>{% endif %}
+        <div class="diagram-timeline-label">{{ entry.label }}</div>
+        {% if entry.desc %}<div class="diagram-timeline-desc">{{ entry.desc }}</div>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% elif section.diagram.type == 'cycle' and section.diagram.entries is defined %}
+    <div class="diagram-cycle">
+      <div class="diagram-cycle-steps">
+        {% for entry in section.diagram.entries %}
+        {% if not loop.first %}<div class="diagram-cycle-arrow"><span class="arrow-h">→</span><span class="arrow-v">↓</span></div>{% endif %}
+        <div class="diagram-cycle-step"><div class="diagram-cycle-step-label">{{ entry.label }}</div><div class="diagram-cycle-step-desc">{{ entry.desc | default('') }}</div></div>
+        {% endfor %}
+      </div>
+      <div class="diagram-cycle-return"><div class="diagram-cycle-return-label">↺ 循环</div></div>
+    </div>
+    {% elif section.diagram.type == 'matrix' and section.diagram.entries is defined %}
+    <div class="diagram-matrix">
+      <div class="diagram-matrix-grid">
+        <div class="diagram-matrix-quadrant top-left">
+          {% if section.diagram.y_axis is defined %}<div class="diagram-matrix-quadrant-title">{{ section.diagram.y_axis.high }} · {{ section.diagram.x_axis.low }}</div>{% endif %}
+          {% for entry in section.diagram.entries if entry.quadrant == 'top-left' %}<div class="diagram-matrix-item">{{ entry.label }}</div>{% endfor %}
+        </div>
+        <div class="diagram-matrix-quadrant top-right">
+          {% if section.diagram.y_axis is defined %}<div class="diagram-matrix-quadrant-title">{{ section.diagram.y_axis.high }} · {{ section.diagram.x_axis.high }}</div>{% endif %}
+          {% for entry in section.diagram.entries if entry.quadrant == 'top-right' %}<div class="diagram-matrix-item">{{ entry.label }}</div>{% endfor %}
+        </div>
+        <div class="diagram-matrix-quadrant bottom-left">
+          {% if section.diagram.y_axis is defined %}<div class="diagram-matrix-quadrant-title">{{ section.diagram.y_axis.low }} · {{ section.diagram.x_axis.low }}</div>{% endif %}
+          {% for entry in section.diagram.entries if entry.quadrant == 'bottom-left' %}<div class="diagram-matrix-item">{{ entry.label }}</div>{% endfor %}
+        </div>
+        <div class="diagram-matrix-quadrant bottom-right">
+          {% if section.diagram.y_axis is defined %}<div class="diagram-matrix-quadrant-title">{{ section.diagram.y_axis.low }} · {{ section.diagram.x_axis.high }}</div>{% endif %}
+          {% for entry in section.diagram.entries if entry.quadrant == 'bottom-right' %}<div class="diagram-matrix-item">{{ entry.label }}</div>{% endfor %}
+        </div>
+      </div>
+      {% if section.diagram.x_axis is defined %}
+      <div class="diagram-matrix-axes"><span class="diagram-matrix-x-label">← {{ section.diagram.x_axis.low }}</span><span class="diagram-matrix-x-label">{{ section.diagram.x_axis.high }} →</span></div>
+      {% endif %}
+    </div>
+    {% elif section.diagram.type == 'stats' and section.diagram.entries is defined %}
+    <div class="diagram-stats">
+      {% for entry in section.diagram.entries %}
+      <div class="diagram-stat-item"><div class="diagram-stat-value">{{ entry.value }}</div><div class="diagram-stat-label">{{ entry.label }}</div>{% if entry.desc %}<div class="diagram-stat-desc">{{ entry.desc }}</div>{% endif %}</div>
+      {% endfor %}
+    </div>
     {% endif %}
   </div>
   {% endif %}
@@ -1570,16 +1902,23 @@ body.nav-open .nav-toggle { display: none; }
       <div class="point-group-flow">
         {% for point in group.points %}
         {% if not loop.first %}<span class="pg-flow-arrow">→</span>{% endif %}
-        <div class="pg-flow-step"><span class="point-text">{%- if point is mapping %}{{ point.text }}{% else %}{{ point }}{% endif -%}</span></div>
+        <div class="pg-flow-step">
+          <span class="point-text">{%- if point is mapping %}{{ point.text }}{% else %}{{ point }}{% endif -%}</span>
+          {%- if point is mapping and point.detail %}<span class="point-desc">{{ point.detail }}</span>{% endif -%}
+        </div>
         {% endfor %}
       </div>
       {% else %}
       {% for point in group.points | default([]) %}
       <div class="point-item">
-        <span class="point-text">
-          {%- if point is mapping %}{{ point.text }}{% else %}{{ point }}{% endif -%}
-          {%- if point is mapping and point.detail %}<span class="fn-ref">{{ ns.fn_counter }}<span class="fn-tip">{{ point.detail }}</span></span>{% set ns.fn_counter = ns.fn_counter + 1 %}{% endif -%}
-        </span>
+        {%- if point is mapping and point.detail %}
+        <span class="point-label">{{ point.text }}</span>
+        <span class="point-desc">{{ point.detail }}</span>
+        {%- elif point is mapping %}
+        <span class="point-text">{{ point.text }}</span>
+        {%- else %}
+        <span class="point-text">{{ point }}</span>
+        {%- endif %}
       </div>
       {% endfor %}
       {% endif %}
@@ -1602,7 +1941,8 @@ body.nav-open .nav-toggle { display: none; }
     {% for story in section.stories %}
     <div class="story-card">
       {% if story is mapping %}
-      <div class="narrator">{{ story.narrator_id }}</div>
+      {% set matched = participants | selectattr('id', 'eq', story.narrator_id) | list %}
+      <div class="narrator">{{ matched[0].name if matched else story.narrator_id }}</div>
       <p>{{ story.text }}</p>
       {% else %}
       <p>{{ story }}</p>
@@ -1657,28 +1997,23 @@ body.nav-open .nav-toggle { display: none; }
     <div class="concept-card reveal{% if loop.index > 1 %} reveal-delay-{{ [loop.index - 1, 4] | min }}{% endif %}">
       <div class="concept-term">{{ concept.term | default('') }}</div>
       <div class="concept-definition">{{ concept.definition | default('') }}</div>
-      {% if concept.explanation is defined or concept.examples is defined or concept.related_concepts is defined %}
-      <details class="concept-details">
-        <summary>展开详情 ▸</summary>
-        {% if concept.explanation is defined and concept.explanation %}
-        <div class="concept-explanation">{{ concept.explanation }}</div>
-        {% endif %}
-        {% if concept.examples is defined and concept.examples %}
-        <ul class="concept-examples">
-          {% for example in concept.examples %}
-          <li>{{ example }}</li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-        {% if concept.related_concepts is defined and concept.related_concepts %}
-        <div class="concept-related">
-          相关概念：
-          {% for rel in concept.related_concepts %}
-          <span>{{ rel }}</span>{% if not loop.last %}、{% endif %}
-          {% endfor %}
-        </div>
-        {% endif %}
-      </details>
+      {% if concept.explanation is defined and concept.explanation %}
+      <div class="concept-explanation">{{ concept.explanation }}</div>
+      {% endif %}
+      {% if concept.examples is defined and concept.examples %}
+      <ul class="concept-examples">
+        {% for example in concept.examples %}
+        <li>{{ example }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% if concept.related_concepts is defined and concept.related_concepts %}
+      <div class="concept-related">
+        相关概念：
+        {% for rel in concept.related_concepts %}
+        <span>{{ rel }}</span>{% if not loop.last %}、{% endif %}
+        {% endfor %}
+      </div>
       {% endif %}
     </div>
     {% endfor %}
@@ -1706,6 +2041,80 @@ body.nav-open .nav-toggle { display: none; }
       {% if item.further_resources is defined and item.further_resources %}
       <div class="reading-resources">{{ item.further_resources }}</div>
       {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- ===== DETAILED TIMELINE ===== -->
+{% if detailed_timeline is defined and detailed_timeline %}
+<section id="detailed-timeline" style="background:var(--bg2);">
+  <div class="section-label reveal">逐段导览</div>
+  <h2 class="section-title reveal">详细时间轴</h2>
+  <div class="section-divider reveal"></div>
+  <div class="timeline-list reveal">
+    {% for item in detailed_timeline %}
+    <div class="timeline-item">
+      <div class="timeline-stamp">{{ item.label }}</div>
+      <div class="timeline-dot">
+        <div class="timeline-headline">{{ item.headline }}</div>
+        <div class="timeline-narrative">{{ item.narrative }}</div>
+        {% if item.topics %}
+        <div class="timeline-topics">
+          {% for topic in item.topics %}
+          <span class="timeline-topic">{{ topic }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- ===== KNOWLEDGE CARDS ===== -->
+{% if knowledge_cards is defined and knowledge_cards %}
+<section id="knowledge-cards" style="background:var(--bg);">
+  <div class="section-label reveal">知识体系</div>
+  <h2 class="section-title reveal">知识卡片</h2>
+  <div class="section-divider reveal"></div>
+
+  {% set ns = namespace(all_tags=[]) %}
+  {% for kc in knowledge_cards %}
+    {% for tag in kc.tags | default([]) %}
+      {% if tag not in ns.all_tags %}{% set ns.all_tags = ns.all_tags + [tag] %}{% endif %}
+    {% endfor %}
+  {% endfor %}
+
+  {% if ns.all_tags %}
+  <div class="kc-filter-bar reveal">
+    <button class="kc-filter-btn active" data-tag="all">全部</button>
+    {% for tag in ns.all_tags %}
+    <button class="kc-filter-btn" data-tag="{{ tag }}">{{ tag }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="kc-grid">
+    {% for kc in knowledge_cards %}
+    <div class="kc-card reveal" data-tags="{{ kc.tags | default([]) | join(',') }}">
+      <div class="kc-claim">{{ kc.claim }}</div>
+      {% if kc.evidence_summary %}
+      <div class="kc-evidence">{{ kc.evidence_summary }}</div>
+      {% endif %}
+      {% if kc.extension %}
+      <div class="kc-extension">{{ kc.extension }}</div>
+      {% endif %}
+      <div class="kc-footer">
+        {% for tag in kc.tags | default([]) %}
+        <span class="kc-tag">{{ tag }}</span>
+        {% endfor %}
+        {% if kc.related_card_ids %}
+        <span class="kc-relation">→ 关联 {{ kc.related_card_ids | length }} 张</span>
+        {% endif %}
+      </div>
     </div>
     {% endfor %}
   </div>
@@ -1982,6 +2391,19 @@ document.getElementById('quiz-submit').addEventListener('click', () => {
   const resultEl = document.getElementById('quiz-result');
   resultEl.style.display = 'block';
   resultEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+
+// === Knowledge Cards 标签筛选 ===
+document.querySelectorAll('.kc-filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.kc-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const tag = btn.dataset.tag;
+    document.querySelectorAll('.kc-card').forEach(card => {
+      const tags = card.dataset.tags.split(',');
+      card.style.display = (tag === 'all' || tags.includes(tag)) ? '' : 'none';
+    });
+  });
 });
 
 // Slider 渐变色更新

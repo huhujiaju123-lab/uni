@@ -82,6 +82,15 @@ def fetch_metadata(url: str) -> dict:
         if match:
             audio_url = match.group(0)
 
+    # 从 JSON-LD 提取音频时长（格式如 "PT80M" = 80分钟，"PT1H30M" = 90分钟）
+    duration_sec = 0
+    time_required = _extract_from_jsonld(soup, "timeRequired")
+    if time_required:
+        m = re.match(r"PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?", time_required)
+        if m:
+            h, mn, s = (int(x) if x else 0 for x in m.groups())
+            duration_sec = h * 3600 + mn * 60 + s
+
     metadata = {
         "episode_id": episode_id,
         "title": title,
@@ -90,6 +99,7 @@ def fetch_metadata(url: str) -> dict:
         "cover_url": cover_url,
         "podcast_name": podcast_name,
         "source_url": url,
+        "duration_sec": duration_sec,
     }
 
     # 输出结果摘要

@@ -44,28 +44,61 @@ h1 {
   color: var(--gold);
   text-align: center;
   margin-bottom: 8px;
+  transition: all 0.4s;
 }
+
+h1.done { color: var(--green); }
 
 .meta-preview {
   text-align: center;
   color: var(--text-dim);
   font-size: 0.9rem;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   min-height: 1.4em;
 }
 
+/* ── 总进度条 ── */
+.total-progress {
+  margin-bottom: 28px;
+}
+
+.total-progress-track {
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.total-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  border-radius: 2px;
+  transition: width 0.8s ease;
+}
+
+.total-progress-bar.complete {
+  background: linear-gradient(90deg, var(--green), #60e080);
+}
+
+.total-progress-text {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+
+/* ── 步骤卡片 ── */
 .steps {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 40px;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .step {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 18px 20px;
+  padding: 16px 18px 12px;
   background: var(--bg2);
   border: 1px solid rgba(255,255,255,0.04);
   border-radius: 12px;
@@ -85,14 +118,20 @@ h1 {
   border-color: rgba(224, 80, 80, 0.3);
 }
 
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
 .step-icon {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: 0.95rem;
   flex-shrink: 0;
   background: rgba(255,255,255,0.04);
   transition: all 0.4s;
@@ -118,12 +157,13 @@ h1 {
 
 .step-content {
   flex: 1;
+  min-width: 0;
 }
 
 .step-name {
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 500;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .step.pending .step-name { color: var(--text-dim); }
@@ -132,17 +172,95 @@ h1 {
 .step.error .step-name { color: var(--danger); }
 
 .step-detail {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--text-dim);
   min-height: 1em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .step-num {
   font-size: 0.7rem;
   color: var(--text-dim);
   opacity: 0.5;
+  flex-shrink: 0;
 }
 
+/* 每步进度条 */
+.step-progress {
+  height: 3px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 2px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.step-progress-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+.step.pending .step-progress-bar { width: 0%; background: transparent; }
+
+.step.running .step-progress-bar {
+  background: var(--gold);
+  transition: width 1s ease;
+}
+
+.step.done .step-progress-bar {
+  background: var(--green);
+  width: 100% !important;
+}
+
+.step.error .step-progress-bar {
+  background: var(--danger);
+}
+
+/* ── 后台提示 ── */
+.bg-hint {
+  padding: 12px 16px;
+  background: rgba(212, 160, 23, 0.06);
+  border: 1px solid rgba(212, 160, 23, 0.15);
+  border-radius: 10px;
+  color: var(--text-dim);
+  font-size: 0.82rem;
+  margin-bottom: 20px;
+  text-align: center;
+  display: none;
+  line-height: 1.5;
+}
+
+.bg-hint.show { display: block; }
+
+/* ── 完成横幅 ── */
+.done-banner {
+  padding: 20px;
+  background: rgba(64, 192, 96, 0.08);
+  border: 1px solid rgba(64, 192, 96, 0.25);
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 20px;
+  display: none;
+}
+
+.done-banner.show { display: block; }
+
+.done-banner h2 {
+  font-family: var(--font);
+  color: var(--green);
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.done-banner .countdown {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+/* ── 错误 / 操作 ── */
 .error-box {
   padding: 16px 20px;
   background: rgba(224, 80, 80, 0.08);
@@ -195,48 +313,83 @@ h1 {
 <body>
 
 <div class="container">
-  <h1>处理中</h1>
+  <h1 id="title">处理中</h1>
   <div class="meta-preview" id="meta-preview">正在启动...</div>
 
+  <!-- 总进度条 -->
+  <div class="total-progress">
+    <div class="total-progress-track">
+      <div class="total-progress-bar" id="total-bar"></div>
+    </div>
+    <div class="total-progress-text">
+      <span id="total-pct">0%</span>
+      <span id="total-elapsed">已用 0:00</span>
+    </div>
+  </div>
+
+  <!-- 步骤卡片 -->
   <div class="steps" id="steps">
     <div class="step pending" data-index="0">
-      <div class="step-icon">📡</div>
-      <div class="step-content">
-        <div class="step-name">获取元数据</div>
-        <div class="step-detail"></div>
+      <div class="step-header">
+        <div class="step-icon">📡</div>
+        <div class="step-content">
+          <div class="step-name">获取元数据</div>
+          <div class="step-detail"></div>
+        </div>
+        <div class="step-num">1/4</div>
       </div>
-      <div class="step-num">1/4</div>
+      <div class="step-progress"><div class="step-progress-bar"></div></div>
     </div>
     <div class="step pending" data-index="1">
-      <div class="step-icon">🎙️</div>
-      <div class="step-content">
-        <div class="step-name">音频转录</div>
-        <div class="step-detail"></div>
+      <div class="step-header">
+        <div class="step-icon">🎙️</div>
+        <div class="step-content">
+          <div class="step-name">音频转录</div>
+          <div class="step-detail"></div>
+        </div>
+        <div class="step-num">2/4</div>
       </div>
-      <div class="step-num">2/4</div>
+      <div class="step-progress"><div class="step-progress-bar"></div></div>
     </div>
     <div class="step pending" data-index="2">
-      <div class="step-icon">🧠</div>
-      <div class="step-content">
-        <div class="step-name">AI 内容分析</div>
-        <div class="step-detail"></div>
+      <div class="step-header">
+        <div class="step-icon">🧠</div>
+        <div class="step-content">
+          <div class="step-name">AI 内容分析</div>
+          <div class="step-detail"></div>
+        </div>
+        <div class="step-num">3/4</div>
       </div>
-      <div class="step-num">3/4</div>
+      <div class="step-progress"><div class="step-progress-bar"></div></div>
     </div>
     <div class="step pending" data-index="3">
-      <div class="step-icon">🎨</div>
-      <div class="step-content">
-        <div class="step-name">生成可视化</div>
-        <div class="step-detail"></div>
+      <div class="step-header">
+        <div class="step-icon">🎨</div>
+        <div class="step-content">
+          <div class="step-name">生成可视化</div>
+          <div class="step-detail"></div>
+        </div>
+        <div class="step-num">4/4</div>
       </div>
-      <div class="step-num">4/4</div>
+      <div class="step-progress"><div class="step-progress-bar"></div></div>
     </div>
+  </div>
+
+  <!-- 后台提示 -->
+  <div class="bg-hint" id="bg-hint">
+    💡 处理可能需要 5-15 分钟，你可以先收起页面做其他事，稍后回来查看
+  </div>
+
+  <!-- 完成横幅 -->
+  <div class="done-banner" id="done-banner">
+    <h2>生成完成！</h2>
+    <div class="countdown" id="countdown">3 秒后自动跳转...</div>
   </div>
 
   <div class="error-box" id="error-box"></div>
 
   <div class="actions" id="actions">
-    <a id="view-link" href="#">查看可视化网页</a>
+    <a id="view-link" href="#">查看可视化报告</a>
   </div>
 
   <div class="back-link">
@@ -251,28 +404,113 @@ const metaEl = document.getElementById('meta-preview');
 const errorBox = document.getElementById('error-box');
 const actionsEl = document.getElementById('actions');
 const viewLink = document.getElementById('view-link');
+const titleEl = document.getElementById('title');
+const totalBar = document.getElementById('total-bar');
+const totalPct = document.getElementById('total-pct');
+const totalElapsed = document.getElementById('total-elapsed');
+const bgHint = document.getElementById('bg-hint');
+const doneBanner = document.getElementById('done-banner');
+const countdownEl = document.getElementById('countdown');
 
 const icons = { pending: '⏳', running: '⏳', done: '✅', error: '❌' };
 
-const source = new EventSource(`/stream/${taskId}`);
+// 默认预估（无音频时长时使用）
+const EST_DEFAULT = [
+  { label: '~5 秒', sec: 10 },
+  { label: '~5-15 分钟', sec: 600 },
+  { label: '~1-2 分钟', sec: 90 },
+  { label: '~5 秒', sec: 10 },
+];
 
-source.onmessage = function(e) {
-  const data = JSON.parse(e.data);
+// 根据音频时长动态计算的预估
+let EST = [...EST_DEFAULT];
+let audioDurationKnown = false;
+
+function updateEstFromDuration(durationSec) {
+  if (!durationSec || audioDurationKnown) return;
+  audioDurationKnown = true;
+  // 转录时间约为音频时长的 5-10%（Deepgram 很快），取 8% + 30s 缓冲
+  const transcribeEst = Math.round(durationSec * 0.08 + 30);
+  // AI 分析时间随文本长度增长，大约 60-180s
+  const analyzeEst = Math.min(180, Math.round(durationSec * 0.02 + 60));
+  const mins = Math.round(durationSec / 60);
+  EST[1] = { label: `~${fmtTime(transcribeEst)}（${mins}分钟音频）`, sec: transcribeEst };
+  EST[2] = { label: `~${fmtTime(analyzeEst)}`, sec: analyzeEst };
+  // 更新后台提示
+  const totalEst = Math.round((transcribeEst + analyzeEst) / 60);
+  bgHint.textContent = `💡 ${mins} 分钟音频，预计处理约 ${totalEst} 分钟，你可以先收起页面做其他事`;
+}
+
+let pollTimer = null;
+let isDone = false;
+
+function fmtTime(sec) {
+  sec = Math.max(0, Math.round(sec));
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+function updateUI(data) {
+  if (isDone) return;
 
   // 更新步骤状态
   if (data.steps) {
+    let doneCount = 0;
+    let runningIdx = -1;
+
     data.steps.forEach((step, i) => {
       const el = stepsEl[i];
+      const prevStatus = el.dataset.status || 'pending';
+      el.dataset.status = step.status;
       el.className = `step ${step.status}`;
-      const iconEl = el.querySelector('.step-icon');
-      iconEl.textContent = icons[step.status] || '⏳';
-      el.querySelector('.step-detail').textContent = step.detail || '';
+      el.querySelector('.step-icon').textContent = icons[step.status] || '⏳';
+
+      // 构建 detail 文本
+      let detail = step.detail || '';
+      if (step.status === 'running' && data.step_elapsed !== undefined) {
+        const elapsed = fmtTime(data.step_elapsed);
+        detail = detail ? `${detail} · ⏱ ${elapsed} / 预计 ${EST[i].label}` : `⏱ ${elapsed} / 预计 ${EST[i].label}`;
+        // 进度条宽度：elapsed / estimated，最大 92%（完成时才到 100%）
+        const ratio = Math.min(0.92, data.step_elapsed / EST[i].sec);
+        const pctWidth = Math.max(5, Math.round(ratio * 100));
+        el.querySelector('.step-progress-bar').style.width = pctWidth + '%';
+      }
+      el.querySelector('.step-detail').textContent = detail;
+
+      if (step.status === 'done') doneCount++;
+      if (step.status === 'running') runningIdx = i;
     });
+
+    // 总进度（含当前步骤的部分进度）
+    let pct = Math.round((doneCount / 4) * 100);
+    if (runningIdx >= 0 && data.step_elapsed !== undefined) {
+      const stepRatio = Math.min(0.92, data.step_elapsed / EST[runningIdx].sec);
+      pct = Math.round(((doneCount + stepRatio) / 4) * 100);
+    }
+    totalBar.style.width = pct + '%';
+    totalPct.textContent = pct + '%';
+
+    // 后台提示：当转录或分析步骤运行时显示
+    if (runningIdx >= 1) {
+      bgHint.classList.add('show');
+    }
   }
 
-  // 更新元数据预览
-  if (data.metadata && data.metadata.title) {
-    metaEl.textContent = `${data.metadata.podcast_name} · ${data.metadata.title}`;
+  // 总耗时
+  if (data.elapsed !== undefined) {
+    totalElapsed.textContent = '已用 ' + fmtTime(data.elapsed);
+  }
+
+  // 元数据预览 + 动态预估
+  if (data.metadata) {
+    if (data.metadata.title) {
+      const name = data.metadata.podcast_name;
+      metaEl.textContent = name ? `${name} · ${data.metadata.title}` : data.metadata.title;
+    }
+    if (data.metadata.duration_sec) {
+      updateEstFromDuration(data.metadata.duration_sec);
+    }
   }
 
   // 错误
@@ -283,25 +521,83 @@ source.onmessage = function(e) {
 
   // 完成
   if (data.done && !data.error && data.episode_id) {
-    source.close();
-    viewLink.href = `/view/${data.episode_id}`;
-    actionsEl.style.display = 'block';
-    document.title = '完成！ | 播客可视化';
-    // 3 秒后自动跳转
-    setTimeout(() => {
-      window.location.href = `/view/${data.episode_id}`;
-    }, 3000);
+    handleDone(data.episode_id);
   }
 
   if (data.done && data.error) {
-    source.close();
+    isDone = true;
+    titleEl.textContent = '出错了';
+    titleEl.style.color = 'var(--danger)';
     document.title = '出错了 | 播客可视化';
   }
+}
+
+function handleDone(episodeId) {
+  if (isDone) return;
+  isDone = true;
+
+  // 更新总进度条
+  totalBar.style.width = '100%';
+  totalBar.classList.add('complete');
+  totalPct.textContent = '100%';
+
+  // 更新标题
+  titleEl.textContent = '生成完成！';
+  titleEl.classList.add('done');
+  document.title = '✅ 完成！| 播客可视化';
+
+  // 隐藏后台提示
+  bgHint.classList.remove('show');
+
+  // 显示完成横幅 + 按钮
+  doneBanner.classList.add('show');
+  viewLink.href = `/view/${episodeId}`;
+  actionsEl.style.display = 'block';
+
+  // 倒计时跳转
+  let countdown = 3;
+  countdownEl.textContent = `${countdown} 秒后自动跳转...`;
+  const timer = setInterval(() => {
+    countdown--;
+    if (countdown > 0) {
+      countdownEl.textContent = `${countdown} 秒后自动跳转...`;
+    } else {
+      clearInterval(timer);
+      window.location.href = `/view/${episodeId}`;
+    }
+  }, 1000);
+}
+
+// ── SSE 连接 ──
+const source = new EventSource(`/stream/${taskId}`);
+
+source.onmessage = function(e) {
+  const data = JSON.parse(e.data);
+  updateUI(data);
+  if (data.done) source.close();
 };
 
 source.onerror = function() {
   source.close();
+  if (isDone) return;
+  // SSE 断线 → 切换到 polling 模式
+  startPolling();
 };
+
+function startPolling() {
+  if (pollTimer) return;
+  pollTimer = setInterval(async () => {
+    try {
+      const resp = await fetch(`/api/status/${taskId}`);
+      const data = await resp.json();
+      updateUI(data);
+      if (data.done) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+      }
+    } catch(e) { /* 网络暂时不可用，继续重试 */ }
+  }, 3000);
+}
 </script>
 
 </body>
