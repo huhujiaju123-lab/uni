@@ -1407,17 +1407,17 @@ body.nav-open .nav-toggle { display: none; }
       <div class="diagram-flow-step"><div class="diagram-flow-step-inner"><div class="diagram-flow-label">{{ step.label }}</div><div class="diagram-flow-desc">{{ step.desc | default('') }}</div></div></div>
       {% endfor %}
     </div>
-    {% elif section.diagram.type == 'comparison' and section.diagram.left is defined %}
+    {% elif section.diagram.type == 'comparison' and section.diagram.left is defined and section.diagram.entries is defined %}
     <div class="diagram-comparison">
       <div class="diagram-comparison-header"><div class="diagram-comparison-header-left">{{ section.diagram.left.label }}</div><div class="diagram-comparison-header-vs">VS</div><div class="diagram-comparison-header-right">{{ section.diagram.right.label }}</div></div>
-      {% for item in section.diagram['items'] %}
-      <div class="diagram-comparison-row"><div class="diagram-comparison-left">{{ item.left }}</div><div class="diagram-comparison-arrow">→</div><div class="diagram-comparison-right">{{ item.right }}</div></div>
+      {% for entry in section.diagram.entries %}
+      <div class="diagram-comparison-row"><div class="diagram-comparison-left">{{ entry.left }}</div><div class="diagram-comparison-arrow">→</div><div class="diagram-comparison-right">{{ entry.right }}</div></div>
       {% endfor %}
     </div>
-    {% elif section.diagram.type == 'icon-list' and section.diagram['items'] is defined %}
+    {% elif section.diagram.type == 'icon-list' and section.diagram.entries is defined %}
     <div class="diagram-icon-list">
-      {% for item in section.diagram['items'] %}
-      <div class="diagram-icon-item"><div class="diagram-icon-emoji">{{ item.icon }}</div><div class="diagram-icon-label">{{ item.label }}</div><div class="diagram-icon-desc">{{ item.desc | default('') }}</div></div>
+      {% for entry in section.diagram.entries %}
+      <div class="diagram-icon-item"><div class="diagram-icon-emoji">{{ entry.icon }}</div><div class="diagram-icon-label">{{ entry.label }}</div><div class="diagram-icon-desc">{{ entry.desc | default('') }}</div></div>
       {% endfor %}
     </div>
     {% elif section.diagram.type == 'slope' and section.diagram.elements is defined %}
@@ -1523,17 +1523,17 @@ body.nav-open .nav-toggle { display: none; }
       <div class="diagram-flow-step"><div class="diagram-flow-step-inner"><div class="diagram-flow-label">{{ step.label }}</div><div class="diagram-flow-desc">{{ step.desc | default('') }}</div></div></div>
       {% endfor %}
     </div>
-    {% elif section.diagram.type == 'comparison' and section.diagram.left is defined %}
+    {% elif section.diagram.type == 'comparison' and section.diagram.left is defined and section.diagram.entries is defined %}
     <div class="diagram-comparison">
       <div class="diagram-comparison-header"><div class="diagram-comparison-header-left">{{ section.diagram.left.label }}</div><div class="diagram-comparison-header-vs">VS</div><div class="diagram-comparison-header-right">{{ section.diagram.right.label }}</div></div>
-      {% for item in section.diagram['items'] %}
-      <div class="diagram-comparison-row"><div class="diagram-comparison-left">{{ item.left }}</div><div class="diagram-comparison-arrow">→</div><div class="diagram-comparison-right">{{ item.right }}</div></div>
+      {% for entry in section.diagram.entries %}
+      <div class="diagram-comparison-row"><div class="diagram-comparison-left">{{ entry.left }}</div><div class="diagram-comparison-arrow">→</div><div class="diagram-comparison-right">{{ entry.right }}</div></div>
       {% endfor %}
     </div>
-    {% elif section.diagram.type == 'icon-list' and section.diagram['items'] is defined %}
+    {% elif section.diagram.type == 'icon-list' and section.diagram.entries is defined %}
     <div class="diagram-icon-list">
-      {% for item in section.diagram['items'] %}
-      <div class="diagram-icon-item"><div class="diagram-icon-emoji">{{ item.icon }}</div><div class="diagram-icon-label">{{ item.label }}</div><div class="diagram-icon-desc">{{ item.desc | default('') }}</div></div>
+      {% for entry in section.diagram.entries %}
+      <div class="diagram-icon-item"><div class="diagram-icon-emoji">{{ entry.icon }}</div><div class="diagram-icon-label">{{ entry.label }}</div><div class="diagram-icon-desc">{{ entry.desc | default('') }}</div></div>
       {% endfor %}
     </div>
     {% elif section.diagram.type == 'slope' and section.diagram.elements is defined %}

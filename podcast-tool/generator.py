@@ -220,6 +220,15 @@ def render(episode_json_path: str, output_path: str = None) -> str:
             g.setdefault("visual_type", "list")
         s.setdefault("diagram", None)
         s.setdefault("section_context", "")
+        # diagram 预处理：重命名 items → entries（避免 Jinja2 与 dict.items 冲突）
+        # 并移除只有 type/title/description 但无实际数据的空 diagram
+        if s.get("diagram") and isinstance(s["diagram"], dict):
+            d = s["diagram"]
+            if "items" in d:
+                d["entries"] = d.pop("items")
+            has_data = any(k in d for k in ("steps", "entries", "elements", "layers", "left"))
+            if not has_data:
+                s["diagram"] = None
 
     # Quiz 配置
     quiz = data.get("quiz") or DEFAULT_QUIZ

@@ -1,5 +1,20 @@
 # Changelog
 
+## v2.0.1 (2026-02-28)
+Diagram 渲染修复 + 健壮性加固
+
+### 修复
+- **修复 `builtin_function_or_method` 崩溃**：Jinja2 中 `dict['items']` 在 key 不存在时回退到 Python dict 的 `.items()` 方法，导致迭代报错。字段名从 `items` 统一改为 `entries`
+- **空壳 diagram 防御**：AI 只生成 type/title/description 但无实际数据时，预处理阶段自动清除，避免空渲染
+- **Prompt 补全 diagram 数据结构**：5 种 diagram 类型（flow/comparison/icon-list/slope/layers）均补充了必需的数据字段说明，确保 AI 生成完整数据
+
+### 改动文件
+- `analyzer.py`：prompt 增加 diagram 完整 schema + 数据字段要求
+- `generator.py`：预处理 `items` → `entries` 重命名 + 空 diagram 清除
+- `templates/base.html.j2`：`diagram['items']` → `diagram.entries`
+
+---
+
 ## v2.0 (2026-02-28)
 内容深度升级 + 可视化图表 + 导航重构
 

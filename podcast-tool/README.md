@@ -6,6 +6,7 @@
 
 | 版本 | Tag | 链接 | 端口 | 服务器路径 |
 |------|-----|------|------|-----------|
+| v2.0.1 | `podcast-viz/v2.0.1` | http://134.175.228.73:8081 | 8081 | /opt/podcast-viz-v2/ |
 | v2.0 | `podcast-viz/v2.0` | http://134.175.228.73:8081 | 8081 | /opt/podcast-viz-v2/ |
 | v1.0 | `podcast-viz/v1.0` | http://134.175.228.73 | 80 | /opt/podcast-viz/ |
 

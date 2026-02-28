@@ -68,7 +68,16 @@ SYSTEM_PROMPT = """你是一位专业的播客内容分析师，擅长将播客�
         }
       ],
       "key_points_grouped": [{"label": "分组名", "visual_type": "list", "points": [{"text": "要点", "detail": "补充"}]}],
-      "diagram": {"type": "flow|comparison|icon-list|slope|layers", "title": "图表标题", "description": "可选说明"},
+      "diagram": {
+        "type": "flow|comparison|icon-list|slope|layers",
+        "title": "图表标题",
+        "description": "可选说明",
+        "// flow 类型需要": "steps: [{label, desc}]",
+        "// comparison 类型需要": "left: {label}, right: {label}, entries: [{left, right}]",
+        "// icon-list 类型需要": "entries: [{icon, label, desc}]",
+        "// slope 类型需要": "elements: [{label, level}]，level 为 low/barrier/high",
+        "// layers 类型需要": "layers: [{label, desc, depth}]，depth 为 1/2/3"
+      },
       "section_context": "本章在全集逻辑中的位置（一句话）"
     }
   ],
@@ -161,7 +170,12 @@ SYSTEM_PROMPT = """你是一位专业的播客内容分析师，擅长将播客�
 12. **extended_reading**：延伸 4-6 个话题方向，deep_dive 可超出播客内容
 13. **mind_map**：2-3 层树状结构，type 为 theme/concept/argument/example，一级 3-5 个节点
 14. **key_points_grouped**：将 key_points 按逻辑分组（2-4组），每组有 label 和 points。**text 必须是完整观点句（15-40字），禁止只写关键词！detail 必须包含具体论据、数据或原文引述（20-80字）。** 读者仅通过 key_points_grouped 就能理解本章 80% 的核心内容。visual_type 可选值：list（默认）、comparison（对比）、flow（流程）、icon-grid（图标网格）
-15. **diagram**：当章节内容适合用图表辅助理解时添加。type：flow（流程图）、comparison（对比图）、icon-list（图标列表）、slope（坡度模型）、layers（层次图）。不是每个章节都需要，每期通常 3-5 个
+15. **diagram**：当章节内容适合用图表辅助理解时添加，每期通常 3-5 个。**必须包含完整数据字段，不能只写 type/title/description！**各类型必需字段：
+    - flow：`steps: [{label: "步骤名", desc: "说明"}]`（3-6步）
+    - comparison：`left: {label: "左侧标签"}, right: {label: "右侧标签"}, entries: [{left: "左侧内容", right: "右侧内容"}]`（3-5行）
+    - icon-list：`entries: [{icon: "emoji", label: "标签", desc: "说明"}]`（4-8项）
+    - slope：`elements: [{label: "标签", level: "low|barrier|high"}]`（3-5项）
+    - layers：`layers: [{label: "标签", desc: "说明", depth: 1|2|3}]`（3层）
 16. **输出纯 JSON**：不要加 ```json 代码块标记，不要加解释文字
 """
 
