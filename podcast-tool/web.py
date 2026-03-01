@@ -12,7 +12,7 @@ from core import (
     OUTPUT_DIR, tasks,
     MAX_CONCURRENT_TASKS, check_rate_limit, sanitize_error,
     is_valid_episode_id, get_history, get_user_history, record_user_episode,
-    create_task, check_cache,
+    create_task, check_cache, get_showcase,
 )
 
 web = Blueprint("web", __name__)
@@ -40,7 +40,8 @@ def index():
         history = get_user_history(uid)
     else:
         history = []
-    resp = make_response(render_template("index.html", history=history))
+    showcase = get_showcase()
+    resp = make_response(render_template("index.html", history=history, showcase=showcase))
     if not uid:
         uid = uuid.uuid4().hex[:8]
         resp.set_cookie("uid", uid, max_age=365 * 86400, httponly=True, samesite="Lax")

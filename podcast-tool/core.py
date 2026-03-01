@@ -103,6 +103,34 @@ def get_user_history(uid):
     return [h for h in get_history() if h["episode_id"] in user_episodes]
 
 
+# ── 精选样例 ──────────────────────────────────
+SHOWCASE_TAGS = {
+    "5e39435d418a84a046be3d3c": ["神话", "文化"],
+    "6735c8cef373fe5d4d46858e": ["纪实", "生活"],
+    "6895a38746542d8c4120d691": ["习惯", "成长"],
+    "68f77f0e2265473020918de6": ["读书", "认知"],
+    "6900bb4e740634ca476f82de": ["科学", "思维"],
+    "6914ab11cbba038b4242c92c": ["商业", "餐饮"],
+    "691b0381cbba038b42f6933c": ["心理", "关系"],
+    "697863e37926069fc865c16d": ["心理", "女性"],
+    "6985a3ab88663289fe893c16": ["故事", "日本"],
+    "6988872d66e2c3037774566c": ["自然", "科普"],
+    "699beb2c66e2c3037715508a": ["家庭", "成长"],
+    "699d628466e2c303773757a6": ["美食", "文化"],
+}
+
+
+def get_showcase():
+    """返回带标签的精选样例列表"""
+    showcase = []
+    for item in get_history():
+        eid = item["episode_id"]
+        if eid in SHOWCASE_TAGS:
+            item["tags"] = SHOWCASE_TAGS[eid]
+            showcase.append(item)
+    return showcase
+
+
 def create_task(url, uid=""):
     """创建新任务并启动后台流水线，返回 task_id"""
     task_id = str(uuid.uuid4())[:8]

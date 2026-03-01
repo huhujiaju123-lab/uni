@@ -31,12 +31,11 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
+  padding: 60px 20px 40px;
 }
 
 .container {
-  max-width: 600px;
+  max-width: 680px;
   width: 100%;
   text-align: center;
 }
@@ -127,19 +126,6 @@ button[type="submit"]:active {
   margin-bottom: 48px;
 }
 
-.history {
-  text-align: left;
-}
-
-.history h3 {
-  font-family: var(--font);
-  font-size: 1rem;
-  color: var(--text-dim);
-  margin-bottom: 16px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-
 .history-item {
   display: block;
   padding: 14px 18px;
@@ -166,6 +152,86 @@ button[type="submit"]:active {
   font-size: 0.78rem;
   color: var(--text-dim);
 }
+
+/* ===== 精选样例 ===== */
+.showcase { text-align: left; margin-bottom: 40px; }
+.showcase h3 {
+  font-family: var(--font);
+  font-size: 1rem;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.showcase-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.showcase-card {
+  display: block;
+  padding: 16px;
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.2s;
+}
+.showcase-card:hover {
+  border-color: rgba(212, 160, 23, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.card-title {
+  font-size: 0.88rem;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.card-podcast { font-size: 0.72rem; color: var(--text-dim); }
+.card-tags { display: flex; gap: 4px; }
+.tag {
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  background: rgba(212, 160, 23, 0.12);
+  color: var(--gold);
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .showcase-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== 个人历史折叠 ===== */
+.history { text-align: left; }
+.history-toggle {
+  font-family: var(--font);
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.history-toggle::-webkit-details-marker { display: none; }
+.history-toggle::before { content: '▸'; transition: transform 0.2s; }
+details[open] .history-toggle::before { transform: rotate(90deg); }
+.history-count {
+  font-size: 0.72rem;
+  background: rgba(255,255,255,0.08);
+  padding: 1px 8px;
+  border-radius: 10px;
+}
+.history-list { margin-top: 12px; }
 
 .footer {
   position: fixed;
@@ -195,15 +261,36 @@ button[type="submit"]:active {
   </form>
   <p class="hint">支持小宇宙单集页面链接</p>
 
+  {% if showcase %}
+  <div class="showcase">
+    <h3>先看看效果</h3>
+    <div class="showcase-grid">
+      {% for item in showcase %}
+      <a class="showcase-card" href="/view/{{ item.episode_id }}">
+        <div class="card-title">{{ item.title }}</div>
+        <div class="card-meta">
+          {% if item.podcast_name %}<span class="card-podcast">{{ item.podcast_name }}</span>{% endif %}
+          <span class="card-tags">{% for tag in item.tags %}<span class="tag">{{ tag }}</span>{% endfor %}</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
   {% if history %}
   <div class="history">
-    <h3>已生成</h3>
-    {% for item in history %}
-    <a class="history-item" href="/view/{{ item.episode_id }}">
-      <div class="title">{{ item.title }}</div>
-      <div class="podcast">{{ item.podcast_name }}</div>
-    </a>
-    {% endfor %}
+    <details>
+      <summary class="history-toggle">我的记录 <span class="history-count">{{ history|length }}</span></summary>
+      <div class="history-list">
+        {% for item in history %}
+        <a class="history-item" href="/view/{{ item.episode_id }}">
+          <div class="title">{{ item.title }}</div>
+          <div class="podcast">{{ item.podcast_name }}</div>
+        </a>
+        {% endfor %}
+      </div>
+    </details>
   </div>
   {% endif %}
 </div>
