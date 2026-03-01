@@ -377,7 +377,7 @@ h1.done { color: var(--green); }
 
   <!-- 后台提示 -->
   <div class="bg-hint" id="bg-hint">
-    💡 处理可能需要 5-15 分钟，你可以先收起页面做其他事，稍后回来查看
+    💡 生成需要一些时间，请耐心等待。用电脑打开生成更方便哦
   </div>
 
   <!-- 完成横幅 -->
@@ -436,9 +436,7 @@ function updateEstFromDuration(durationSec) {
   const mins = Math.round(durationSec / 60);
   EST[1] = { label: `~${fmtTime(transcribeEst)}（${mins}分钟音频）`, sec: transcribeEst };
   EST[2] = { label: `~${fmtTime(analyzeEst)}`, sec: analyzeEst };
-  // 更新后台提示
-  const totalEst = Math.round((transcribeEst + analyzeEst) / 60);
-  bgHint.textContent = `💡 ${mins} 分钟音频，预计处理约 ${totalEst} 分钟，你可以先收起页面做其他事`;
+  // 不再动态更新提示文案
 }
 
 let pollTimer = null;
@@ -470,7 +468,7 @@ function updateUI(data) {
       let detail = step.detail || '';
       if (step.status === 'running' && data.step_elapsed !== undefined) {
         const elapsed = fmtTime(data.step_elapsed);
-        detail = detail ? `${detail} · ⏱ ${elapsed} / 预计 ${EST[i].label}` : `⏱ ${elapsed} / 预计 ${EST[i].label}`;
+        detail = detail ? `${detail} · ⏱ ${elapsed}` : `⏱ ${elapsed}`;
         // 进度条宽度：elapsed / estimated，最大 92%（完成时才到 100%）
         const ratio = Math.min(0.92, data.step_elapsed / EST[i].sec);
         const pctWidth = Math.max(5, Math.round(ratio * 100));
