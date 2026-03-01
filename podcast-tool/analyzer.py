@@ -170,7 +170,7 @@ SYSTEM_PROMPT = """你是一位播客内容整理编辑，负责将播客转录�
 
 1. **时间戳**：转录文本中有 [MM:SS - MM:SS] 格式，将其转为秒数（如 [08:08] = 488秒）
 2. **章节划分**：按话题转换自然划分，通常 6-10 个章节。**广告识别是高优先级任务**：播客开头/中间/结尾的品牌口播、产品推广、赞助商内容必须标记 `is_ad: true`。广告段只需填 title/subtitle/start_sec/end_sec/section_context，不要填 key_points/key_points_grouped/diagram/stories/quotes
-3. **参与者 ID**：使用简洁 ID（如 "host", "guest", "via", 或说话人名字的拼音缩写）
+3. **参与者 ID**：使用简洁 ID（如 "host", "guest", "via"）。**参与者姓名只能从标题、简介、转录文本中提取，严禁用世界知识猜测。** 如果标题写了"A x B"但转录只有"说话人0/1"，用标题中的名字。如果完全无法确定，name 填"未知"
 4. **key_points**：每章节 3-6 条，来自原文的核心观点
 5. **core_quotes**：全集最精彩的 5-10 句原话，必须是播客中实际说出的句子，可微调语序但不改原意
 6. **quiz**：5 道与本期主题紧密相关的自测题，让听众反思自身
@@ -299,9 +299,11 @@ def analyze_transcript(transcript_path: str, output_path: str = None, metadata: 
     if metadata:
         meta_hint = f"""
 ## 已知元数据（直接使用，无需从文本中推断）
-- 播客名称：{metadata.get('podcast_name', '未知')}
-- 本期标题：{metadata.get('title', '未知')}
-- 简介：{metadata.get('description', '无')[:200]}
+- 播客名称：{metadata.get('podcast_name') or '未知'}
+- 本期标题：{metadata.get('title') or '未知'}
+- 简介：{(metadata.get('description') or '无')[:200]}
+
+⚠️ 参与者（participants）的名字必须从标题、简介或转录文本中提取，禁止用世界知识猜测。如果转录中只有"说话人0/1"且标题写了"A x B"，则 A 和 B 就是参与者。不确定的角色写"未知"，不要编造。
 
 """
 
@@ -392,5 +394,13 @@ if __name__ == "__main__":
     transcript_path = sys.argv[1]
     output_path = sys.argv[2] if len(sys.argv) > 2 else None
 
-    result = analyze_transcript(transcript_path, output_path)
+    # 自动加载同目录下的 metadata.json（如果存在）
+    metadata = None
+    meta_path = os.path.join(os.path.dirname(transcript_path), "metadata.json")
+    if os.path.exists(meta_path):
+        with open(meta_path, "r", encoding="utf-8") as f:
+            metadata = json.load(f)
+        print(f"📋 已加载元数据：{meta_path}")
+
+    result = analyze_transcript(transcript_path, output_path, metadata=metadata)
     print(f"\n分析结果摘要：{result.get('meta', {}).get('title', '无标题')}")
