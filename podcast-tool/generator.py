@@ -275,6 +275,13 @@ def prepare_episode_data(data: dict) -> dict:
             g.setdefault("visual_type", "list")
             vt = g.get("visual_type", "list")
 
+            # P3 兜底：points 中的 icon/label/desc → text/detail 格式转换
+            for p in g.get("points", []):
+                if "text" not in p and "label" in p:
+                    p["text"] = p.pop("label")
+                if "detail" not in p and "desc" in p:
+                    p["detail"] = p.pop("desc")
+
             # key_points_grouped 只支持这几种 visual_type，其他的 fallback 到 list
             SUPPORTED_KPG_TYPES = {"list", "comparison", "flow", "icon-list", "icon-grid"}
             if vt not in SUPPORTED_KPG_TYPES:

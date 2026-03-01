@@ -1,5 +1,27 @@
 # Changelog
 
+## v2.2 (2026-03-01)
+模块质量审阅修复 — 12期横评驱动的 prompt/generator/template 改进
+
+### Prompt 修复（analyzer.py）
+- **P0 section_context 反编辑腔**：新增 14 个术语黑名单（解构/认知/升维/底层逻辑/方法论/锚点/张力/杠杆/范式/叙事/维度/框架/隐喻/收束/主体性）+ 禁用学术句式（"为后续…奠定""全集…的核心"）。污染率从 36% 降至 22%
+- **P1 block_connections relationship 必填**：明确要求 relation 和 description 不能为空，用一句话说清组块间逻辑关系。修复前 12/12 期全空，修复后全部填写
+- **P2 timeline narrative 字数硬限制**：从 100-200 字压缩至 50-100 字，禁止散文体，要求备忘录式概括
+- **one_sentence_summary 反术语**：禁止"本质/解构/认知/升维/范式"等分析术语
+
+### Generator 修复（generator.py）
+- **P3 key_points schema 兜底**：自动转换 `{icon, label, desc}` → `{text, detail}` 格式，修复 3/12 期的空白分组渲染问题
+
+### Template 修复（base.html.j2）
+- **移除 featured_work 卡片**：删除"本期书目/影片"展示块
+
+### 改动文件
+- `analyzer.py`：SYSTEM_PROMPT section_context/content_overview + SYSTEM_PROMPT_EXTENDED timeline narrative
+- `generator.py`：key_points_grouped 格式转换
+- `templates/base.html.j2`：删除 featured_work 渲染块
+
+---
+
 ## v2.1 (2026-02-28)
 内容质量大版本 — 语言忠实度 + 数据清洗层 + 广告过滤 + 图表多样化 + 移动端适配
 

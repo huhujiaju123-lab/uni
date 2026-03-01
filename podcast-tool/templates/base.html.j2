@@ -1525,18 +1525,7 @@ body.nav-open .nav-toggle { display: none; }
       <p>{{ p.bio if p.bio else p.role }}</p>
     </div>
     {% endfor %}
-    {% if featured_work is defined and featured_work %}
-    <div class="author-card">
-      <h3>本期{% if featured_work.type == 'book' %}书目{% elif featured_work.type == 'film' %}影片{% else %}主题{% endif %}</h3>
-      <p style="color:var(--gold);font-size:16px;font-weight:700;">{{ featured_work.title }}</p>
-      {% if featured_work.author %}
-      <p style="margin-top:6px;font-size:13px;color:var(--text-muted);">{{ featured_work.author }}{% if featured_work.year %} · {{ featured_work.year }}{% endif %}</p>
-      {% endif %}
-      {% if featured_work.description %}
-      <p style="margin-top:10px;font-style:italic;">{{ featured_work.description }}</p>
-      {% endif %}
-    </div>
-    {% endif %}
+{# featured_work 已移除 #}
   </div>
 </section>
 

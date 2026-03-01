@@ -90,7 +90,7 @@ SYSTEM_PROMPT = """你是一位播客内容整理编辑，负责将播客转录�
         "// matrix 类型需要": "x_axis: {low, high}, y_axis: {low, high}, entries: [{label, quadrant}]，quadrant 为 top-left/top-right/bottom-left/bottom-right",
         "// stats 类型需要": "entries: [{value, label, desc(可选)}]"
       },
-      "section_context": "本章在全集逻辑中的位置（一句话）"
+      "section_context": "这段聊了什么（一句大白话，像跟朋友解释。禁用术语：解构/认知/升维/底层逻辑/方法论/锚点/张力/杠杆/范式/叙事/维度/框架/隐喻/收束/主体性。禁用句式：'为后续…奠定''全集…的核心''提供…支点'）"
     }
   ],
   "core_quotes": [
@@ -139,12 +139,12 @@ SYSTEM_PROMPT = """你是一位播客内容整理编辑，负责将播客转录�
     ]
   },
   "content_overview": {
-    "one_sentence_summary": "一句话概括核心主旨（15-30字）",
+    "one_sentence_summary": "一句话概括核心主旨（15-30字，用大白话，禁止用：本质/解构/认知/升维/范式 等分析术语）",
     "content_blocks": [
       {"id": "block-1", "title": "组块标题", "summary": "组块概要", "section_ids": ["section-id"], "icon": "🎯"}
     ],
     "block_connections": [
-      {"from": "block-1", "to": "block-2", "relation": "延伸", "description": "逻辑关系说明"}
+      {"from": "block-1", "to": "block-2", "relation": "延伸/因果/递进/对比（必填）", "description": "一句话说清两个组块之间的关系（必填，不能为空）"}
     ]
   },
   "arguments": [
@@ -176,7 +176,7 @@ SYSTEM_PROMPT = """你是一位播客内容整理编辑，负责将播客转录�
 6. **quiz**：5 道与本期主题紧密相关的自测题，让听众反思自身
 7. **featured_work**：仅当本期明确围绕某书/电影/作品展开时填写，否则省略该字段
 8. **recommendations**：收集节目中提到的书单/影单/播客推荐，可为空数组
-9. **content_overview**：将章节归纳为 3-5 个组块，描述组块间逻辑关系（因果/递进/对比/延伸）
+9. **content_overview**：将章节归纳为 3-5 个组块。one_sentence_summary 用大白话，禁止"本质""解构""认知"等分析术语。**block_connections 的 relation 和 description 必须填写**，不能为空字符串，用一句话说清"A 跟 B 是什么关系"（如"聊完理论后举了实际案例"）
 10. **arguments**：提取 8-12 个核心观点，必须是播客中明确表达的立场，evidence_type 为：个人经历/类比/引用/数据/逻辑推演/故事，strength 为 strong/moderate/anecdotal
 11. **key_concepts**：提取 6-10 个播客中反复出现或重点讲解的概念，定义和解释必须基于播客原文的表述，不要替换为教科书定义
 12. **extended_reading**：这是唯一允许超出播客原文的模块。延伸 4-6 个话题方向，deep_dive 可补充背景知识和延伸思考。**严禁编造具体学术论文、期刊名称、年份、项目名称、百分比数据。** 如需引用研究，只写"有研究发现..."等模糊表述，或引用播客中实际提到的来源
@@ -218,7 +218,7 @@ SYSTEM_PROMPT_EXTENDED = """你是播客内容整理编辑。基于播客转录�
       "end_sec": 480,
       "label": "00:00 – 08:00",
       "headline": "段落小标题（10字内）",
-      "narrative": "简洁概括这段讲了什么（100-200字）。重点写：讨论了哪些话题、提出了什么观点、举了什么例子。不要写散文，不要描写情绪氛围，用平实语言帮听众回忆内容。",
+      "narrative": "这段讲了什么（严格控制在50-100字）。只写：聊了什么话题、说了什么观点。禁止散文体、禁止描写情绪氛围、禁止文学修辞。像备忘录，不像书评。",
       "topics": ["话题标签1", "话题标签2"]
     }
   ],
@@ -237,7 +237,7 @@ SYSTEM_PROMPT_EXTENDED = """你是播客内容整理编辑。基于播客转录�
 ```
 
 ## 数量要求
-- detailed_timeline：每5-10分钟一段，narrative 100-200字，平实简洁地概括"这段讲了啥"
+- detailed_timeline：每5-10分钟一段，narrative 严格50-100字，像备忘录而非书评，只写"聊了什么、说了什么"
 - knowledge_cards：12-20张，extension 字段提供延伸视角但不编造学术引用
 
 ## 参与者信息
