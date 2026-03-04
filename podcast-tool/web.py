@@ -14,6 +14,7 @@ from core import (
     is_valid_episode_id, get_history, get_user_history, record_user_episode,
     create_task, check_cache, get_showcase,
 )
+from logger import log_event
 
 web = Blueprint("web", __name__)
 
@@ -45,6 +46,8 @@ def index():
     if not uid:
         uid = uuid.uuid4().hex[:8]
         resp.set_cookie("uid", uid, max_age=365 * 86400, httponly=True, samesite="Lax")
+    log_event("page_view", path="/", uid=uid or "",
+              ip=request.headers.get("X-Real-IP", request.remote_addr))
     return resp
 
 
@@ -63,13 +66,15 @@ def process():
         return render_template("index.html", error="请输入有效的小宇宙单集链接", history=[])
 
     cached = check_cache(url)
+    uid = request.cookies.get("uid", "")
+    client_ip = request.headers.get("X-Real-IP", request.remote_addr)
     if cached:
-        uid = request.cookies.get("uid", "")
         record_user_episode(uid, cached)
+        log_event("task_created", url=url, uid=uid, ip=client_ip, cached=True)
         return redirect(url_for("web.view", episode_id=cached))
 
-    uid = request.cookies.get("uid", "")
     task_id = create_task(url, uid=uid)
+    log_event("task_created", task_id=task_id, url=url, uid=uid, ip=client_ip, cached=False)
     return redirect(url_for("web.progress", task_id=task_id))
 
 
@@ -80,6 +85,8 @@ def progress(task_id):
         return redirect(url_for("web.index"))
     if task["status"] == "done" and task.get("episode_id"):
         return redirect(url_for("web.view", episode_id=task["episode_id"]))
+    log_event("page_view", path="/progress", uid=request.cookies.get("uid", ""),
+              ip=request.headers.get("X-Real-IP", request.remote_addr))
     return render_template("progress.html", task_id=task_id)
 
 
@@ -127,4 +134,7 @@ def view(episode_id):
         return redirect(url_for("web.index"))
     if not html_path.exists():
         return redirect(url_for("web.index"))
+    log_event("page_view", path="/view", episode_id=episode_id,
+              uid=request.cookies.get("uid", ""),
+              ip=request.headers.get("X-Real-IP", request.remote_addr))
     return send_file(html_path, mimetype="text/html")

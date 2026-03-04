@@ -1,5 +1,25 @@
 # Changelog
 
+## v2.4 (2026-03-04)
+事件埋点 + 日报系统
+
+### 新增
+- **事件日志模块** `logger.py`：轻量 JSONL 日志，每天一个文件（logs/YYYY-MM-DD.jsonl）
+- **日报脚本** `report.py`：读取日志生成每日摘要（PV/UV、生成任务统计、步骤耗时、异常汇总）
+- **gunicorn access log**：systemd service 启用访问日志
+
+### 埋点覆盖
+- `web.py`：page_view（首页/进度页/查看页）、task_created（含缓存命中标记）
+- `core.py`：step_done（每步耗时）、task_done（总耗时）、task_error（错误步骤+信息）、rate_limited
+
+### 改动文件
+- `logger.py`（新建）
+- `report.py`（新建）
+- `core.py`（pipeline 埋点）
+- `web.py`（页面访问埋点）
+
+---
+
 ## v2.3.1 (2026-03-01)
 首页改版 + 进度页优化
 

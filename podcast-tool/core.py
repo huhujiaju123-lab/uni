@@ -28,6 +28,8 @@ def check_rate_limit(ip):
     now = time.time()
     _rate_limit[ip] = [t for t in _rate_limit[ip] if now - t < RATE_LIMIT_WINDOW]
     if len(_rate_limit[ip]) >= RATE_LIMIT_MAX:
+        from logger import log_event
+        log_event("rate_limited", ip=ip)
         return False
     _rate_limit[ip].append(now)
     return True
@@ -173,6 +175,14 @@ def _update_step(task_id, step_index, status, detail=""):
 
 def _run_pipeline(task_id, url):
     """后台执行 4 步流水线"""
+    from logger import log_event
+    step_names = ["获取元数据", "音频转录", "AI 内容分析", "生成可视化"]
+
+    def _log_step_done(step_idx):
+        elapsed = time.time() - tasks[task_id].get("step_started_at", time.time())
+        log_event("step_done", task_id=task_id, step=step_idx,
+                  step_name=step_names[step_idx], duration_sec=round(elapsed, 1))
+
     try:
         # Step 1: 获取元数据
         _update_step(task_id, 0, "running", "正在访问小宇宙...")
@@ -196,11 +206,13 @@ def _run_pipeline(task_id, url):
             json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8"
         )
         _update_step(task_id, 0, "done", metadata.get("title", "")[:40])
+        _log_step_done(0)
 
         # Step 2: 转录
         txt_path = output_dir / "transcript.txt"
         if txt_path.exists() and txt_path.stat().st_size > 100:
             _update_step(task_id, 1, "done", "已有转录文件，跳过")
+            _log_step_done(1)
         else:
             _update_step(task_id, 1, "running", "Deepgram 转录中，请耐心等待...")
             from transcribe import transcribe_audio
@@ -213,31 +225,43 @@ def _run_pipeline(task_id, url):
             if not tr_result["success"]:
                 raise RuntimeError(f"转录失败：{tr_result['error']}")
             _update_step(task_id, 1, "done", f"转录完成 · {tr_result.get('duration', '')}")
+            _log_step_done(1)
 
         # Step 3: AI 分析
         episode_json_path = output_dir / "episode.json"
         if episode_json_path.exists() and episode_json_path.stat().st_size > 100:
             _update_step(task_id, 2, "done", "已有分析文件，跳过")
+            _log_step_done(2)
         else:
             _update_step(task_id, 2, "running", "AI 正在分析内容...")
             from analyzer import analyze_transcript
             analyze_transcript(str(txt_path), str(episode_json_path), metadata)
             _update_step(task_id, 2, "done", "分析完成")
+            _log_step_done(2)
 
         # Step 4: 生成 HTML
         _update_step(task_id, 3, "running", "渲染可视化网页...")
         from generator import render
         render(str(episode_json_path), str(output_dir / "visualization.html"))
         _update_step(task_id, 3, "done", "生成完成")
+        _log_step_done(3)
 
         tasks[task_id]["status"] = "done"
         record_user_episode(tasks[task_id].get("uid", ""), episode_id)
+
+        total_sec = round(time.time() - tasks[task_id]["started_at"], 1)
+        log_event("task_done", task_id=task_id, episode_id=episode_id,
+                  total_sec=total_sec, title=metadata.get("title", ""))
 
     except Exception as e:
         safe_msg = sanitize_error(e)
         tasks[task_id]["error"] = safe_msg
         tasks[task_id]["status"] = "error"
-        for step in tasks[task_id]["steps"]:
+        failed_step = -1
+        for i, step in enumerate(tasks[task_id]["steps"]):
             if step["status"] == "running":
                 step["status"] = "error"
                 step["detail"] = safe_msg[:100]
+                failed_step = i
+        log_event("task_error", task_id=task_id, step=failed_step,
+                  error_msg=safe_msg)
