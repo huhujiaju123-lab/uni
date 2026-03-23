@@ -367,15 +367,23 @@ def extract_json(content):
 def fetch_feeds():
     print("[1/7] 拉取 follow-builders feed...")
     feeds = {}
+    MAX_RETRIES = 3
     for name, url in [("x", FEED_X_URL), ("podcasts", FEED_PODCAST_URL)]:
-        try:
-            req = urllib.request.Request(url, headers={"User-Agent": "AI-Briefing/1.0"})
-            with urllib.request.urlopen(req, timeout=30) as resp:
-                feeds[name] = json.loads(resp.read().decode())
-            print(f"  {name}: OK")
-        except Exception as e:
-            print(f"  {name}: FAILED - {e}")
-            feeds[name] = {}
+        for attempt in range(MAX_RETRIES):
+            try:
+                req = urllib.request.Request(url, headers={"User-Agent": "AI-Briefing/1.0"})
+                with urllib.request.urlopen(req, timeout=30) as resp:
+                    feeds[name] = json.loads(resp.read().decode())
+                print(f"  {name}: OK")
+                break
+            except Exception as e:
+                if attempt < MAX_RETRIES - 1:
+                    wait = 10 * (attempt + 1)
+                    print(f"  {name}: 第{attempt+1}次失败({e})，{wait}s后重试...")
+                    import time; time.sleep(wait)
+                else:
+                    print(f"  {name}: {MAX_RETRIES}次均失败 - {e}")
+                    feeds[name] = {}
     return feeds
 
 
@@ -908,7 +916,7 @@ async def generate_audio(script):
 # Step 7: 上传到服务器
 # ============================================================
 def upload_to_server(mp3_path, duration, script, plan=None):
-    print("[6/7] 上传到服务器...")
+    print("[6/7] 发布到服务器...")
 
     # 标题和描述来自规划（如果有）
     if plan:
@@ -927,35 +935,63 @@ def upload_to_server(mp3_path, duration, script, plan=None):
         title = f"EP{TODAY} {extract_title_keywords(first_lines)}"
         rss_desc = first_lines[:200]
 
-    # 上传 MP3
-    subprocess.run([
-        "sshpass", "-p", SERVER_PASS, "scp", "-o", "StrictHostKeyChecking=no",
-        mp3_path, f"root@{SERVER}:{SERVER_PODCAST_DIR}/episodes/{TODAY}.mp3"
-    ], capture_output=True)
+    # 判断是本地运行还是服务器运行
+    on_server = Path(SERVER_PODCAST_DIR).exists()
 
-    # 上传 meta JSON
-    meta = {
-        "title": title,
-        "description": rss_desc,
-        "duration": duration
-    }
-    meta_path = BASE_DIR / f"meta-{TODAY}.json"
-    with open(meta_path, "w", encoding="utf-8") as f:
-        json.dump(meta, f, ensure_ascii=False)
+    if on_server:
+        # 服务器上直接文件操作（cron 场景）
+        import shutil
+        ep_dir = Path(SERVER_PODCAST_DIR) / "episodes"
+        ep_dir.mkdir(parents=True, exist_ok=True)
 
-    subprocess.run([
-        "sshpass", "-p", SERVER_PASS, "scp", "-o", "StrictHostKeyChecking=no",
-        str(meta_path), f"root@{SERVER}:{SERVER_PODCAST_DIR}/episodes/{TODAY}.json"
-    ], capture_output=True)
+        # 拷贝 MP3
+        shutil.copy2(mp3_path, ep_dir / f"{TODAY}.mp3")
 
-    # 远程更新 RSS
-    subprocess.run([
-        "sshpass", "-p", SERVER_PASS, "ssh", "-o", "StrictHostKeyChecking=no",
-        f"root@{SERVER}", f"python3 {SERVER_PODCAST_DIR}/rss-generator.py"
-    ], capture_output=True)
+        # 写 meta JSON
+        meta = {
+            "title": title,
+            "description": rss_desc,
+            "duration": duration
+        }
+        with open(ep_dir / f"{TODAY}.json", "w", encoding="utf-8") as f:
+            json.dump(meta, f, ensure_ascii=False)
 
-    print(f"  已上传: {title}")
-    print(f"  RSS 已更新")
+        # 本地执行 RSS 生成
+        subprocess.run(
+            ["python3", f"{SERVER_PODCAST_DIR}/rss-generator.py"],
+            capture_output=True
+        )
+    else:
+        # 本地运行 → scp 上传到服务器
+        # 上传 MP3
+        subprocess.run([
+            "sshpass", "-p", SERVER_PASS, "scp", "-o", "StrictHostKeyChecking=no",
+            mp3_path, f"root@{SERVER}:{SERVER_PODCAST_DIR}/episodes/{TODAY}.mp3"
+        ], capture_output=True)
+
+        # 上传 meta JSON
+        meta = {
+            "title": title,
+            "description": rss_desc,
+            "duration": duration
+        }
+        meta_path = BASE_DIR / f"meta-{TODAY}.json"
+        with open(meta_path, "w", encoding="utf-8") as f:
+            json.dump(meta, f, ensure_ascii=False)
+
+        subprocess.run([
+            "sshpass", "-p", SERVER_PASS, "scp", "-o", "StrictHostKeyChecking=no",
+            str(meta_path), f"root@{SERVER}:{SERVER_PODCAST_DIR}/episodes/{TODAY}.json"
+        ], capture_output=True)
+
+        # 远程更新 RSS
+        subprocess.run([
+            "sshpass", "-p", SERVER_PASS, "ssh", "-o", "StrictHostKeyChecking=no",
+            f"root@{SERVER}", f"python3 {SERVER_PODCAST_DIR}/rss-generator.py"
+        ], capture_output=True)
+
+    print(f"  已发布: {title}")
+    print(f"  RSS 已更新 ({'本地' if on_server else '远程'})")
     return title
 
 
