@@ -1,0 +1,16 @@
+<!-- 征引内容 -->
+<div class="citation-list">
+  {% for cite in gua.steps.zhengyin %}
+  <div class="citation-item fade-in fade-in-delay-{{ loop.index0 % 4 + 1 }}">
+    <p class="cite-yao">{{ cite.yao }}</p>
+    <p class="cite-title">{{ cite.event }}</p>
+    <p class="cite-detail">{{ cite.detail }}</p>
+    <p class="cite-source">
+      {{ cite.source }}
+      <span class="source-tag source-{{ cite.contentSource }}">
+        {% if cite.contentSource == 'classic' %}经典{% elif cite.contentSource == 'youan' %}佑安{% else %}AI{% endif %}
+      </span>
+    </p>
+  </div>
+  {% endfor %}
+</div>

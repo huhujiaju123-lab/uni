@@ -1,0 +1,247 @@
+# Lucky US 数据分析记忆
+
+## 🚀 工作流程
+
+**用户会在对话开始时发送**：
+> 先看下技能文档：~/.claude/skills/luckyus-data-query/skill.md
+
+**收到后我应该**：
+1. 读取 skill.md 回忆 SQL 模板和表结构
+2. 读取 auth.json 确认认证是否有效
+3. 然后再执行查询
+
+## 核心技能路径
+
+开始数据查询前，先读取这些文件回忆技能：
+```
+~/.claude/skills/luckyus-data-query/skill.md                    # SQL模板和表结构
+~/.claude/skills/luckyus-data-query/references/knowledge-base.md # 完整知识库（表/字段/指标百科）
+~/.claude/skills/cyberdata-query/instructions.md                # API调用方式
+~/.claude/skills/cyberdata-query/auth.json                      # 认证信息
+```
+
+## 常用查询速记
+
+### 门店杯量（秒出）
+```sql
+SELECT shop_name AS 门店, SUM(sku_cnt) AS 杯量, SUM(order_cnt) AS 订单数
+FROM dw_ads.ads_mg_sku_shop_sales_statistic_d_1d
+WHERE dt = '日期' AND tenant = 'LKUS' AND one_category_name = 'Drink'
+  AND shop_name NOT IN ('NJ Test Kitchen', 'NJ Test Kitchen 2')
+GROUP BY shop_name ORDER BY 杯量 DESC
+```
+
+### 执行 SQL 脚本
+```bash
+~/.claude/skills/cyberdata-query/run_sql.sh "SQL语句"
+```
+
+## 表选择原则
+
+| 需求 | 推荐表 | 速度 |
+|------|--------|------|
+| 门店杯量/销售 | ads_mg_sku_shop_sales_statistic_d_1d | ⚡秒出 |
+| 订单明细/杯量/实收 | **dwd_t_ord_order_item_d_inc** (DWD层，优先) | ⚡秒出 |
+| 来访/流量 | **dwd_mg_log_detail_d_inc** (AppStart事件) | ⚡秒出 |
+| 周复购 | ads_user_order_rep_info_d_nw | ⚡秒出 |
+| 月复购 | ads_user_order_rep_info_d_nm | ⚡秒出 |
+| 门店维度 | dim_shop_d_his | ⚡秒出 |
+| 实验分流 | t_user_traffic_distribution | ⚡秒出 |
+| 人群标签 | ads_marketing_t_user_group_d_his | ⚡秒出 |
+| 券使用 | dwd_t_mkt_coupon_use_record_d_inc | ⚡秒出 |
+| 触达权限 | ads_marketing_t_user_grant_d_his | ⚡秒出 |
+| 分享邀请 | t_user_invitation_info | ⚡秒出 |
+| APP漏斗 | dws_mg_log_user_screen_name_d_1d | ⚡秒出 |
+| 埋点事件 | v_hmonitor_track_event_rt | 🐢大表 |
+| 订单明细(ODS) | t_order_item JOIN v_order | ❌超时，用DWD替代 |
+
+完整表结构速记：`memory/lucky-us-sql-tables.md`
+
+## 关键约定
+
+- 租户过滤：`tenant = 'LKUS'` 或 `INSTR(tenant, 'IQ') = 0`
+- 成功订单：`status = 90`（DWD表用 `order_status = 90`）
+- 时区转换：`DATE(CONVERT_TZ(create_time, @@time_zone, 'America/New_York'))`（DWD表直接用 `dt` 或 `local_dt`）
+- 排除测试店：`shop_name NOT IN ('NJ Test Kitchen', 'NJ Test Kitchen 2')`
+- 饮品类目：`one_category_name = 'Drink'`
+- 门店订单过滤：`order_category = '门店订单'`（DWD order item 表）
+- 用户剔除：`type NOT IN (3, 4, 5)` — 3=待确认类型/4=游客/5=外卖
+- 实收口径：**仅饮品实收**（drink_pay_money），不含食品等非饮品
+- 外卖渠道：`channel IN (8, 9, 10)` → DoorDash/Grubhub/UberEats
+- 杯量计算：`COUNT(*)` from order_item WHERE Drink，不是 COUNT(DISTINCT order_id)
+- 单杯实收：`pay_amount / sku_num`（item级），非 v_order 级
+- 来访率：用 `dwd_mg_log_detail_d_inc` 的 AppStart 事件（比 screen_name 表更准）
+- 套餐识别：`spu_type = 2`
+- 试喝识别：`promotion_name = 'Sampling Coupon'`
+
+## 470 SQL 系统学习（2026-03-04 完成）
+
+详细发现与待办：`memory/sql-learning-insights.md`
+
+### 产出物
+- **知识库 MD**：`~/.claude/skills/luckyus-data-query/references/knowledge-base.md`（8 章 ~600 行）
+- **知识库 HTML**：`~/Vibe coding/lucky-us-knowledge-base.html`（交互式暗色主题网页）
+- **学习总结**：`~/Vibe coding/SQL学习总结_470份生产SQL的认知.md`
+- 更新了 4 个 skill（luckyus-data-query / ab-experiment / share-the-luck / daily-report）
+
+### 核心认知
+1. **90% 日常分析只需 3 张 ADS 表**（ads_sales_d_1d / ads_rep_d_nw / dws_screen_name_d_1d）
+2. **6 个 SQL 模式覆盖 80% 查询**（时区+租户 / CTE留存 / CASE分层 / CROSS JOIN日期 / 窗口累计 / 首单识别）
+3. **杯量 ≠ 订单数**：多杯率是被低估的增长杠杆
+4. **外卖(ch 8/9/10)是独立世界**：不经 APP 漏斗，必须和 Pickup 分离分析
+5. **时间窗口是设计决策**：日报D7 / 周报周复购 / 实验D0-D14，不同周期不同尺度
+
+### 待用户决策的建议
+- 试喝券(Sampling Coupon)建议单独追踪，目前混在新客指标里
+- 外卖用户生命周期需独立分析
+- 长期缺一张 ADS 层「用户日级宽表」
+
+## 日报系统
+
+详细记忆：`memory/daily-report.md`
+
+- v2 脚本：`~/Vibe coding/generate_daily_report_v2.py`（含归因，数据硬编码）
+- 输出：`daily_report_attribution_2026-02-24.html`
+- Part 1（5模块）：业务 / 用户 / 品类 / TOP10商品 / 分时
+- Part 2（7模块）：天气 / 门店 / 渠道 / 用户结构 / 券 / 商品 / 综合归因
+- 对比基准：周同比 | 天气：Open-Meteo NYC 摄氏度
+- 待做：参数化、老客留存补充、自动化
+
+## 分享有礼（Share The Luck）
+
+详细文档：`memory/share-the-luck.md`
+
+- 2月月报已完成：拉新占比 6.78%→5.23%（-1.55pp）
+- 核心发现：注册×转化双降，裂变系数停滞（人均1.1，84%仅邀1人）
+- 归档：`~/Vibe coding/分享有礼_2月月报.md` / `_PPT.html`
+- CyberData API：`/api/dev/task/run`（提交）+ `/api/logger/getQueryLog`（取结果）| 核心看占比不看绝对值
+- 2月资源位：弹窗 LKUSCP118430296139038721，Banner luckymedia/1767772777170
+
+## AB 实验技能
+
+详细文档：`~/.claude/skills/ab-experiment/skill.md`
+实验详细记忆：`memory/ab-experiments.md`
+
+四大能力：分流切分 → 质量检验 → 效果分析 → 持续追踪
+
+当前实验状态：
+- **新客弹层券**（01-19起）：✅ 已完成，全量推 A 组涨价券包 → 详见 `memory/0119-newcust-experiment.md`
+- **0212老客涨价**（02-12起）：📊 持续追踪中 → 详见 `memory/ab-experiments.md`
+  - 3组：涨价组1(38093人,75折系) / 涨价组2(38058人,7折系) / 对照组3(50295人,原价)
+  - 整体：单杯实收 +8~10%，转化率 -1pp，总收入略降（-0.2%~-4%）
+  - **分层看**：30+天流失用户实收 +12~15%（正向），0-15天活跃用户拖负整体
+  - 2月月报已出，同事分析对比已完成 → 详见 `memory/ab-experiments.md`
+- **三层人群划分方案**：📝 设计完毕未实施（`~/Vibe coding/定价实验人群划分方案.md`）
+
+### 实验分析方法论（2026-03-10 对齐同事后更新）
+- **必须分层分析**：按用户生命周期（0-15天活跃/16-30天衰退/30+天流失）分层，避免辛普森悖论
+- **核心指标用 ITT**：进组人均饮品实收（drink_pay_money / total_users），而非仅看下单用户
+- **收入口径仅饮品**：只统计 `one_category_name = 'Drink'` 的实收，排除食品等
+- **经济分析必做**：LTV回收周期（CAC/LTV）+ 毛利回收周期（CAC/(LTV×毛利率)）
+- **多看访购率**：order_users / visit_users，比下单率更能反映价格对购买决策的影响
+- 新客券实验先检查 activity_no 是否被历史复用
+- 报告中用百分比/比例描述，避免写绝对用户数
+- 涨价实验中不要建议把涨价券改回对照组价格
+
+### SQL 框架速查
+3 框架：Fixed Cohort / Rolling Cohort / Daily Dimension
+分层：生命周期（0-15/16-30/30+）+ RFM + 首单特征
+经济指标：LTV回收周期 + 毛利回收周期
+详见 `~/.claude/skills/ab-experiment/skill.md`
+
+## podcast-viz 项目
+
+- **⚠️ 重要约定：未经用户允许，不得覆盖线上代码或发布新版本**
+- CHANGELOG: podcast-tool/CHANGELOG.md
+- 发版流程: 开发完 → 合并 main → 更新 CHANGELOG → 打 tag → **经用户确认后**部署
+
+### 版本与部署
+- v1.0(`bc85b12`, 端口80) → v2.3.1(`303cd63`) → **v2.4(`5fc67ef`, 当前线上)**
+- 线上：端口 8081，/opt/podcast-viz-v2/，v2.4 已部署（MD5 校验一致），18集，暂无自然流量
+- 部署：非 git，手动 scp/rsync，systemd Gunicorn 1w/4t
+
+### 当前阶段：MVP 稳定，卡在转录成本
+- Deepgram 占每集成本 98%（¥3/集），faster-whisper 降本方案在 PRECOMPUTE_STRATEGY.md（零实现）
+- **小程序原生版已搭建**：`~/Vibe coding/podcast-miniprogram/`（云开发，2026-03-08 启动）
+- 旧骨架 `podcast-viz-miniprogram/` 已废弃（webview 方案）
+
+### 小程序版（podcast-miniprogram/）
+- **项目记忆**：`~/Vibe coding/podcast-miniprogram/CLAUDE.md`
+- **技术栈**：微信原生 + 云开发（云函数 + 云数据库）
+- **共享文档**：`docs/` 目录 symlink → `podcast-tool/` 的 ARCHITECTURE.md / PRECOMPUTE_STRATEGY.md / research/
+- **数据模型**：与 Web 版完全一致（episode.json），定义在 `docs/ARCHITECTURE.md`
+- **同步约定**：数据模型/AI Prompt 变更必须同步两端
+- **4 个页面**：首页(index) / 内容页(episode) / 进度页(progress) / 我的(profile)
+- **8 个组件**：preview-card / section-card / quote-card / mind-map / diagram / quiz / share-poster / episode-list
+- **3 个云函数**：processEpisode(异步600s) / getEpisode / listEpisodes
+- **待实现**：云函数中的 fetchMetadata / transcribeAudio / analyzeContent（标注了参考 Web 版对应文件）
+- AppID：wx8455d9c3b3e70865 | 云开发环境 ID：待配置
+
+### 技术栈
+AI: 通义千问 qwen-plus | 转录: Deepgram Nova-2 | Web: Flask+Gunicorn+Nginx | 小程序: 微信云开发
+核心模块：core/web/api/fetcher/transcribe/analyzer/generator/batch_process/logger/report
+质量机制：忠于原文、14词黑名单、禁止猜测姓名、5道清洗防线
+
+### 未实施（PRECOMPUTE_STRATEGY.md）
+Phase 1-4 全未开始：faster-whisper 降本 → 预计算调度 → 计费 → WhisperX 说话人识别
+
+## 腾讯云服务器
+
+- IP: 134.175.228.73
+- SSH: root / Yumoshucheng@
+- 宝塔面板: http://134.175.228.73:8888/tencentcloud (user: 294e9362 / pass: 448066b9cc72)
+- 系统: OpenCloudOS (CentOS 系，用 dnf/yum)
+- v1 服务: systemctl restart/status podcast-viz（端口 80）
+- v2 服务: systemctl restart/status podcast-viz-v2（端口 8081）
+- 日志: journalctl -u podcast-viz-v2 -f
+
+## PPT 生成器
+
+详细偏好：`memory/ppt-generator.md`
+
+- 每次生成**双版本**：实用版（直接汇报）+ 深度版（敏感性分析/条件着色）
+- 正文字号 ≥ 20pt，图表高度 6"，不能压扁
+- Claude 扮演老板审核，≥85分通过
+- 技能：`~/.claude/skills/ppt-generator/skill.md`
+
+## 数据分析核心原则
+
+**底层哲学**：`memory/data-analysis-philosophy.md`
+- 分析是为了推动决策，不是展示数据
+- 论证结构是"律师辩护"不是"学术论文"
+- 每条数据服务一个论点，无关数据删掉
+- 复杂度留在计算过程，文档只呈现结论
+- 参数可信度 = 文档可信度
+
+**活动方案设计原则**：`memory/campaign-design-principles.md`
+- 用户旅程视角、问题驱动、数据推导方案
+- 测算用简单模型、参数对齐实际业务值
+- 参考模板：`~/Downloads/US用户运营任务方案.pdf`
+
+## Token 过期处理
+
+如果查询返回 401 或空结果，让用户在 CyberData 浏览器 F12 Network 面板复制任意请求的 "Copy as cURL" 发过来更新认证。
+
+## Life OS 系统
+
+**启动日期**：2026-03-03 | **灵感来源**：陈彬《逆向工程蓝图》
+
+### 角色与状态
+
+| 角色 | 触发词 | 状态 |
+|------|--------|------|
+| Alfred 管家 | `/alfred`、复盘 | **活跃** — 已完成首次复盘(03-03) |
+| Rem 早晨伙伴 | `/rem`、早上好 | **已试用** — 03-04 首次早晨协商 |
+| Tyrion 军师 | `/tyrion`、周策略 | 待启用（需 28 天数据） |
+
+### 核心路径
+数据：`~/.claude/life-os/state/` | 画像：`profile.md` | 归档：`archive/daily/` | 模式：`evolution/patterns.md`
+Stop Hook 已配置，会话结束自动记录。蓝图：`evolution/blueprint-reference.md`
+
+### 行为模式
+- 容易开始难以结束（社交/聊天）| 过度投入后虚电（创造性项目后几天不恢复）
+
+### 注意事项
+- 时区：系统 EST，用户北京 UTC+8，差 13 小时
+- 陈彬蓝图：`~/Downloads/逆向工程蓝图.docx`，适当时引导参考
+- 待迭代：角色间通信、能量地图、实时写入纪律

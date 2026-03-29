@@ -1,0 +1,2523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>乾卦解读 — 六龙御天，自强不息 | 易经64卦</title>
+  <meta name="description" content="乾卦九步深度解读：从字源训诂到现代映射，融合经典原文、佑安释易方法论与AI跨卦分析。元亨利贞四德、六龙演进、用九天则。">
+  <meta name="keywords" content="乾卦, 易经, 元亨利贞, 潜龙勿用, 飞龙在天, 亢龙有悔, 周易, 六十四卦">
+  <meta property="og:title" content="乾卦解读 — 六龙御天，自强不息 | 易经64卦">
+  <meta property="og:description" content="乾卦九步深度解读：从字源训诂到现代映射，融合经典原文、佑安释易方法论与AI跨卦分析。元亨利贞四德、六龙演进、用九天则。">
+  <meta property="og:type" content="article">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+/* ============================================================
+   易经64卦 — 统一设计系统 (宣纸美学)
+   提取自谦卦/天火同人卦解读 + 扩展
+   ============================================================ */
+
+/* --- Design Tokens --- */
+:root {
+  --ink-black: #1a1a1a;
+  --ink-dark: #2d2d2d;
+  --ink-medium: #555;
+  --ink-light: #888;
+  --paper: #f5f0e8;
+  --paper-light: #faf7f0;
+  --paper-dark: #e8e0d0;
+  --gold: #b8860b;
+  --gold-light: #d4a843;
+  --gold-bright: #e6c453;
+  --vermilion: #c23a2b;
+  --vermilion-light: #d4554a;
+  --vermilion-dark: #8b1a1a;
+  --cloud-white: rgba(255,255,255,0.6);
+  --shadow-ink: rgba(26,26,26,0.08);
+  --radius: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --font-main: 'Noto Serif SC', 'Songti SC', 'SimSun', serif;
+  --font-body: 'Noto Serif SC', -apple-system, 'PingFang SC', serif;
+  /* Source tag colors */
+  --source-classic: #2d2d2d;
+  --source-youan: #6b4c8a;
+  --source-ai: #2a6496;
+}
+
+/* --- Reset & Base --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink-black);
+  background-color: var(--paper);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  line-height: 1.9;
+  font-size: 1rem;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(200,190,170,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 50%, rgba(200,190,170,0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+a { color: var(--gold); text-decoration: none; transition: color 0.3s; }
+a:hover { color: var(--vermilion); }
+
+img { max-width: 100%; height: auto; }
+
+/* --- Container --- */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Navigation (Sticky 9-Step) --- */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: rgba(245, 240, 232, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  transform: translateY(-100%);
+  transition: transform 0.4s ease;
+  z-index: 100;
+  padding: 0.5rem 0;
+}
+.nav.visible { transform: translateY(0); }
+
+.nav-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-dark);
+  white-space: nowrap;
+}
+
+.nav-links {
+  display: flex;
+  gap: 0.2rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.nav-links a {
+  font-size: 0.7rem;
+  color: var(--ink-medium);
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--radius);
+  transition: all 0.3s;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--vermilion);
+  background: rgba(194, 58, 43, 0.06);
+}
+
+/* --- Hero Section --- */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+}
+
+.hero-step-label {
+  font-size: 0.75rem;
+  color: var(--gold);
+  letter-spacing: 0.5em;
+  margin-bottom: 1rem;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.3s forwards;
+}
+
+.hero-gua-name {
+  font-size: clamp(5rem, 15vw, 10rem);
+  font-weight: 900;
+  color: var(--ink-black);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  animation: brushReveal 1.2s ease 0.5s forwards;
+}
+
+.hero-full-name {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: var(--ink-medium);
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.8s forwards;
+}
+
+.hero-tagline {
+  font-size: 1.1rem;
+  color: var(--ink-medium);
+  max-width: 500px;
+  margin: 0 auto 2rem;
+  opacity: 0;
+  animation: fadeUp 1s ease 1s forwards;
+}
+
+.hero-hexagram {
+  opacity: 0;
+  animation: fadeUp 1s ease 1.2s forwards;
+}
+
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: var(--ink-light);
+  letter-spacing: 0.3em;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.5s forwards;
+}
+
+.hero-scroll-hint::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 30px;
+  background: linear-gradient(180deg, var(--ink-light), transparent);
+  margin: 0.5rem auto 0;
+  animation: scrollPulse 2s ease infinite;
+}
+
+/* --- Sections --- */
+section {
+  padding: 5rem 0;
+  position: relative;
+}
+
+.section-light { background: transparent; }
+.section-warm { background: rgba(184, 134, 11, 0.03); }
+.section-dark {
+  background: var(--ink-dark);
+  color: var(--paper);
+}
+
+.section-step {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--vermilion);
+  letter-spacing: 0.4em;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.section-title {
+  text-align: center;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--ink-black);
+  margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--ink-light);
+  margin-bottom: 2.5rem;
+}
+
+/* --- Dividers --- */
+.divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ink-light), transparent);
+  margin: 2rem auto;
+}
+.divider-gold { background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.divider-vermilion { background: linear-gradient(90deg, transparent, var(--vermilion), transparent); }
+.divider-wide { width: 120px; }
+
+/* --- Quote Block --- */
+.quote-block {
+  background: var(--paper-light);
+  border-left: 3px solid var(--gold);
+  padding: 1.5rem 2rem;
+  margin: 1.5rem 0;
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  font-style: italic;
+  color: var(--ink-dark);
+}
+
+.quote-block cite {
+  display: block;
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  color: var(--ink-light);
+  font-style: normal;
+}
+
+/* --- Source Tags --- */
+.source-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+}
+
+.source-classic {
+  background: rgba(45, 45, 45, 0.08);
+  color: var(--source-classic);
+}
+
+.source-youan {
+  background: rgba(107, 76, 138, 0.1);
+  color: var(--source-youan);
+}
+
+.source-ai {
+  background: rgba(42, 100, 150, 0.1);
+  color: var(--source-ai);
+}
+
+/* --- Tuan Grid (读彖 3-Column) --- */
+.tuan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.tuan-card {
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.tuan-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--vermilion));
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+.tuan-card:hover::before { transform: scaleX(1); }
+.tuan-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+
+.tuan-card .tuan-label {
+  font-size: 0.75rem;
+  color: var(--vermilion);
+  letter-spacing: 0.2em;
+  margin-bottom: 0.5rem;
+}
+
+.tuan-card .tuan-text {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink-black);
+  margin-bottom: 0.8rem;
+}
+
+.tuan-card .tuan-explain {
+  font-size: 0.85rem;
+  color: var(--ink-medium);
+  line-height: 1.7;
+}
+
+/* --- Character Table (训字) --- */
+.char-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 2rem 0;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.char-table thead th {
+  background: var(--ink-dark);
+  color: var(--paper);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 1rem 1.2rem;
+  letter-spacing: 0.1em;
+  text-align: left;
+}
+
+.char-table tbody tr {
+  transition: background 0.3s;
+}
+.char-table tbody tr:hover { background: rgba(184, 134, 11, 0.06); }
+.char-table tbody tr:nth-child(even) { background: rgba(0,0,0,0.015); }
+
+.char-table tbody td {
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  font-size: 0.9rem;
+  color: var(--ink-dark);
+  vertical-align: top;
+}
+
+.char-table tbody td:first-child {
+  font-size: 1.8rem;
+  font-weight: 900;
+  text-align: center;
+  width: 70px;
+  color: var(--ink-black);
+}
+
+/* --- Yao Analysis (析位) --- */
+.xiwei-layout {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 3rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.yao-structure { flex: 0 0 280px; }
+
+.yao-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  transition: all 0.3s;
+}
+.yao-row:hover { background: rgba(184, 134, 11, 0.04); border-radius: var(--radius); }
+.yao-row.yao-highlight { background: rgba(194, 58, 43, 0.06); border-radius: var(--radius); }
+
+.yao-pos {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-medium);
+  min-width: 35px;
+}
+
+.yao-line-mini { display: flex; gap: 4px; align-items: center; }
+.yao-line-mini .bar {
+  height: 4px;
+  border-radius: 2px;
+}
+.yao-line-mini .bar.yang { width: 50px; background: var(--ink-dark); }
+.yao-line-mini .bar.yin { width: 20px; background: var(--ink-dark); }
+
+.yao-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+.yao-tag {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  background: rgba(0,0,0,0.05);
+  color: var(--ink-medium);
+}
+.yao-tag.tag-key {
+  background: rgba(184, 134, 11, 0.12);
+  color: var(--gold);
+}
+
+.xiwei-insight {
+  flex: 0 0 280px;
+  background: linear-gradient(135deg, rgba(194, 58, 43, 0.04), rgba(184, 134, 11, 0.04));
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.xiwei-insight h4 {
+  font-size: 0.85rem;
+  color: var(--vermilion);
+  margin-bottom: 0.8rem;
+  letter-spacing: 0.1em;
+}
+
+.xiwei-insight p {
+  font-size: 0.9rem;
+  color: var(--ink-dark);
+  line-height: 1.8;
+}
+
+/* --- Yao Cards (玩辞) --- */
+.yao-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 3rem 0;
+}
+
+.yao-card {
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+
+.yao-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.yao-card:hover {
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  transform: translateY(-2px);
+}
+
+.yao-card.level-safe::after { background: #4a9c6d; }
+.yao-card.level-warn::after { background: var(--gold); }
+.yao-card.level-danger::after { background: var(--vermilion); }
+.yao-card.level-turn::after { background: #3a7bd5; }
+.yao-card.level-climax::after { background: linear-gradient(180deg, var(--vermilion), var(--gold)); }
+.yao-card.level-end::after { background: var(--ink-light); }
+
+.yao-card .yao-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.yao-card .yao-position {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink-black);
+}
+
+.yao-card .yao-level {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.level-label-safe { background: rgba(74, 156, 109, 0.12); color: #4a9c6d; }
+.level-label-warn { background: rgba(184, 134, 11, 0.12); color: var(--gold); }
+.level-label-danger { background: rgba(194, 58, 43, 0.12); color: var(--vermilion); }
+.level-label-turn { background: rgba(58, 123, 213, 0.12); color: #3a7bd5; }
+.level-label-climax { background: rgba(194, 58, 43, 0.12); color: var(--vermilion); }
+.level-label-end { background: rgba(136, 136, 136, 0.12); color: var(--ink-light); }
+
+.yao-card .yao-original {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink-dark);
+  margin-bottom: 0.5rem;
+}
+
+.yao-card .yao-xiang {
+  font-size: 0.85rem;
+  color: var(--ink-light);
+  margin-bottom: 0.8rem;
+  font-style: italic;
+}
+
+.yao-card .yao-interp {
+  font-size: 0.9rem;
+  color: var(--ink-dark);
+  line-height: 1.8;
+}
+
+/* Special: Highlight Card (e.g. 九五) */
+.yao-card.yao-highlight {
+  background: linear-gradient(135deg, #fdf8ef, #faf0db);
+  border: 2px solid var(--gold);
+  box-shadow: 0 4px 20px rgba(184, 134, 11, 0.1);
+}
+.yao-card.yao-highlight::before {
+  content: attr(data-highlight-label);
+  position: absolute;
+  top: -12px;
+  right: 24px;
+  background: linear-gradient(135deg, var(--vermilion), var(--vermilion-light));
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.8rem;
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+/* --- Trend Chart (玩辞 SVG) --- */
+.chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1rem 1rem;
+  overflow-x: auto;
+}
+
+.chart-tooltip {
+  position: absolute;
+  background: var(--ink-dark);
+  color: var(--paper);
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 10;
+  max-width: 200px;
+}
+
+.chart-path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 2s ease;
+}
+.chart-path.animated { stroke-dashoffset: 0; }
+
+.chart-dot { opacity: 0; transition: opacity 0.5s ease; cursor: pointer; }
+.chart-dot.animated { opacity: 1; }
+
+/* --- Xugua Flow (察变 序卦) --- */
+.xugua-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 2.5rem 0;
+  flex-wrap: wrap;
+}
+
+.xugua-node {
+  text-align: center;
+  padding: 1.5rem 2rem;
+  border-radius: var(--radius-lg);
+  position: relative;
+  min-width: 140px;
+}
+
+.xugua-node.node-past {
+  background: rgba(136, 136, 136, 0.08);
+  border: 1px solid rgba(136, 136, 136, 0.15);
+}
+.xugua-node.node-present {
+  background: rgba(194, 58, 43, 0.08);
+  border: 2px solid var(--vermilion);
+  box-shadow: 0 0 20px rgba(194, 58, 43, 0.1);
+}
+.xugua-node.node-future {
+  background: rgba(184, 134, 11, 0.08);
+  border: 1px solid rgba(184, 134, 11, 0.2);
+}
+
+.xugua-node .node-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.xugua-node .node-desc {
+  font-size: 0.8rem;
+  color: var(--ink-medium);
+}
+
+.xugua-arrow {
+  font-size: 1.5rem;
+  color: var(--ink-light);
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+.xugua-arrow .arrow-label {
+  font-size: 0.7rem;
+  color: var(--ink-light);
+}
+
+/* --- Zonggua Compare (察变 综卦) --- */
+.zonggua-compare {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2.5rem 0;
+  flex-wrap: wrap;
+}
+
+.zonggua-item {
+  text-align: center;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  min-width: 160px;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: var(--paper-light);
+}
+
+.zonggua-vs {
+  font-size: 1.5rem;
+  color: var(--ink-light);
+  font-weight: 300;
+}
+
+/* --- Virtue Cards (归德) --- */
+.de-cards {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.de-card {
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  text-align: center;
+  flex: 0 1 250px;
+  transition: all 0.4s;
+}
+.de-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.de-card .de-icon {
+  font-size: 2rem;
+  margin-bottom: 0.8rem;
+}
+
+.de-card .de-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink-black);
+  margin-bottom: 0.5rem;
+}
+
+.de-card .de-desc {
+  font-size: 0.85rem;
+  color: var(--ink-medium);
+  line-height: 1.7;
+}
+
+/* --- Citation Cards (征引) --- */
+.citation-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.citation-item {
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+
+.citation-item::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--vermilion));
+  transform: scaleX(0);
+  transition: transform 0.4s;
+  transform-origin: left;
+}
+.citation-item:hover::before { transform: scaleX(1); }
+.citation-item:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
+
+.citation-item .cite-yao {
+  font-size: 0.7rem;
+  color: var(--vermilion);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.citation-item .cite-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink-black);
+  margin-bottom: 0.5rem;
+}
+
+.citation-item .cite-detail {
+  font-size: 0.85rem;
+  color: var(--ink-medium);
+  line-height: 1.7;
+}
+
+.citation-item .cite-source {
+  font-size: 0.75rem;
+  color: var(--ink-light);
+  margin-top: 0.8rem;
+  font-style: italic;
+}
+
+/* --- Guide Timeline (映射 Zigzag) --- */
+.guide-timeline {
+  position: relative;
+  padding: 2rem 0;
+  margin: 2rem 0;
+}
+
+.guide-timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--gold), var(--vermilion), var(--ink-light));
+  transform: translateX(-50%);
+}
+
+.guide-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.guide-item:nth-child(odd) {
+  flex-direction: row;
+  padding-right: calc(50% + 2rem);
+  text-align: right;
+}
+
+.guide-item:nth-child(even) {
+  flex-direction: row-reverse;
+  padding-left: calc(50% + 2rem);
+  text-align: left;
+}
+
+.guide-dot {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--paper);
+  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.2);
+  z-index: 2;
+}
+
+.guide-label {
+  font-size: 0.7rem;
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.guide-content h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink-black);
+  margin-bottom: 0.3rem;
+}
+
+.guide-content p {
+  font-size: 0.85rem;
+  color: var(--ink-medium);
+  line-height: 1.7;
+}
+
+/* --- AI Insights Panel --- */
+.ai-panel {
+  background: linear-gradient(135deg, rgba(42, 100, 150, 0.04), rgba(42, 100, 150, 0.08));
+  border: 1px solid rgba(42, 100, 150, 0.15);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  margin: 2rem 0;
+  position: relative;
+}
+
+.ai-panel::before {
+  content: 'AI 洞察';
+  position: absolute;
+  top: -12px;
+  left: 24px;
+  background: linear-gradient(135deg, #2a6496, #3a7bd5);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.8rem;
+  border-radius: var(--radius);
+  letter-spacing: 0.1em;
+}
+
+.ai-panel h3 {
+  font-size: 1.1rem;
+  color: #2a6496;
+  margin-bottom: 1rem;
+}
+
+.ai-panel p {
+  font-size: 0.9rem;
+  color: var(--ink-dark);
+  line-height: 1.8;
+}
+
+/* --- Network Diagram (关系网络) --- */
+.network-diagram {
+  max-width: 600px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.network-node {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  margin: 0.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(0,0,0,0.08);
+  background: var(--paper-light);
+  transition: all 0.3s;
+}
+.network-node:hover {
+  border-color: var(--gold);
+  box-shadow: 0 4px 15px rgba(184, 134, 11, 0.1);
+}
+.network-node.node-center {
+  border: 2px solid var(--vermilion);
+  background: linear-gradient(135deg, rgba(194, 58, 43, 0.04), var(--paper-light));
+}
+
+.network-label {
+  font-size: 0.7rem;
+  color: var(--ink-light);
+  margin-top: 0.3rem;
+}
+
+/* --- Conclusion Section --- */
+.conclusion-section {
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-dark) 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 4rem 0;
+}
+
+.conclusion-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 10%, var(--gold) 50%, transparent 90%);
+}
+
+.conclusion-box {
+  background: var(--paper-light);
+  border: 1px solid rgba(184, 134, 11, 0.15);
+  border-radius: var(--radius-xl);
+  padding: 3rem;
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.conclusion-box::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 2rem; right: 2rem;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--vermilion), var(--gold));
+  border-radius: 2px 2px 0 0;
+}
+
+.conclusion-highlight {
+  background: rgba(194, 58, 43, 0.04);
+  border-left: 3px solid var(--vermilion);
+  padding: 1.2rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 6px 6px 0;
+}
+
+/* --- Footer --- */
+.footer {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--ink-light);
+  font-size: 0.8rem;
+}
+
+.footer-nav {
+  margin-bottom: 1.5rem;
+}
+
+.footer-nav a {
+  color: var(--ink-medium);
+  padding: 0.3rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+/* --- Back to Top --- */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem; right: 2rem;
+  width: 40px; height: 40px;
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+  z-index: 90;
+  font-size: 1rem;
+  color: var(--ink-medium);
+}
+.back-to-top.visible { opacity: 1; visibility: visible; }
+.back-to-top:hover {
+  background: var(--gold);
+  color: #fff;
+  border-color: var(--gold);
+}
+
+/* --- Animations --- */
+@keyframes brushReveal {
+  0% { opacity: 0; transform: scale(0.8); filter: blur(4px); }
+  60% { opacity: 0.8; transform: scale(1.02); filter: blur(0); }
+  100% { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* Scroll-triggered fade-in */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+.fade-in-delay-1 { transition-delay: 0.15s; }
+.fade-in-delay-2 { transition-delay: 0.3s; }
+.fade-in-delay-3 { transition-delay: 0.45s; }
+.fade-in-delay-4 { transition-delay: 0.6s; }
+
+/* --- TOC (目录导引) --- */
+.toc-section {
+  padding: 3rem 0 2rem;
+}
+
+.toc-heading {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--ink-light);
+  letter-spacing: 0.5em;
+  margin-bottom: 2rem;
+}
+
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.8rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.toc-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.2rem 0.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(0,0,0,0.05);
+  background: var(--paper-light);
+  text-decoration: none;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.toc-item:hover {
+  border-color: var(--gold);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(184, 134, 11, 0.1);
+}
+
+.toc-num {
+  font-size: 0.7rem;
+  color: var(--vermilion);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+}
+
+.toc-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink-black);
+  margin-bottom: 0.2rem;
+}
+
+.toc-desc {
+  font-size: 0.7rem;
+  color: var(--ink-light);
+}
+
+.toc-item-ai {
+  border-style: dashed;
+  border-color: rgba(42, 100, 150, 0.2);
+}
+.toc-item-ai .toc-num { color: var(--source-ai); }
+.toc-item-ai:hover { border-color: var(--source-ai); box-shadow: 0 4px 15px rgba(42, 100, 150, 0.1); }
+
+/* --- Xunzi Cards (训字 — 象形可视化) --- */
+.xunzi-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.xunzi-card {
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem;
+  transition: all 0.4s;
+}
+.xunzi-card:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+  transform: translateY(-2px);
+}
+
+.xunzi-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.xunzi-modern {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.xunzi-char {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--ink-black);
+  line-height: 1;
+}
+
+.xunzi-pictograph {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pictograph-svg {
+  width: 100%;
+  max-width: 120px;
+  height: auto;
+  background: rgba(0,0,0,0.02);
+  border-radius: var(--radius);
+  padding: 6px;
+  border: 1px dashed rgba(0,0,0,0.08);
+}
+
+.pictograph-label {
+  font-size: 0.7rem;
+  color: var(--ink-light);
+  margin-top: 0.4rem;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+.xunzi-components {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.8rem 1rem;
+  background: rgba(184, 134, 11, 0.04);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--gold);
+}
+
+.xunzi-comp {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+}
+
+.comp-part {
+  font-weight: 700;
+  color: var(--vermilion);
+  font-size: 1rem;
+}
+
+.comp-arrow {
+  color: var(--ink-light);
+  font-size: 0.75rem;
+}
+
+.comp-meaning {
+  color: var(--ink-medium);
+}
+
+.xunzi-shuowen {
+  font-size: 0.8rem;
+  color: var(--ink-light);
+  font-style: italic;
+  padding: 0.6rem 0;
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.xunzi-extension {
+  font-size: 0.88rem;
+  color: var(--ink-dark);
+  line-height: 1.85;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  section { padding: 3.5rem 0; }
+  .container { padding: 0 1.2rem; }
+  .tuan-grid { grid-template-columns: 1fr; }
+  .yao-cards { grid-template-columns: 1fr; }
+  .xunzi-cards { grid-template-columns: 1fr; }
+  .toc-grid { grid-template-columns: repeat(5, 1fr); gap: 0.5rem; }
+  .toc-desc { display: none; }
+  .toc-item { padding: 0.8rem 0.3rem; }
+  .toc-name { font-size: 0.95rem; }
+  .xiwei-layout { flex-direction: column; align-items: center; }
+  .citation-list { grid-template-columns: 1fr; }
+  .de-cards { flex-direction: column; align-items: center; }
+  .guide-timeline::before { left: 1rem; }
+  .guide-item { padding-left: 3rem !important; padding-right: 0 !important; text-align: left !important; flex-direction: row !important; }
+  .guide-dot { left: 1rem; }
+  .nav-links { display: none; }
+  .xugua-flow { flex-direction: column; gap: 1rem; }
+  .xugua-arrow { transform: rotate(90deg); }
+  .zonggua-compare { flex-direction: column; }
+}
+
+@media (max-width: 480px) {
+  .hero-gua-name { font-size: clamp(3rem, 20vw, 5rem); }
+  .char-table th, .char-table td { font-size: 0.8rem; padding: 0.7rem 0.6rem; }
+  .yao-card .yao-header { flex-direction: column; gap: 0.5rem; }
+  .ai-panel { padding: 2rem 1.5rem; }
+  .conclusion-box { padding: 2rem 1.5rem; }
+  .toc-grid { grid-template-columns: repeat(5, 1fr); }
+  .toc-num { font-size: 0.6rem; }
+  .toc-name { font-size: 0.8rem; }
+  .xunzi-card-top { flex-direction: column; align-items: center; }
+  .xunzi-card { padding: 1.2rem; }
+}
+
+  </style>
+</head>
+<body>
+
+<!-- 九步导航条 -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <span class="nav-title">乾卦 · 乾为天</span>
+    <div class="nav-links">
+      <a href="#guanxiang">观象</a>
+      <a href="#dutuan">读彖</a>
+      <a href="#xunzi">训字</a>
+      <a href="#xiwei">析位</a>
+      <a href="#wanci">玩辞</a>
+      <a href="#chabian">察变</a>
+      <a href="#guide">归德</a>
+      <a href="#zhengyin">征引</a>
+      <a href="#yingshe">映射</a>
+      <a href="#ai-insights">AI</a>
+    </div>
+  </div>
+</nav>
+<!-- Hero 区 -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <!-- 乾卦：天上有天，纯阳苍穹 -->
+    <svg width="100%" height="100%" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" style="position:absolute;top:0;left:0;">
+      <defs>
+        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0a1628"/>
+          <stop offset="30%" stop-color="#1a2744"/>
+          <stop offset="60%" stop-color="#2c3e5a"/>
+          <stop offset="85%" stop-color="#3d5070"/>
+          <stop offset="100%" stop-color="#4a6080"/>
+        </linearGradient>
+        <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="dragonGold" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#b8860b" stop-opacity="0.2"/>
+          <stop offset="50%" stop-color="#d4a843" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#b8860b" stop-opacity="0.2"/>
+        </linearGradient>
+      </defs>
+      <!-- 深邃夜空 -->
+      <rect width="1200" height="800" fill="url(#skyGrad)"/>
+      <!-- 星辰 -->
+      <circle cx="150" cy="80" r="1.5" fill="#fff" opacity="0.6"><animate attributeName="opacity" values="0.2;0.8;0.2" dur="4s" repeatCount="indefinite"/></circle>
+      <circle cx="350" cy="120" r="1" fill="#fff" opacity="0.4"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="3s" repeatCount="indefinite"/></circle>
+      <circle cx="550" cy="60" r="2" fill="#fff" opacity="0.7"><animate attributeName="opacity" values="0.4;0.9;0.4" dur="5s" repeatCount="indefinite"/></circle>
+      <circle cx="780" cy="100" r="1.5" fill="#fff" opacity="0.5"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="3.5s" repeatCount="indefinite"/></circle>
+      <circle cx="950" cy="150" r="1" fill="#fff" opacity="0.3"><animate attributeName="opacity" values="0.1;0.5;0.1" dur="4.5s" repeatCount="indefinite"/></circle>
+      <circle cx="1050" cy="70" r="1.5" fill="#fff" opacity="0.6"><animate attributeName="opacity" values="0.3;0.8;0.3" dur="3.2s" repeatCount="indefinite"/></circle>
+      <circle cx="250" cy="200" r="1" fill="#fff" opacity="0.4"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="5.5s" repeatCount="indefinite"/></circle>
+      <circle cx="680" cy="180" r="1.5" fill="#fff" opacity="0.5"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="4.2s" repeatCount="indefinite"/></circle>
+      <!-- 云气 -->
+      <ellipse cx="300" cy="550" rx="350" ry="60" fill="rgba(255,255,255,0.03)">
+        <animate attributeName="cx" values="300;350;300" dur="20s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="800" cy="480" rx="250" ry="40" fill="rgba(255,255,255,0.04)">
+        <animate attributeName="cx" values="800;750;800" dur="15s" repeatCount="indefinite"/>
+      </ellipse>
+      <!-- 金色龙气光带 -->
+      <ellipse cx="600" cy="400" rx="500" ry="80" fill="url(#dragonGold)" opacity="0.3">
+        <animate attributeName="opacity" values="0.2;0.4;0.2" dur="8s" repeatCount="indefinite"/>
+      </ellipse>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-step-label">易经第1卦</p>
+    <h1 class="hero-gua-name" style="color:#f5f0e8;">乾</h1>
+    <p class="hero-full-name" style="color:rgba(245,240,232,0.7);">乾为天</p>
+    <p class="hero-tagline" style="color:rgba(245,240,232,0.6);">天行健，君子以自强不息</p>
+
+    <!-- 卦象 SVG -->
+    <div class="hero-hexagram">
+      <svg width="80" height="120" viewBox="0 0 80 120">
+        <!-- 阳爻 -->
+        <rect x="5" y="10" width="70" height="8" rx="2"
+              fill="rgba(245,240,232,0.8)"/>
+        <!-- 阳爻 -->
+        <rect x="5" y="28" width="70" height="8" rx="2"
+              fill="rgba(245,240,232,0.8)"/>
+        <!-- 阳爻 -->
+        <rect x="5" y="46" width="70" height="8" rx="2"
+              fill="rgba(245,240,232,0.8)"/>
+        <!-- 阳爻 -->
+        <rect x="5" y="64" width="70" height="8" rx="2"
+              fill="rgba(245,240,232,0.8)"/>
+        <!-- 阳爻 -->
+        <rect x="5" y="82" width="70" height="8" rx="2"
+              fill="rgba(245,240,232,0.8)"/>
+        <!-- 阳爻 -->
+        <rect x="5" y="100" width="70" height="8" rx="2"
+              fill="rgba(245,240,232,0.8)"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="hero-scroll-hint" style="color:rgba(245,240,232,0.4);">
+    向下探索
+  </div>
+</section>
+<!-- 目录导引 -->
+<section id="toc" class="section-light toc-section">
+  <div class="container">
+    <p class="toc-heading fade-in">本卦导览</p>
+    <div class="toc-grid fade-in">
+      <a href="#guanxiang" class="toc-item">
+        <span class="toc-num">一</span>
+        <span class="toc-name">观象</span>
+        <span class="toc-desc">观卦象之形</span>
+      </a>
+      <a href="#dutuan" class="toc-item">
+        <span class="toc-num">二</span>
+        <span class="toc-name">读彖</span>
+        <span class="toc-desc">断一卦之义</span>
+      </a>
+      <a href="#xunzi" class="toc-item">
+        <span class="toc-num">三</span>
+        <span class="toc-name">训字</span>
+        <span class="toc-desc">溯字源本义</span>
+      </a>
+      <a href="#xiwei" class="toc-item">
+        <span class="toc-num">四</span>
+        <span class="toc-name">析位</span>
+        <span class="toc-desc">六爻各有其位</span>
+      </a>
+      <a href="#wanci" class="toc-item">
+        <span class="toc-num">五</span>
+        <span class="toc-name">玩辞</span>
+        <span class="toc-desc">体察吉凶消长</span>
+      </a>
+      <a href="#chabian" class="toc-item">
+        <span class="toc-num">六</span>
+        <span class="toc-name">察变</span>
+        <span class="toc-desc">穷变化之道</span>
+      </a>
+      <a href="#guide" class="toc-item">
+        <span class="toc-num">七</span>
+        <span class="toc-name">归德</span>
+        <span class="toc-desc">卦以修德</span>
+      </a>
+      <a href="#zhengyin" class="toc-item">
+        <span class="toc-num">八</span>
+        <span class="toc-name">征引</span>
+        <span class="toc-desc">以史为证</span>
+      </a>
+      <a href="#yingshe" class="toc-item">
+        <span class="toc-num">九</span>
+        <span class="toc-name">映射</span>
+        <span class="toc-desc">落地当代</span>
+      </a>
+      <a href="#ai-insights" class="toc-item toc-item-ai">
+        <span class="toc-num">+</span>
+        <span class="toc-name">AI 洞察</span>
+        <span class="toc-desc">跨卦独创分析</span>
+      </a>
+    </div>
+  </div>
+</section>
+<!-- 第一步：观象 -->
+<section id="guanxiang" class="section-light">
+  <div class="container">
+    <p class="section-step fade-in">第一步</p>
+    <h2 class="section-title fade-in">观象</h2>
+    <p class="section-subtitle fade-in">观卦象之形，悟天地之意</p>
+    <div class="divider divider-gold fade-in"></div>
+
+<!-- 观象内容 -->
+<div class="quote-block fade-in">
+  <p>乾：元，亨，利，贞。</p>
+  <cite>卦辞</cite>
+</div>
+
+<div class="fade-in fade-in-delay-1" style="margin: 2rem 0; line-height: 2;">
+  <p>乾上乾下，六爻皆阳。上卦为天，下卦亦天——天上有天，纯阳至刚。如同仰望苍穹，日月运行不息，四时更替有序，万物由此而生。</p>
+</div>
+
+<div class="fade-in fade-in-delay-2" style="margin: 2rem 0;">
+  <h3 style="font-size: 1rem; color: var(--gold); margin-bottom: 0.8rem; letter-spacing: 0.1em;">卦象取类</h3>
+  <p style="line-height: 2; color: var(--ink-dark);">乾象为天、为圜、为君、为父、为玉、为金、为寒、为冰、为大赤、为良马、为老马、为瘠马、为驳马、为木果。天的特质是刚健不已、运转不息。乾为马，取其健行之象；为玉为金，取其刚坚之质；为寒为冰，取其凛然之气。</p>
+</div>
+
+<div class="fade-in fade-in-delay-3" style="margin: 2rem 0; padding: 1.5rem; background: rgba(184,134,11,0.04); border-radius: 8px; border: 1px solid rgba(184,134,11,0.1);">
+  <p style="line-height: 2; color: var(--ink-dark);">乾卦是六十四卦之首，纯阳之卦。六爻皆阳，无一阴爻，象征最纯粹的创始之力。天道的本质不是静止的权威，而是永不停歇的运动——「天行健」三字道尽乾卦精髓。</p>
+</div>  </div>
+</section>
+
+<!-- 第二步：读彖 -->
+<section id="dutuan" class="section-warm">
+  <div class="container">
+    <p class="section-step fade-in">第二步</p>
+    <h2 class="section-title fade-in">读彖</h2>
+    <p class="section-subtitle fade-in">彖者，断也。断一卦之义</p>
+    <div class="divider divider-gold fade-in"></div>
+
+<!-- 读彖内容 -->
+<div class="quote-block fade-in">
+  <p>大哉乾元，万物资始，乃统天。云行雨施，品物流形。大明终始，六位时成，时乘六龙以御天。乾道变化，各正性命。保合太和，乃利贞。首出庶物，万国咸宁。</p>
+  <cite>彖传</cite>
+</div>
+
+<div class="tuan-grid fade-in fade-in-delay-1">
+  <div class="tuan-card">
+    <p class="tuan-label">资始统天</p>
+    <p class="tuan-text">大哉乾元，万物资始，乃统天</p>
+    <p class="tuan-explain">乾元是万物的根源和开端。「资」是依赖、凭借；「统」是统领、贯穿。一切存在皆从乾元发动，天道统摄万物。</p>
+  </div>
+  <div class="tuan-card">
+    <p class="tuan-label">品物流形</p>
+    <p class="tuan-text">云行雨施，品物流形</p>
+    <p class="tuan-explain">云气流动、雨泽降临，万物因此各得其形、各展其貌。这是乾元创始之力从抽象到具体的展开过程。</p>
+  </div>
+  <div class="tuan-card">
+    <p class="tuan-label">保合太和</p>
+    <p class="tuan-text">保合太和，乃利贞</p>
+    <p class="tuan-explain">保持最高的和谐状态，才是真正的「利」与「贞」。太和不是消灭差异，而是让万物各安其位、各得其所。</p>
+  </div>
+</div>
+
+<div class="fade-in fade-in-delay-2" style="margin: 2rem auto; max-width: 700px; padding: 2rem; background: rgba(194,58,43,0.04); border: 1px solid rgba(194,58,43,0.1); border-radius: 8px; text-align: center;">
+  <p style="font-size: 0.95rem; line-height: 1.9; color: var(--ink-dark);">彖传将「元亨利贞」从占卜吉辞升华为宇宙论——乾元是万物之源（元），天道运行畅达（亨），万物各正性命（利），保合太和（贞）。这是从「占」到「理」的根本转变。</p>
+  <span class="source-tag source-classic">
+经典原文  </span>
+</div>  </div>
+</section>
+
+<!-- 第三步：训字 -->
+<section id="xunzi" class="section-light">
+  <div class="container">
+    <p class="section-step fade-in">第三步</p>
+    <h2 class="section-title fade-in">训字</h2>
+    <p class="section-subtitle fade-in">溯字源本义，解经典密码</p>
+    <div class="divider divider-gold fade-in"></div>
+
+<!-- 训字内容 — 卡片式 + 象形可视化 -->
+<div class="xunzi-cards">
+  <div class="xunzi-card fade-in fade-in-delay-1">
+    <div class="xunzi-card-top">
+      <!-- 现代字 -->
+      <div class="xunzi-modern">
+        <span class="xunzi-char">乾</span>
+        <span class="source-tag source-classic">
+经典        </span>
+      </div>
+      <!-- 象形图解 -->
+    </div>
+    <!-- 字形结构拆解 -->
+    <!-- 说文解字引用 -->
+    <div class="xunzi-shuowen">
+      《说文》：乾，上出也。从乙，乙，物之达也
+    </div>
+    <!-- 本卦引申 -->
+    <div class="xunzi-extension">
+      在本卦中代表天道的刚健本质。乾为天，取其刚健不息之德
+    </div>
+  </div>
+  <div class="xunzi-card fade-in fade-in-delay-2">
+    <div class="xunzi-card-top">
+      <!-- 现代字 -->
+      <div class="xunzi-modern">
+        <span class="xunzi-char">元</span>
+        <span class="source-tag source-youan">
+佑安        </span>
+      </div>
+      <!-- 象形图解 -->
+    </div>
+    <!-- 字形结构拆解 -->
+    <!-- 说文解字引用 -->
+    <div class="xunzi-shuowen">
+      《说文》：元，始也。佑安注：古字形像头部突出的侧立的人形，本义为头，引申为首要、第一，进而表示天地万物的本源
+    </div>
+    <!-- 本卦引申 -->
+    <div class="xunzi-extension">
+      万物之始，善之长。元者首也，在乾卦中代表一切创始的根源力量
+    </div>
+  </div>
+  <div class="xunzi-card fade-in fade-in-delay-3">
+    <div class="xunzi-card-top">
+      <!-- 现代字 -->
+      <div class="xunzi-modern">
+        <span class="xunzi-char">亨</span>
+        <span class="source-tag source-youan">
+佑安        </span>
+      </div>
+      <!-- 象形图解 -->
+    </div>
+    <!-- 字形结构拆解 -->
+    <!-- 说文解字引用 -->
+    <div class="xunzi-shuowen">
+      佑安注：从甲骨文形体来看，像高大台基上建有殿堂形，象征祭祖的宗庙。引申为聚会、会合，类似庙会时众人准备牲礼到庙中祈福的场景
+    </div>
+    <!-- 本卦引申 -->
+    <div class="xunzi-extension">
+      通达无阻。从宗庙祭祀的聚会之义，引申为一切事物的通顺畅达
+    </div>
+  </div>
+  <div class="xunzi-card fade-in fade-in-delay-4">
+    <div class="xunzi-card-top">
+      <!-- 现代字 -->
+      <div class="xunzi-modern">
+        <span class="xunzi-char">利</span>
+        <span class="source-tag source-youan">
+佑安        </span>
+      </div>
+      <!-- 象形图解 -->
+    </div>
+    <!-- 字形结构拆解 -->
+    <!-- 说文解字引用 -->
+    <div class="xunzi-shuowen">
+      佑安注：本义指刀剑锋利，锋利则速度快，引申为顺利、便利。事情顺利就有好处，又引申为利益、利润
+    </div>
+    <!-- 本卦引申 -->
+    <div class="xunzi-extension">
+      义之和也。刀口锋利则切割顺畅，引申为顺利、便利，进而指利益、好处
+    </div>
+  </div>
+  <div class="xunzi-card fade-in fade-in-delay-1">
+    <div class="xunzi-card-top">
+      <!-- 现代字 -->
+      <div class="xunzi-modern">
+        <span class="xunzi-char">贞</span>
+        <span class="source-tag source-youan">
+佑安        </span>
+      </div>
+      <!-- 象形图解 -->
+    </div>
+    <!-- 字形结构拆解 -->
+    <!-- 说文解字引用 -->
+    <div class="xunzi-shuowen">
+      《说文》：贞，卜问也。佑安注：本意是在鼎上占卜，通过观察龟甲裂纹判断吉凶，后延伸出有节操、坚定不移之意
+    </div>
+    <!-- 本卦引申 -->
+    <div class="xunzi-extension">
+      事之干也。从占卜引申为正确坚定。如古代旗帜顺风而指，永远不差
+    </div>
+  </div>
+  <div class="xunzi-card fade-in fade-in-delay-2">
+    <div class="xunzi-card-top">
+      <!-- 现代字 -->
+      <div class="xunzi-modern">
+        <span class="xunzi-char">龙</span>
+        <span class="source-tag source-classic">
+经典        </span>
+      </div>
+      <!-- 象形图解 -->
+    </div>
+    <!-- 字形结构拆解 -->
+    <!-- 说文解字引用 -->
+    <div class="xunzi-shuowen">
+      《说文》：龙，鳞虫之长，能幽能明，能细能巨，能短能长
+    </div>
+    <!-- 本卦引申 -->
+    <div class="xunzi-extension">
+      乾卦以龙喻阳德变化。潜→见→惕→跃→飞→亢，龙的六种状态对应六爻递进。龙德即乾德——隐现自如、因时而变
+    </div>
+  </div>
+</div>  </div>
+</section>
+
+<!-- 第四步：析位 -->
+<section id="xiwei" class="section-warm">
+  <div class="container">
+    <p class="section-step fade-in">第四步</p>
+    <h2 class="section-title fade-in">析位</h2>
+    <p class="section-subtitle fade-in">六爻各有其位，当位失位各有所宜</p>
+    <div class="divider divider-gold fade-in"></div>
+
+<!-- 析位内容 -->
+<p class="fade-in" style="text-align:center; max-width:700px; margin:0 auto 2rem; color:var(--ink-dark); line-height:1.9;">
+  乾卦六爻皆阳，是六十四卦中唯一的纯阳卦。六个阳爻从初至上，展现了阳气从潜伏到亢极的完整生命周期。阳爻居阳位为「当位」（初、三、五），居阴位为「不当位」（二、四、上），但乾卦因其纯阳特质，当位与否的影响被龙德的时势所超越。
+</p>
+
+<div class="xiwei-layout fade-in fade-in-delay-1">
+  <!-- 六爻结构图 -->
+  <div class="yao-structure">
+    <div class="yao-row ">
+      <span class="yao-pos">上九</span>
+      <div class="yao-line-mini">
+        <span class="bar yang"></span>
+      </div>
+      <div class="yao-tags">
+        <span class="yao-tag ">阴位</span>
+        <span class="yao-tag tag-key">不当位</span>
+        <span class="yao-tag ">极位</span>
+        <span class="yao-tag ">亢极</span>
+      </div>
+    </div>
+    <div class="yao-row yao-highlight">
+      <span class="yao-pos">九五</span>
+      <div class="yao-line-mini">
+        <span class="bar yang"></span>
+      </div>
+      <div class="yao-tags">
+        <span class="yao-tag ">阳位</span>
+        <span class="yao-tag tag-key">当位</span>
+        <span class="yao-tag tag-key">君位</span>
+        <span class="yao-tag tag-key">中正</span>
+        <span class="yao-tag ">多功</span>
+      </div>
+    </div>
+    <div class="yao-row ">
+      <span class="yao-pos">九四</span>
+      <div class="yao-line-mini">
+        <span class="bar yang"></span>
+      </div>
+      <div class="yao-tags">
+        <span class="yao-tag ">阴位</span>
+        <span class="yao-tag tag-key">不当位</span>
+        <span class="yao-tag tag-key">近君位</span>
+        <span class="yao-tag ">多惧</span>
+      </div>
+    </div>
+    <div class="yao-row ">
+      <span class="yao-pos">九三</span>
+      <div class="yao-line-mini">
+        <span class="bar yang"></span>
+      </div>
+      <div class="yao-tags">
+        <span class="yao-tag ">阳位</span>
+        <span class="yao-tag tag-key">当位</span>
+        <span class="yao-tag ">人位</span>
+        <span class="yao-tag ">重刚</span>
+        <span class="yao-tag ">多凶</span>
+      </div>
+    </div>
+    <div class="yao-row ">
+      <span class="yao-pos">九二</span>
+      <div class="yao-line-mini">
+        <span class="bar yang"></span>
+      </div>
+      <div class="yao-tags">
+        <span class="yao-tag ">阴位</span>
+        <span class="yao-tag tag-key">不当位</span>
+        <span class="yao-tag ">内卦中位</span>
+        <span class="yao-tag tag-key">中正</span>
+      </div>
+    </div>
+    <div class="yao-row ">
+      <span class="yao-pos">初九</span>
+      <div class="yao-line-mini">
+        <span class="bar yang"></span>
+      </div>
+      <div class="yao-tags">
+        <span class="yao-tag ">阳位</span>
+        <span class="yao-tag tag-key">当位</span>
+        <span class="yao-tag ">地位·初</span>
+        <span class="yao-tag ">内卦之始</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 核心洞察 -->
+  <div class="xiwei-insight">
+    <h4>析位要旨</h4>
+    <p>乾卦析位的核心发现：纯阳六爻中，九五「既中且正」为最佳，九三「重刚不中」为最险。而贯穿六爻的主线不是位的吉凶，而是「时」的变化——同是阳爻，因时位不同而潜、见、惕、跃、飞、亢，展现了「与时偕行」的根本法则。</p>
+  </div>
+</div>
+
+<!-- 各爻详细说明（折叠展示） -->
+<div class="fade-in fade-in-delay-2" style="margin-top:2rem;">
+  <div style="padding:0.8rem 0; border-bottom:1px solid rgba(0,0,0,0.04);">
+    <p style="font-weight:600; color:var(--ink-dark); margin-bottom:0.3rem;">初九
+<span class="yao-tag tag-key">当位</span>    </p>
+    <p style="font-size:0.85rem; color:var(--ink-medium); line-height:1.8;">阳爻居阳位，当位。但初位卑微，上有五阳压制，故潜而勿用。文言传：「龙德而隐者也。不易乎世，不成乎名，遯世无闷。」</p>
+  </div>
+  <div style="padding:0.8rem 0; border-bottom:1px solid rgba(0,0,0,0.04);">
+    <p style="font-weight:600; color:var(--ink-dark); margin-bottom:0.3rem;">九二
+<span class="yao-tag">不当位</span>    </p>
+    <p style="font-size:0.85rem; color:var(--ink-medium); line-height:1.8;">阳爻居阴位，虽不当位但居内卦之中，得「中」德。文言传：「龙德而正中者也。庸言之信，庸行之谨。」与九五相应。</p>
+  </div>
+  <div style="padding:0.8rem 0; border-bottom:1px solid rgba(0,0,0,0.04);">
+    <p style="font-weight:600; color:var(--ink-dark); margin-bottom:0.3rem;">九三
+<span class="yao-tag tag-key">当位</span>    </p>
+    <p style="font-size:0.85rem; color:var(--ink-medium); line-height:1.8;">阳爻居阳位，当位但处「重刚而不中」之险。上不在天，下不在田——三爻是内外卦交界的风险位。文言传特别强调「乾乾因其时而惕」。</p>
+  </div>
+  <div style="padding:0.8rem 0; border-bottom:1px solid rgba(0,0,0,0.04);">
+    <p style="font-weight:600; color:var(--ink-dark); margin-bottom:0.3rem;">九四
+<span class="yao-tag">不当位</span>    </p>
+    <p style="font-size:0.85rem; color:var(--ink-medium); line-height:1.8;">阳爻居阴位，不当位。四爻近君（五）位，进退两难。文言传：「上下无常，非为邪也。进退无恒，非离群也。」用「或」字表达犹疑试探。</p>
+  </div>
+  <div style="padding:0.8rem 0; border-bottom:1px solid rgba(0,0,0,0.04);">
+    <p style="font-weight:600; color:var(--ink-dark); margin-bottom:0.3rem;">九五
+<span class="yao-tag tag-key">当位</span>    </p>
+    <p style="font-size:0.85rem; color:var(--ink-medium); line-height:1.8;">阳爻居阳位，当位且居外卦之中——既中且正，是全卦最佳位置。文言传：「同声相应，同气相求。圣人作而万物覩。」与九二上下相应。</p>
+  </div>
+  <div style="padding:0.8rem 0; border-bottom:1px solid rgba(0,0,0,0.04);">
+    <p style="font-weight:600; color:var(--ink-dark); margin-bottom:0.3rem;">上九
+<span class="yao-tag">不当位</span>    </p>
+    <p style="font-size:0.85rem; color:var(--ink-medium); line-height:1.8;">阳爻居阴位，不当位且处极位。阳气至此已极，盈不可久。文言传：「贵而无位，高而无民，贤人在下位而无辅，是以动而有悔也。」</p>
+  </div>
+</div>  </div>
+</section>
+
+<!-- 第五步：玩辞 -->
+<section id="wanci" class="section-light">
+  <div class="container">
+    <p class="section-step fade-in">第五步</p>
+    <h2 class="section-title fade-in">玩辞</h2>
+    <p class="section-subtitle fade-in">玩味爻辞，体察吉凶消长</p>
+    <div class="divider divider-gold fade-in"></div>
+
+<!-- 玩辞内容 -->
+
+<!-- 六爻吉凶走势图 -->
+<div class="chart-container fade-in">
+  <div class="chart-tooltip"></div>
+  <svg id="trendChart" width="100%" viewBox="0 0 700 250" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <linearGradient id="trendGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#4a9c6d"/>
+        <stop offset="40%" stop-color="#b8860b"/>
+        <stop offset="70%" stop-color="#c23a2b"/>
+        <stop offset="100%" stop-color="#888"/>
+      </linearGradient>
+    </defs>
+
+    <!-- 网格线 -->
+    <line x1="60" y1="30" x2="60" y2="210" stroke="rgba(0,0,0,0.05)" stroke-width="1"/>
+    <line x1="60" y1="210" x2="660" y2="210" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+    <line x1="60" y1="120" x2="660" y2="120" stroke="rgba(0,0,0,0.04)" stroke-width="1" stroke-dasharray="4"/>
+
+    <!-- Y轴标签 -->
+    <text x="50" y="35" text-anchor="end" font-size="10" fill="#888">吉</text>
+    <text x="50" y="215" text-anchor="end" font-size="10" fill="#888">凶</text>
+
+    <!-- 走势线 -->
+    <path d="M115,138.0 L225,102.0 L335,147.0 L445,120.0 L555,39.0 L665,165.0" fill="none" stroke="url(#trendGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="chart-path"/>
+
+    <!-- 数据点 -->
+    <circle cx="115" cy="138.0" r="6" fill="#4a9c6d" class="chart-dot"
+            data-label="初九" data-desc="safe"/>
+    <text x="115" y="235" text-anchor="middle" font-size="11" fill="#555" class="chart-dot">初九</text>
+    <circle cx="225" cy="102.0" r="6" fill="#4a9c6d" class="chart-dot"
+            data-label="九二" data-desc="safe"/>
+    <text x="225" y="235" text-anchor="middle" font-size="11" fill="#555" class="chart-dot">九二</text>
+    <circle cx="335" cy="147.0" r="6" fill="#c23a2b" class="chart-dot"
+            data-label="九三" data-desc="danger"/>
+    <text x="335" y="235" text-anchor="middle" font-size="11" fill="#555" class="chart-dot">九三</text>
+    <circle cx="445" cy="120.0" r="6" fill="#3a7bd5" class="chart-dot"
+            data-label="九四" data-desc="turn"/>
+    <text x="445" y="235" text-anchor="middle" font-size="11" fill="#555" class="chart-dot">九四</text>
+    <circle cx="555" cy="39.0" r="6" fill="#c23a2b" class="chart-dot"
+            data-label="九五" data-desc="climax"/>
+    <text x="555" y="235" text-anchor="middle" font-size="11" fill="#555" class="chart-dot">九五</text>
+    <circle cx="665" cy="165.0" r="6" fill="#888" class="chart-dot"
+            data-label="上九" data-desc="end"/>
+    <text x="665" y="235" text-anchor="middle" font-size="11" fill="#555" class="chart-dot">上九</text>
+  </svg>
+</div>
+
+<!-- 六爻卡片 -->
+<div class="yao-cards">
+  <div class="yao-card level-safe fade-in fade-in-delay-1 " >
+    <div class="yao-header">
+      <span class="yao-position">初九</span>
+      <span class="yao-level level-label-safe">
+        平稳
+      </span>
+      <span class="source-tag source-youan">
+佑安      </span>
+    </div>
+    <p class="yao-original">潜龙，勿用。</p>
+    <p class="yao-xiang">潜龙勿用，阳在下也。</p>
+    <div style="background:rgba(184,134,11,0.04); padding:0.8rem 1rem; border-radius:4px; margin-bottom:0.8rem; font-size:0.82rem; color:var(--ink-medium); line-height:1.8;">
+      <span style="color:var(--gold); font-weight:600; font-size:0.7rem; letter-spacing:0.1em;">文言传</span><br>
+      「潜龙勿用」，何谓也？子曰：「龙德而隐者也。不易乎世，不成乎名，遯世无闷，不见是而无闷。乐则行之，忧则违之，确乎其不可拔，潜龙也。」
+    </div>
+    <div class="yao-interp" style="white-space:pre-line;">龙潜于深渊，时机未到，不可妄动。这不是消极等待，而是在暗中积蓄力量。「确乎其不可拔」五字写尽潜龙的内在坚定——虽隐于世，志不可夺。佑安引太史公语：「力田不如逢年，善仕不如遇合」，人生不会一直处在潜的时运，待到风云际会之时，必然飞龙在天。</div>
+  </div>
+  <div class="yao-card level-safe fade-in fade-in-delay-2 " >
+    <div class="yao-header">
+      <span class="yao-position">九二</span>
+      <span class="yao-level level-label-safe">
+        平稳
+      </span>
+      <span class="source-tag source-youan">
+佑安      </span>
+    </div>
+    <p class="yao-original">见龙在田，利见大人。</p>
+    <p class="yao-xiang">见龙在田，德施普也。</p>
+    <div style="background:rgba(184,134,11,0.04); padding:0.8rem 1rem; border-radius:4px; margin-bottom:0.8rem; font-size:0.82rem; color:var(--ink-medium); line-height:1.8;">
+      <span style="color:var(--gold); font-weight:600; font-size:0.7rem; letter-spacing:0.1em;">文言传</span><br>
+      九二曰「见龙在田，利见大人」，何谓也？子曰：「龙德而正中者也。庸言之信，庸行之谨，闲邪存其诚，善世而不伐，德博而化。」
+    </div>
+    <div class="yao-interp" style="white-space:pre-line;">龙从深渊浮现田间，美德开始在日常中彰显。此时不应急于改革或上位，而是静守中庸之道，等待赏识之人。「庸言之信，庸行之谨」——在平凡处做到真诚与谨慎，才是九二的功夫。佑安特别提醒：识别贵人很重要，真正的贵人不仅是地位高、能力强，而是双方能找到共赢之点。</div>
+  </div>
+  <div class="yao-card level-danger fade-in fade-in-delay-3 yao-highlight" data-highlight-label="全卦修行关键">
+    <div class="yao-header">
+      <span class="yao-position">九三</span>
+      <span class="yao-level level-label-danger">
+        危厉
+      </span>
+      <span class="source-tag source-youan">
+佑安      </span>
+    </div>
+    <p class="yao-original">君子终日乾乾，夕惕若，厉，无咎。</p>
+    <p class="yao-xiang">终日乾乾，反复道也。</p>
+    <div style="background:rgba(184,134,11,0.04); padding:0.8rem 1rem; border-radius:4px; margin-bottom:0.8rem; font-size:0.82rem; color:var(--ink-medium); line-height:1.8;">
+      <span style="color:var(--gold); font-weight:600; font-size:0.7rem; letter-spacing:0.1em;">文言传</span><br>
+      九三曰「君子终日乾乾、夕惕若、厉、无咎」，何谓也？子曰：「君子进德修业。忠信，所以进德也；修辞立其诚，所以居业也。知至至之，可与几也；知终终之，可与存义也。是故居上位而不骄，在下位而不忧，故乾乾因其时而惕，虽危无咎矣。」
+    </div>
+    <div class="yao-interp" style="white-space:pre-line;">九三是全卦最关键的爻——「重刚而不中，上不在天，下不在田」，处于内外卦交界的危险地带。但正因危险，才逼出乾卦最核心的修行法门：「终日乾乾」不是拼命加班，而是在生活的每个环节保持清醒和精进。「夕惕若厉」——到了傍晚依然警惕如临深渊。这种持续的自我觉察，使得「虽危无咎」。</div>
+  </div>
+  <div class="yao-card level-turn fade-in fade-in-delay-4 " >
+    <div class="yao-header">
+      <span class="yao-position">九四</span>
+      <span class="yao-level level-label-turn">
+        转折
+      </span>
+      <span class="source-tag source-classic">
+经典      </span>
+    </div>
+    <p class="yao-original">或跃在渊，无咎。</p>
+    <p class="yao-xiang">或跃在渊，进无咎也。</p>
+    <div style="background:rgba(184,134,11,0.04); padding:0.8rem 1rem; border-radius:4px; margin-bottom:0.8rem; font-size:0.82rem; color:var(--ink-medium); line-height:1.8;">
+      <span style="color:var(--gold); font-weight:600; font-size:0.7rem; letter-spacing:0.1em;">文言传</span><br>
+      九四曰「或跃在渊，无咎」，何谓也？子曰：「上下无常，非为邪也。进退无恒，非离群也。君子进德修业，欲及时也，故无咎。」
+    </div>
+    <div class="yao-interp" style="white-space:pre-line;">「或」字用得精妙——可能跃起，也可能退回深渊，一切取决于时势。九四近君位（九五），进退两难。文言传的解读充满理解：上下变动不是邪念，进退不定不是孤离。这是在关键转折点的审慎试探，只要心存「及时」之念——把握时机而非贪恋位置——就能无咎。</div>
+  </div>
+  <div class="yao-card level-climax fade-in fade-in-delay-1 yao-highlight" data-highlight-label="全卦至尊位">
+    <div class="yao-header">
+      <span class="yao-position">九五</span>
+      <span class="yao-level level-label-climax">
+        至盛
+      </span>
+      <span class="source-tag source-classic">
+经典      </span>
+    </div>
+    <p class="yao-original">飞龙在天，利见大人。</p>
+    <p class="yao-xiang">飞龙在天，乃位乎天德。</p>
+    <div style="background:rgba(184,134,11,0.04); padding:0.8rem 1rem; border-radius:4px; margin-bottom:0.8rem; font-size:0.82rem; color:var(--ink-medium); line-height:1.8;">
+      <span style="color:var(--gold); font-weight:600; font-size:0.7rem; letter-spacing:0.1em;">文言传</span><br>
+      九五曰「飞龙在天，利见大人」，何谓也？子曰：「同声相应，同气相求。水流湿，火就燥，云从龙，风从虎，圣人作而万物覩。本乎天者亲上，本乎地者亲下，则各从其类也。」
+    </div>
+    <div class="yao-interp" style="white-space:pre-line;">六爻之巅峰——龙飞九天，阳爻居阳位且得中，既中且正。此时不是独享荣耀，而是「圣人作而万物覩」——你的出现让天下人都看到了方向。「同声相应，同气相求」道出领导力的本质：不是控制，而是感召。与九二的「利见大人」遥相呼应，上下同心。</div>
+  </div>
+  <div class="yao-card level-end fade-in fade-in-delay-2 " >
+    <div class="yao-header">
+      <span class="yao-position">上九</span>
+      <span class="yao-level level-label-end">
+        亢极
+      </span>
+      <span class="source-tag source-youan">
+佑安      </span>
+    </div>
+    <p class="yao-original">亢龙有悔。</p>
+    <p class="yao-xiang">亢龙有悔，盈不可久也。</p>
+    <div style="background:rgba(184,134,11,0.04); padding:0.8rem 1rem; border-radius:4px; margin-bottom:0.8rem; font-size:0.82rem; color:var(--ink-medium); line-height:1.8;">
+      <span style="color:var(--gold); font-weight:600; font-size:0.7rem; letter-spacing:0.1em;">文言传</span><br>
+      上九曰「亢龙有悔」，何谓也？子曰：「贵而无位，高而无民，贤人在下位而无辅，是以动而有悔也。」
+    </div>
+    <div class="yao-interp" style="white-space:pre-line;">阳气升至极处，盈满则亏。「亢」本义为脖子——龙脖子的位置，再往上便无处可去。三个「无」字触目惊心：无位、无民、无辅。佑安以马云的阿里帝国为例：如日中天时不懂收敛光芒，蚂蚁金服暂停上市后帝国渐次分崩。但孔子对上九的态度是积极的——他不否定进取，只是提醒要「知进退存亡而不失其正」。</div>
+  </div>
+</div>
+
+<!-- 用九/用六 -->
+<div class="fade-in" style="margin: 2rem auto; max-width: 700px; padding: 2.5rem; background: linear-gradient(135deg, rgba(184,134,11,0.06), rgba(194,58,43,0.04)); border: 2px solid rgba(184,134,11,0.2); border-radius: 12px; text-align: center;">
+  <p style="font-size: 1.3rem; font-weight: 700; color: var(--ink-black); margin-bottom: 0.5rem;">用九：见群龙无首，吉。</p>
+  <div class="divider divider-gold" style="margin: 1rem auto;"></div>
+  <p style="font-size: 0.95rem; color: var(--ink-dark); line-height: 1.9; text-align: left;">这是乾卦独有的「用辞」。当六爻皆变（阳变阴），乾变为坤，刚极而柔——这是最高境界。「群龙无首」不是群龙无首领的混乱，而是每条龙都能独立为首的繁荣。各个领域的领军人物都能在自己的范围内百花齐放，而非被有限的小团体所操控。这恰是「天下治也」——天道的法则是去中心化的自组织。</p>
+</div>
+  </div>
+</section>
+
+<!-- 第六步：察变 -->
+<section id="chabian" class="section-warm">
+  <div class="container">
+    <p class="section-step fade-in">第六步</p>
+    <h2 class="section-title fade-in">察变</h2>
+    <p class="section-subtitle fade-in">卦与卦相生相变，穷变化之道</p>
+    <div class="divider divider-gold fade-in"></div>
+
+<!-- 察变内容 -->
+
+<!-- 序卦因果链 -->
+<h3 class="fade-in" style="font-size:1rem; color:var(--gold); text-align:center; margin-bottom:0.5rem; letter-spacing:0.1em;">序卦因果</h3>
+<div class="quote-block fade-in" style="text-align:center; font-style:normal;">
+  <p style="font-size:0.9rem;">有天地，然后万物生焉。盈天地之间者唯万物，故受之以屯。</p>
+  <cite>序卦传</cite>
+</div>
+
+<div class="xugua-flow fade-in fade-in-delay-1">
+  <div class="xugua-node node-present">
+    <p class="node-name">乾</p>
+    <p class="node-desc">天道创始</p>
+  </div>
+  <div class="xugua-arrow">
+    <span>→</span>
+    <span class="arrow-label">故</span>
+  </div>
+  <div class="xugua-node node-future">
+    <p class="node-name">坤</p>
+    <p class="node-desc">地道承载</p>
+  </div>
+  <div class="xugua-arrow">
+    <span>→</span>
+    <span class="arrow-label">故</span>
+  </div>
+  <div class="xugua-node node-future">
+    <p class="node-name">屯</p>
+    <p class="node-desc">万物初生</p>
+  </div>
+</div>
+
+<!-- 杂卦 -->
+<div class="fade-in fade-in-delay-1" style="margin:2rem 0; padding:1.2rem 1.5rem; background:rgba(0,0,0,0.02); border-radius:8px;">
+  <h4 style="font-size:0.85rem; color:var(--vermilion); letter-spacing:0.1em; margin-bottom:0.5rem;">杂卦传</h4>
+  <p style="font-size:0.9rem; color:var(--ink-dark); line-height:1.8;">乾刚坤柔。杂卦传以最简练的两个字概括乾卦本质：刚。与坤之「柔」对举，乾坤是六十四卦的总纲。</p>
+</div>
+
+<!-- 综卦/错卦/互卦 比较 -->
+<div style="display:flex; gap:1.5rem; flex-wrap:wrap; justify-content:center; margin:2rem 0;">
+  <div class="fade-in fade-in-delay-1" style="flex:1; min-width:250px; padding:1.5rem; background:var(--paper-light); border:1px solid rgba(0,0,0,0.06); border-radius:8px;">
+    <h4 style="font-size:0.85rem; color:var(--gold); letter-spacing:0.1em; margin-bottom:0.5rem;">综卦（翻转）</h4>
+    <p style="font-weight:600; margin-bottom:0.3rem;">坤（第2卦）</p>
+    <p style="font-size:0.85rem; color:var(--ink-medium); line-height:1.7;">乾卦翻转180度仍为乾卦——六阳翻转还是六阳。这是乾坤的特殊性：它们是自己的综卦。纯粹到无法通过视角变换而改变本质。</p>
+  </div>
+
+  <div class="fade-in fade-in-delay-2" style="flex:1; min-width:250px; padding:1.5rem; background:var(--paper-light); border:1px solid rgba(0,0,0,0.06); border-radius:8px;">
+    <h4 style="font-size:0.85rem; color:var(--vermilion); letter-spacing:0.1em; margin-bottom:0.5rem;">错卦（阴阳反转）</h4>
+    <p style="font-weight:600; margin-bottom:0.3rem;">坤（第2卦）</p>
+    <p style="font-size:0.85rem; color:var(--ink-medium); line-height:1.7;">乾卦六爻阴阳全部反转，得坤卦。乾→坤是最彻底的对立：纯阳→纯阴，创始→承载，刚健→柔顺。但对立中有统一——「乾知大始，坤作成物」，没有坤的承载，乾的创始毫无意义。</p>
+  </div>
+
+  <div class="fade-in fade-in-delay-3" style="flex:1; min-width:250px; padding:1.5rem; background:var(--paper-light); border:1px solid rgba(0,0,0,0.06); border-radius:8px;">
+    <h4 style="font-size:0.85rem; color:#2a6496; letter-spacing:0.1em; margin-bottom:0.5rem;">互卦（内部结构）</h4>
+    <p style="font-weight:600; margin-bottom:0.3rem;">乾（第1卦）</p>
+    <p style="font-size:0.85rem; color:var(--ink-medium); line-height:1.7;">取二三四爻和三四五爻构成的互卦，乾的互卦仍是乾。这又是纯卦的特殊性——无论怎样取截，乾的内在结构都是自身。</p>
+  </div>
+</div>
+
+<div class="fade-in fade-in-delay-3" style="margin:2rem auto; max-width:600px; text-align:center; padding:1.5rem; border-top:1px solid rgba(0,0,0,0.06);">
+  <p style="font-size:0.9rem; color:var(--ink-dark); line-height:1.9;">乾→坤→屯：从最纯粹的创始（乾）到最纯粹的承载（坤），然后进入万物初生的混沌（屯）。这三卦构成了宇宙论的起手式：天→地→万物。</p>
+</div>
+  </div>
+</section>
+
+<!-- 第七步：归德 -->
+<section id="guide" class="section-light">
+  <div class="container">
+    <p class="section-step fade-in">第七步</p>
+    <h2 class="section-title fade-in">归德</h2>
+    <p class="section-subtitle fade-in">卦以修德，知行合一</p>
+    <div class="divider divider-gold fade-in"></div>
+
+<!-- 归德内容 -->
+<div class="quote-block fade-in">
+  <p style="font-size:1.1rem; font-weight:600;">乾，德之始也</p>
+  <p style="margin-top:0.8rem; font-style:normal; color:var(--ink-dark); line-height:1.9;">系辞传列「九卦修德」，乾为九卦之首。履（践行）、谦（谦逊）、复（回归）、恒（恒久）、损（减损）、益（增益）、困（困境）、井（济人）、巽（柔顺）——这九卦的修德实践，都以乾的「自强不息」为起点和动力。</p>
+  <cite>系辞传 · 九卦修德</cite>
+</div>
+
+<div class="de-cards fade-in fade-in-delay-1">
+  <div class="de-card">
+    <div class="de-icon">☰</div>
+    <p class="de-name">自强不息</p>
+    <p class="de-desc">天行健的核心。不是苦行僧式的自虐，而是像天体运行一样自然而然、持续不断地精进。停不下来不是因为被逼，而是因为运动本身就是乾的本性。</p>
+  </div>
+  <div class="de-card">
+    <div class="de-icon">⏳</div>
+    <p class="de-name">与时偕行</p>
+    <p class="de-desc">文言传反复强调「时」：潜有潜的时，飞有飞的时，亢有亢的时。自强不是蛮干，而是在正确的时机做正确的事。知进退存亡而不失其正，其唯圣人乎。</p>
+  </div>
+  <div class="de-card">
+    <div class="de-icon">☯</div>
+    <p class="de-name">保合太和</p>
+    <p class="de-desc">乾的最终目标不是独大，而是让万物各正性命、各安其位。纯阳之卦的最高智慧，是懂得与纯阴（坤）互补共生，达到太和之境。</p>
+  </div>
+</div>
+
+<div class="fade-in fade-in-delay-2" style="margin:2rem auto; max-width:650px; padding:2rem; background:rgba(184,134,11,0.04); border:1px solid rgba(184,134,11,0.1); border-radius:8px;">
+  <p style="font-size:0.95rem; color:var(--ink-dark); line-height:1.9; text-align:center;">乾卦的归德启示：真正的刚健不是逞强，而是「确乎其不可拔」的内在坚定。自强不息的终极不是永远向上攀登，而是在适当的时候懂得「见群龙无首」——让渡中心，成就众生。</p>
+</div>
+  </div>
+</section>
+
+<!-- 第八步：征引 -->
+<section id="zhengyin" class="section-warm">
+  <div class="container">
+    <p class="section-step fade-in">第八步</p>
+    <h2 class="section-title fade-in">征引</h2>
+    <p class="section-subtitle fade-in">以史为证，古今相映</p>
+    <div class="divider divider-gold fade-in"></div>
+
+<!-- 征引内容 -->
+<div class="citation-list">
+  <div class="citation-item fade-in fade-in-delay-1">
+    <p class="cite-yao">初九</p>
+    <p class="cite-title">太史公《佞幸列传》</p>
+    <p class="cite-detail">「力田不如逢年，善仕不如遇合。」再勤于耕田，不如遇到好年景；再善于做官，不如遇到赏识你的人。潜龙的关键不是潜多久，而是静待风云际会之时。</p>
+    <p class="cite-source">
+      《史记》
+      <span class="source-tag source-youan">
+佑安      </span>
+    </p>
+  </div>
+  <div class="citation-item fade-in fade-in-delay-2">
+    <p class="cite-yao">九二</p>
+    <p class="cite-title">舜耕历山</p>
+    <p class="cite-detail">舜在历山耕作时，「田者皆让畔」——因其德行感召，周围的人主动谦让田界。这正是「见龙在田，德施普也」的现实写照：龙德不必刻意展示，在日常中自然流露。</p>
+    <p class="cite-source">
+      《史记·五帝本纪》
+      <span class="source-tag source-ai-analysis">
+AI      </span>
+    </p>
+  </div>
+  <div class="citation-item fade-in fade-in-delay-3">
+    <p class="cite-yao">九三</p>
+    <p class="cite-title">文王被囚羑里</p>
+    <p class="cite-detail">周文王被商纣王囚禁于羑里七年，正是「终日乾乾，夕惕若厉」的典范。在最危险的处境中保持精进，演易为六十四卦，最终奠定了周朝八百年基业。</p>
+    <p class="cite-source">
+      《史记·周本纪》
+      <span class="source-tag source-ai-analysis">
+AI      </span>
+    </p>
+  </div>
+  <div class="citation-item fade-in fade-in-delay-4">
+    <p class="cite-yao">九五</p>
+    <p class="cite-title">尧帝在位</p>
+    <p class="cite-detail">孔子赞尧曰：「大哉尧之为君也！巍巍乎！唯天为大，唯尧则之。荡荡乎，民无能名焉。」飞龙在天的圣人之治，是让百姓感受到如天道般自然的秩序，而说不出具体的恩德——这才是最高的治理。</p>
+    <p class="cite-source">
+      《论语·泰伯》
+      <span class="source-tag source-ai-analysis">
+AI      </span>
+    </p>
+  </div>
+  <div class="citation-item fade-in fade-in-delay-1">
+    <p class="cite-yao">上九</p>
+    <p class="cite-title">马云与阿里帝国</p>
+    <p class="cite-detail">阿里帝国如日中天时，马云本人不懂收敛光芒。蚂蚁金服暂停上市后，阿里帝国逐渐分崩离析。这正是「亢龙有悔」的当代注脚：贵而无位，高而无民，是以动而有悔。</p>
+    <p class="cite-source">
+      当代商业
+      <span class="source-tag source-youan">
+佑安      </span>
+    </p>
+  </div>
+  <div class="citation-item fade-in fade-in-delay-2">
+    <p class="cite-yao">用九</p>
+    <p class="cite-title">左传·昭公二十九年：蔡墨论龙</p>
+    <p class="cite-detail">蔡墨引「用九，见群龙无首，吉」解释：天下不能由一人独治。豢龙氏、御龙氏的故事表明，即便是龙也需要人来养育、驾驭。最高的治理是众龙各展其能、百花齐放。</p>
+    <p class="cite-source">
+      《左传》
+      <span class="source-tag source-ai-analysis">
+AI      </span>
+    </p>
+  </div>
+</div>  </div>
+</section>
+
+<!-- 第九步：映射 -->
+<section id="yingshe" class="section-light">
+  <div class="container">
+    <p class="section-step fade-in">第九步</p>
+    <h2 class="section-title fade-in">映射</h2>
+    <p class="section-subtitle fade-in">假如你身处此卦，当如何行事</p>
+    <div class="divider divider-gold fade-in"></div>
+
+<!-- 映射内容 -->
+<div class="guide-timeline">
+  <div class="guide-item fade-in">
+    <div class="guide-dot"></div>
+    <div class="guide-content">
+      <span class="guide-label level-label-safe">初九</span>
+      <span class="source-tag source-youan">
+佑安      </span>
+      <h4>你刚入职一家新公司，满腹才华却没有展示的机会</h4>
+      <p>不要急于表现。把精力放在观察公司文化、理解业务逻辑上。在会议中多听少说，在工作中做好每一件小事。你的能力不会因为「潜」而消失——它会在合适的时机被看见。</p>
+    </div>
+  </div>
+  <div class="guide-item fade-in">
+    <div class="guide-dot"></div>
+    <div class="guide-content">
+      <span class="guide-label level-label-safe">九二</span>
+      <span class="source-tag source-youan">
+佑安      </span>
+      <h4>你的能力逐渐被认可，开始有人注意到你</h4>
+      <p>保持「庸言之信，庸行之谨」——在平凡处做到真诚可靠。不必急于拉帮结派或争抢资源。真正的贵人会因为你的实力和品格主动靠近。识别贵人的标准不是对方有多高的地位，而是你们能否找到真正的共赢之点。</p>
+    </div>
+  </div>
+  <div class="guide-item fade-in">
+    <div class="guide-dot"></div>
+    <div class="guide-content">
+      <span class="guide-label level-label-danger">九三</span>
+      <span class="source-tag source-youan">
+佑安      </span>
+      <h4>你被提拔为中层管理者，上有高层压力，下有团队期待</h4>
+      <p>这是最容易出事的位置。白天全力以赴工作，晚上复盘今日得失——「终日乾乾，夕惕若厉」。关键修炼两件事：「忠信以进德」（对人真诚可靠），「修辞立诚以居业」（让自己的表达和行动一致）。在这个位置，不骄不躁、持续警醒才是长久之道。</p>
+    </div>
+  </div>
+  <div class="guide-item fade-in">
+    <div class="guide-dot"></div>
+    <div class="guide-content">
+      <span class="guide-label level-label-turn">九四</span>
+      <span class="source-tag source-ai-analysis">
+AI      </span>
+      <h4>你面临重大的职业转型——跳槽、创业、或接受一个高风险的机会</h4>
+      <p>「或跃在渊」的智慧是：可以试探，但不要孤注一掷。做好两手准备，进则有所依凭，退则有路可回。犹豫不是软弱——在关键的转折点上，审慎本身就是勇气。</p>
+    </div>
+  </div>
+  <div class="guide-item fade-in">
+    <div class="guide-dot"></div>
+    <div class="guide-content">
+      <span class="guide-label level-label-climax">九五</span>
+      <span class="source-tag source-ai-analysis">
+AI      </span>
+      <h4>你成为某个领域的领军人物，有了真正的影响力</h4>
+      <p>此时最重要的不是巩固权力，而是「同声相应，同气相求」——用你的理念感召志同道合的人。你的存在应该让所有人看到方向（圣人作而万物覩），而非让所有人畏惧你的权威。</p>
+    </div>
+  </div>
+  <div class="guide-item fade-in">
+    <div class="guide-dot"></div>
+    <div class="guide-content">
+      <span class="guide-label level-label-end">上九</span>
+      <span class="source-tag source-youan">
+佑安      </span>
+      <h4>你到达事业巅峰，声望如日中天</h4>
+      <p>记住三个「无」：贵而无位（高处不胜寒）、高而无民（脱离群众）、无辅（贤人不再追随）。这时候最需要的不是继续攀登，而是学会退让和传承。知进退存亡而不失其正——能做到这一点的，才是真正的强者。</p>
+    </div>
+  </div>
+</div>  </div>
+</section>
+
+<!-- AI 洞察 -->
+<section id="ai-insights" class="section-warm">
+  <div class="container">
+    <p class="section-step fade-in">AI 独创</p>
+    <h2 class="section-title fade-in">跨卦洞察</h2>
+    <p class="section-subtitle fade-in">AI全局视角 · 佑安做不到的突破</p>
+    <div class="divider fade-in" style="background: linear-gradient(90deg, transparent, #2a6496, transparent);"></div>
+
+<!-- AI 洞察内容 -->
+
+<!-- 跨卦分析 -->
+<div class="ai-panel fade-in">
+  <h3>龙意象的跨卦追踪</h3>
+  <p style="margin-bottom:1rem;">「龙」在六十四卦中不止出现在乾卦。坤卦上六「龙战于野」（阴极则龙出而战）、屯卦「磐桓，利建侯」（创生之初的混沌）中暗含龙的挣扎意象。更深层的关联在于：乾卦六爻的龙是理想化的生命轨迹——潜→见→惕→跃→飞→亢——但现实中大多数人的人生轨迹是在不同卦之间跳转：你可能在事业上处于九五（飞龙），同时在家庭关系中处于初九（潜龙）。乾卦的价值不在于承诺一条直线上升的路径，而在于教你识别自己当下处于哪个阶段，并据此行动。</p>
+  <p style="margin-bottom:1rem;">另一个跨卦洞察：「元亨利贞」四字在多卦反复出现（屯/随/临/无妄/革等），但完整四字齐备的只有乾和坤。其余卦取其一二三德不等，可以理解为乾坤之德在不同情境下的偏振和展开。</p>
+  <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid rgba(42,100,150,0.15);">
+    <p style="font-size:0.8rem; color:var(--ink-light);">关联卦：
+      <span style="display:inline-block; padding:0.1rem 0.5rem; background:rgba(42,100,150,0.08); border-radius:3px; margin:0.2rem; font-size:0.75rem; color:#2a6496;">坤</span>
+      <span style="display:inline-block; padding:0.1rem 0.5rem; background:rgba(42,100,150,0.08); border-radius:3px; margin:0.2rem; font-size:0.75rem; color:#2a6496;">屯</span>
+      <span style="display:inline-block; padding:0.1rem 0.5rem; background:rgba(42,100,150,0.08); border-radius:3px; margin:0.2rem; font-size:0.75rem; color:#2a6496;">蒙</span>
+      <span style="display:inline-block; padding:0.1rem 0.5rem; background:rgba(42,100,150,0.08); border-radius:3px; margin:0.2rem; font-size:0.75rem; color:#2a6496;">需</span>
+      <span style="display:inline-block; padding:0.1rem 0.5rem; background:rgba(42,100,150,0.08); border-radius:3px; margin:0.2rem; font-size:0.75rem; color:#2a6496;">同人</span>
+      <span style="display:inline-block; padding:0.1rem 0.5rem; background:rgba(42,100,150,0.08); border-radius:3px; margin:0.2rem; font-size:0.75rem; color:#2a6496;">大有</span>
+      <span style="display:inline-block; padding:0.1rem 0.5rem; background:rgba(42,100,150,0.08); border-radius:3px; margin:0.2rem; font-size:0.75rem; color:#2a6496;">大畜</span>
+      <span style="display:inline-block; padding:0.1rem 0.5rem; background:rgba(42,100,150,0.08); border-radius:3px; margin:0.2rem; font-size:0.75rem; color:#2a6496;">革</span>
+    </p>
+  </div>
+</div>
+
+<!-- 关系网络 -->
+<div class="ai-panel fade-in fade-in-delay-1" style="margin-top:2rem;">
+  <h3>关系网络</h3>
+  <p style="margin-bottom:1.5rem;">乾卦作为第1卦，处于64卦关系网络的起点。它与其他卦的关系揭示了易经的底层结构。</p>
+
+  <div class="network-diagram">
+    <div class="network-node node-center">
+      <span style="font-size:1.8rem; font-weight:900;">乾</span>
+      <span class="network-label">本卦</span>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; margin-top:1.5rem;">
+    <div style="padding:1rem; background:rgba(42,100,150,0.04); border-radius:6px; border:1px solid rgba(42,100,150,0.08);">
+      <p style="font-size:0.75rem; color:#2a6496; font-weight:600; letter-spacing:0.1em; margin-bottom:0.3rem;">综卦</p>
+      <p style="font-weight:600; margin-bottom:0.3rem;">→ 乾（自身）</p>
+      <p style="font-size:0.82rem; color:var(--ink-medium); line-height:1.6;">纯阳卦翻转不变，体现纯粹性——本质不因视角而改变</p>
+    </div>
+    <div style="padding:1rem; background:rgba(42,100,150,0.04); border-radius:6px; border:1px solid rgba(42,100,150,0.08);">
+      <p style="font-size:0.75rem; color:#2a6496; font-weight:600; letter-spacing:0.1em; margin-bottom:0.3rem;">错卦</p>
+      <p style="font-weight:600; margin-bottom:0.3rem;">→ 坤（第2卦）</p>
+      <p style="font-size:0.82rem; color:var(--ink-medium); line-height:1.6;">阴阳全反，最彻底的对立与互补。乾知大始，坤作成物</p>
+    </div>
+    <div style="padding:1rem; background:rgba(42,100,150,0.04); border-radius:6px; border:1px solid rgba(42,100,150,0.08);">
+      <p style="font-size:0.75rem; color:#2a6496; font-weight:600; letter-spacing:0.1em; margin-bottom:0.3rem;">互卦</p>
+      <p style="font-weight:600; margin-bottom:0.3rem;">→ 乾（自身）</p>
+      <p style="font-size:0.82rem; color:var(--ink-medium); line-height:1.6;">内部结构自我一致，无论怎样取截都是乾</p>
+    </div>
+    <div style="padding:1rem; background:rgba(42,100,150,0.04); border-radius:6px; border:1px solid rgba(42,100,150,0.08);">
+      <p style="font-size:0.75rem; color:#2a6496; font-weight:600; letter-spacing:0.1em; margin-bottom:0.3rem;">序卦</p>
+      <p style="font-weight:600; margin-bottom:0.3rem;">→ 坤（第2卦）</p>
+      <p style="font-size:0.82rem; color:var(--ink-medium); line-height:1.6;">天→地，创始→承载，有天地然后万物生</p>
+    </div>
+    <div style="padding:1rem; background:rgba(42,100,150,0.04); border-radius:6px; border:1px solid rgba(42,100,150,0.08);">
+      <p style="font-size:0.75rem; color:#2a6496; font-weight:600; letter-spacing:0.1em; margin-bottom:0.3rem;">杂卦</p>
+      <p style="font-weight:600; margin-bottom:0.3rem;">→ 坤</p>
+      <p style="font-size:0.82rem; color:var(--ink-medium); line-height:1.6;">「乾刚坤柔」——以刚柔对举总括天地之性</p>
+    </div>
+    <div style="padding:1rem; background:rgba(42,100,150,0.04); border-radius:6px; border:1px solid rgba(42,100,150,0.08);">
+      <p style="font-size:0.75rem; color:#2a6496; font-weight:600; letter-spacing:0.1em; margin-bottom:0.3rem;">主爻同构</p>
+      <p style="font-weight:600; margin-bottom:0.3rem;">→ 同人（第13卦）/大有（第14卦）</p>
+      <p style="font-size:0.82rem; color:var(--ink-medium); line-height:1.6;">乾上离下/离上乾下——乾卦加入一阴爻后的两种形态</p>
+    </div>
+  </div>
+</div>
+
+<!-- 现代框架映射 -->
+<div class="ai-panel fade-in fade-in-delay-2" style="margin-top:2rem;">
+  <h3>发展心理学 × 系统思维</h3>
+  <p style="margin-bottom:1rem; white-space:pre-line;">乾卦六爻完美对应马斯洛需求层次与个人成长阶段的融合模型：</p>
+  <p style="margin-bottom:1rem; white-space:pre-line;">初九「潜龙勿用」→ 安全需求阶段：在不确定的环境中保护自己，积蓄资源。
+九二「见龙在田」→ 归属与尊重：通过日常中的信和谨赢得社会认可。
+九三「终日乾乾」→ 自我实现的苦行期：在能力与位置的落差中磨炼。
+九四「或跃在渊」→ 决策科学中的「期权思维」：保持选择权，不过早锁死路径。
+九五「飞龙在天」→ 自我超越：从个人成就转向系统性影响力。
+上九「亢龙有悔」→ 系统崩溃的临界点：任何系统持续扩张终将遇到承载极限。</p>
+  <p style="margin-bottom:1rem; white-space:pre-line;">用九「群龙无首」→ 这是一个去中心化网络的隐喻：最健康的系统不依赖单一领导者，而是每个节点都具备自组织能力。</p>
+  <div class="conclusion-highlight" style="margin-top:1.5rem; border-left-color:#2a6496;">
+    <p style="font-size:0.9rem; color:var(--ink-dark); line-height:1.8;">从系统思维看，乾卦最深刻的智慧不在任何一爻，而在用九——「见群龙无首，吉」。这与现代复杂性科学的核心发现惊人一致：涌现秩序（emergent order）优于指令控制（command-and-control）。蚁群没有CEO，大脑没有中央处理器，生态系统没有总设计师——但它们都运转得比任何中央计划更精妙。乾卦在三千年前就洞见了这个道理。</p>
+  </div>
+</div>
+
+  </div>
+</section>
+
+<!-- 结语 -->
+<!-- 结语 -->
+<div class="conclusion-section">
+  <div class="container">
+    <div class="conclusion-box fade-in">
+      <h2 style="text-align:center; font-size:1.3rem; color:var(--ink-black); margin-bottom:1.5rem;">乾卦总结</h2>
+
+      <p style="line-height:2; color:var(--ink-dark); margin-bottom:1.5rem;">乾卦以「龙」为喻，用六爻展开了一个完整的生命周期：从潜伏蓄势（初九）到崭露头角（九二），从苦行精进（九三）到审慎试探（九四），从飞龙在天（九五）到亢极知返（上九）。而用九的「群龙无首」则超越了这个线性叙事，指向一个更高的境界——当你学会放下「首」的执念，天下反而大治。</p>
+
+      <div class="conclusion-highlight">
+        <p style="font-weight:600; color:var(--ink-black); margin-bottom:0.5rem;">核心洞见</p>
+        <p>元亨利贞不是四个并列的吉辞，而是一个循环过程：创始（元）→ 通达（亨）→ 和谐（利）→ 正固（贞）→ 再创始。这个循环就是「天行健」的内在结构——天道之所以生生不息，是因为它不止步于任何一个阶段。</p>
+      </div>
+
+      <div style="margin-top:1.5rem; padding:1.5rem; background:rgba(184,134,11,0.04); border-radius:8px; text-align:center;">
+        <p style="font-size:0.85rem; color:var(--gold); letter-spacing:0.1em; margin-bottom:0.5rem;">实践指引</p>
+        <p style="line-height:1.9; color:var(--ink-dark);">读乾卦最重要的收获：判断自己当下处于六爻的哪一阶段。潜时不焦虑，见时不浮躁，惕时不懈怠，跃时不冒进，飞时不骄傲，亢时知进退。而贯穿始终的修行只有一条——自强不息，与时偕行。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 页脚 -->
+<footer class="footer">
+  <div class="footer-nav">
+    <a href="index.html">六十四卦</a>
+    <a href="02-kūn.html">坤卦 →</a>
+  </div>
+  <div class="divider" style="margin:1rem auto;"></div>
+  <p>易经六十四卦 · AI在佑安方法论基础上的独立创作</p>
+  <p style="margin-top:0.5rem; font-size:0.7rem; color:var(--ink-light);">
+    内容来源标注：<span class="source-tag source-classic">经典原文</span>
+    <span class="source-tag source-youan">佑安释易</span>
+    <span class="source-tag source-ai">AI 分析</span>
+  </p>
+</footer>
+<div class="back-to-top" title="回到顶部">↑</div>
+
+<script>
+/* ============================================================
+   易经64卦 — 统一交互系统
+   ============================================================ */
+
+(function() {
+  'use strict';
+
+  // --- Scroll-triggered fade-in ---
+  var fadeObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        fadeObserver.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -60px 0px', threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(function(el) {
+    fadeObserver.observe(el);
+  });
+
+  // --- Sticky Navigation ---
+  var mainNav = document.querySelector('.nav');
+  var lastScrollTop = 0;
+  var heroHeight = 0;
+  var heroEl = document.querySelector('.hero');
+  if (heroEl) {
+    heroHeight = heroEl.offsetHeight;
+  }
+
+  window.addEventListener('scroll', function() {
+    var scrollTop = window.scrollY;
+
+    // Show nav after passing hero
+    if (scrollTop > heroHeight * 0.8) {
+      if (scrollTop < lastScrollTop) {
+        mainNav && mainNav.classList.add('visible');
+      } else {
+        mainNav && mainNav.classList.remove('visible');
+      }
+    } else {
+      mainNav && mainNav.classList.remove('visible');
+    }
+
+    lastScrollTop = scrollTop;
+
+    // Update active nav link
+    updateActiveNavLink();
+
+    // Back to top visibility
+    var backToTop = document.querySelector('.back-to-top');
+    if (backToTop) {
+      if (scrollTop > 300) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    }
+  });
+
+  // --- Active Nav Link Tracking ---
+  function updateActiveNavLink() {
+    var sections = document.querySelectorAll('section[id]');
+    var navLinks = document.querySelectorAll('.nav-links a');
+    var scrollPos = window.scrollY + 100;
+
+    sections.forEach(function(section) {
+      var top = section.offsetTop;
+      var height = section.offsetHeight;
+      var id = section.getAttribute('id');
+
+      if (scrollPos >= top && scrollPos < top + height) {
+        navLinks.forEach(function(link) {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + id) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  }
+
+  // --- Back to Top ---
+  var backToTopBtn = document.querySelector('.back-to-top');
+  if (backToTopBtn) {
+    backToTopBtn.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // --- Chart Animation ---
+  var chartAnimated = false;
+  var chartContainer = document.querySelector('.chart-container');
+
+  if (chartContainer) {
+    var chartObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting && !chartAnimated) {
+          chartAnimated = true;
+          animateChart();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    chartObserver.observe(chartContainer);
+  }
+
+  function animateChart() {
+    // Animate SVG paths
+    var paths = document.querySelectorAll('.chart-path');
+    paths.forEach(function(path) {
+      if (path.getTotalLength) {
+        var length = path.getTotalLength();
+        path.style.strokeDasharray = length;
+        path.style.strokeDashoffset = length;
+        requestAnimationFrame(function() {
+          path.classList.add('animated');
+          path.style.strokeDashoffset = '0';
+        });
+      }
+    });
+
+    // Animate dots with stagger
+    var dots = document.querySelectorAll('.chart-dot');
+    dots.forEach(function(dot, i) {
+      setTimeout(function() {
+        dot.classList.add('animated');
+      }, 300 + i * 200);
+    });
+  }
+
+  // --- Chart Tooltip ---
+  var tooltip = document.querySelector('.chart-tooltip');
+  if (tooltip) {
+    var dots = document.querySelectorAll('.chart-dot[data-label]');
+    dots.forEach(function(dot) {
+      dot.addEventListener('mouseenter', function(e) {
+        var label = this.getAttribute('data-label');
+        var desc = this.getAttribute('data-desc') || '';
+        tooltip.innerHTML = '<strong>' + label + '</strong>' + (desc ? '<br/>' + desc : '');
+        tooltip.style.opacity = '1';
+
+        var rect = chartContainer.getBoundingClientRect();
+        var cx = parseFloat(this.getAttribute('cx') || this.getBBox().x);
+        var cy = parseFloat(this.getAttribute('cy') || this.getBBox().y);
+        tooltip.style.left = cx + 'px';
+        tooltip.style.top = (cy - 50) + 'px';
+      });
+
+      dot.addEventListener('mouseleave', function() {
+        tooltip.style.opacity = '0';
+      });
+    });
+  }
+
+  // --- Smooth scroll for nav links ---
+  document.querySelectorAll('.nav-links a, a[href^="#"]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      var href = this.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        var target = document.querySelector(href);
+        if (target) {
+          var offset = 60; // nav height
+          var top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        }
+      }
+    });
+  });
+
+})();
+
+</script>
+
+</body>
+</html>

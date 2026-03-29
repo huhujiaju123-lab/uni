@@ -1,0 +1,118 @@
+.page-profile {
+  min-height: 100vh;
+  padding-bottom: 120rpx;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  border-bottom: 1rpx solid var(--border);
+  padding: 0 32rpx;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 28rpx 0;
+  font-size: 30rpx;
+  color: var(--text-dim);
+  position: relative;
+}
+
+.tab.active {
+  color: var(--gold);
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  right: 25%;
+  height: 4rpx;
+  background: var(--gold);
+  border-radius: 2rpx;
+}
+
+/* History */
+.history-item {
+  display: flex;
+  gap: 20rpx;
+  padding: 24rpx 32rpx;
+  border-bottom: 1rpx solid var(--border);
+}
+
+.history-item:active {
+  background: var(--bg-card-hover);
+}
+
+.history-cover {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+  background: var(--bg-card);
+}
+
+.history-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.history-podcast {
+  font-size: 22rpx;
+  color: var(--gold);
+  margin-bottom: 4rpx;
+}
+
+.history-title {
+  font-size: 28rpx;
+  color: var(--text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.history-time {
+  font-size: 22rpx;
+  margin-top: 6rpx;
+}
+
+/* Favorites */
+.export-row {
+  padding: 24rpx 32rpx;
+  text-align: right;
+}
+
+.export-btn {
+  display: inline-block;
+  font-size: 24rpx;
+  color: var(--gold);
+  border: 1rpx solid var(--gold);
+  padding: 8rpx 24rpx;
+  border-radius: 20rpx;
+}
+
+.fav-item {
+  padding: 24rpx 32rpx;
+  border-bottom: 1rpx solid var(--border);
+}
+
+.fav-quote {
+  font-family: var(--font-serif);
+  font-size: 30rpx;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.fav-source {
+  font-size: 24rpx;
+  margin-top: 8rpx;
+}
+
+/* Empty */
+.empty-state {
+  text-align: center;
+  padding: 120rpx 32rpx;
+}

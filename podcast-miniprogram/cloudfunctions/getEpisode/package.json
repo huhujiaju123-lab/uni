@@ -1,0 +1,9 @@
+{
+  "name": "getEpisode",
+  "version": "1.0.0",
+  "description": "获取单集 / 任务进度 / 收藏管理 / 浏览历史",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

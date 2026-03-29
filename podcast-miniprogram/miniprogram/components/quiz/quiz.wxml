@@ -1,0 +1,64 @@
+<view class="quiz card" wx:if="{{data && data.questions}}">
+  <view class="card-title">互动自测</view>
+  <view class="quiz-intro" wx:if="{{data.intro}}">{{data.intro}}</view>
+
+  <!-- 题目列表 -->
+  <view class="quiz-questions">
+    <view
+      class="quiz-question"
+      wx:for="{{data.questions}}"
+      wx:key="id"
+    >
+      <view class="q-number">Q{{index + 1}}</view>
+      <view class="q-text">{{item.text}}</view>
+
+      <!-- 选择题 -->
+      <view class="q-options" wx:if="{{item.type === 'choice'}}">
+        <view
+          class="q-option {{answers[item.id].optIdx === optIdx ? 'selected' : ''}}"
+          wx:for="{{item.options}}"
+          wx:for-item="opt"
+          wx:for-index="optIdx"
+          wx:key="label"
+          data-qid="{{item.id}}"
+          data-opt-idx="{{optIdx}}"
+          data-score="{{opt.score}}"
+          bindtap="onSelectOption"
+        >
+          {{opt.label}}
+        </view>
+      </view>
+
+      <!-- 滑块 -->
+      <view class="q-slider" wx:if="{{item.type === 'slider'}}">
+        <slider
+          min="0"
+          max="3"
+          step="1"
+          value="{{answers[item.id].score || 0}}"
+          activeColor="var(--gold)"
+          backgroundColor="var(--bg)"
+          block-color="var(--gold)"
+          data-qid="{{item.id}}"
+          bindchange="onSliderChange"
+        />
+        <view class="slider-labels" wx:if="{{item.slider_labels}}">
+          <text wx:for="{{item.slider_labels}}" wx:key="*this" class="slider-label">{{item}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="quiz-action" wx:if="{{!submitted}}">
+    <view class="btn-primary" bindtap="onSubmit">查看结果</view>
+  </view>
+
+  <!-- 结果 -->
+  <view class="quiz-result" wx:if="{{submitted && resultLevel}}">
+    <view class="result-level">{{resultLevel.level_label}}</view>
+    <view class="result-score">平均分：{{avgScore}}</view>
+    <view class="result-desc">{{resultLevel.description}}</view>
+    <view class="result-reset" bindtap="onReset">重新测试</view>
+  </view>
+</view>

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucky US 数据分析知识库</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--border:#2a2a4a;--text:#e0e0e0;--text2:#8888aa;--accent:#00d4aa;--accent2:#6c5ce7;--red:#ff6b6b;--orange:#ffa502;--green:#2ed573;--blue:#4dabf7;--yellow:#ffd43b}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;display:flex;min-height:100vh}
+/* Sidebar */
+.sidebar{width:260px;background:var(--card);border-right:1px solid var(--border);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;padding:20px 0}
+.sidebar h2{padding:10px 20px;font-size:14px;color:var(--accent);text-transform:uppercase;letter-spacing:1px}
+.sidebar a{display:block;padding:8px 20px;color:var(--text2);text-decoration:none;font-size:13px;border-left:3px solid transparent;transition:.2s}
+.sidebar a:hover,.sidebar a.active{color:var(--text);background:rgba(0,212,170,.05);border-left-color:var(--accent)}
+.sidebar .sub{padding-left:35px;font-size:12px}
+/* Main */
+.main{margin-left:260px;flex:1;max-width:960px;padding:40px 60px 100px}
+/* Search */
+.search-box{position:sticky;top:0;z-index:50;background:var(--bg);padding:15px 0 20px;border-bottom:1px solid var(--border);margin-bottom:30px}
+.search-box input{width:100%;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;outline:none}
+.search-box input:focus{border-color:var(--accent)}
+/* Banner */
+.banner{background:linear-gradient(135deg,var(--card2),var(--card));border:1px solid var(--border);border-radius:12px;padding:40px;margin-bottom:40px}
+.banner h1{font-size:28px;background:linear-gradient(135deg,var(--accent),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.banner p{color:var(--text2);font-size:14px}
+.banner .tags{margin-top:15px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.tag-green{background:rgba(46,213,115,.15);color:var(--green)}
+.tag-orange{background:rgba(255,165,2,.15);color:var(--orange)}
+.tag-red{background:rgba(255,107,107,.15);color:var(--red)}
+.tag-blue{background:rgba(77,171,247,.15);color:var(--blue)}
+/* Section */
+section{margin-bottom:50px}
+h2.section-title{font-size:20px;color:var(--accent);margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+h2.section-title::after{content:'▼';font-size:12px;color:var(--text2);transition:.3s}
+h2.section-title.collapsed::after{transform:rotate(-90deg)}
+h3{font-size:16px;color:var(--blue);margin:25px 0 12px}
+h4{font-size:14px;color:var(--yellow);margin:18px 0 8px}
+p{margin-bottom:12px;color:var(--text2);font-size:14px}
+/* Tables */
+table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:13px}
+th{background:var(--card2);color:var(--accent);text-align:left;padding:10px 12px;font-weight:600;border-bottom:2px solid var(--border);white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text2)}
+tr:hover td{background:rgba(0,212,170,.03);color:var(--text)}
+code{background:var(--card2);color:var(--accent);padding:2px 6px;border-radius:4px;font-size:12px;font-family:'SF Mono',Monaco,Consolas,monospace}
+/* SQL blocks */
+.sql-block{position:relative;background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:16px;margin:12px 0 20px;overflow-x:auto}
+.sql-block pre{color:#c9d1d9;font-size:12px;font-family:'SF Mono',Monaco,Consolas,monospace;line-height:1.7;margin:0;white-space:pre}
+.sql-block .copy-btn{position:absolute;top:8px;right:8px;background:var(--card);border:1px solid var(--border);color:var(--text2);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:11px}
+.sql-block .copy-btn:hover{color:var(--accent);border-color:var(--accent)}
+.kw{color:#ff7b72}.fn{color:#d2a8ff}.str{color:#a5d6ff}.cm{color:#8b949e}.num{color:#79c0ff}
+/* Cards */
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin:15px 0}
+.metric-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px}
+.metric-card .name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.metric-card .formula{font-size:12px;color:var(--accent);font-family:monospace;margin-bottom:6px}
+.metric-card .warn{font-size:11px;color:var(--orange)}
+/* Architecture diagram */
+.arch-diagram{display:flex;flex-direction:column;gap:0;margin:15px 0 20px}
+.arch-layer{padding:16px 20px;border:1px solid var(--border);position:relative}
+.arch-layer:first-child{border-radius:10px 10px 0 0}
+.arch-layer:last-child{border-radius:0 0 10px 10px}
+.arch-layer .layer-name{font-weight:700;font-size:14px;margin-bottom:4px}
+.arch-layer .layer-desc{font-size:12px;color:var(--text2)}
+.arch-layer .layer-speed{position:absolute;right:16px;top:50%;transform:translateY(-50%)}
+.layer-ads{background:rgba(46,213,115,.08);border-color:rgba(46,213,115,.3)}
+.layer-ads .layer-name{color:var(--green)}
+.layer-dws{background:rgba(77,171,247,.08);border-color:rgba(77,171,247,.3)}
+.layer-dws .layer-name{color:var(--blue)}
+.layer-dim{background:rgba(108,92,231,.08);border-color:rgba(108,92,231,.3)}
+.layer-dim .layer-name{color:var(--accent2)}
+.layer-ods{background:rgba(255,165,2,.08);border-color:rgba(255,165,2,.3)}
+.layer-ods .layer-name{color:var(--orange)}
+/* Funnel */
+.funnel{display:flex;flex-direction:column;align-items:center;gap:0;margin:15px 0}
+.funnel-step{padding:10px;text-align:center;font-size:13px;font-weight:600;color:var(--bg);border-radius:4px}
+.funnel-arrow{color:var(--text2);font-size:16px;line-height:1}
+/* Tree */
+.tree{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;margin:15px 0}
+.tree-node{padding:4px 0;font-size:13px;color:var(--text2)}
+.tree-node .val{color:var(--accent);font-weight:600}
+.tree-node .tbl{color:var(--blue)}
+/* RFM grid */
+.rfm-grid{display:grid;grid-template-columns:100px repeat(4,1fr);gap:2px;margin:15px 0;font-size:12px}
+.rfm-cell{padding:10px;text-align:center;border-radius:4px}
+.rfm-header{background:var(--card2);color:var(--accent);font-weight:700}
+.rfm-green{background:rgba(46,213,115,.15);color:var(--green)}
+.rfm-yellow{background:rgba(255,212,59,.12);color:var(--yellow)}
+.rfm-orange{background:rgba(255,165,2,.12);color:var(--orange)}
+.rfm-red{background:rgba(255,107,107,.12);color:var(--red)}
+/* Lifecycle */
+.lifecycle{display:flex;gap:0;margin:15px 0;overflow-x:auto}
+.lc-step{flex:1;min-width:100px;padding:12px 8px;text-align:center;position:relative;background:var(--card);border:1px solid var(--border)}
+.lc-step:first-child{border-radius:8px 0 0 8px}
+.lc-step:last-child{border-radius:0 8px 8px 0}
+.lc-step .lc-name{font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px}
+.lc-step .lc-tbl{font-size:10px;color:var(--text2)}
+.lc-arrow{display:flex;align-items:center;color:var(--accent);font-size:18px;padding:0 2px}
+/* Back to top */
+.back-top{position:fixed;bottom:30px;right:30px;width:40px;height:40px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--bg);font-size:18px;box-shadow:0 4px 15px rgba(0,212,170,.3);opacity:0;transition:.3s;z-index:200}
+.back-top.show{opacity:1}
+/* Collapsible */
+.section-body{overflow:hidden;transition:max-height .3s ease}
+.section-body.collapsed{max-height:0!important}
+/* Responsive */
+@media(max-width:768px){
+.sidebar{display:none}
+.main{margin-left:0;padding:20px}
+.metric-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav class="sidebar" id="sidebar">
+<h2>知识库导航</h2>
+<a href="#s1">一、业务全景</a>
+<a href="#s1-1" class="sub">1.1 公司概况</a>
+<a href="#s1-2" class="sub">1.2 指标体系</a>
+<a href="#s1-3" class="sub">1.3 用户生命周期</a>
+<a href="#s2">二、数据架构</a>
+<a href="#s2-1" class="sub">2.1 分层架构</a>
+<a href="#s2-2" class="sub">2.2 选表决策</a>
+<a href="#s3">三、表字段百科</a>
+<a href="#t-ads" class="sub">ads_sku_shop_sales</a>
+<a href="#t-vorder" class="sub">v_order</a>
+<a href="#t-item" class="sub">t_order_item</a>
+<a href="#t-user" class="sub">t_user</a>
+<a href="#t-coupon" class="sub">t_coupon_record</a>
+<a href="#t-screen" class="sub">dws_screen_name</a>
+<a href="#t-push" class="sub">dwd_push_receipt</a>
+<a href="#t-invite" class="sub">t_invitation_info</a>
+<a href="#t-traffic" class="sub">t_traffic_distribution</a>
+<a href="#t-track" class="sub">v_hmonitor_track</a>
+<a href="#t-other" class="sub">其他重要表</a>
+<a href="#s4">四、指标口径词典</a>
+<a href="#s5">五、分析 Playbook</a>
+<a href="#s6">六、SQL 规范手册</a>
+<a href="#s7">七、用户分层体系</a>
+<a href="#s8">八、项目索引</a>
+</nav>
+
+<div class="main" id="main">
+
+<div class="search-box">
+<input type="text" id="search" placeholder="搜索表名、字段、指标..." oninput="doSearch(this.value)">
+</div>
+
+<div class="banner">
+<h1>Lucky US 数据分析知识库</h1>
+<p>基于 470 份生产 SQL 系统学习 · 2026-03-04</p>
+<p>适用角色：数据分析师 / 增长运营 / BI 开发</p>
+<div class="tags">
+<span class="tag tag-green">⚡ 秒出 = ADS/DWS 层</span>
+<span class="tag tag-orange">🐢 较慢 = ODS 明细</span>
+<span class="tag tag-red">❌ 超时 = 大表 JOIN</span>
+<span class="tag tag-blue">20+ 张表 · 30+ 指标 · 12 种 SQL 模式</span>
+</div>
+</div>
+
+<!-- Section 1 -->
+<section id="s1" class="searchable">
+<h2 class="section-title" onclick="toggleSection(this)">一、业务全景</h2>
+<div class="section-body">
+
+<h3 id="s1-1">1.1 公司概况</h3>
+<p>Lucky US（瑞幸美国）— 面向美国市场的连锁茶饮品牌</p>
+<div class="metric-grid">
+<div class="metric-card"><div class="name">门店自取 Pickup</div><div class="formula">APP 下单 → 到店取餐</div><div class="warn">channel: 1/2/3/4/6</div></div>
+<div class="metric-card"><div class="name">外卖配送 Delivery</div><div class="formula">DoorDash / Grubhub / UberEats</div><div class="warn">channel: 5/8/9/10</div></div>
+<div class="metric-card"><div class="name">裂变获客</div><div class="formula">Share The Luck 邀请好友</div><div class="warn">t_user_invitation_info</div></div>
+</div>
+
+<h3 id="s1-2">1.2 核心指标体系</h3>
+<div style="text-align:center;margin:20px 0">
+<div style="display:inline-block;background:linear-gradient(135deg,var(--accent),var(--blue));color:var(--bg);padding:12px 30px;border-radius:8px;font-weight:700;font-size:16px">GMV / 销售额</div>
+<div style="display:flex;justify-content:center;gap:20px;margin-top:12px">
+<div style="background:var(--card);border:1px solid var(--border);padding:10px 20px;border-radius:8px;text-align:center"><div style="color:var(--green);font-weight:600">杯量</div><div style="font-size:11px;color:var(--text2)">SUM(sku_cnt)</div></div>
+<div style="background:var(--card);border:1px solid var(--border);padding:10px 20px;border-radius:8px;text-align:center"><div style="color:var(--yellow);font-weight:600">单杯实收</div><div style="font-size:11px;color:var(--text2)">pay/sku_cnt</div></div>
+<div style="background:var(--card);border:1px solid var(--border);padding:10px 20px;border-radius:8px;text-align:center"><div style="color:var(--blue);font-weight:600">门店数</div><div style="font-size:11px;color:var(--text2)">DISTINCT shop</div></div>
+</div>
+<div style="display:flex;justify-content:center;gap:15px;margin-top:10px">
+<div style="background:var(--card);border:1px solid var(--border);padding:8px 16px;border-radius:6px;font-size:13px"><span style="color:var(--accent)">新客</span> / <span style="color:var(--accent)">老客</span></div>
+<div style="background:var(--card);border:1px solid var(--border);padding:8px 16px;border-radius:6px;font-size:13px;color:var(--accent2)">多杯率</div>
+<div style="background:var(--card);border:1px solid var(--border);padding:8px 16px;border-radius:6px;font-size:13px;color:var(--orange)">留存率 / 复购率</div>
+</div>
+</div>
+
+<h3 id="s1-3">1.3 用户生命周期</h3>
+<div style="display:flex;align-items:center;gap:0;margin:15px 0;overflow-x:auto">
+<div class="lc-step"><div class="lc-name">注册</div><div class="lc-tbl">t_user</div></div>
+<div class="lc-arrow">→</div>
+<div class="lc-step"><div class="lc-name">首单转化</div><div class="lc-tbl">v_order</div></div>
+<div class="lc-arrow">→</div>
+<div class="lc-step"><div class="lc-name">复购激活</div><div class="lc-tbl">D3/D7 复购率</div></div>
+<div class="lc-arrow">→</div>
+<div class="lc-step"><div class="lc-name">频次提升</div><div class="lc-tbl">周/月复购表</div></div>
+<div class="lc-arrow">→</div>
+<div class="lc-step"><div class="lc-name">多杯消费</div><div class="lc-tbl">多杯率</div></div>
+<div class="lc-arrow">→</div>
+<div class="lc-step"><div class="lc-name">忠诚用户</div><div class="lc-tbl">R0 (RFM)</div></div>
+</div>
+
+</div></section>
+
+<!-- Section 2 -->
+<section id="s2" class="searchable">
+<h2 class="section-title" onclick="toggleSection(this)">二、数据架构</h2>
+<div class="section-body">
+
+<h3 id="s2-1">2.1 分层架构</h3>
+<div class="arch-diagram">
+<div class="arch-layer layer-ads"><div class="layer-name">ADS 应用层 · ads_*</div><div class="layer-desc">预聚合宽表：门店日销售、周/月复购、人群标签、触达权限</div><div class="layer-speed"><span class="tag tag-green">⚡ 秒级</span></div></div>
+<div class="arch-layer layer-dws"><div class="layer-name">DWS/DWD 汇总层 · dws_* / dwd_*</div><div class="layer-desc">中间聚合层：页面日志汇总、推送记录、券使用记录</div><div class="layer-speed"><span class="tag tag-green">⚡ 秒级</span></div></div>
+<div class="arch-layer layer-dim"><div class="layer-name">DIM 维度层 · dim_*</div><div class="layer-desc">门店、商品等缓慢变化维度</div><div class="layer-speed"><span class="tag tag-green">⚡ 秒级</span></div></div>
+<div class="arch-layer layer-ods"><div class="layer-name">ODS 原始层 · ods_*</div><div class="layer-desc">业务系统原始数据镜像：订单、用户、券、邀请、埋点</div><div class="layer-speed"><span class="tag tag-orange">🐢 视数据量</span></div></div>
+</div>
+
+<h3 id="s2-2">2.2 选表决策矩阵</h3>
+<table>
+<tr><th>我需要</th><th>首选表</th><th>备选</th><th>禁忌</th></tr>
+<tr><td>门店杯量/销售额</td><td><code>ads_mg_sku_shop_sales_statistic_d_1d</code></td><td>—</td><td style="color:var(--red)">不要用 t_order_item</td></tr>
+<tr><td>用户周复购率</td><td><code>ads_user_order_rep_info_d_nw</code></td><td>—</td><td style="color:var(--red)">不要自己算</td></tr>
+<tr><td>用户月复购率</td><td><code>ads_user_order_rep_info_d_nm</code></td><td>—</td><td style="color:var(--red)">不要自己算</td></tr>
+<tr><td>APP 页面漏斗</td><td><code>dws_mg_log_user_screen_name_d_1d</code></td><td>—</td><td>—</td></tr>
+<tr><td>新客/老客判定</td><td><code>v_order</code> (首单日期CTE)</td><td>—</td><td>—</td></tr>
+<tr><td>AB 实验人群</td><td><code>t_user_traffic_distribution</code></td><td><code>ads_marketing_t_user_group</code></td><td>—</td></tr>
+<tr><td>券发放/核销</td><td><code>t_coupon_record</code></td><td><code>dwd_t_mkt_coupon_use</code></td><td>—</td></tr>
+<tr><td>触达效果</td><td><code>dwd_marketing_t_push_receipt</code></td><td>—</td><td>—</td></tr>
+<tr><td>分享邀请</td><td><code>t_user_invitation_info</code></td><td>—</td><td>—</td></tr>
+<tr><td>订单级(客单价)</td><td><code>v_order</code></td><td>—</td><td style="color:var(--red)">避免 JOIN item</td></tr>
+<tr><td>杯级(单杯实收)</td><td><code>t_order_item</code></td><td>—</td><td style="color:var(--red)">避免 JOIN v_order</td></tr>
+<tr><td>埋点事件</td><td><code>v_hmonitor_track_event_rt</code></td><td>—</td><td style="color:var(--orange)">大表加dt分区</td></tr>
+</table>
+
+</div></section>
+
+<!-- Section 3: Tables -->
+<section id="s3" class="searchable">
+<h2 class="section-title" onclick="toggleSection(this)">三、表字段百科</h2>
+<div class="section-body">
+
+<h3 id="t-ads">3.1 ads_mg_sku_shop_sales_statistic_d_1d <span class="tag tag-green">⚡ 首选</span></h3>
+<p>门店 × SKU × 日 销售汇总表。<strong>日常分析首选表。</strong></p>
+<table>
+<tr><th>字段</th><th>类型</th><th>含义</th><th>备注</th></tr>
+<tr><td><code>dt</code></td><td>DATE</td><td>统计日期</td><td>分区键，必须指定</td></tr>
+<tr><td><code>tenant</code></td><td>VARCHAR</td><td>租户</td><td>= 'LKUS'</td></tr>
+<tr><td><code>shop_name</code></td><td>VARCHAR</td><td>门店名称</td><td>排除测试店</td></tr>
+<tr><td><code>spu_name</code></td><td>VARCHAR</td><td>商品名称</td><td>可 LIKE 匹配</td></tr>
+<tr><td><code>one_category_name</code></td><td>VARCHAR</td><td>一级类目</td><td>'Drink' = 饮品</td></tr>
+<tr><td><code>sku_cnt</code></td><td>INT</td><td style="color:var(--green);font-weight:600">杯量</td><td style="color:var(--orange)">每杯计1，非订单数!</td></tr>
+<tr><td><code>order_cnt</code></td><td>INT</td><td>订单数</td><td>含该SKU的订单去重</td></tr>
+<tr><td><code>pay_amount</code></td><td>DECIMAL</td><td>实付金额</td><td>—</td></tr>
+<tr><td><code>origin_amount</code></td><td>DECIMAL</td><td>原价金额</td><td>用于折扣深度</td></tr>
+</table>
+<div class="sql-block"><button class="copy-btn" onclick="copySQL(this)">复制</button><pre><span class="cm">-- 全店日汇总</span>
+<span class="kw">SELECT</span> dt, <span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> shop_name) <span class="kw">AS</span> 门店数, <span class="fn">SUM</span>(sku_cnt) <span class="kw">AS</span> 杯量,
+       <span class="fn">ROUND</span>(<span class="fn">SUM</span>(pay_amount), <span class="num">2</span>) <span class="kw">AS</span> 销售额,
+       <span class="fn">ROUND</span>(<span class="fn">SUM</span>(pay_amount)/<span class="fn">SUM</span>(sku_cnt), <span class="num">2</span>) <span class="kw">AS</span> 单杯实收
+<span class="kw">FROM</span> dw_ads.ads_mg_sku_shop_sales_statistic_d_1d
+<span class="kw">WHERE</span> dt <span class="kw">BETWEEN</span> <span class="str">'2026-02-25'</span> <span class="kw">AND</span> <span class="str">'2026-03-03'</span>
+  <span class="kw">AND</span> tenant = <span class="str">'LKUS'</span> <span class="kw">AND</span> one_category_name = <span class="str">'Drink'</span>
+  <span class="kw">AND</span> shop_name <span class="kw">NOT IN</span> (<span class="str">'NJ Test Kitchen'</span>, <span class="str">'NJ Test Kitchen 2'</span>)
+<span class="kw">GROUP BY</span> dt <span class="kw">ORDER BY</span> dt;</pre></div>
+
+<h3 id="t-vorder">3.2 v_order <span class="tag tag-green">⚡ 单表快</span></h3>
+<p>订单主表。每条记录 = 一笔订单。</p>
+<table>
+<tr><th>字段</th><th>类型</th><th>含义</th><th>备注</th></tr>
+<tr><td><code>id</code></td><td>BIGINT</td><td>订单ID</td><td>主键</td></tr>
+<tr><td><code>user_no</code></td><td>VARCHAR</td><td>用户编号</td><td>关联 t_user</td></tr>
+<tr><td><code>shop_name</code></td><td>VARCHAR</td><td>门店</td><td>—</td></tr>
+<tr><td><code>channel</code></td><td>INT</td><td>渠道</td><td>见下方枚举</td></tr>
+<tr><td><code>status</code></td><td>INT</td><td>状态</td><td style="color:var(--green);font-weight:600">90 = 成功</td></tr>
+<tr><td><code>pay_money</code></td><td>DECIMAL</td><td>实付金额</td><td>订单级</td></tr>
+<tr><td><code>create_time</code></td><td>DATETIME</td><td>下单时间</td><td style="color:var(--orange)">需 CONVERT_TZ</td></tr>
+<tr><td><code>pay_time</code></td><td>DATETIME</td><td>支付时间</td><td>履约时效起点</td></tr>
+</table>
+<h4>渠道枚举 channel</h4>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 20px">
+<span class="tag tag-blue">1 Android</span><span class="tag tag-blue">2 iOS</span><span class="tag tag-blue">3 H5</span><span class="tag tag-blue">4 自助机</span><span class="tag tag-blue">6 EPoint</span>
+<span class="tag tag-orange">5 Grab</span><span class="tag tag-orange">8 DoorDash</span><span class="tag tag-orange">9 Grubhub</span><span class="tag tag-orange">10 UberEats</span>
+</div>
+
+<h3 id="t-item">3.3 t_order_item <span class="tag tag-orange">🐢 慎用</span></h3>
+<p>订单明细表。每条记录 = 一个 SKU（一杯）。<strong>大表。</strong></p>
+<table>
+<tr><th>字段</th><th>类型</th><th>含义</th><th>备注</th></tr>
+<tr><td><code>order_id</code></td><td>BIGINT</td><td>订单ID</td><td>关联 v_order.id</td></tr>
+<tr><td><code>spu_name</code></td><td>VARCHAR</td><td>商品名</td><td>—</td></tr>
+<tr><td><code>spu_type</code></td><td>INT</td><td>类型</td><td>2 = 套餐</td></tr>
+<tr><td><code>one_category_name</code></td><td>VARCHAR</td><td>类目</td><td>'Drink'</td></tr>
+<tr><td><code>origin_price</code></td><td>DECIMAL</td><td>原价</td><td style="color:var(--orange)">可能为0(赠品)</td></tr>
+<tr><td><code>pay_money</code></td><td>DECIMAL</td><td>实付</td><td style="color:var(--green)">item级，用于单杯实收</td></tr>
+<tr><td><code>sku_num</code></td><td>INT</td><td>数量</td><td>通常=1</td></tr>
+</table>
+<div class="sql-block"><button class="copy-btn" onclick="copySQL(this)">复制</button><pre><span class="cm">-- 杯量 = COUNT(*)，不是订单数！</span>
+<span class="fn">COUNT</span>(*) <span class="kw">AS</span> cups
+<span class="cm">-- 单杯实收</span>
+<span class="fn">SUM</span>(pay_money) / <span class="fn">SUM</span>(sku_num) <span class="kw">AS</span> price_per_cup
+<span class="cm">-- 多杯判断：drink_cnt >= 2</span>
+<span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> one_category_name = <span class="str">'Drink'</span> <span class="kw">THEN</span> <span class="num">1</span> <span class="kw">ELSE</span> <span class="num">0</span> <span class="kw">END</span>) <span class="kw">AS</span> drink_cnt</pre></div>
+
+<h3 id="t-user">3.4 t_user</h3>
+<table>
+<tr><th>字段</th><th>类型</th><th>含义</th><th>备注</th></tr>
+<tr><td><code>user_no</code></td><td>VARCHAR</td><td>用户编号</td><td>全局唯一</td></tr>
+<tr><td><code>create_time</code></td><td>DATETIME</td><td>注册时间</td><td>需 CONVERT_TZ</td></tr>
+<tr><td><code>type</code></td><td>INT</td><td>用户类型</td><td style="color:var(--red)">4=游客 5=外卖 需剔除</td></tr>
+</table>
+
+<h3 id="t-coupon">3.5 t_coupon_record</h3>
+<table>
+<tr><th>字段</th><th>类型</th><th>含义</th><th>备注</th></tr>
+<tr><td><code>member_no</code></td><td>VARCHAR</td><td>用户编号</td><td>= v_order.user_no</td></tr>
+<tr><td><code>activity_no</code></td><td>VARCHAR</td><td>活动编号</td><td>AB实验区分组</td></tr>
+<tr><td><code>coupon_name</code></td><td>VARCHAR</td><td>券名称</td><td>—</td></tr>
+<tr><td><code>coupon_denomination</code></td><td>DECIMAL</td><td>面额</td><td>—</td></tr>
+<tr><td><code>use_status</code></td><td>INT</td><td>使用状态</td><td style="color:var(--green)">1 = 已使用</td></tr>
+<tr><td><code>use_time</code></td><td>DATETIME</td><td>使用时间</td><td>—</td></tr>
+</table>
+
+<h3 id="t-screen">3.6 dws_mg_log_user_screen_name_d_1d <span class="tag tag-green">⚡ 秒出</span></h3>
+<p>APP 页面访问日志。用于漏斗分析。</p>
+<div style="display:flex;align-items:center;gap:0;margin:15px 0;flex-wrap:wrap">
+<div style="background:var(--green);color:var(--bg);padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600">home</div>
+<div style="padding:0 8px;color:var(--text2)">→</div>
+<div style="background:rgba(46,213,115,.7);color:var(--bg);padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600">menu</div>
+<div style="padding:0 8px;color:var(--text2)">→</div>
+<div style="background:rgba(46,213,115,.5);color:var(--bg);padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600">productdetail</div>
+<div style="padding:0 8px;color:var(--text2)">→</div>
+<div style="background:rgba(46,213,115,.35);color:var(--text);padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600">confirmorder</div>
+<div style="padding:0 8px;color:var(--text2)">→</div>
+<div style="background:rgba(46,213,115,.2);color:var(--text);padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600">orderdetail ✓</div>
+</div>
+
+<h3 id="t-push">3.7 dwd_marketing_t_push_receipt_d_inc</h3>
+<p>触达渠道：<span class="tag tag-blue">1 SMS</span> <span class="tag tag-blue">2 Push</span> <span class="tag tag-blue">3-4 WhatsApp</span> <span class="tag tag-blue">5 EDM</span></p>
+
+<h3 id="t-invite">3.8 t_user_invitation_info</h3>
+<table>
+<tr><th>字段</th><th>含义</th><th>备注</th></tr>
+<tr><td><code>inviter_user_no</code></td><td>邀请人</td><td>—</td></tr>
+<tr><td><code>invitee_user_no</code></td><td>被邀请人</td><td>—</td></tr>
+<tr><td><code>invitation_success</code></td><td>是否成功</td><td style="color:var(--green)">1 = 已下单</td></tr>
+<tr><td><code>create_time</code></td><td>注册时间</td><td>—</td></tr>
+<tr><td><code>modify_time</code></td><td>下单时间</td><td>success=1时取</td></tr>
+</table>
+
+<h3 id="t-traffic">3.9 t_user_traffic_distribution</h3>
+<p>实验分流表：<code>experiment_layer_no</code> + <code>experiment_group_no</code> + <code>user_no</code></p>
+
+<h3 id="t-track">3.10 v_hmonitor_track_event_rt <span class="tag tag-red">大表</span></h3>
+<p>前端埋点。<code>dt</code> 为 INT 型(YYYYMMDD)，<strong>必须加分区过滤</strong>。</p>
+<p>事件命名：<code>$page.{页面}$model.{模块}$content.{内容}$action.{bw|ck}</code></p>
+
+<h3 id="t-other">3.11 其他重要表</h3>
+<table>
+<tr><th>表</th><th>用途</th><th>核心字段</th></tr>
+<tr><td><code>user_label_df</code></td><td>哈希桶</td><td>ab_bash_10000 (0-9999)</td></tr>
+<tr><td><code>ads_marketing_t_user_group_d_his</code></td><td>CDP人群</td><td>group_name, user_no</td></tr>
+<tr><td><code>ads_marketing_t_user_grant_d_his</code></td><td>触达权限</td><td>is_able_sms/push/waapp/mail</td></tr>
+<tr><td><code>ads_user_order_rep_info_d_nw</code></td><td>周复购</td><td>src_week, dst_week, usr_cnt</td></tr>
+<tr><td><code>ads_user_order_rep_info_d_nm</code></td><td>月复购</td><td>src_month, dst_month, usr_cnt</td></tr>
+<tr><td><code>dim_shop_d_his</code></td><td>门店维度</td><td>dept_id, shop_name</td></tr>
+<tr><td><code>t_order_make</code></td><td>制作完成</td><td>order_id, finish_time</td></tr>
+<tr><td><code>t_order_promotion_detail</code></td><td>促销明细</td><td>order_id, promotion_name</td></tr>
+</table>
+
+</div></section>
+
+<!-- Section 4: Metrics -->
+<section id="s4" class="searchable">
+<h2 class="section-title" onclick="toggleSection(this)">四、指标口径词典</h2>
+<div class="section-body">
+
+<h3>4.1 经营核心</h3>
+<div class="metric-grid">
+<div class="metric-card"><div class="name">杯量</div><div class="formula">COUNT(*) from t_order_item WHERE Drink</div><div class="warn">⚠ 不是订单数！每行=一杯</div></div>
+<div class="metric-card"><div class="name">销售额</div><div class="formula">SUM(pay_amount)</div><div class="warn">用 ads 表</div></div>
+<div class="metric-card"><div class="name">单杯实收</div><div class="formula">SUM(pay_amount) / SUM(sku_cnt)</div><div class="warn">⚠ 不是 销售额/订单数</div></div>
+<div class="metric-card"><div class="name">客单价 AOV</div><div class="formula">SUM(pay_money) / COUNT(DISTINCT order_id)</div><div class="warn">pay_money=0 也参与计算</div></div>
+<div class="metric-card"><div class="name">店日均杯量</div><div class="formula">杯量 / 营业门店数</div><div class="warn">—</div></div>
+<div class="metric-card"><div class="name">ARPU (全用户)</div><div class="formula">SUM(pay_money) / total_users</div><div class="warn">含未购用户</div></div>
+</div>
+
+<h3>4.2 用户指标</h3>
+<div class="metric-grid">
+<div class="metric-card"><div class="name">新客</div><div class="formula">首笔成功订单日期 = 统计日</div><div class="warn">首单用 MIN(stat_date)</div></div>
+<div class="metric-card"><div class="name">新客占比</div><div class="formula">新客数 / (新客+老客) × 100%</div><div class="warn">分母不含未购</div></div>
+<div class="metric-card"><div class="name">注册用户</div><div class="formula">t_user 当日 create_time</div><div class="warn">需 CONVERT_TZ</div></div>
+</div>
+
+<h3>4.3 留存与复购</h3>
+<div class="metric-grid">
+<div class="metric-card"><div class="name">D7 留存率</div><div class="formula">7日前用户中7日内再购 / 基准用户</div><div class="warn">窗口 [date-7, date]</div></div>
+<div class="metric-card"><div class="name">D3 复购率</div><div class="formula">首单后3天内再购 / 首单用户</div><div class="warn">窗口 [+1d, +3d]</div></div>
+<div class="metric-card"><div class="name">多杯率</div><div class="formula">当天饮品≥2杯用户 / 下单用户</div><div class="warn">当天维度</div></div>
+<div class="metric-card"><div class="name">周复购率</div><div class="formula">本周买且上周也买 / 上周用户</div><div class="warn">用 ads_nw 表</div></div>
+</div>
+
+<h3>4.4 漏斗转化</h3>
+<table>
+<tr><th>指标</th><th>公式</th></tr>
+<tr><td>到访率</td><td>APP打开用户 / 总用户 × 100%</td></tr>
+<tr><td>下单率</td><td>下单用户 / 总用户 × 100%</td></tr>
+<tr><td>到访转化率</td><td>下单用户 / APP打开用户 × 100%</td></tr>
+<tr><td>菜单→详情</td><td>productdetail_uv / menu_uv × 100%</td></tr>
+<tr><td>详情→确认</td><td>confirmorder_uv / productdetail_uv × 100%</td></tr>
+<tr><td>确认→支付</td><td>orderdetail_uv / confirmorder_uv × 100%</td></tr>
+</table>
+
+<h3>4.5 价格与折扣</h3>
+<div class="metric-grid">
+<div class="metric-card"><div class="name">折扣深度</div><div class="formula">(origin - pay) / origin × 100%</div><div class="warn">NULLIF(origin, 0) 防零</div></div>
+<div class="metric-card"><div class="name">外卖占比</div><div class="formula">channel IN (8,9,10) / total</div><div class="warn">—</div></div>
+<div class="metric-card"><div class="name">商品渗透率</div><div class="formula">含某商品订单 / 总订单 × 100%</div><div class="warn">—</div></div>
+</div>
+
+</div></section>
+
+<!-- Section 5 -->
+<section id="s5" class="searchable">
+<h2 class="section-title" onclick="toggleSection(this)">五、分析场景 Playbook</h2>
+<div class="section-body">
+
+<h3>5.1 每日经营日报</h3>
+<table>
+<tr><th>#</th><th>模块</th><th>数据源</th><th>耗时</th></tr>
+<tr><td>1</td><td>业务结果(杯量/销售额/单杯实收)</td><td><code>ads_mg_sku...</code></td><td><span class="tag tag-green">秒出</span></td></tr>
+<tr><td>2</td><td>门店明细</td><td><code>ads_mg_sku...</code></td><td><span class="tag tag-green">秒出</span></td></tr>
+<tr><td>3</td><td>漏斗转化</td><td><code>dws_mg_log...</code></td><td><span class="tag tag-green">秒出</span></td></tr>
+<tr><td>4</td><td>商品渗透 TOP5</td><td><code>ads_mg_sku...</code></td><td><span class="tag tag-green">秒出</span></td></tr>
+<tr><td>5</td><td>用户(新客/老客/留存)</td><td><code>v_order + t_user</code></td><td><span class="tag tag-orange">8-15s/天</span></td></tr>
+</table>
+
+<h3>5.2 AB 实验三阶段法</h3>
+<div class="metric-grid">
+<div class="metric-card" style="border-left:3px solid var(--green)"><div class="name">阶段1: Fixed Cohort</div><div class="formula">锁定开始日人群 → D0-D7 统一追踪</div><div class="warn">适合 3-7 天快速评估</div></div>
+<div class="metric-card" style="border-left:3px solid var(--blue)"><div class="name">阶段2: Rolling Cohort</div><div class="formula">每日新入组按 first_group_date 追踪</div><div class="warn">消除时间混淆，7-14 天</div></div>
+<div class="metric-card" style="border-left:3px solid var(--accent2)"><div class="name">阶段3: 分层诊断</div><div class="formula">RFM / 首单AOV / 折扣深度 分层</div><div class="warn">识别敏感人群</div></div>
+</div>
+
+<h3>5.3 留存分析 CTE 模板</h3>
+<div class="sql-block"><button class="copy-btn" onclick="copySQL(this)">复制</button><pre><span class="kw">WITH</span> target_users <span class="kw">AS</span> (
+    <span class="kw">SELECT DISTINCT</span> user_no <span class="kw">FROM</span> v_order
+    <span class="kw">WHERE</span> stat_date = <span class="str">'{date}'</span> <span class="kw">AND</span> status = <span class="num">90</span>
+),
+future_orders <span class="kw">AS</span> (
+    <span class="kw">SELECT DISTINCT</span> user_no <span class="kw">FROM</span> v_order
+    <span class="kw">WHERE</span> stat_date > <span class="str">'{date}'</span>
+      <span class="kw">AND</span> stat_date <= <span class="fn">DATE_ADD</span>(<span class="str">'{date}'</span>, <span class="kw">INTERVAL</span> <span class="num">7</span> <span class="kw">DAY</span>)
+      <span class="kw">AND</span> user_no <span class="kw">IN</span> (<span class="kw">SELECT</span> user_no <span class="kw">FROM</span> target_users)
+)
+<span class="kw">SELECT</span>
+    (<span class="kw">SELECT</span> <span class="fn">COUNT</span>(*) <span class="kw">FROM</span> target_users) <span class="kw">AS</span> base_users,
+    (<span class="kw">SELECT</span> <span class="fn">COUNT</span>(*) <span class="kw">FROM</span> future_orders) <span class="kw">AS</span> retained,
+    <span class="fn">ROUND</span>(retained / <span class="fn">NULLIF</span>(base_users, <span class="num">0</span>) * <span class="num">100</span>, <span class="num">2</span>) <span class="kw">AS</span> rate;</pre></div>
+
+<h3>5.4 分享有礼全链路</h3>
+<div style="display:flex;align-items:center;gap:4px;margin:15px 0;flex-wrap:wrap;font-size:12px">
+<div style="background:var(--accent2);color:#fff;padding:6px 12px;border-radius:4px">资源位曝光</div><span style="color:var(--text2)">→</span>
+<div style="background:rgba(108,92,231,.7);color:#fff;padding:6px 12px;border-radius:4px">点击</div><span style="color:var(--text2)">→</span>
+<div style="background:rgba(108,92,231,.5);color:#fff;padding:6px 12px;border-radius:4px">分享页</div><span style="color:var(--text2)">→</span>
+<div style="background:var(--blue);color:var(--bg);padding:6px 12px;border-radius:4px">点击分享</div><span style="color:var(--text2)">→</span>
+<div style="background:rgba(77,171,247,.6);color:#fff;padding:6px 12px;border-radius:4px">注册</div><span style="color:var(--text2)">→</span>
+<div style="background:var(--green);color:var(--bg);padding:6px 12px;border-radius:4px">D0下单</div><span style="color:var(--text2)">→</span>
+<div style="background:rgba(46,213,115,.6);color:var(--bg);padding:6px 12px;border-radius:4px">D7下单</div>
+</div>
+
+</div></section>
+
+<!-- Section 6 -->
+<section id="s6" class="searchable">
+<h2 class="section-title" onclick="toggleSection(this)">六、SQL 规范手册</h2>
+<div class="section-body">
+
+<h3>6.1 六条铁律</h3>
+<div class="sql-block"><button class="copy-btn" onclick="copySQL(this)">复制</button><pre><span class="cm">-- 1. 时区转换</span>
+<span class="fn">DATE</span>(<span class="fn">CONVERT_TZ</span>(create_time, @@time_zone, <span class="str">'America/New_York'</span>))
+<span class="cm">-- 2. 租户过滤</span>
+<span class="kw">WHERE</span> <span class="fn">INSTR</span>(tenant, <span class="str">'IQ'</span>) = <span class="num">0</span>
+<span class="cm">-- 3. 成功订单</span>
+<span class="kw">AND</span> status = <span class="num">90</span>
+<span class="cm">-- 4. 排除测试店</span>
+<span class="kw">AND</span> shop_name <span class="kw">NOT IN</span> (<span class="str">'NJ Test Kitchen'</span>, <span class="str">'NJ Test Kitchen 2'</span>)
+<span class="cm">-- 5. 饮品过滤</span>
+<span class="kw">AND</span> one_category_name = <span class="str">'Drink'</span>
+<span class="cm">-- 6. 用户剔除</span>
+<span class="kw">AND</span> type <span class="kw">NOT IN</span> (<span class="num">4</span>, <span class="num">5</span>)</pre></div>
+
+<h3>6.2 性能优化</h3>
+<table>
+<tr><th>原则</th><th>说明</th></tr>
+<tr><td style="color:var(--green);font-weight:600">ADS 表优先</td><td>能用汇总表绝不查明细表</td></tr>
+<tr><td style="color:var(--red);font-weight:600">避免大表 JOIN</td><td>t_order_item JOIN v_order 会超时</td></tr>
+<tr><td>分区键必须</td><td>查 ODS 表必须加 dt 条件</td></tr>
+<tr><td>先过滤再 JOIN</td><td>CTE/子查询先缩小范围</td></tr>
+<tr><td>NULLIF 防零</td><td>除法用 NULLIF(denominator, 0)</td></tr>
+<tr><td>整数日期</td><td>埋点表 dt 是 INT，用 BETWEEN</td></tr>
+</table>
+
+<h3>6.3 SQL 模式速查</h3>
+<table>
+<tr><th>模式</th><th>代码</th></tr>
+<tr><td>新老客</td><td><code>MIN(stat_date) = current_date → 新客</code></td></tr>
+<tr><td>留存CTE</td><td><code>target → future → retention</code></td></tr>
+<tr><td>复购(N日)</td><td><code>MAX(CASE WHEN BETWEEN first+1 AND first+N)</code></td></tr>
+<tr><td>折扣分层</td><td><code>pay/NULLIF(origin,0) ≤ 0.3/0.5/0.7</code></td></tr>
+<tr><td>多杯</td><td><code>SUM(CASE WHEN Drink THEN 1) >= 2</code></td></tr>
+<tr><td>外卖</td><td><code>channel IN (8, 9, 10)</code></td></tr>
+<tr><td>累计</td><td><code>SUM() OVER (UNBOUNDED PRECEDING)</code></td></tr>
+<tr><td>周分组</td><td><code>YEARWEEK(dt, 1)</code></td></tr>
+</table>
+
+</div></section>
+
+<!-- Section 7 -->
+<section id="s7" class="searchable">
+<h2 class="section-title" onclick="toggleSection(this)">七、用户分层体系</h2>
+<div class="section-body">
+
+<h3>7.1 RFM 矩阵</h3>
+<div class="rfm-grid">
+<div class="rfm-cell rfm-header"></div><div class="rfm-cell rfm-header">F1 (1次)</div><div class="rfm-cell rfm-header">F2 (2-3)</div><div class="rfm-cell rfm-header">F3 (4-7)</div><div class="rfm-cell rfm-header">F4 (8+)</div>
+<div class="rfm-cell rfm-header">R0 ≤7d</div><div class="rfm-cell rfm-green">新客</div><div class="rfm-cell rfm-green">激活中</div><div class="rfm-cell rfm-green">活跃</div><div class="rfm-cell rfm-green">忠诚</div>
+<div class="rfm-cell rfm-header">R1 8-30d</div><div class="rfm-cell rfm-yellow">流失风险</div><div class="rfm-cell rfm-yellow">温热</div><div class="rfm-cell rfm-green">活跃</div><div class="rfm-cell rfm-green">高价值</div>
+<div class="rfm-cell rfm-header">R2 31-60d</div><div class="rfm-cell rfm-orange">沉睡</div><div class="rfm-cell rfm-orange">沉睡</div><div class="rfm-cell rfm-yellow">唤醒</div><div class="rfm-cell rfm-yellow">挽回</div>
+<div class="rfm-cell rfm-header">R3 60d+</div><div class="rfm-cell rfm-red">流失</div><div class="rfm-cell rfm-red">流失</div><div class="rfm-cell rfm-red">流失</div><div class="rfm-cell rfm-orange">流失</div>
+</div>
+
+<h3>7.2 生命周期分层</h3>
+<table>
+<tr><th>阶段</th><th>条件</th><th>策略方向</th></tr>
+<tr><td style="color:var(--green)">注册未购</td><td>t_user有，v_order无</td><td>首单券激活</td></tr>
+<tr><td style="color:var(--green)">新购 ≤15d</td><td>首单后1-15天</td><td>复购券培养</td></tr>
+<tr><td style="color:var(--blue)">成长 16-30d</td><td>首购后16-30天</td><td>频次提升</td></tr>
+<tr><td style="color:var(--accent)">成熟 31d+</td><td>首购后31天+</td><td>多杯/高单价</td></tr>
+<tr><td style="color:var(--yellow)">来访未购</td><td>7天有访问无购买</td><td>转化推送</td></tr>
+<tr><td style="color:var(--red)">沉默</td><td>末次下单30天+</td><td>召回</td></tr>
+</table>
+
+<h3>7.3 首单特征分层（实验用）</h3>
+<table>
+<tr><th>维度</th><th>分档</th><th>含义</th></tr>
+<tr><td>AOV</td><td>&lt;$5 / $5-10 / ≥$10</td><td>首单消费力</td></tr>
+<tr><td>折扣深度</td><td>≥35% / 25-35% / &lt;25%</td><td>价格敏感度</td></tr>
+<tr><td>杯数</td><td>单杯 / 双杯 / 3杯+</td><td>消费深度</td></tr>
+<tr><td>注册天数</td><td>3d / 7d / 15d / 30d</td><td>用户成熟度</td></tr>
+</table>
+
+</div></section>
+
+<!-- Section 8 -->
+<section id="s8" class="searchable">
+<h2 class="section-title" onclick="toggleSection(this)">八、项目索引</h2>
+<div class="section-body">
+<table>
+<tr><th>项目</th><th>关键文件</th><th>状态</th></tr>
+<tr><td>日报</td><td><code>~/.claude/skills/daily-report/SKILL.md</code></td><td><span class="tag tag-green">技能化</span></td></tr>
+<tr><td>AB 实验</td><td><code>~/.claude/skills/ab-experiment/skill.md</code></td><td><span class="tag tag-green">技能化</span></td></tr>
+<tr><td>分享有礼</td><td><code>~/.claude/skills/share-the-luck/skill.md</code></td><td><span class="tag tag-green">技能化</span></td></tr>
+<tr><td>数据查询</td><td><code>~/.claude/skills/luckyus-data-query/skill.md</code></td><td><span class="tag tag-green">技能化</span></td></tr>
+<tr><td>SQL 学习库</td><td><code>~/Downloads/sql/</code> (470份)</td><td><span class="tag tag-blue">参考</span></td></tr>
+<tr><td>新客实验</td><td><code>~/Desktop/实验报告/</code></td><td><span class="tag tag-blue">已完成</span></td></tr>
+<tr><td>涨价实验</td><td><code>~/Vibe coding/</code></td><td><span class="tag tag-orange">进行中</span></td></tr>
+</table>
+</div></section>
+
+</div>
+
+<div class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<script>
+// Copy SQL
+function copySQL(btn){const pre=btn.parentElement.querySelector('pre');const t=pre.textContent;navigator.clipboard.writeText(t);btn.textContent='已复制!';setTimeout(()=>btn.textContent='复制',1500)}
+
+// Toggle sections
+function toggleSection(el){const body=el.nextElementSibling;el.classList.toggle('collapsed');body.classList.toggle('collapsed')}
+
+// Search
+function doSearch(q){q=q.toLowerCase();document.querySelectorAll('.searchable').forEach(s=>{const text=s.textContent.toLowerCase();s.style.display=!q||text.includes(q)?'':'none'})}
+
+// Sidebar active state
+const links=document.querySelectorAll('.sidebar a');
+const sections=document.querySelectorAll('section, h3[id]');
+window.addEventListener('scroll',()=>{
+  document.getElementById('backTop').classList.toggle('show',window.scrollY>300);
+  let current='';
+  sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id});
+  links.forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+current)});
+});
+
+// Smooth scroll
+document.querySelectorAll('.sidebar a').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})})});
+</script>
+</body>
+</html>

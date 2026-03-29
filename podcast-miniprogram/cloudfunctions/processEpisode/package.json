@@ -1,0 +1,9 @@
+{
+  "name": "processEpisode",
+  "version": "1.0.0",
+  "description": "快速入口：检查缓存、创建任务、触发异步 pipeline",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

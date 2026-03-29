@@ -1,0 +1,261 @@
+.page-index {
+  min-height: 100vh;
+  padding-bottom: 120rpx;
+}
+
+/* Header */
+.header {
+  padding: 60rpx 32rpx 32rpx;
+}
+
+.header-title {
+  font-family: var(--font-serif);
+  font-size: 48rpx;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.header-subtitle {
+  font-size: 26rpx;
+  color: var(--text-dim);
+  margin-top: 8rpx;
+}
+
+/* Add Section */
+.add-section {
+  padding: 0 32rpx;
+  margin-bottom: 32rpx;
+}
+
+.add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  background: var(--bg-card);
+  border: 2rpx dashed var(--gold-dim);
+  border-radius: 16rpx;
+  padding: 28rpx;
+  color: var(--gold);
+  font-size: 28rpx;
+}
+
+.add-icon {
+  font-size: 36rpx;
+  font-weight: 300;
+}
+
+.input-panel {
+  background: var(--bg-card);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  border: 1rpx solid var(--border);
+}
+
+.input-row {
+  display: flex;
+  gap: 16rpx;
+  align-items: center;
+}
+
+.url-input {
+  flex: 1;
+  background: var(--bg);
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+  color: var(--text);
+  font-size: 26rpx;
+}
+
+.input-placeholder {
+  color: var(--text-muted);
+}
+
+.paste-btn {
+  color: var(--gold);
+  font-size: 26rpx;
+  padding: 16rpx 20rpx;
+  white-space: nowrap;
+}
+
+.error-text {
+  color: var(--danger);
+  font-size: 24rpx;
+  margin-top: 12rpx;
+  padding-left: 4rpx;
+}
+
+.input-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 24rpx;
+  margin-top: 20rpx;
+}
+
+.cancel-btn {
+  color: var(--text-dim);
+  font-size: 28rpx;
+  padding: 12rpx 24rpx;
+}
+
+.submit-btn {
+  background: var(--gold);
+  color: var(--bg);
+  font-size: 28rpx;
+  font-weight: 600;
+  padding: 12rpx 32rpx;
+  border-radius: 12rpx;
+}
+
+.submit-btn.disabled {
+  opacity: 0.5;
+}
+
+/* Section Title */
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 8rpx 32rpx 16rpx;
+  font-family: var(--font-serif);
+  font-size: 30rpx;
+  color: var(--text);
+}
+
+.section-count {
+  font-size: 24rpx;
+  color: var(--text-dim);
+  font-family: var(--font-sans);
+}
+
+/* Episode Grid */
+.episode-grid {
+  padding: 0 32rpx;
+}
+
+.episode-card {
+  display: flex;
+  gap: 20rpx;
+  background: var(--bg-card);
+  border-radius: 16rpx;
+  padding: 20rpx;
+  margin-bottom: 16rpx;
+  border: 1rpx solid var(--border);
+}
+
+.episode-card:active {
+  background: var(--bg-card-hover);
+}
+
+.episode-cover {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+  background: var(--bg-card-hover);
+}
+
+.episode-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.episode-podcast-name {
+  font-size: 22rpx;
+  color: var(--gold);
+  margin-bottom: 6rpx;
+}
+
+.episode-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.episode-meta-row {
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: var(--text-dim);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 120rpx 32rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: var(--text-dim);
+  margin-bottom: 12rpx;
+}
+
+.empty-hint {
+  font-size: 26rpx;
+  color: var(--text-muted);
+}
+
+/* Loading */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80rpx;
+  gap: 16rpx;
+}
+
+.loading-dot {
+  width: 16rpx;
+  height: 16rpx;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Debug Panel */
+.debug-panel {
+  margin: 48rpx 32rpx;
+  padding: 24rpx;
+  background: rgba(212, 160, 23, 0.05);
+  border: 2rpx dashed var(--gold);
+  border-radius: 16rpx;
+}
+
+.debug-title {
+  font-size: 26rpx;
+  color: var(--gold);
+  margin-bottom: 16rpx;
+  font-weight: 600;
+}
+
+.debug-btn {
+  background: var(--bg-card);
+  border: 1rpx solid var(--border);
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 12rpx;
+  font-size: 26rpx;
+  color: var(--text);
+}
+
+.debug-btn:active {
+  background: var(--bg-card-hover);
+}

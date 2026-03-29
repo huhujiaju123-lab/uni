@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ gua.seo.title }}</title>
+  <meta name="description" content="{{ gua.seo.description }}">
+  {% if gua.seo.keywords %}
+  <meta name="keywords" content="{{ gua.seo.keywords | join(', ') }}">
+  {% endif %}
+  <meta property="og:title" content="{{ gua.seo.title }}">
+  <meta property="og:description" content="{{ gua.seo.description }}">
+  <meta property="og:type" content="article">
+  {% if gua.seo.ogImage %}
+  <meta property="og:image" content="{{ gua.seo.ogImage }}">
+  {% endif %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+{{ css }}
+  </style>
+</head>
+<body>
+
+{% include 'partials/nav.html' %}
+
+{% include 'partials/hero.html' %}
+
+{% include 'partials/toc.html' %}
+
+<!-- 第一步：观象 -->
+<section id="guanxiang" class="section-light">
+  <div class="container">
+    <p class="section-step fade-in">第一步</p>
+    <h2 class="section-title fade-in">观象</h2>
+    <p class="section-subtitle fade-in">观卦象之形，悟天地之意</p>
+    <div class="divider divider-gold fade-in"></div>
+
+    {% include 'partials/guanxiang.html' %}
+  </div>
+</section>
+
+<!-- 第二步：读彖 -->
+<section id="dutuan" class="section-warm">
+  <div class="container">
+    <p class="section-step fade-in">第二步</p>
+    <h2 class="section-title fade-in">读彖</h2>
+    <p class="section-subtitle fade-in">彖者，断也。断一卦之义</p>
+    <div class="divider divider-gold fade-in"></div>
+
+    {% include 'partials/dutuan.html' %}
+  </div>
+</section>
+
+<!-- 第三步：训字 -->
+<section id="xunzi" class="section-light">
+  <div class="container">
+    <p class="section-step fade-in">第三步</p>
+    <h2 class="section-title fade-in">训字</h2>
+    <p class="section-subtitle fade-in">溯字源本义，解经典密码</p>
+    <div class="divider divider-gold fade-in"></div>
+
+    {% include 'partials/xunzi.html' %}
+  </div>
+</section>
+
+<!-- 第四步：析位 -->
+<section id="xiwei" class="section-warm">
+  <div class="container">
+    <p class="section-step fade-in">第四步</p>
+    <h2 class="section-title fade-in">析位</h2>
+    <p class="section-subtitle fade-in">六爻各有其位，当位失位各有所宜</p>
+    <div class="divider divider-gold fade-in"></div>
+
+    {% include 'partials/xiwei.html' %}
+  </div>
+</section>
+
+<!-- 第五步：玩辞 -->
+<section id="wanci" class="section-light">
+  <div class="container">
+    <p class="section-step fade-in">第五步</p>
+    <h2 class="section-title fade-in">玩辞</h2>
+    <p class="section-subtitle fade-in">玩味爻辞，体察吉凶消长</p>
+    <div class="divider divider-gold fade-in"></div>
+
+    {% include 'partials/wanci.html' %}
+  </div>
+</section>
+
+<!-- 第六步：察变 -->
+<section id="chabian" class="section-warm">
+  <div class="container">
+    <p class="section-step fade-in">第六步</p>
+    <h2 class="section-title fade-in">察变</h2>
+    <p class="section-subtitle fade-in">卦与卦相生相变，穷变化之道</p>
+    <div class="divider divider-gold fade-in"></div>
+
+    {% include 'partials/chabian.html' %}
+  </div>
+</section>
+
+<!-- 第七步：归德 -->
+<section id="guide" class="section-light">
+  <div class="container">
+    <p class="section-step fade-in">第七步</p>
+    <h2 class="section-title fade-in">归德</h2>
+    <p class="section-subtitle fade-in">卦以修德，知行合一</p>
+    <div class="divider divider-gold fade-in"></div>
+
+    {% include 'partials/guide.html' %}
+  </div>
+</section>
+
+<!-- 第八步：征引 -->
+<section id="zhengyin" class="section-warm">
+  <div class="container">
+    <p class="section-step fade-in">第八步</p>
+    <h2 class="section-title fade-in">征引</h2>
+    <p class="section-subtitle fade-in">以史为证，古今相映</p>
+    <div class="divider divider-gold fade-in"></div>
+
+    {% include 'partials/zhengyin.html' %}
+  </div>
+</section>
+
+<!-- 第九步：映射 -->
+<section id="yingshe" class="section-light">
+  <div class="container">
+    <p class="section-step fade-in">第九步</p>
+    <h2 class="section-title fade-in">映射</h2>
+    <p class="section-subtitle fade-in">假如你身处此卦，当如何行事</p>
+    <div class="divider divider-gold fade-in"></div>
+
+    {% include 'partials/yingshe.html' %}
+  </div>
+</section>
+
+<!-- AI 洞察 -->
+<section id="ai-insights" class="section-warm">
+  <div class="container">
+    <p class="section-step fade-in">AI 独创</p>
+    <h2 class="section-title fade-in">跨卦洞察</h2>
+    <p class="section-subtitle fade-in">AI全局视角 · 佑安做不到的突破</p>
+    <div class="divider fade-in" style="background: linear-gradient(90deg, transparent, #2a6496, transparent);"></div>
+
+    {% include 'partials/ai-insights.html' %}
+  </div>
+</section>
+
+<!-- 结语 -->
+{% include 'partials/conclusion.html' %}
+
+{% include 'partials/footer.html' %}
+
+<div class="back-to-top" title="回到顶部">↑</div>
+
+<script>
+{{ js }}
+</script>
+
+</body>
+</html>

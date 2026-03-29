@@ -1,0 +1,184 @@
+.diagram {
+  margin: 16rpx 0;
+  padding: 20rpx;
+  background: var(--bg);
+  border-radius: 12rpx;
+}
+
+.diagram-title {
+  font-size: 24rpx;
+  color: var(--gold);
+  margin-bottom: 16rpx;
+  font-weight: 600;
+}
+
+/* Flow */
+.diagram-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flow-node {
+  background: var(--bg-card);
+  border: 1rpx solid var(--gold-dim);
+  border-radius: 12rpx;
+  padding: 16rpx 32rpx;
+  font-size: 26rpx;
+  color: var(--text);
+  text-align: center;
+  width: 80%;
+}
+
+.flow-arrow {
+  color: var(--gold);
+  font-size: 28rpx;
+  margin: 8rpx 0;
+}
+
+/* Comparison */
+.diagram-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.compare-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.compare-left,
+.compare-right {
+  flex: 1;
+  background: var(--bg-card);
+  border-radius: 8rpx;
+  padding: 16rpx;
+  font-size: 24rpx;
+  color: var(--text);
+  text-align: center;
+}
+
+.compare-vs {
+  font-size: 20rpx;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* Icon Grid */
+.diagram-icon-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.icon-item {
+  display: flex;
+  gap: 12rpx;
+  width: calc(50% - 8rpx);
+  padding: 12rpx;
+  background: var(--bg-card);
+  border-radius: 8rpx;
+}
+
+.icon-emoji {
+  font-size: 32rpx;
+  flex-shrink: 0;
+}
+
+.icon-label {
+  font-size: 24rpx;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.icon-desc {
+  font-size: 22rpx;
+  color: var(--text-dim);
+  margin-top: 2rpx;
+}
+
+/* Layers */
+.diagram-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.layer-item {
+  background: var(--bg-card);
+  border-radius: 8rpx;
+  padding: 14rpx 20rpx;
+  border-left: 4rpx solid var(--gold);
+}
+
+.layer-label {
+  font-size: 26rpx;
+  color: var(--text);
+}
+
+/* Timeline */
+.diagram-timeline {
+  padding-left: 24rpx;
+}
+
+.tl-item {
+  display: flex;
+  gap: 16rpx;
+  padding-bottom: 20rpx;
+  position: relative;
+}
+
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: 8rpx;
+  top: 24rpx;
+  bottom: 0;
+  width: 2rpx;
+  background: var(--border);
+}
+
+.tl-item:last-child::before {
+  display: none;
+}
+
+.tl-dot {
+  width: 16rpx;
+  height: 16rpx;
+  background: var(--gold);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 8rpx;
+  z-index: 1;
+}
+
+.tl-time {
+  font-size: 22rpx;
+  color: var(--text-muted);
+}
+
+.tl-label {
+  font-size: 26rpx;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* List */
+.diagram-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.list-item {
+  font-size: 26rpx;
+  color: var(--text);
+  display: flex;
+  gap: 8rpx;
+}
+
+.list-bullet {
+  color: var(--gold);
+}

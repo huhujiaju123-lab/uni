@@ -1,0 +1,44 @@
+.ep-item {
+  display: flex;
+  gap: 20rpx;
+  padding: 20rpx;
+  background: var(--bg-card);
+  border-radius: 16rpx;
+  margin-bottom: 16rpx;
+  border: 1rpx solid var(--border);
+}
+
+.ep-item:active {
+  background: var(--bg-card-hover);
+}
+
+.ep-cover {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+  background: var(--bg-card-hover);
+}
+
+.ep-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.ep-podcast {
+  font-size: 22rpx;
+  color: var(--gold);
+  margin-bottom: 6rpx;
+}
+
+.ep-title {
+  font-size: 28rpx;
+  color: var(--text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

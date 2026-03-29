@@ -1,0 +1,86 @@
+<!-- 玩辞内容 -->
+
+<!-- 六爻吉凶走势图 -->
+{% if gua.steps.wanci.trendData %}
+<div class="chart-container fade-in">
+  <div class="chart-tooltip"></div>
+  <svg id="trendChart" width="100%" viewBox="0 0 700 250" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <linearGradient id="trendGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#4a9c6d"/>
+        <stop offset="40%" stop-color="#b8860b"/>
+        <stop offset="70%" stop-color="#c23a2b"/>
+        <stop offset="100%" stop-color="#888"/>
+      </linearGradient>
+    </defs>
+
+    <!-- 网格线 -->
+    <line x1="60" y1="30" x2="60" y2="210" stroke="rgba(0,0,0,0.05)" stroke-width="1"/>
+    <line x1="60" y1="210" x2="660" y2="210" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+    <line x1="60" y1="120" x2="660" y2="120" stroke="rgba(0,0,0,0.04)" stroke-width="1" stroke-dasharray="4"/>
+
+    <!-- Y轴标签 -->
+    <text x="50" y="35" text-anchor="end" font-size="10" fill="#888">吉</text>
+    <text x="50" y="215" text-anchor="end" font-size="10" fill="#888">凶</text>
+
+    <!-- 走势线 -->
+    {% set ns = namespace(path='') %}
+    {% for d in gua.steps.wanci.trendData %}
+    {% set x = 60 + loop.index0 * 110 + 55 %}
+    {% set y = 210 - (d.value / 100 * 180) %}
+    {% if loop.first %}
+    {% set ns.path = 'M' ~ x ~ ',' ~ y %}
+    {% else %}
+    {% set ns.path = ns.path ~ ' L' ~ x ~ ',' ~ y %}
+    {% endif %}
+    {% endfor %}
+    <path d="{{ ns.path }}" fill="none" stroke="url(#trendGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="chart-path"/>
+
+    <!-- 数据点 -->
+    {% for d in gua.steps.wanci.trendData %}
+    {% set x = 60 + loop.index0 * 110 + 55 %}
+    {% set y = 210 - (d.value / 100 * 180) %}
+    {% set colors = {'safe': '#4a9c6d', 'warn': '#b8860b', 'danger': '#c23a2b', 'turn': '#3a7bd5', 'climax': '#c23a2b', 'end': '#888'} %}
+    <circle cx="{{ x }}" cy="{{ y }}" r="6" fill="{{ colors[d.level] }}" class="chart-dot"
+            data-label="{{ d.position }}" data-desc="{{ d.level }}"/>
+    <text x="{{ x }}" y="235" text-anchor="middle" font-size="11" fill="#555" class="chart-dot">{{ d.position }}</text>
+    {% endfor %}
+  </svg>
+</div>
+{% endif %}
+
+<!-- 六爻卡片 -->
+<div class="yao-cards">
+  {% for yao in gua.steps.wanci.yao %}
+  <div class="yao-card level-{{ yao.level }} fade-in fade-in-delay-{{ loop.index0 % 4 + 1 }} {% if yao.isHighlight %}yao-highlight{% endif %}" {% if yao.isHighlight and yao.highlightLabel %}data-highlight-label="{{ yao.highlightLabel }}"{% endif %}>
+    <div class="yao-header">
+      <span class="yao-position">{{ yao.position }}</span>
+      <span class="yao-level level-label-{{ yao.level }}">
+        {% set levelNames = {'safe': '平稳', 'warn': '警醒', 'danger': '危厉', 'turn': '转折', 'climax': '至盛', 'end': '亢极'} %}
+        {{ levelNames[yao.level] }}
+      </span>
+      <span class="source-tag source-{{ yao.source }}">
+        {% if yao.source == 'classic' %}经典{% elif yao.source == 'youan' %}佑安{% else %}AI{% endif %}
+      </span>
+    </div>
+    <p class="yao-original">{{ yao.yaoci }}</p>
+    <p class="yao-xiang">{{ yao.xiangYue }}</p>
+    {% if yao.wenyan %}
+    <div style="background:rgba(184,134,11,0.04); padding:0.8rem 1rem; border-radius:4px; margin-bottom:0.8rem; font-size:0.82rem; color:var(--ink-medium); line-height:1.8;">
+      <span style="color:var(--gold); font-weight:600; font-size:0.7rem; letter-spacing:0.1em;">文言传</span><br>
+      {{ yao.wenyan }}
+    </div>
+    {% endif %}
+    <div class="yao-interp" style="white-space:pre-line;">{{ yao.interpretation }}</div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- 用九/用六 -->
+{% if gua.steps.wanci.yongjiu %}
+<div class="fade-in" style="margin: 2rem auto; max-width: 700px; padding: 2.5rem; background: linear-gradient(135deg, rgba(184,134,11,0.06), rgba(194,58,43,0.04)); border: 2px solid rgba(184,134,11,0.2); border-radius: 12px; text-align: center;">
+  <p style="font-size: 1.3rem; font-weight: 700; color: var(--ink-black); margin-bottom: 0.5rem;">{{ gua.steps.wanci.yongjiu.text }}</p>
+  <div class="divider divider-gold" style="margin: 1rem auto;"></div>
+  <p style="font-size: 0.95rem; color: var(--ink-dark); line-height: 1.9; text-align: left;">{{ gua.steps.wanci.yongjiu.interpretation }}</p>
+</div>
+{% endif %}

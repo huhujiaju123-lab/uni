@@ -1,0 +1,744 @@
+{
+  "Q2: 转化收入": [
+    {
+      "grp": "$2.99组",
+      "total_users": "8994",
+      "order_users": "7764",
+      "conv_rate": "86.32",
+      "order_cnt": "12969",
+      "total_revenue": "52826.02",
+      "avg_order_value": "4.07"
+    },
+    {
+      "grp": "$3.99组",
+      "total_users": "8995",
+      "order_users": "7775",
+      "conv_rate": "86.44",
+      "order_cnt": "12759",
+      "total_revenue": "55123.57",
+      "avg_order_value": "4.32"
+    }
+  ],
+  "Q3: 每日趋势": [
+    {
+      "grp": "$2.99组",
+      "dt": "2026-01-22",
+      "order_users": "206",
+      "order_cnt": "219",
+      "revenue": "868.51"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-01-22",
+      "order_users": "220",
+      "order_cnt": "233",
+      "revenue": "825.45"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-01-23",
+      "order_users": "157",
+      "order_cnt": "161",
+      "revenue": "604.80"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-01-23",
+      "order_users": "168",
+      "order_cnt": "174",
+      "revenue": "744.50"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-01-24",
+      "order_users": "188",
+      "order_cnt": "203",
+      "revenue": "849.10"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-01-24",
+      "order_users": "157",
+      "order_cnt": "166",
+      "revenue": "664.52"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-01-25",
+      "order_users": "48",
+      "order_cnt": "51",
+      "revenue": "233.57"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-01-25",
+      "order_users": "35",
+      "order_cnt": "38",
+      "revenue": "209.44"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-01-26",
+      "order_users": "77",
+      "order_cnt": "77",
+      "revenue": "313.78"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-01-26",
+      "order_users": "67",
+      "order_cnt": "69",
+      "revenue": "268.93"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-01-27",
+      "order_users": "131",
+      "order_cnt": "139",
+      "revenue": "601.59"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-01-27",
+      "order_users": "127",
+      "order_cnt": "129",
+      "revenue": "512.07"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-01-28",
+      "order_users": "153",
+      "order_cnt": "171",
+      "revenue": "695.38"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-01-28",
+      "order_users": "127",
+      "order_cnt": "130",
+      "revenue": "539.42"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-01-29",
+      "order_users": "213",
+      "order_cnt": "223",
+      "revenue": "880.17"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-01-29",
+      "order_users": "220",
+      "order_cnt": "225",
+      "revenue": "939.84"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-01-30",
+      "order_users": "169",
+      "order_cnt": "173",
+      "revenue": "587.79"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-01-30",
+      "order_users": "194",
+      "order_cnt": "197",
+      "revenue": "812.91"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-01-31",
+      "order_users": "224",
+      "order_cnt": "233",
+      "revenue": "955.21"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-01-31",
+      "order_users": "237",
+      "order_cnt": "251",
+      "revenue": "940.61"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-01",
+      "order_users": "211",
+      "order_cnt": "220",
+      "revenue": "848.21"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-01",
+      "order_users": "195",
+      "order_cnt": "204",
+      "revenue": "912.18"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-02",
+      "order_users": "192",
+      "order_cnt": "199",
+      "revenue": "805.69"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-02",
+      "order_users": "202",
+      "order_cnt": "210",
+      "revenue": "913.18"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-03",
+      "order_users": "244",
+      "order_cnt": "253",
+      "revenue": "966.93"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-03",
+      "order_users": "255",
+      "order_cnt": "259",
+      "revenue": "1053.66"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-04",
+      "order_users": "256",
+      "order_cnt": "264",
+      "revenue": "999.40"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-04",
+      "order_users": "259",
+      "order_cnt": "267",
+      "revenue": "1085.00"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-05",
+      "order_users": "265",
+      "order_cnt": "280",
+      "revenue": "1123.53"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-05",
+      "order_users": "254",
+      "order_cnt": "269",
+      "revenue": "1245.11"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-06",
+      "order_users": "330",
+      "order_cnt": "348",
+      "revenue": "1359.37"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-06",
+      "order_users": "318",
+      "order_cnt": "329",
+      "revenue": "1306.52"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-07",
+      "order_users": "232",
+      "order_cnt": "249",
+      "revenue": "1047.98"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-07",
+      "order_users": "232",
+      "order_cnt": "237",
+      "revenue": "1060.99"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-08",
+      "order_users": "166",
+      "order_cnt": "175",
+      "revenue": "774.11"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-08",
+      "order_users": "166",
+      "order_cnt": "174",
+      "revenue": "798.77"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-09",
+      "order_users": "247",
+      "order_cnt": "257",
+      "revenue": "1004.40"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-09",
+      "order_users": "263",
+      "order_cnt": "270",
+      "revenue": "1066.04"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-10",
+      "order_users": "325",
+      "order_cnt": "334",
+      "revenue": "1264.00"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-10",
+      "order_users": "372",
+      "order_cnt": "394",
+      "revenue": "1720.44"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-11",
+      "order_users": "398",
+      "order_cnt": "414",
+      "revenue": "1710.57"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-11",
+      "order_users": "353",
+      "order_cnt": "372",
+      "revenue": "1612.63"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-12",
+      "order_users": "369",
+      "order_cnt": "390",
+      "revenue": "1550.42"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-12",
+      "order_users": "379",
+      "order_cnt": "409",
+      "revenue": "1755.12"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-13",
+      "order_users": "381",
+      "order_cnt": "404",
+      "revenue": "1566.62"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-13",
+      "order_users": "366",
+      "order_cnt": "385",
+      "revenue": "1665.95"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-14",
+      "order_users": "413",
+      "order_cnt": "433",
+      "revenue": "1704.87"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-14",
+      "order_users": "439",
+      "order_cnt": "453",
+      "revenue": "1980.03"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-15",
+      "order_users": "383",
+      "order_cnt": "400",
+      "revenue": "1634.95"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-15",
+      "order_users": "384",
+      "order_cnt": "393",
+      "revenue": "1634.86"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-16",
+      "order_users": "373",
+      "order_cnt": "396",
+      "revenue": "1646.95"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-16",
+      "order_users": "307",
+      "order_cnt": "322",
+      "revenue": "1417.03"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-17",
+      "order_users": "402",
+      "order_cnt": "417",
+      "revenue": "1671.37"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-17",
+      "order_users": "443",
+      "order_cnt": "459",
+      "revenue": "2083.66"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-18",
+      "order_users": "394",
+      "order_cnt": "411",
+      "revenue": "1704.16"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-18",
+      "order_users": "356",
+      "order_cnt": "368",
+      "revenue": "1668.29"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-19",
+      "order_users": "404",
+      "order_cnt": "425",
+      "revenue": "1698.77"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-19",
+      "order_users": "416",
+      "order_cnt": "428",
+      "revenue": "1942.93"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-20",
+      "order_users": "335",
+      "order_cnt": "354",
+      "revenue": "1516.95"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-20",
+      "order_users": "294",
+      "order_cnt": "302",
+      "revenue": "1377.32"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-21",
+      "order_users": "417",
+      "order_cnt": "439",
+      "revenue": "1892.84"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-21",
+      "order_users": "456",
+      "order_cnt": "474",
+      "revenue": "1905.35"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-22",
+      "order_users": "159",
+      "order_cnt": "166",
+      "revenue": "697.82"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-22",
+      "order_users": "143",
+      "order_cnt": "146",
+      "revenue": "644.30"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-24",
+      "order_users": "289",
+      "order_cnt": "306",
+      "revenue": "1304.85"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-24",
+      "order_users": "282",
+      "order_cnt": "290",
+      "revenue": "1257.37"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-25",
+      "order_users": "380",
+      "order_cnt": "391",
+      "revenue": "1589.72"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-25",
+      "order_users": "344",
+      "order_cnt": "357",
+      "revenue": "1647.89"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-26",
+      "order_users": "511",
+      "order_cnt": "535",
+      "revenue": "2172.38"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-26",
+      "order_users": "535",
+      "order_cnt": "554",
+      "revenue": "2372.16"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-27",
+      "order_users": "489",
+      "order_cnt": "504",
+      "revenue": "2169.56"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-27",
+      "order_users": "499",
+      "order_cnt": "515",
+      "revenue": "2353.73"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-02-28",
+      "order_users": "486",
+      "order_cnt": "507",
+      "revenue": "2121.91"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-02-28",
+      "order_users": "513",
+      "order_cnt": "530",
+      "revenue": "2190.13"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-03-01",
+      "order_users": "416",
+      "order_cnt": "430",
+      "revenue": "1819.84"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-03-01",
+      "order_users": "416",
+      "order_cnt": "428",
+      "revenue": "1923.32"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-03-02",
+      "order_users": "413",
+      "order_cnt": "428",
+      "revenue": "1790.41"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-03-02",
+      "order_users": "395",
+      "order_cnt": "407",
+      "revenue": "1899.19"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-03-03",
+      "order_users": "424",
+      "order_cnt": "438",
+      "revenue": "1760.03"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-03-03",
+      "order_users": "412",
+      "order_cnt": "418",
+      "revenue": "1855.23"
+    },
+    {
+      "grp": "$2.99组",
+      "dt": "2026-03-04",
+      "order_users": "528",
+      "order_cnt": "552",
+      "revenue": "2317.51"
+    },
+    {
+      "grp": "$3.99组",
+      "dt": "2026-03-04",
+      "order_users": "507",
+      "order_cnt": "524",
+      "revenue": "2317.50"
+    }
+  ],
+  "Q4: 复购率": [
+    {
+      "grp": "$2.99组",
+      "total_buyers": "7764",
+      "d3_elig": "7146",
+      "d3_rep": "844",
+      "d7_elig": "5954",
+      "d7_rep": "1246",
+      "d14_elig": "4896",
+      "d14_rep": "1311",
+      "d30_elig": "1650",
+      "d30_rep": "497",
+      "d45_elig": "0",
+      "d45_rep": "0"
+    },
+    {
+      "grp": "$3.99组",
+      "total_buyers": "7775",
+      "d3_elig": "7179",
+      "d3_rep": "807",
+      "d7_elig": "5927",
+      "d7_rep": "1121",
+      "d14_elig": "4894",
+      "d14_rep": "1182",
+      "d30_elig": "1629",
+      "d30_rep": "490",
+      "d45_elig": "0",
+      "d45_rep": "0"
+    }
+  ],
+  "Q5: 单杯实收": [
+    {
+      "grp": "$2.99组",
+      "total_cups": "16768",
+      "item_revenue": "48501.93",
+      "unit_price": "2.89"
+    },
+    {
+      "grp": "$3.99组",
+      "total_cups": "16800",
+      "item_revenue": "50612.02",
+      "unit_price": "3.01"
+    }
+  ],
+  "Q6: LTV": [
+    {
+      "grp": "$2.99组",
+      "total_users": "8994",
+      "rev_7d": "39646.31",
+      "rev_14d": "45557.88",
+      "rev_30d": "51890.75",
+      "rev_45d": "52826.02",
+      "rev_total": "52826.02"
+    },
+    {
+      "grp": "$3.99组",
+      "total_users": "8995",
+      "rev_7d": "40715.79",
+      "rev_14d": "46769.70",
+      "rev_30d": "54117.90",
+      "rev_45d": "55123.57",
+      "rev_total": "55123.57"
+    }
+  ],
+  "Q7: 下单归因": [
+    {
+      "grp": "$2.99组",
+      "seq": "1",
+      "orders": "7764",
+      "users": "7764",
+      "cups": "10127",
+      "revenue": "26973.08",
+      "unit_price": "2.66",
+      "avg_order_value": "3.47"
+    },
+    {
+      "grp": "$2.99组",
+      "seq": "2",
+      "orders": "2189",
+      "users": "2189",
+      "cups": "2773",
+      "revenue": "7967.68",
+      "unit_price": "2.87",
+      "avg_order_value": "3.64"
+    },
+    {
+      "grp": "$2.99组",
+      "seq": "3",
+      "orders": "1096",
+      "users": "1096",
+      "cups": "1431",
+      "revenue": "4678.75",
+      "unit_price": "3.27",
+      "avg_order_value": "4.27"
+    },
+    {
+      "grp": "$2.99组",
+      "seq": "4+",
+      "orders": "1920",
+      "users": "610",
+      "cups": "2437",
+      "revenue": "8882.42",
+      "unit_price": "3.64",
+      "avg_order_value": "4.63"
+    },
+    {
+      "grp": "$3.99组",
+      "seq": "1",
+      "orders": "7775",
+      "users": "7775",
+      "cups": "10093",
+      "revenue": "26877.61",
+      "unit_price": "2.66",
+      "avg_order_value": "3.46"
+    },
+    {
+      "grp": "$3.99组",
+      "seq": "2",
+      "orders": "1984",
+      "users": "1984",
+      "cups": "2660",
+      "revenue": "8884.91",
+      "unit_price": "3.34",
+      "avg_order_value": "4.48"
+    },
+    {
+      "grp": "$3.99组",
+      "seq": "3",
+      "orders": "994",
+      "users": "994",
+      "cups": "1348",
+      "revenue": "4805.47",
+      "unit_price": "3.56",
+      "avg_order_value": "4.83"
+    },
+    {
+      "grp": "$3.99组",
+      "seq": "4+",
+      "orders": "2006",
+      "users": "572",
+      "cups": "2699",
+      "revenue": "10044.03",
+      "unit_price": "3.72",
+      "avg_order_value": "5.01"
+    }
+  ]
+}

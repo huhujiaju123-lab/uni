@@ -1,0 +1,352 @@
+{
+  "S1: 用户结构": [
+    {
+      "grp": "对照组3",
+      "lifecycle": "0-15天",
+      "user_cnt": "181"
+    },
+    {
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "user_cnt": "2522"
+    },
+    {
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "user_cnt": "47592"
+    },
+    {
+      "grp": "对照组3",
+      "lifecycle": "无订单",
+      "user_cnt": "7"
+    },
+    {
+      "grp": "涨价组1",
+      "lifecycle": "0-15天",
+      "user_cnt": "131"
+    },
+    {
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "user_cnt": "1896"
+    },
+    {
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "user_cnt": "36066"
+    },
+    {
+      "grp": "涨价组1",
+      "lifecycle": "无订单",
+      "user_cnt": "2"
+    },
+    {
+      "grp": "涨价组2",
+      "lifecycle": "0-15天",
+      "user_cnt": "152"
+    },
+    {
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "user_cnt": "2048"
+    },
+    {
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "user_cnt": "35858"
+    },
+    {
+      "grp": "涨价组2",
+      "lifecycle": "无订单",
+      "user_cnt": "4"
+    }
+  ],
+  "S2: 实验期指标(组×生命周期)": [
+    {
+      "grp": "对照组3",
+      "lifecycle": "0-15天",
+      "total_users": "181",
+      "buyers": "53",
+      "conversion_rate": "29.3",
+      "total_cups": "165",
+      "total_revenue": "624.03",
+      "unit_price": "3.78",
+      "cups_per_buyer": "3.11"
+    },
+    {
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "total_users": "2522",
+      "buyers": "429",
+      "conversion_rate": "17.0",
+      "total_cups": "1322",
+      "total_revenue": "4593.74",
+      "unit_price": "3.47",
+      "cups_per_buyer": "3.08"
+    },
+    {
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "total_users": "47592",
+      "buyers": "5361",
+      "conversion_rate": "11.3",
+      "total_cups": "14021",
+      "total_revenue": "46020.82",
+      "unit_price": "3.28",
+      "cups_per_buyer": "2.62"
+    },
+    {
+      "grp": "对照组3",
+      "lifecycle": "无订单",
+      "total_users": "7",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "total_cups": "0",
+      "total_revenue": "0.00",
+      "unit_price": null,
+      "cups_per_buyer": null
+    },
+    {
+      "grp": "涨价组1",
+      "lifecycle": "0-15天",
+      "total_users": "131",
+      "buyers": "30",
+      "conversion_rate": "22.9",
+      "total_cups": "82",
+      "total_revenue": "302.64",
+      "unit_price": "3.69",
+      "cups_per_buyer": "2.73"
+    },
+    {
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "total_users": "1896",
+      "buyers": "309",
+      "conversion_rate": "16.3",
+      "total_cups": "785",
+      "total_revenue": "2881.29",
+      "unit_price": "3.67",
+      "cups_per_buyer": "2.54"
+    },
+    {
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "total_users": "36066",
+      "buyers": "3773",
+      "conversion_rate": "10.5",
+      "total_cups": "9689",
+      "total_revenue": "34878.87",
+      "unit_price": "3.60",
+      "cups_per_buyer": "2.57"
+    },
+    {
+      "grp": "涨价组1",
+      "lifecycle": "无订单",
+      "total_users": "2",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "total_cups": "0",
+      "total_revenue": "0.00",
+      "unit_price": null,
+      "cups_per_buyer": null
+    },
+    {
+      "grp": "涨价组2",
+      "lifecycle": "0-15天",
+      "total_users": "152",
+      "buyers": "46",
+      "conversion_rate": "30.3",
+      "total_cups": "131",
+      "total_revenue": "480.84",
+      "unit_price": "3.67",
+      "cups_per_buyer": "2.85"
+    },
+    {
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "total_users": "2048",
+      "buyers": "367",
+      "conversion_rate": "17.9",
+      "total_cups": "976",
+      "total_revenue": "3596.40",
+      "unit_price": "3.68",
+      "cups_per_buyer": "2.66"
+    },
+    {
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "total_users": "35858",
+      "buyers": "3630",
+      "conversion_rate": "10.1",
+      "total_cups": "9323",
+      "total_revenue": "33037.63",
+      "unit_price": "3.54",
+      "cups_per_buyer": "2.57"
+    },
+    {
+      "grp": "涨价组2",
+      "lifecycle": "无订单",
+      "total_users": "4",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "total_cups": "0",
+      "total_revenue": "0.00",
+      "unit_price": null,
+      "cups_per_buyer": null
+    }
+  ],
+  "S3: 各组合计": [
+    {
+      "grp": "对照组3",
+      "total_users": "50302",
+      "buyers": "5843",
+      "conversion_rate": "11.6",
+      "total_cups": "15508",
+      "total_revenue": "51238.59",
+      "unit_price": "3.30",
+      "cups_per_buyer": "2.65"
+    },
+    {
+      "grp": "涨价组1",
+      "total_users": "38095",
+      "buyers": "4112",
+      "conversion_rate": "10.8",
+      "total_cups": "10556",
+      "total_revenue": "38062.80",
+      "unit_price": "3.61",
+      "cups_per_buyer": "2.57"
+    },
+    {
+      "grp": "涨价组2",
+      "total_users": "38062",
+      "buyers": "4043",
+      "conversion_rate": "10.6",
+      "total_cups": "10430",
+      "total_revenue": "37114.87",
+      "unit_price": "3.56",
+      "cups_per_buyer": "2.58"
+    }
+  ],
+  "S4: 实验前基线(组×生命周期)": [
+    {
+      "grp": "对照组3",
+      "lifecycle": "0-15天",
+      "total_users": "181",
+      "pre_buyers": "108",
+      "pre_conversion_rate": "59.7",
+      "pre_cups": "266",
+      "pre_revenue": "893.34",
+      "pre_unit_price": "3.36"
+    },
+    {
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "total_users": "2522",
+      "pre_buyers": "499",
+      "pre_conversion_rate": "19.8",
+      "pre_cups": "1457",
+      "pre_revenue": "5080.97",
+      "pre_unit_price": "3.49"
+    },
+    {
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "total_users": "47592",
+      "pre_buyers": "5016",
+      "pre_conversion_rate": "10.5",
+      "pre_cups": "13145",
+      "pre_revenue": "44359.49",
+      "pre_unit_price": "3.37"
+    },
+    {
+      "grp": "对照组3",
+      "lifecycle": "无订单",
+      "total_users": "7",
+      "pre_buyers": "0",
+      "pre_conversion_rate": "0.0",
+      "pre_cups": "0",
+      "pre_revenue": "0.00",
+      "pre_unit_price": null
+    },
+    {
+      "grp": "涨价组1",
+      "lifecycle": "0-15天",
+      "total_users": "131",
+      "pre_buyers": "70",
+      "pre_conversion_rate": "53.4",
+      "pre_cups": "190",
+      "pre_revenue": "648.15",
+      "pre_unit_price": "3.41"
+    },
+    {
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "total_users": "1896",
+      "pre_buyers": "347",
+      "pre_conversion_rate": "18.3",
+      "pre_cups": "959",
+      "pre_revenue": "3413.69",
+      "pre_unit_price": "3.56"
+    },
+    {
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "total_users": "36066",
+      "pre_buyers": "3625",
+      "pre_conversion_rate": "10.1",
+      "pre_cups": "9380",
+      "pre_revenue": "33270.09",
+      "pre_unit_price": "3.55"
+    },
+    {
+      "grp": "涨价组1",
+      "lifecycle": "无订单",
+      "total_users": "2",
+      "pre_buyers": "0",
+      "pre_conversion_rate": "0.0",
+      "pre_cups": "0",
+      "pre_revenue": "0.00",
+      "pre_unit_price": null
+    },
+    {
+      "grp": "涨价组2",
+      "lifecycle": "0-15天",
+      "total_users": "152",
+      "pre_buyers": "94",
+      "pre_conversion_rate": "61.8",
+      "pre_cups": "265",
+      "pre_revenue": "825.82",
+      "pre_unit_price": "3.12"
+    },
+    {
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "total_users": "2048",
+      "pre_buyers": "429",
+      "pre_conversion_rate": "20.9",
+      "pre_cups": "1277",
+      "pre_revenue": "4434.37",
+      "pre_unit_price": "3.47"
+    },
+    {
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "total_users": "35858",
+      "pre_buyers": "3660",
+      "pre_conversion_rate": "10.2",
+      "pre_cups": "9456",
+      "pre_revenue": "31889.17",
+      "pre_unit_price": "3.37"
+    },
+    {
+      "grp": "涨价组2",
+      "lifecycle": "无订单",
+      "total_users": "4",
+      "pre_buyers": "0",
+      "pre_conversion_rate": "0.0",
+      "pre_cups": "0",
+      "pre_revenue": "0.00",
+      "pre_unit_price": null
+    }
+  ]
+}

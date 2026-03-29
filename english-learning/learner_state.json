@@ -1,0 +1,29 @@
+{
+  "current_level": "B1+",
+  "child_age_months": 24,
+  "energy_today": 7,
+  "recent_scenes_covered": [
+    "morning_wakeup"
+  ],
+  "weak_areas": [],
+  "learned_phrases_count": 0,
+  "episodes_completed": 1,
+  "last_feedback": "",
+  "scene_queue": [
+    "bath_time",
+    "mealtime_breakfast",
+    "playground",
+    "bedtime_routine",
+    "praise_encourage"
+  ],
+  "generalization_stage": 1,
+  "preferences": {
+    "child_name": "",
+    "preferred_topics": [
+      "daily_routine",
+      "emotions",
+      "play_time"
+    ],
+    "pace": "normal"
+  }
+}

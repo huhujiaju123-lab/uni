@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "episode-list": "/components/episode-list/episode-list"
+  },
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark"
+}

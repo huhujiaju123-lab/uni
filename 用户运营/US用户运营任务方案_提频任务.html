@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>US 用户运营任务方案 — 提频任务</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  /* ===== 基础样式 ===== */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+    background: #fff;
+    color: #1a1a1a;
+    line-height: 1.7;
+    font-size: 14px;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 32px 60px;
+  }
+
+  /* ===== 文档头 ===== */
+  .doc-header {
+    border-bottom: 3px solid #1a1a1a;
+    padding-bottom: 20px;
+    margin-bottom: 36px;
+  }
+  .doc-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+  }
+  .doc-header .subtitle {
+    font-size: 14px;
+    color: #666;
+  }
+
+  /* ===== 章节标题 ===== */
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 40px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e5e5e5;
+  }
+  .sub-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 28px 0 12px;
+  }
+  .sub-sub-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+    margin: 20px 0 8px;
+  }
+
+  /* ===== 段落与列表 ===== */
+  p { margin: 8px 0; color: #333; }
+  ol, ul { margin: 8px 0 8px 24px; color: #333; }
+  li { margin: 4px 0; }
+
+  /* ===== 表格 ===== */
+  .table-wrapper {
+    overflow-x: auto;
+    margin: 12px 0 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead th {
+    background: #f5f5f5;
+    font-weight: 600;
+    text-align: center;
+    padding: 10px 12px;
+    border: 1px solid #d9d9d9;
+    white-space: nowrap;
+  }
+  thead th:first-child { text-align: left; }
+  tbody td {
+    padding: 8px 12px;
+    border: 1px solid #d9d9d9;
+    text-align: center;
+  }
+  tbody td:first-child { text-align: left; font-weight: 500; }
+  tbody tr:nth-child(even) { background: #fafafa; }
+  tbody tr:hover { background: #f0f4ff; }
+  tbody tr.total-row { font-weight: 700; background: #f0f0f0; }
+  tbody tr.total-row td { border-top: 2px solid #999; }
+
+  /* ===== Callout 框 ===== */
+  .callout {
+    background: #f7f8fc;
+    border-left: 4px solid #4a6cf7;
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout.green {
+    background: #f0faf4;
+    border-left-color: #22a55d;
+  }
+  .callout.orange {
+    background: #fff9f0;
+    border-left-color: #f59e0b;
+  }
+  .callout h4 {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
+  }
+  .callout ul { margin: 4px 0 0 18px; }
+  .callout li { margin: 3px 0; font-size: 13px; }
+  .callout p { font-size: 13px; }
+  .callout strong { color: #1a1a1a; }
+
+  /* ===== 推荐框 ===== */
+  .recommend-box {
+    background: #f0faf4;
+    border: 2px solid #22a55d;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+  .recommend-box h4 {
+    color: #16803c;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  .recommend-box p { font-size: 13px; color: #333; margin: 6px 0; }
+  .recommend-box .highlight-line {
+    font-weight: 700;
+    font-size: 14px;
+    color: #1a1a1a;
+    margin-top: 10px;
+  }
+
+  /* ===== 流程图 ===== */
+  .flow-chart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 16px 0 20px;
+    flex-wrap: wrap;
+  }
+  .flow-step {
+    background: #4a6cf7;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .flow-arrow {
+    color: #999;
+    font-size: 18px;
+    margin: 0 6px;
+    flex-shrink: 0;
+  }
+
+  /* ===== 图表容器 ===== */
+  .chart-container {
+    margin: 20px 0;
+    padding: 16px;
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+  }
+  .chart-container canvas {
+    max-height: 320px;
+  }
+
+  /* ===== 热力图表格 ===== */
+  .heatmap td.heat-1 { background: #e8f5e9; }
+  .heatmap td.heat-2 { background: #c8e6c9; }
+  .heatmap td.heat-3 { background: #a5d6a7; }
+  .heatmap td.heat-4 { background: #81c784; }
+  .heatmap td.heat-5 { background: #66bb6a; color: #fff; }
+  .heatmap td.heat-loss { background: #ffcdd2; }
+  .heatmap td.retention-low { color: #e53935; font-weight: 700; }
+  .heatmap td.retention-mid { color: #f57c00; font-weight: 700; }
+  .heatmap td.retention-high { color: #2e7d32; font-weight: 700; }
+
+  /* ===== 高亮单元格 ===== */
+  td.highlight-a {
+    background: #e8f0fe !important;
+    font-weight: 700;
+    color: #1a56db;
+  }
+  tr.winner-row td {
+    background: #f0faf4 !important;
+  }
+  tr.winner-row td.highlight-a {
+    background: #dcfce7 !important;
+    color: #16803c;
+    font-weight: 700;
+  }
+
+  /* ===== 时间线 ===== */
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+    margin: 16px 0 24px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: #d9d9d9;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #4a6cf7;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #4a6cf7;
+  }
+  .timeline-item .tl-label {
+    font-weight: 700;
+    font-size: 14px;
+    color: #4a6cf7;
+  }
+  .timeline-item .tl-content {
+    font-size: 13px;
+    color: #555;
+    margin-top: 2px;
+  }
+
+  /* ===== 页脚 ===== */
+  .doc-footer {
+    margin-top: 48px;
+    padding-top: 16px;
+    border-top: 1px solid #d9d9d9;
+    font-size: 12px;
+    color: #999;
+    text-align: center;
+  }
+
+  /* ===== 打印样式 ===== */
+  @media print {
+    body { font-size: 12px; }
+    .container { padding: 20px; max-width: 100%; }
+    .chart-container { break-inside: avoid; }
+    table { break-inside: avoid; }
+    .section-title { break-after: avoid; }
+    .callout { break-inside: avoid; }
+    .recommend-box { break-inside: avoid; }
+    .flow-chart { break-inside: avoid; }
+    .timeline { break-inside: avoid; }
+  }
+
+  /* ===== 分层标签 ===== */
+  .tier-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .tier-tag.t1 { background: #dbeafe; color: #1d4ed8; }
+  .tier-tag.t2 { background: #fef3c7; color: #b45309; }
+  .tier-tag.no { background: #f3f4f6; color: #6b7280; }
+
+  /* ===== 假设参数表 ===== */
+  .param-table td:first-child { font-weight: 600; white-space: nowrap; }
+  .param-table td:nth-child(2) { text-align: center; font-weight: 700; color: #4a6cf7; }
+
+  /* ===== 对比表强调 ===== */
+  .compare-main td:nth-child(2) { text-align: center; }
+  .compare-main td:nth-child(3) { text-align: center; }
+  .compare-main td:nth-child(4) { text-align: center; font-size: 12px; color: #666; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ===== 文档头 ===== -->
+  <div class="doc-header">
+    <h1>US 用户运营任务方案 — 提频任务</h1>
+    <div class="subtitle">Lucky US Growth Team | 2026-03-12</div>
+  </div>
+
+  <!-- ===== 一、分析背景 ===== -->
+  <h2 class="section-title">一、分析背景</h2>
+
+  <h3 class="sub-title">1.1 核心问题</h3>
+  <ol>
+    <li>当前用户消费频次是什么水平？提频空间有多大？</li>
+    <li>任务周期设 7 天是否合理？</li>
+    <li>不同目标杯数（3/5 vs 2/4）哪个 ROI 更优？</li>
+  </ol>
+
+  <h3 class="sub-title">1.2 分析框架</h3>
+  <div class="flow-chart">
+    <div class="flow-step">频次基线摸底</div>
+    <span class="flow-arrow">&#10132;</span>
+    <div class="flow-step">消费节奏验证</div>
+    <span class="flow-arrow">&#10132;</span>
+    <div class="flow-step">用户分层</div>
+    <span class="flow-arrow">&#10132;</span>
+    <div class="flow-step">方案测算</div>
+    <span class="flow-arrow">&#10132;</span>
+    <div class="flow-step">推荐方案</div>
+  </div>
+
+  <!-- ===== 二、频次现状与提频空间 ===== -->
+  <h2 class="section-title">二、频次现状与提频空间</h2>
+
+  <h3 class="sub-title">2.1 周频次分布</h3>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>周频次</th><th>W07</th><th>W08</th><th>W09</th><th>W10</th><th>4周均值</th><th>占比</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1次</td><td>10,157</td><td>9,923</td><td>10,317</td><td>11,648</td><td>10,511</td><td>76.2%</td></tr>
+        <tr><td>2次</td><td>2,196</td><td>1,943</td><td>1,824</td><td>2,303</td><td>2,067</td><td>15.0%</td></tr>
+        <tr><td>3次</td><td>653</td><td>643</td><td>589</td><td>799</td><td>671</td><td>4.9%</td></tr>
+        <tr><td>4次</td><td>284</td><td>266</td><td>212</td><td>352</td><td>279</td><td>2.0%</td></tr>
+        <tr><td>5+次</td><td>152</td><td>196</td><td>154</td><td>254</td><td>189</td><td>1.4%</td></tr>
+        <tr class="total-row"><td>合计</td><td>13,442</td><td>12,971</td><td>13,096</td><td>15,356</td><td>13,716</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="chartFreqDist"></canvas>
+  </div>
+
+  <div class="callout">
+    <h4>关键发现</h4>
+    <ul>
+      <li><strong>76%</strong> 的活跃用户每周仅消费 1 次，存在巨大提频空间</li>
+      <li>仅 <strong>8.3%</strong> 的用户周消费 &ge;3 次</li>
+    </ul>
+  </div>
+
+  <h3 class="sub-title">2.2 消费节奏</h3>
+
+  <h4 class="sub-sub-title">星期分布</h4>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>星期</th><th>订单数</th><th>用户数</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Mon</td><td>14,556</td><td>10,675</td></tr>
+        <tr><td>Tue</td><td>15,570</td><td>10,996</td></tr>
+        <tr><td>Wed</td><td>17,131</td><td>11,685</td></tr>
+        <tr><td>Thu</td><td>16,585</td><td>11,521</td></tr>
+        <tr><td>Fri</td><td>15,016</td><td>10,827</td></tr>
+        <tr><td>Sat</td><td>12,654</td><td>9,932</td></tr>
+        <tr><td>Sun</td><td>11,412</td><td>8,914</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="chartWeekday"></canvas>
+  </div>
+
+  <h4 class="sub-sub-title">最长连续消费天数分布</h4>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>连续天数</th><th>用户数</th><th>占比</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1天</td><td>55,753</td><td>85.4%</td></tr>
+        <tr><td>2天</td><td>6,380</td><td>9.8%</td></tr>
+        <tr><td>3天</td><td>1,761</td><td>2.7%</td></tr>
+        <tr><td>4-5天</td><td>1,100</td><td>1.7%</td></tr>
+        <tr><td>6+天</td><td>261</td><td>0.4%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <h4>关键发现</h4>
+    <ul>
+      <li>工作日消费显著高于周末（周三峰值 vs 周日低谷，差异 <strong>50%</strong>），呈明显<strong>周周期</strong></li>
+      <li>85% 用户最长连续消费仅 1 天，日频任务不现实</li>
+      <li><strong>结论：7天是最合适的任务周期</strong> — 匹配自然消费周期，且给用户足够的完成窗口</li>
+    </ul>
+  </div>
+
+  <h3 class="sub-title">2.3 频次迁移矩阵（1月 &rarr; 2月）</h3>
+
+  <div class="table-wrapper">
+    <table class="heatmap">
+      <thead>
+        <tr>
+          <th></th><th>2月1次</th><th>2月2次</th><th>2月3-4次</th><th>2月5+次</th><th>流失</th><th>留存率</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1月1次 (21,536)</td>
+          <td class="heat-2">2,929</td><td class="heat-1">1,117</td><td class="heat-1">639</td><td class="heat-1">301</td>
+          <td class="heat-loss">16,550</td><td class="retention-low">23.2%</td>
+        </tr>
+        <tr>
+          <td>1月2次 (5,757)</td>
+          <td class="heat-2">1,353</td><td class="heat-1">715</td><td class="heat-1">534</td><td class="heat-1">292</td>
+          <td class="heat-loss">2,863</td><td class="retention-mid">50.3%</td>
+        </tr>
+        <tr>
+          <td>1月3-4次 (4,078)</td>
+          <td class="heat-1">863</td><td class="heat-1">639</td><td class="heat-2">717</td><td class="heat-2">497</td>
+          <td class="heat-loss">1,362</td><td class="retention-mid">66.6%</td>
+        </tr>
+        <tr>
+          <td>1月5+次 (3,124)</td>
+          <td class="heat-1">329</td><td class="heat-1">401</td><td class="heat-2">633</td><td class="heat-5">1,426</td>
+          <td class="heat-1">335</td><td class="retention-high">89.3%</td>
+        </tr>
+        <tr style="background:#f9f9f9;">
+          <td>2月新增</td>
+          <td>16,835</td><td>3,114</td><td>1,651</td><td>654</td><td>-</td><td>-</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout orange">
+    <h4>关键发现</h4>
+    <ul>
+      <li>月1次用户流失率高达 <strong>77%</strong>，不干预就丢人</li>
+      <li>月5+次用户留存率 <strong>89%</strong>，高频用户无需额外激励</li>
+      <li><strong>提频核心目标：把低频用户从"试用"推到"习惯"阶段</strong></li>
+    </ul>
+  </div>
+
+  <!-- ===== 三、任务方案设计 ===== -->
+  <h2 class="section-title">三、任务方案设计</h2>
+
+  <h3 class="sub-title">3.1 用户分层</h3>
+
+  <h4 class="sub-sub-title">近4周频次分层（Q2c 数据）</h4>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>频次层</th><th>用户数</th><th>占比</th><th>周均单量</th><th>是否下发任务</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>极低频 (&lt;0.5/周)</td><td>25,011</td><td>63.9%</td><td>0.25</td><td><span class="tier-tag t1">Tier 1</span></td></tr>
+        <tr><td>低频 (0.5-1/周)</td><td>9,267</td><td>23.7%</td><td>0.58</td><td><span class="tier-tag t1">Tier 1</span></td></tr>
+        <tr><td>中低频 (1-2/周)</td><td>3,645</td><td>9.3%</td><td>1.25</td><td><span class="tier-tag t2">Tier 2</span></td></tr>
+        <tr><td>中频 (2-3/周)</td><td>754</td><td>1.9%</td><td>2.28</td><td><span class="tier-tag t2">Tier 2</span></td></tr>
+        <tr><td>高频 (3+/周)</td><td>486</td><td>1.2%</td><td>4.53</td><td><span class="tier-tag no">不下发</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 class="sub-sub-title">分层逻辑</h4>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>层级</th><th>覆盖人群</th><th>合计用户</th><th>加权基线</th><th>任务目标</th><th>奖励</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tier-tag t1">Tier 1</span></td>
+          <td>极低频 + 低频</td><td>34,278</td><td>0.34/周</td><td>7天 x 杯</td><td>50%折扣券</td>
+        </tr>
+        <tr>
+          <td><span class="tier-tag t2">Tier 2</span></td>
+          <td>中低频 + 中频</td><td>4,399</td><td>1.43/周</td><td>7天 x 杯</td><td>免费饮品券</td>
+        </tr>
+        <tr>
+          <td><span class="tier-tag no">不下发</span></td>
+          <td>高频</td><td>486</td><td>4.53/周</td><td>-</td><td>-</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <h4>分层依据</h4>
+    <ul>
+      <li><strong>高频用户（486人，1.2%）</strong>：已形成消费习惯，任务无增量价值，不下发避免白送奖励</li>
+      <li><strong>Tier 2 奖励更高（免费券）</strong>：因为这部分用户已有消费习惯，目标杯数更高，需要更强激励</li>
+    </ul>
+  </div>
+
+  <h3 class="sub-title">3.2 方案对比测算</h3>
+
+  <h4 class="sub-sub-title">测算假设</h4>
+  <div class="table-wrapper">
+    <table class="param-table">
+      <thead>
+        <tr><th>参数</th><th>值</th><th>依据</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>提频目标</td><td>店均日增 10 杯</td><td>11店 &times; 7天 = 770杯/周增量</td></tr>
+        <tr><td>Tier 1 全量用户</td><td>34,280 人</td><td>极低频 + 低频</td></tr>
+        <tr><td>Tier 2 全量用户</td><td>4,400 人</td><td>中低频 + 中频</td></tr>
+        <tr><td>杯均价</td><td>$4.50</td><td>近期平均实收</td></tr>
+        <tr><td>50%券成本</td><td>$1.30/张</td><td>实际券面成本</td></tr>
+        <tr><td>免费券成本</td><td>$2.50/张</td><td>实际券面成本</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <h4>倒推逻辑</h4>
+    <p>从「店均日增 10 杯」目标倒推所需转化率（分母 = 全量用户），而非先假设参与率再算增量。转化率 = 完成任务的人 &divide; 该层全量用户。</p>
+  </div>
+
+  <p style="margin:16px 0 8px;font-weight:600;color:#333;">两方案定义：</p>
+  <ul>
+    <li><strong>方案 A</strong>：Tier 1 目标 <strong>3 杯</strong> / Tier 2 目标 <strong>5 杯</strong></li>
+    <li><strong>方案 B</strong>：Tier 1 目标 <strong>2 杯</strong> / Tier 2 目标 <strong>4 杯</strong></li>
+  </ul>
+
+  <h4 class="sub-sub-title">Tier 1 测算（34,280人，完成者基线 ~1.5杯/周）</h4>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>指标</th><th>方案A（目标3杯）</th><th>方案B（目标2杯）</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>人均增量</td><td>1.5 杯</td><td>0.5 杯</td></tr>
+        <tr><td>所需转化率</td><td class="highlight-a">1.2%</td><td>3.6%</td></tr>
+        <tr><td>达成人数</td><td class="highlight-a">411</td><td>1,224</td></tr>
+        <tr><td>增量杯数/周</td><td>617</td><td>612</td></tr>
+        <tr><td>奖励成本/周</td><td class="highlight-a">$534</td><td>$1,591</td></tr>
+        <tr><td>增量收入/周</td><td>$2,776</td><td>$2,754</td></tr>
+        <tr><td>净收入/周</td><td class="highlight-a">$2,242</td><td>$1,163</td></tr>
+        <tr><td>ROI</td><td class="highlight-a">5.2x</td><td>1.7x</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 class="sub-sub-title">Tier 2 测算（4,400人，完成者基线 ~3.5杯/周）</h4>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>指标</th><th>方案A（目标5杯）</th><th>方案B（目标4杯）</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>人均增量</td><td>1.5 杯</td><td>0.5 杯</td></tr>
+        <tr><td>所需转化率</td><td class="highlight-a">2.4%</td><td>7.1%</td></tr>
+        <tr><td>达成人数</td><td class="highlight-a">106</td><td>314</td></tr>
+        <tr><td>增量杯数/周</td><td>158</td><td>157</td></tr>
+        <tr><td>奖励成本/周</td><td class="highlight-a">$264</td><td>$785</td></tr>
+        <tr><td>增量收入/周</td><td>$713</td><td>$707</td></tr>
+        <tr><td>净收入/周</td><td class="highlight-a">$449</td><td style="color:#e53935;font-weight:700;">-$78</td></tr>
+        <tr><td>ROI</td><td class="highlight-a">2.7x</td><td style="color:#e53935;font-weight:700;">0.9x</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout orange">
+    <h4>方案B Tier 2 亏损</h4>
+    <p>目标 4 杯时，完成者人均增量仅 0.5 杯，增量收入 $2.25 &lt; 免费券成本 $2.50，<strong>每多一个人完成任务反而亏 $0.25</strong>。</p>
+  </div>
+
+  <h3 class="sub-title">3.3 汇总对比与推荐</h3>
+
+  <div class="table-wrapper">
+    <table class="compare-main">
+      <thead>
+        <tr><th>指标</th><th>方案A（3/5杯）</th><th>方案B（2/4杯）</th><th>对比</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Tier 1 转化率</td><td>1.2%</td><td>3.6%</td><td>B需3倍转化</td></tr>
+        <tr><td>Tier 2 转化率</td><td>2.4%</td><td>7.1%</td><td>B需3倍转化</td></tr>
+        <tr><td>达成人数</td><td class="highlight-a">517</td><td>1,538</td><td>B需3倍人</td></tr>
+        <tr><td>增量杯数/周</td><td>775</td><td>769</td><td>相当</td></tr>
+        <tr><td>总奖励成本/周</td><td class="highlight-a">$798</td><td>$2,376</td><td style="color:#16803c;font-weight:600;">A省66%</td></tr>
+        <tr class="winner-row"><td style="font-weight:700;">净收入/周</td><td class="highlight-a">$2,691</td><td>$1,085</td><td style="color:#16803c;font-weight:600;">A多148%</td></tr>
+        <tr class="winner-row"><td style="font-weight:700;">ROI</td><td class="highlight-a">4.37x</td><td>1.46x</td><td style="color:#16803c;font-weight:600;">A高199%</td></tr>
+        <tr class="winner-row"><td style="font-weight:700;">单杯提频成本</td><td class="highlight-a">$1.03</td><td>$3.09</td><td style="color:#16803c;font-weight:600;">A省67%</td></tr>
+        <tr><td>店均日增杯</td><td>10.1</td><td>10.0</td><td>相当</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="chartCompare"></canvas>
+  </div>
+
+  <div class="recommend-box">
+    <h4>推荐方案 A（7天3杯/5杯）</h4>
+    <p><strong>核心理由：</strong>同样实现「店均日增 10 杯」的目标，方案A只需 1.2%/2.4% 转化率（517人完成），方案B却需 3.6%/7.1%（1,538人完成）。方案B成本是方案A的 3 倍，而且<strong>Tier 2 免费券实际亏损</strong>（人均增量收入 $2.25 &lt; 券成本 $2.50）。</p>
+    <p class="highlight-line">一句话：目标高 &rarr; 人均增量大(1.5杯) &rarr; 需要的完成人数少 &rarr; 成本低 &rarr; ROI 3倍于方案B。</p>
+  </div>
+
+  <!-- ===== 四、后续节奏 ===== -->
+  <h2 class="section-title">四、后续节奏</h2>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="tl-label">W12（本周）</div>
+      <div class="tl-content">确认任务方案 + 产品需求评审</div>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-label">W13-14</div>
+      <div class="tl-content">产品开发 + 任务配置 + 资源位设计</div>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-label">W15</div>
+      <div class="tl-content">小流量 AB 测试上线（10% 用户），验证参与率和完成率假设</div>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-label">W16</div>
+      <div class="tl-content">评估首期数据，迭代任务参数 &rarr; 全量推广</div>
+    </div>
+  </div>
+
+  <!-- ===== 五、总结 ===== -->
+  <h2 class="section-title">五、总结</h2>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th style="width:30%;">问题</th><th>结论</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>当前频次水平？</td><td>76%用户周仅1单，63%用户月仅1单</td></tr>
+        <tr><td>为什么7天任务周期？</td><td>85%用户连续消费仅1天，2/3复购发生在7天内，7天匹配自然周周期</td></tr>
+        <tr><td>谁需要提频？</td><td>极低频+低频（34,278人）和中低频+中频（4,399人），排除高频486人</td></tr>
+        <tr><td>推荐哪个方案？</td><td>方案A（3/5杯），ROI 4.37x，店均日增10杯，转化率仅需1.2%/2.4%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== 页脚 ===== -->
+  <div class="doc-footer">
+    数据截至 2026-03-10 | Lucky US Growth Team
+  </div>
+
+</div>
+
+<script>
+  /* ===== 图表1：周频次分布柱状图 ===== */
+  new Chart(document.getElementById('chartFreqDist'), {
+    type: 'bar',
+    data: {
+      labels: ['1次', '2次', '3次', '4次', '5+次'],
+      datasets: [{
+        label: '4周均值（人数）',
+        data: [10511, 2067, 671, 279, 189],
+        backgroundColor: ['#4a6cf7', '#6b8cfa', '#8ba6fc', '#adc0fd', '#cedafe'],
+        borderRadius: 4,
+        barPercentage: 0.6
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: {
+          display: true,
+          text: '周频次分布（W07-W10 四周均值）',
+          font: { size: 14, weight: '600' },
+          color: '#333',
+          padding: { bottom: 16 }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              const pcts = [76.2, 15.0, 4.9, 2.0, 1.4];
+              return ctx.parsed.y.toLocaleString() + ' 人（' + pcts[ctx.dataIndex] + '%）';
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { callback: v => v.toLocaleString() },
+          grid: { color: '#f0f0f0' }
+        },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  /* ===== 图表2：星期分布折线图 ===== */
+  new Chart(document.getElementById('chartWeekday'), {
+    type: 'line',
+    data: {
+      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      datasets: [{
+        label: '订单数',
+        data: [14556, 15570, 17131, 16585, 15016, 12654, 11412],
+        borderColor: '#4a6cf7',
+        backgroundColor: 'rgba(74,108,247,0.08)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 5,
+        pointBackgroundColor: '#4a6cf7',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: {
+          display: true,
+          text: '消费星期分布（W07-W10 订单数）',
+          font: { size: 14, weight: '600' },
+          color: '#333',
+          padding: { bottom: 16 }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              return '订单数：' + ctx.parsed.y.toLocaleString();
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: false,
+          min: 10000,
+          ticks: { callback: v => (v/1000).toFixed(0) + 'k' },
+          grid: { color: '#f0f0f0' }
+        },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  /* ===== 图表3：方案AB对比 — 分组柱状图 ===== */
+  new Chart(document.getElementById('chartCompare'), {
+    type: 'bar',
+    data: {
+      labels: ['净收入/周', '奖励成本/周', '单杯提频成本'],
+      datasets: [
+        {
+          label: '方案A（3/5杯）',
+          data: [2691, 798, 103],
+          backgroundColor: '#4a6cf7',
+          borderRadius: 4,
+          barPercentage: 0.55,
+          categoryPercentage: 0.6
+        },
+        {
+          label: '方案B（2/4杯）',
+          data: [1085, 2376, 309],
+          backgroundColor: '#d1d5db',
+          borderRadius: 4,
+          barPercentage: 0.55,
+          categoryPercentage: 0.6
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: '方案 A vs B 核心财务指标对比（每周，单位：美元）',
+          font: { size: 14, weight: '600' },
+          color: '#333',
+          padding: { bottom: 16 }
+        },
+        legend: {
+          position: 'bottom',
+          labels: { font: { size: 12 }, padding: 16 }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var val = ctx.parsed.y;
+              if (ctx.dataIndex === 2) return ctx.dataset.label + '：$' + (val / 100).toFixed(2);
+              return ctx.dataset.label + '：$' + val.toLocaleString();
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { callback: v => '$' + v.toLocaleString() },
+          grid: { color: '#f0f0f0' }
+        },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  /* 在图表下方补充 ROI 文字对比 */
+  (function() {
+    var wrap = document.getElementById('chartCompare').parentElement;
+    var note = document.createElement('div');
+    note.style.cssText = 'display:flex;justify-content:center;gap:40px;margin-top:12px;font-size:13px;color:#555;';
+    note.innerHTML = '<span>方案A ROI：<strong style="color:#4a6cf7;font-size:18px;">4.37x</strong></span>' +
+                     '<span>方案B ROI：<strong style="color:#999;font-size:18px;">1.46x</strong></span>' +
+                     '<span style="color:#16803c;font-weight:600;">A 高出 199%</span>';
+    wrap.appendChild(note);
+  })();
+</script>
+</body>
+</html>

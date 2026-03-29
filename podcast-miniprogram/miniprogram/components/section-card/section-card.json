@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "diagram": "/components/diagram/diagram",
+    "quote-card": "/components/quote-card/quote-card"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "timeout": 600,
+  "memory": 256,
+  "triggers": []
+}

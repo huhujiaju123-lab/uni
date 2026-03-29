@@ -1,0 +1,44 @@
+.quote-card {
+  position: relative;
+  background: var(--bg);
+  border-radius: 12rpx;
+  padding: 24rpx 32rpx;
+  margin: 16rpx 0;
+  border-left: 4rpx solid var(--gold);
+}
+
+.quote-card:active {
+  background: var(--bg-card-hover);
+}
+
+.quote-mark {
+  font-family: var(--font-serif);
+  font-size: 40rpx;
+  color: var(--gold);
+  line-height: 1;
+  opacity: 0.5;
+}
+
+.quote-mark.end {
+  text-align: right;
+}
+
+.quote-text {
+  font-family: var(--font-serif);
+  font-size: 28rpx;
+  color: var(--text);
+  line-height: 1.8;
+  padding: 4rpx 0;
+}
+
+.quote-fav {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  font-size: 32rpx;
+  color: var(--text-muted);
+}
+
+.quote-fav.active {
+  color: var(--danger);
+}

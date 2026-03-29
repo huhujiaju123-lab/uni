@@ -1,0 +1,47 @@
+<!-- 析位内容 -->
+<p class="fade-in" style="text-align:center; max-width:700px; margin:0 auto 2rem; color:var(--ink-dark); line-height:1.9;">
+  {{ gua.steps.xiwei.overview }}
+</p>
+
+<div class="xiwei-layout fade-in fade-in-delay-1">
+  <!-- 六爻结构图 -->
+  <div class="yao-structure">
+    {% for yao in gua.steps.xiwei.yaoAnalysis | reverse %}
+    <div class="yao-row {% if yao.position == '九五' or yao.position == '六五' %}yao-highlight{% endif %}">
+      <span class="yao-pos">{{ yao.position }}</span>
+      <div class="yao-line-mini">
+        {% if yao.yinYang == 'yang' %}
+        <span class="bar yang"></span>
+        {% else %}
+        <span class="bar yin"></span>
+        <span style="width:10px;"></span>
+        <span class="bar yin"></span>
+        {% endif %}
+      </div>
+      <div class="yao-tags">
+        {% for trait in yao.traits %}
+        <span class="yao-tag {% if '当位' in trait or '中正' in trait or '君位' in trait %}tag-key{% endif %}">{{ trait }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- 核心洞察 -->
+  <div class="xiwei-insight">
+    <h4>析位要旨</h4>
+    <p>{{ gua.steps.xiwei.keyInsight }}</p>
+  </div>
+</div>
+
+<!-- 各爻详细说明（折叠展示） -->
+<div class="fade-in fade-in-delay-2" style="margin-top:2rem;">
+  {% for yao in gua.steps.xiwei.yaoAnalysis %}
+  <div style="padding:0.8rem 0; border-bottom:1px solid rgba(0,0,0,0.04);">
+    <p style="font-weight:600; color:var(--ink-dark); margin-bottom:0.3rem;">{{ yao.position }}
+      {% if yao.isProper %}<span class="yao-tag tag-key">当位</span>{% else %}<span class="yao-tag">不当位</span>{% endif %}
+    </p>
+    <p style="font-size:0.85rem; color:var(--ink-medium); line-height:1.8;">{{ yao.note }}</p>
+  </div>
+  {% endfor %}
+</div>

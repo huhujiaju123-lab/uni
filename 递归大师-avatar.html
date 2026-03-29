@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>递归大师 - 播客头像</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #111118;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .avatar-container {
+    width: 800px;
+    height: 800px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow:
+      0 0 80px rgba(0, 220, 255, 0.12),
+      0 0 160px rgba(100, 50, 220, 0.08);
+  }
+  svg { display: block; }
+
+  /* === 动画 === */
+  .spin-cw-120 { animation: spinCW 120s linear infinite; transform-origin: 400px 370px; }
+  .spin-ccw-90 { animation: spinCCW 90s linear infinite; transform-origin: 400px 370px; }
+  .spin-cw-80 { animation: spinCW 80s linear infinite; transform-origin: 400px 370px; }
+  .spin-ccw-60 { animation: spinCCW 60s linear infinite; transform-origin: 400px 370px; }
+  .spin-cw-50 { animation: spinCW 50s linear infinite; transform-origin: 400px 370px; }
+  .spin-ccw-40 { animation: spinCCW 40s linear infinite; transform-origin: 400px 370px; }
+
+  .breathe { animation: breathe 5s ease-in-out infinite; }
+  .breathe-alt { animation: breatheAlt 6s ease-in-out infinite; }
+  .breathe-slow { animation: breathe 8s ease-in-out infinite; }
+  .pulse-ring { animation: pulseRing 4s ease-in-out infinite; transform-origin: 400px 370px; }
+  .pulse-ring-d { animation: pulseRing 4s ease-in-out infinite 2s; transform-origin: 400px 370px; }
+
+  .float-particle { animation: floatP 10s ease-in-out infinite; }
+  .fp-d1 { animation-delay: 0s; }
+  .fp-d2 { animation-delay: 2s; }
+  .fp-d3 { animation-delay: 4s; }
+  .fp-d4 { animation-delay: 6s; }
+  .fp-d5 { animation-delay: 8s; }
+
+  .circuit-blink { animation: circBlink 5s ease-in-out infinite; }
+  .cb-d1 { animation-delay: 0s; }
+  .cb-d2 { animation-delay: 1.25s; }
+  .cb-d3 { animation-delay: 2.5s; }
+  .cb-d4 { animation-delay: 3.75s; }
+
+  @keyframes spinCW { to { transform: rotate(360deg); } }
+  @keyframes spinCCW { to { transform: rotate(-360deg); } }
+  @keyframes breathe { 0%,100%{opacity:.55} 50%{opacity:1} }
+  @keyframes breatheAlt { 0%,100%{opacity:.35} 50%{opacity:.85} }
+  @keyframes pulseRing { 0%,100%{transform:scale(1);opacity:.6} 50%{transform:scale(1.02);opacity:1} }
+  @keyframes floatP { 0%,100%{transform:translate(0,0);opacity:.25} 30%{transform:translate(5px,-8px);opacity:.8} 70%{transform:translate(-4px,-5px);opacity:.6} }
+  @keyframes circBlink { 0%,100%{opacity:.15} 50%{opacity:.7} }
+</style>
+</head>
+<body>
+
+<div class="avatar-container">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+<defs>
+  <!-- 背景 -->
+  <radialGradient id="bg" cx="50%" cy="46%" r="70%">
+    <stop offset="0%" stop-color="#12102a"/>
+    <stop offset="50%" stop-color="#0a0820"/>
+    <stop offset="100%" stop-color="#040410"/>
+  </radialGradient>
+
+  <!-- 中心光晕 -->
+  <radialGradient id="coreAura" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#00e5ff" stop-opacity=".35"/>
+    <stop offset="35%" stop-color="#6d28d9" stop-opacity=".12"/>
+    <stop offset="100%" stop-color="#040410" stop-opacity="0"/>
+  </radialGradient>
+
+  <!-- 渐变 -->
+  <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#00e5ff"/><stop offset="100%" stop-color="#8b5cf6"/>
+  </linearGradient>
+  <linearGradient id="g2" x1="100%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#06b6d4"/><stop offset="100%" stop-color="#a855f7"/>
+  </linearGradient>
+  <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#00e5ff" stop-opacity=".7"/>
+    <stop offset="50%" stop-color="#7c3aed" stop-opacity=".5"/>
+    <stop offset="100%" stop-color="#e879f9" stop-opacity=".3"/>
+  </linearGradient>
+  <linearGradient id="gText" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#b0e0ff"/>
+    <stop offset="50%" stop-color="#e0f0ff"/>
+    <stop offset="100%" stop-color="#c4b5fd"/>
+  </linearGradient>
+
+  <!-- 滤镜 -->
+  <filter id="fCyan" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="b"/>
+    <feColorMatrix in="b" values="0 0 0 0 0  0 .9 0 0 .8  0 0 1 0 1  0 0 0 1.6 0" result="g"/>
+    <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="fCyanHi" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/>
+    <feColorMatrix in="b" values="0 0 0 0 0  0 .9 0 0 .9  0 0 1 0 1  0 0 0 2.5 0" result="g"/>
+    <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="fPurple" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/>
+    <feColorMatrix in="b" values="0 0 0 0 .45  0 0 0 0 .1  0 0 1 0 .9  0 0 0 1.8 0" result="g"/>
+    <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="fSoft" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="fText" x="-30%" y="-30%" width="160%" height="160%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="b"/>
+    <feColorMatrix in="b" values="0 0 0 0 .1  0 .6 0 0 .7  0 0 1 0 1  0 0 0 1 0" result="g"/>
+    <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+
+  <!-- 六边形网格 -->
+  <pattern id="hex" width="34" height="59" patternUnits="userSpaceOnUse" patternTransform="rotate(12)">
+    <path d="M17 0L34 10v20L17 39 0 30V10z" fill="none" stroke="#162040" stroke-width=".4"/>
+    <path d="M17 20L34 30v20L17 59 0 50V30z" fill="none" stroke="#162040" stroke-width=".4"/>
+  </pattern>
+  <mask id="hexMask">
+    <radialGradient id="hm" cx="50%" cy="46%" r="50%">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="65%" stop-color="#fff" stop-opacity=".6"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <rect width="800" height="800" fill="url(#hm)"/>
+  </mask>
+
+  <!-- 轨道路径 -->
+  <path id="orb1" d="M400 190 A180 180 0 1 1 399.9 190" fill="none"/>
+  <path id="orb2" d="M400 150 A220 220 0 1 0 399.9 150" fill="none"/>
+  <path id="orb3" d="M400 210 A240 160 0 1 1 399.9 210" fill="none"/>
+</defs>
+
+<!-- ══════════ 背景 ══════════ -->
+<rect width="800" height="800" fill="url(#bg)"/>
+<rect width="800" height="800" fill="url(#hex)" mask="url(#hexMask)" opacity=".45"/>
+
+<!-- 星尘 -->
+<g opacity=".35">
+  <circle cx="95" cy="65" r="1" fill="#fff"/>
+  <circle cx="710" cy="95" r=".7" fill="#a5d8ff"/>
+  <circle cx="55" cy="350" r=".8" fill="#fff"/>
+  <circle cx="745" cy="280" r="1" fill="#c3dafe"/>
+  <circle cx="180" cy="175" r=".5" fill="#fff"/>
+  <circle cx="620" cy="50" r="1.1" fill="#bae6fd"/>
+  <circle cx="730" cy="520" r=".6" fill="#fff"/>
+  <circle cx="70" cy="550" r=".9" fill="#c4b5fd"/>
+  <circle cx="340" cy="745" r=".7" fill="#fff"/>
+  <circle cx="520" cy="760" r=".5" fill="#a5d8ff"/>
+  <circle cx="150" cy="700" r=".6" fill="#fff"/>
+  <circle cx="660" cy="700" r=".8" fill="#c3dafe"/>
+  <circle cx="400" cy="40" r=".6" fill="#fff"/>
+  <circle cx="250" cy="50" r=".4" fill="#ddd6fe"/>
+</g>
+
+<!-- 中心光晕 -->
+<circle cx="400" cy="370" r="260" fill="url(#coreAura)" class="breathe-slow"/>
+
+<!-- ══════════ 电路纹理 ══════════ -->
+<g opacity=".3">
+  <g class="circuit-blink cb-d1">
+    <path d="M65 195h55l20-20h60l20 20h45" stroke="#0891b2" stroke-width=".7" fill="none"/>
+    <circle cx="65" cy="195" r="1.8" fill="#00e5ff"/>
+    <circle cx="265" cy="195" r="1.8" fill="#00e5ff"/>
+    <path d="M90 230h50l15 18h40" stroke="#0891b2" stroke-width=".5" fill="none"/>
+    <circle cx="195" cy="248" r="1.2" fill="#00e5ff"/>
+  </g>
+  <g class="circuit-blink cb-d2">
+    <path d="M535 175h50l20-20h60l20 20h50" stroke="#0891b2" stroke-width=".7" fill="none"/>
+    <circle cx="535" cy="175" r="1.8" fill="#00e5ff"/>
+    <circle cx="735" cy="175" r="1.8" fill="#00e5ff"/>
+    <path d="M590 210h45l18 18h45" stroke="#0891b2" stroke-width=".5" fill="none"/>
+    <circle cx="698" cy="228" r="1.2" fill="#00e5ff"/>
+  </g>
+  <g class="circuit-blink cb-d3">
+    <path d="M55 510h50l18 18h55l18-18h40" stroke="#7c3aed" stroke-width=".7" fill="none"/>
+    <circle cx="55" cy="510" r="1.8" fill="#a78bfa"/>
+    <circle cx="236" cy="510" r="1.8" fill="#a78bfa"/>
+  </g>
+  <g class="circuit-blink cb-d4">
+    <path d="M560 530h45l18 18h55l18-18h45" stroke="#7c3aed" stroke-width=".7" fill="none"/>
+    <circle cx="560" cy="530" r="1.8" fill="#a78bfa"/>
+    <circle cx="741" cy="530" r="1.8" fill="#a78bfa"/>
+  </g>
+  <!-- 底部 -->
+  <g class="circuit-blink cb-d1">
+    <path d="M240 640h50l18 15h80l18-15h55l18 15h55" stroke="#065f6c" stroke-width=".5" fill="none"/>
+    <circle cx="240" cy="640" r="1.2" fill="#00e5ff" opacity=".4"/>
+    <circle cx="534" cy="655" r="1.2" fill="#00e5ff" opacity=".4"/>
+  </g>
+</g>
+
+<!-- ══════════ 外环系统 ══════════ -->
+
+<!-- 最外虚线圈 -->
+<circle cx="400" cy="370" r="320" fill="none" stroke="#182848" stroke-width=".8" stroke-dasharray="3 10" opacity=".35" class="spin-cw-120"/>
+
+<!-- 分段弧 -->
+<g filter="url(#fPurple)" class="pulse-ring" opacity=".55">
+  <path d="M400 80 A290 290 0 0 1 668 268" fill="none" stroke="#7c3aed" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M688 370 A290 290 0 0 1 548 630" fill="none" stroke="#7c3aed" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M400 660 A290 290 0 0 1 132 472" fill="none" stroke="#7c3aed" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M112 370 A290 290 0 0 1 252 128" fill="none" stroke="#7c3aed" stroke-width="1.2" stroke-linecap="round"/>
+</g>
+
+<!-- 刻度圈 -->
+<g opacity=".25" class="spin-ccw-90">
+  <circle cx="400" cy="370" r="280" fill="none" stroke="#00b8d4" stroke-width=".4" stroke-dasharray="1.5 14"/>
+  <line x1="400" y1="90" x2="400" y2="98" stroke="#00b8d4" stroke-width=".8"/>
+  <line x1="400" y1="642" x2="400" y2="650" stroke="#00b8d4" stroke-width=".8"/>
+  <line x1="120" y1="370" x2="128" y2="370" stroke="#00b8d4" stroke-width=".8"/>
+  <line x1="672" y1="370" x2="680" y2="370" stroke="#00b8d4" stroke-width=".8"/>
+  <line x1="202" y1="172" x2="208" y2="178" stroke="#00b8d4" stroke-width=".6"/>
+  <line x1="598" y1="172" x2="592" y2="178" stroke="#00b8d4" stroke-width=".6"/>
+  <line x1="202" y1="568" x2="208" y2="562" stroke="#00b8d4" stroke-width=".6"/>
+  <line x1="598" y1="568" x2="592" y2="562" stroke="#00b8d4" stroke-width=".6"/>
+</g>
+
+<!-- ══════════ 核心分形 - 6 层递归六边形 ══════════ -->
+<!--
+  正六边形以 (400,370) 为中心
+  半径 R 的正六边形顶点(从正上方开始):
+  (cx, cy-R), (cx+R*sin60, cy-R*cos60), (cx+R*sin60, cy+R*cos60),
+  (cx, cy+R), (cx-R*sin60, cy+R*cos60), (cx-R*sin60, cy-R*cos60)
+  sin60=0.866, cos60=0.5
+-->
+<g filter="url(#fCyan)">
+
+  <!-- 层1 R=200 -->
+  <g class="spin-cw-120 breathe">
+    <polygon points="400,170 573.2,270 573.2,470 400,570 226.8,470 226.8,270"
+      fill="none" stroke="url(#g1)" stroke-width="1.5" opacity=".4"/>
+  </g>
+
+  <!-- 层2 R=170 旋转15 -->
+  <g class="spin-ccw-90 breathe-alt">
+    <polygon points="400,200 547.2,285 547.2,455 400,540 252.8,455 252.8,285"
+      fill="none" stroke="url(#g2)" stroke-width="1.3" opacity=".48"
+      transform="rotate(15 400 370)"/>
+  </g>
+
+  <!-- 层3 R=140 -->
+  <g class="spin-cw-80 breathe">
+    <polygon points="400,230 521.2,300 521.2,440 400,510 278.8,440 278.8,300"
+      fill="none" stroke="url(#g1)" stroke-width="1.3" opacity=".56"/>
+  </g>
+
+  <!-- 层4 R=110 旋转15 -->
+  <g class="spin-ccw-60 breathe-alt">
+    <polygon points="400,260 495.3,315 495.3,425 400,480 304.7,425 304.7,315"
+      fill="none" stroke="#00e5ff" stroke-width="1.3" opacity=".65"
+      transform="rotate(15 400 370)"/>
+  </g>
+
+  <!-- 层5 R=80 -->
+  <g class="spin-cw-50 breathe">
+    <polygon points="400,290 469.3,330 469.3,410 400,450 330.7,410 330.7,330"
+      fill="none" stroke="#00e5ff" stroke-width="1.5" opacity=".78"/>
+  </g>
+
+  <!-- 层6 R=50 旋转15 -->
+  <g class="spin-ccw-40 breathe-alt">
+    <polygon points="400,320 443.3,345 443.3,395 400,420 356.7,395 356.7,345"
+      fill="none" stroke="#00e5ff" stroke-width="1.8" opacity=".9"
+      transform="rotate(15 400 370)"/>
+  </g>
+
+</g>
+
+<!-- ══════════ 内层 Sierpinski 三角暗示 ══════════ -->
+<g opacity=".12" stroke="#00e5ff" stroke-width=".5" fill="none" class="spin-cw-80">
+  <polygon points="400,250 487,400 313,400"/>
+  <polygon points="400,325 443.5,400 356.5,400"/>
+  <polygon points="356.5,288 400,400 313,400"/>
+  <polygon points="443.5,288 487,400 400,400"/>
+</g>
+
+<!-- ══════════ 核心辐射线 ══════════ -->
+<g filter="url(#fCyan)" opacity=".3" class="breathe-alt">
+  <line x1="400" y1="370" x2="400" y2="290" stroke="#00e5ff" stroke-width=".5"/>
+  <line x1="400" y1="370" x2="469.3" y2="330" stroke="#00e5ff" stroke-width=".5"/>
+  <line x1="400" y1="370" x2="469.3" y2="410" stroke="#00e5ff" stroke-width=".5"/>
+  <line x1="400" y1="370" x2="400" y2="450" stroke="#00e5ff" stroke-width=".5"/>
+  <line x1="400" y1="370" x2="330.7" y2="410" stroke="#00e5ff" stroke-width=".5"/>
+  <line x1="400" y1="370" x2="330.7" y2="330" stroke="#00e5ff" stroke-width=".5"/>
+</g>
+
+<!-- ══════════ 核心发光点 ══════════ -->
+<g filter="url(#fCyanHi)">
+  <circle cx="400" cy="370" r="10" fill="#00e5ff" opacity=".85" class="breathe"/>
+  <circle cx="400" cy="370" r="4" fill="#fff"/>
+  <circle cx="400" cy="370" r="18" fill="none" stroke="#00e5ff" stroke-width=".5" opacity=".4" class="breathe-alt"/>
+</g>
+
+<!-- ══════════ 轨道粒子 ══════════ -->
+<g filter="url(#fCyan)">
+  <!-- 轨道线 -->
+  <circle cx="400" cy="370" r="180" fill="none" stroke="#00e5ff" stroke-width=".25" opacity=".12"/>
+  <circle cx="400" cy="370" r="220" fill="none" stroke="#7c3aed" stroke-width=".25" opacity=".08"/>
+
+  <!-- 粒子 1 -->
+  <circle r="2.5" fill="#00e5ff" opacity=".8">
+    <animateMotion dur="14s" repeatCount="indefinite"><mpath href="#orb1"/></animateMotion>
+  </circle>
+  <!-- 粒子 2 -->
+  <circle r="2" fill="#a78bfa" opacity=".7">
+    <animateMotion dur="20s" repeatCount="indefinite"><mpath href="#orb2"/></animateMotion>
+  </circle>
+  <!-- 粒子 3 -->
+  <circle r="1.8" fill="#06b6d4" opacity=".6">
+    <animateMotion dur="16s" repeatCount="indefinite"><mpath href="#orb3"/></animateMotion>
+  </circle>
+</g>
+
+<!-- ══════════ 顶点节点 ══════════ -->
+<g filter="url(#fCyan)" opacity=".45" class="breathe">
+  <!-- 层1 六个顶点 -->
+  <circle cx="400" cy="170" r="2.5" fill="#00e5ff"/>
+  <circle cx="573.2" cy="270" r="2.5" fill="#00e5ff"/>
+  <circle cx="573.2" cy="470" r="2.5" fill="#00e5ff"/>
+  <circle cx="400" cy="570" r="2.5" fill="#00e5ff"/>
+  <circle cx="226.8" cy="470" r="2.5" fill="#00e5ff"/>
+  <circle cx="226.8" cy="270" r="2.5" fill="#00e5ff"/>
+  <!-- 环 -->
+  <circle cx="400" cy="170" r="5.5" fill="none" stroke="#00e5ff" stroke-width=".4"/>
+  <circle cx="573.2" cy="270" r="5.5" fill="none" stroke="#00e5ff" stroke-width=".4"/>
+  <circle cx="573.2" cy="470" r="5.5" fill="none" stroke="#00e5ff" stroke-width=".4"/>
+  <circle cx="400" cy="570" r="5.5" fill="none" stroke="#00e5ff" stroke-width=".4"/>
+  <circle cx="226.8" cy="470" r="5.5" fill="none" stroke="#00e5ff" stroke-width=".4"/>
+  <circle cx="226.8" cy="270" r="5.5" fill="none" stroke="#00e5ff" stroke-width=".4"/>
+</g>
+
+<!-- ══════════ 漂浮粒子 ══════════ -->
+<g filter="url(#fSoft)">
+  <circle cx="140" cy="140" r="1.4" fill="#00e5ff" class="float-particle fp-d1"/>
+  <circle cx="665" cy="160" r="1.1" fill="#a78bfa" class="float-particle fp-d2"/>
+  <circle cx="90" cy="460" r="1" fill="#06b6d4" class="float-particle fp-d3"/>
+  <circle cx="710" cy="490" r="1.2" fill="#00e5ff" class="float-particle fp-d4"/>
+  <circle cx="290" cy="90" r=".8" fill="#8b5cf6" class="float-particle fp-d5"/>
+  <circle cx="560" cy="665" r="1.1" fill="#0891b2" class="float-particle fp-d1"/>
+  <circle cx="240" cy="610" r=".9" fill="#a78bfa" class="float-particle fp-d3"/>
+  <circle cx="695" cy="360" r=".7" fill="#00e5ff" class="float-particle fp-d2"/>
+  <circle cx="110" cy="310" r="1" fill="#06b6d4" class="float-particle fp-d4"/>
+  <circle cx="460" cy="80" r=".6" fill="#c4b5fd" class="float-particle fp-d5"/>
+  <circle cx="170" cy="480" r=".8" fill="#00e5ff" class="float-particle fp-d1"/>
+  <circle cx="630" cy="600" r=".7" fill="#a78bfa" class="float-particle fp-d3"/>
+</g>
+
+<!-- ══════════ 数据流 ══════════ -->
+<g opacity=".2">
+  <line x1="155" y1="80" x2="155" y2="720" stroke="#00b8d4" stroke-width=".7" stroke-dasharray="2 16">
+    <animate attributeName="stroke-dashoffset" from="0" to="-36" dur="4s" repeatCount="indefinite"/>
+  </line>
+  <line x1="645" y1="60" x2="645" y2="740" stroke="#7c3aed" stroke-width=".7" stroke-dasharray="2 16">
+    <animate attributeName="stroke-dashoffset" from="0" to="36" dur="5s" repeatCount="indefinite"/>
+  </line>
+  <line x1="80" y1="80" x2="300" y2="300" stroke="#065f6c" stroke-width=".4" stroke-dasharray="1.5 14">
+    <animate attributeName="stroke-dashoffset" from="0" to="-31" dur="3.5s" repeatCount="indefinite"/>
+  </line>
+  <line x1="720" y1="80" x2="500" y2="300" stroke="#6d28d9" stroke-width=".4" stroke-dasharray="1.5 14">
+    <animate attributeName="stroke-dashoffset" from="0" to="31" dur="4.5s" repeatCount="indefinite"/>
+  </line>
+</g>
+
+<!-- ══════════ 角标 ══════════ -->
+<g opacity=".2" stroke="#00b8d4" stroke-width=".7" fill="none">
+  <path d="M28 58 L28 28 L58 28"/>
+  <path d="M742 28 L772 28 L772 58"/>
+  <path d="M28 742 L28 772 L58 772"/>
+  <path d="M742 772 L772 772 L772 742"/>
+</g>
+
+<!-- HUD 微标签 -->
+<g opacity=".18" fill="#00b8d4" font-family="'SF Mono','Courier New',monospace" font-size="7.5">
+  <text x="42" y="46">SYS.OK</text>
+  <text x="714" y="46">v.inf</text>
+  <text x="42" y="764">REC:ON</text>
+  <text x="720" y="764">f(f)</text>
+</g>
+
+<!-- ══════════ 「递归大师」文字 ══════════ -->
+<g filter="url(#fText)">
+  <text x="400" y="715"
+    text-anchor="middle"
+    font-family="-apple-system,'PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif"
+    font-size="50" font-weight="800" letter-spacing="18"
+    fill="url(#gText)" opacity=".93">递归大师</text>
+</g>
+
+<!-- 文字装饰线 -->
+<g opacity=".35">
+  <line x1="265" y1="732" x2="365" y2="732" stroke="url(#g3)" stroke-width=".8"/>
+  <line x1="435" y1="732" x2="535" y2="732" stroke="url(#g3)" stroke-width=".8"/>
+  <circle cx="400" cy="732" r="1.8" fill="#00e5ff" opacity=".5"/>
+  <!-- 两端小菱形 -->
+  <polygon points="265,732 260,729 255,732 260,735" fill="#00e5ff" opacity=".3"/>
+  <polygon points="535,732 540,729 545,732 540,735" fill="#a78bfa" opacity=".3"/>
+</g>
+
+<!-- 英文副标题 -->
+<text x="400" y="754"
+  text-anchor="middle"
+  font-family="'SF Mono','Courier New',monospace"
+  font-size="11" letter-spacing="7"
+  fill="#3a6878" opacity=".45">RECURSIVE MASTER</text>
+
+<!-- ══════════ 边框光 ══════════ -->
+<rect x=".5" y=".5" width="799" height="799" fill="none" stroke="url(#g3)" stroke-width=".8" opacity=".1"/>
+
+</svg>
+</div>
+
+</body>
+</html>

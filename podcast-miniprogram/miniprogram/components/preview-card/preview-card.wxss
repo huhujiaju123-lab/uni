@@ -1,0 +1,80 @@
+.preview-card {
+  margin: 24rpx 32rpx;
+  background: var(--bg-card);
+  border-radius: 16rpx;
+  padding: 32rpx;
+  border: 1rpx solid var(--gold-dim);
+}
+
+.preview-header {
+  margin-bottom: 16rpx;
+}
+
+.preview-label {
+  font-size: 22rpx;
+  color: var(--gold);
+  background: var(--gold-dim);
+  padding: 4rpx 16rpx;
+  border-radius: 12rpx;
+}
+
+.preview-summary {
+  font-family: var(--font-serif);
+  font-size: 32rpx;
+  color: var(--text);
+  line-height: 1.6;
+  margin-bottom: 20rpx;
+}
+
+.preview-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  margin-bottom: 20rpx;
+}
+
+.preview-guests {
+  margin-bottom: 16rpx;
+}
+
+.preview-guest {
+  display: flex;
+  align-items: baseline;
+  gap: 8rpx;
+  margin-bottom: 6rpx;
+}
+
+.guest-name {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.guest-bio {
+  font-size: 24rpx;
+  color: var(--text-dim);
+}
+
+.preview-meta {
+  font-size: 24rpx;
+  color: var(--text-dim);
+  margin-bottom: 16rpx;
+}
+
+.preview-audience {
+  border-top: 1rpx solid var(--border);
+  padding-top: 16rpx;
+}
+
+.audience-label {
+  font-size: 24rpx;
+  color: var(--text-dim);
+  margin-bottom: 8rpx;
+}
+
+.audience-item {
+  font-size: 26rpx;
+  color: var(--text);
+  line-height: 1.6;
+  padding-left: 4rpx;
+}

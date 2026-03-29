@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>0212 涨价实验 · 用户结构与贡献拆解分析</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+  :root {
+    --bg-primary: #0f1023;
+    --bg-secondary: #1a1b36;
+    --bg-card: #22243d;
+    --bg-card-hover: #2a2c4a;
+    --border: #333560;
+    --text-primary: #e8e8f0;
+    --text-secondary: #8b8da8;
+    --text-muted: #5c5e78;
+    --color-control: #4dabf7;
+    --color-control-bg: rgba(77,171,247,0.12);
+    --color-group1: #ff922b;
+    --color-group1-bg: rgba(255,146,43,0.12);
+    --color-group2: #51cf66;
+    --color-group2-bg: rgba(81,207,102,0.12);
+    --color-positive: #51cf66;
+    --color-negative: #ff6b6b;
+    --color-neutral: #8b8da8;
+    --radius: 10px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.3);
+    --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Menlo', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a1b36 0%, #0f1023 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 0 36px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #4dabf7, #51cf66);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .header .subtitle {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin-bottom: 20px;
+  }
+  .header-meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .header-meta .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+  }
+  .header-meta .tag .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+
+  /* Section */
+  .section {
+    padding: 48px 0 24px;
+  }
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .section-desc {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+
+  /* KPI Cards */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  .kpi-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    transition: background 0.2s;
+  }
+  .kpi-card:hover { background: var(--bg-card-hover); }
+  .kpi-card .kpi-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+  .kpi-card .kpi-value {
+    font-size: 32px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+  }
+  .kpi-card .kpi-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .kpi-card .kpi-sub span {
+    font-family: var(--font-mono);
+  }
+
+  /* Tables */
+  .table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 32px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  thead th {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-align: right;
+    padding: 12px 16px;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+  }
+  thead th:first-child { text-align: left; }
+  tbody td {
+    padding: 11px 16px;
+    text-align: right;
+    border-bottom: 1px solid rgba(51,53,96,0.5);
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  tbody td:first-child {
+    text-align: left;
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    font-weight: 500;
+  }
+  tbody tr:nth-child(even) { background: rgba(26,27,54,0.5); }
+  tbody tr:hover { background: var(--bg-card-hover); }
+  tbody tr.row-total {
+    background: var(--bg-secondary);
+    font-weight: 700;
+  }
+  tbody tr.row-total td { border-top: 2px solid var(--border); }
+
+  .val-pos { color: var(--color-positive); }
+  .val-neg { color: var(--color-negative); }
+  .val-bold { font-weight: 700; }
+
+  /* Chart containers */
+  .chart-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .chart-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .chart-box .chart-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+  }
+  .chart-container {
+    width: 100%;
+    height: 320px;
+  }
+  .chart-wide {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 32px;
+  }
+  .chart-wide .chart-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  /* Decomposition pair */
+  .decomp-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .decomp-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+  .decomp-card h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .decomp-card h4 .indicator {
+    width: 12px; height: 12px; border-radius: 3px;
+  }
+
+  /* Insight box */
+  .insight-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  .insight-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 24px;
+    border-left: 3px solid;
+  }
+  .insight-card h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .insight-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .insight-card .insight-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .summary-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 32px;
+  }
+  .summary-box h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .summary-box ul {
+    list-style: none;
+    padding: 0;
+  }
+  .summary-box ul li {
+    padding: 6px 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    border-bottom: 1px solid rgba(51,53,96,0.3);
+  }
+  .summary-box ul li:last-child { border-bottom: none; }
+  .summary-box ul li strong { color: var(--text-primary); }
+
+  .footer {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .health-sub-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 32px 0 16px;
+    color: var(--text-primary);
+    padding-left: 12px;
+    border-left: 3px solid #ff8787;
+  }
+  .health-trio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 1100px) {
+    .health-trio { grid-template-columns: 1fr; }
+  }
+
+  /* Tabs */
+  .tab-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+  .tab-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--text-primary); }
+  .tab-btn.active {
+    color: var(--color-control);
+    border-bottom-color: var(--color-control);
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .kpi-grid, .chart-row, .insight-grid { grid-template-columns: 1fr; }
+    .decomp-pair { grid-template-columns: 1fr; }
+    .header h1 { font-size: 22px; }
+  }
+  @media (max-width: 600px) {
+    .container { padding: 0 12px; }
+    .section { padding: 32px 0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="container">
+    <h1>0212 老客涨价实验 · 用户结构与贡献拆解</h1>
+    <p class="subtitle">通过拉齐对比方法，拆解三组间杯量、单杯实收与总实收的差异来源</p>
+    <div class="header-meta">
+      <span class="tag"><span class="dot" style="background:var(--color-control)"></span>对照组3 · 原价策略</span>
+      <span class="tag"><span class="dot" style="background:var(--color-group1)"></span>涨价组1 · 75折券</span>
+      <span class="tag"><span class="dot" style="background:var(--color-group2)"></span>涨价组2 · 7折券</span>
+      <span class="tag">实验期 2026-02-12 ~ 02-28（17天）</span>
+      <span class="tag">基线期 2026-01-29 ~ 02-11（14天）</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ===================== PART 1 ===================== -->
+  <div class="section">
+    <h2 class="section-title"><span class="badge" style="background:rgba(77,171,247,0.15);color:var(--color-control)">PART 1</span> 用户结构分析</h2>
+    <p class="section-desc">三组用户按生命周期（首单至今天数）分层的人数分布与占比对比</p>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid" id="kpi-cards"></div>
+
+    <!-- Structure Table -->
+    <div class="table-wrapper">
+      <table id="structure-table">
+        <thead>
+          <tr>
+            <th>生命周期</th>
+            <th colspan="2">对照组3</th>
+            <th colspan="2">涨价组1</th>
+            <th colspan="2">涨价组2</th>
+          </tr>
+          <tr>
+            <th></th>
+            <th>人数</th><th>占比</th>
+            <th>人数</th><th>占比</th>
+            <th>人数</th><th>占比</th>
+          </tr>
+        </thead>
+        <tbody id="structure-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Pie Charts -->
+    <div class="chart-row">
+      <div class="chart-box">
+        <div class="chart-title" style="color:var(--color-control)">对照组3 · 用户结构</div>
+        <div class="chart-container" id="pie-control"></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title" style="color:var(--color-group1)">涨价组1 · 用户结构</div>
+        <div class="chart-container" id="pie-group1"></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title" style="color:var(--color-group2)">涨价组2 · 用户结构</div>
+        <div class="chart-container" id="pie-group2"></div>
+      </div>
+    </div>
+
+    <!-- Bar Chart -->
+    <div class="chart-wide">
+      <div class="chart-title">三组用户结构占比对比</div>
+      <div class="chart-container" id="bar-structure"></div>
+    </div>
+  </div>
+
+  <!-- ===================== PART 2 ===================== -->
+  <div class="section">
+    <h2 class="section-title"><span class="badge" style="background:rgba(255,146,43,0.15);color:var(--color-group1)">PART 2</span> 实验贡献拆解</h2>
+    <p class="section-desc">拉齐方法：按各生命周期人数比例折算对照组指标后再比较差异，消除分组人数差异的影响</p>
+
+    <!-- Method note -->
+    <div class="summary-box" style="border-left: 3px solid var(--color-group1); margin-bottom: 32px;">
+      <h4>拉齐对比方法说明</h4>
+      <ul>
+        <li><strong>拉齐系数</strong> = 涨价组该层人数 ÷ 对照组该层人数（按生命周期分别计算）</li>
+        <li><strong>对照组拉齐指标</strong> = 对照组原始指标 × 拉齐系数</li>
+        <li><strong>Δ差异</strong> = 涨价组实际值 − 对照组拉齐值（正=涨价组更优）</li>
+        <li><strong>单杯实收变化</strong>不需要拉齐，直接相减即可</li>
+      </ul>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('cups')">A. 杯量增量拆解</button>
+      <button class="tab-btn" onclick="switchTab('unit')">B. 单杯实收变化</button>
+      <button class="tab-btn" onclick="switchTab('revenue')">C. 总实收拆解</button>
+    </div>
+
+    <!-- Tab A: Cups -->
+    <div class="tab-panel active" id="tab-cups">
+      <div class="decomp-pair">
+        <div class="decomp-card">
+          <h4><span class="indicator" style="background:var(--color-group1)"></span>涨价组1 vs 对照组3 · 杯量</h4>
+          <div class="table-wrapper" style="border:none;">
+            <table id="cups-table-g1"></table>
+          </div>
+        </div>
+        <div class="decomp-card">
+          <h4><span class="indicator" style="background:var(--color-group2)"></span>涨价组2 vs 对照组3 · 杯量</h4>
+          <div class="table-wrapper" style="border:none;">
+            <table id="cups-table-g2"></table>
+          </div>
+        </div>
+      </div>
+      <div class="chart-wide">
+        <div class="chart-title">杯量差异贡献拆解（拉齐后）</div>
+        <div class="chart-container" id="chart-cups-waterfall" style="height:360px"></div>
+      </div>
+    </div>
+
+    <!-- Tab B: Unit Price -->
+    <div class="tab-panel" id="tab-unit">
+      <div class="decomp-pair">
+        <div class="decomp-card">
+          <h4><span class="indicator" style="background:var(--color-group1)"></span>涨价组1 vs 对照组3 · 单杯实收</h4>
+          <div class="table-wrapper" style="border:none;">
+            <table id="unit-table-g1"></table>
+          </div>
+        </div>
+        <div class="decomp-card">
+          <h4><span class="indicator" style="background:var(--color-group2)"></span>涨价组2 vs 对照组3 · 单杯实收</h4>
+          <div class="table-wrapper" style="border:none;">
+            <table id="unit-table-g2"></table>
+          </div>
+        </div>
+      </div>
+      <div class="chart-wide">
+        <div class="chart-title">各生命周期单杯实收变化（Δ$/杯）</div>
+        <div class="chart-container" id="chart-unit-bar" style="height:360px"></div>
+      </div>
+    </div>
+
+    <!-- Tab C: Revenue -->
+    <div class="tab-panel" id="tab-revenue">
+      <div class="decomp-pair">
+        <div class="decomp-card">
+          <h4><span class="indicator" style="background:var(--color-group1)"></span>涨价组1 vs 对照组3 · 实收</h4>
+          <div class="table-wrapper" style="border:none;">
+            <table id="rev-table-g1"></table>
+          </div>
+        </div>
+        <div class="decomp-card">
+          <h4><span class="indicator" style="background:var(--color-group2)"></span>涨价组2 vs 对照组3 · 实收</h4>
+          <div class="table-wrapper" style="border:none;">
+            <table id="rev-table-g2"></table>
+          </div>
+        </div>
+      </div>
+      <div class="chart-wide">
+        <div class="chart-title">总实收 Bridge 分析（拉齐后，按生命周期拆解）</div>
+        <div class="chart-container" id="chart-rev-bridge" style="height:400px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== PART 3 ===================== -->
+  <div class="section">
+    <h2 class="section-title"><span class="badge" style="background:rgba(177,151,252,0.15);color:#b197fc">PART 3</span> 用户消费频次分布（距上一单天数）</h2>
+    <p class="section-desc">分析三组用户的 Recency 分布（截至 2/28 距上一单天数），了解用户活跃度结构及涨价在不同活跃层的影响</p>
+
+    <!-- Recency Distribution Table -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Recency 分层</th>
+            <th colspan="2">对照组3</th>
+            <th colspan="2">涨价组1</th>
+            <th colspan="2">涨价组2</th>
+          </tr>
+          <tr>
+            <th></th>
+            <th>人数</th><th>占比</th>
+            <th>人数</th><th>占比</th>
+            <th>人数</th><th>占比</th>
+          </tr>
+        </thead>
+        <tbody id="recency-dist-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Recency Distribution Charts -->
+    <div class="decomp-pair">
+      <div class="chart-wide" style="margin-bottom:0">
+        <div class="chart-title">活跃用户 Recency 分布（0-30天，按人数）</div>
+        <div class="chart-container" id="chart-recency-active-dist" style="height:340px"></div>
+      </div>
+      <div class="chart-wide" style="margin-bottom:0">
+        <div class="chart-title">全量用户 Recency 占比（堆叠百分比）</div>
+        <div class="chart-container" id="chart-recency-full-dist" style="height:340px"></div>
+      </div>
+    </div>
+
+    <!-- Active user ratio KPIs -->
+    <div class="kpi-grid" style="margin-top:32px" id="recency-kpi-cards"></div>
+
+    <!-- Active Users Metrics Table -->
+    <h3 style="font-size:16px;font-weight:600;margin:32px 0 16px;color:var(--text-primary)">活跃用户消费指标（Recency 0-21天，实验期 2/12-2/28）</h3>
+    <div class="summary-box" style="border-left:3px solid #b197fc;margin-bottom:20px;padding:16px 24px">
+      <p style="font-size:13px;color:var(--text-secondary);margin:0">
+        <strong style="color:var(--text-primary)">说明：</strong>Recency 是截至 2/28 计算。0-7天/8-14天用户在实验期内一定有消费（转化率 100%）；15-21天用户部分消费；22-30天及 31天+ 用户在实验期内完全未消费。
+      </p>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Recency</th>
+            <th style="text-align:left">分组</th>
+            <th>用户数</th>
+            <th>购买人数</th>
+            <th>转化率</th>
+            <th>杯量</th>
+            <th>实收</th>
+            <th>单杯实收</th>
+            <th>人均杯量</th>
+          </tr>
+        </thead>
+        <tbody id="recency-active-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Active User Charts -->
+    <div class="decomp-pair" style="margin-top:24px">
+      <div class="chart-wide" style="margin-bottom:0">
+        <div class="chart-title">各活跃层单杯实收对比（$/杯）</div>
+        <div class="chart-container" id="chart-recency-unit-price" style="height:340px"></div>
+      </div>
+      <div class="chart-wide" style="margin-bottom:0">
+        <div class="chart-title">各活跃层人均杯量对比（杯/人）</div>
+        <div class="chart-container" id="chart-recency-cups-buyer" style="height:340px"></div>
+      </div>
+    </div>
+
+    <!-- Insights -->
+    <div class="insight-grid" style="margin-top:32px">
+      <div class="insight-card" style="border-left-color:#b197fc">
+        <span class="insight-tag" style="background:rgba(177,151,252,0.12);color:#b197fc">结构一致</span>
+        <h4>三组 Recency 结构高度一致</h4>
+        <p>83~84% 用户距上一单超过 31 天（沉睡用户），0-30 天活跃用户仅占 15.8%~16.7%。三组分布无显著差异，实验分流质量良好。</p>
+      </div>
+      <div class="insight-card" style="border-left-color:var(--color-positive)">
+        <span class="insight-tag" style="background:var(--color-group2-bg);color:var(--color-group2)">涨价生效</span>
+        <h4>活跃用户中涨价确实生效</h4>
+        <p>0-7 天最活跃层单杯实收：涨价组1 $3.67、涨价组2 $3.62，对照组 $3.39，提升 +$0.23~$0.28/杯。涨价策略在高频用户中显著提升了客单价。</p>
+      </div>
+      <div class="insight-card" style="border-left-color:var(--color-negative)">
+        <span class="insight-tag" style="background:rgba(255,107,107,0.12);color:var(--color-negative)">频次微降</span>
+        <h4>活跃用户人均杯量略受影响</h4>
+        <p>0-7 天层人均杯量：涨价组1 3.24 杯 / 涨价组2 3.32 杯 vs 对照组 3.28 杯。15-21 天层转化率三组相近（33%~36%），涨价未显著影响中等活跃用户的复购意愿。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== PART 4 ===================== -->
+  <div class="section">
+    <h2 class="section-title"><span class="badge" style="background:rgba(81,207,102,0.15);color:var(--color-group2)">PART 4</span> 综合洞察总结</h2>
+    <p class="section-desc">基于用户结构分析、贡献拆解与 Recency 分布的关键发现</p>
+
+    <div class="insight-grid">
+      <div class="insight-card" style="border-left-color:var(--color-control)">
+        <span class="insight-tag" style="background:var(--color-control-bg);color:var(--color-control)">结构发现</span>
+        <h4>三组结构高度一致</h4>
+        <p>31天+老客占比均为 94.5%~94.6%，16-30天次新客占 5.0%~5.4%，0-15天新客不足 0.4%。实验分流质量良好，结构差异可忽略。</p>
+      </div>
+      <div class="insight-card" style="border-left-color:var(--color-negative)">
+        <span class="insight-tag" style="background:rgba(255,107,107,0.12);color:var(--color-negative)">核心矛盾</span>
+        <h4>杯量下降抵消提价</h4>
+        <p id="insight-core"></p>
+      </div>
+      <div class="insight-card" style="border-left-color:var(--color-group2)">
+        <span class="insight-tag" style="background:var(--color-group2-bg);color:var(--color-group2)">分层洞察</span>
+        <h4>老客是决定性力量</h4>
+        <p id="insight-lifecycle"></p>
+      </div>
+    </div>
+
+    <div class="decomp-pair">
+      <div class="summary-box" style="border-left: 3px solid var(--color-group1);">
+        <h4 style="color:var(--color-group1)">涨价组1（75折券）优劣势</h4>
+        <ul id="summary-g1"></ul>
+      </div>
+      <div class="summary-box" style="border-left: 3px solid var(--color-group2);">
+        <h4 style="color:var(--color-group2)">涨价组2（7折券）优劣势</h4>
+        <ul id="summary-g2"></ul>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      <h4>决策建议</h4>
+      <ul id="summary-decision"></ul>
+    </div>
+  </div>
+
+  <!-- ===================== PART 5 ===================== -->
+  <div class="section">
+    <h2 class="section-title"><span class="badge" style="background:rgba(255,135,135,0.15);color:#ff8787">PART 5</span> 业务健康度：每日用户结构监测</h2>
+    <p class="section-desc">追踪实验期间（2/12-2/28）每日来访与消费用户的生命周期构成变化，监测涨价对用户结构的时序影响</p>
+
+    <div class="summary-box" style="border-left:3px solid #ff8787;margin-bottom:24px;padding:16px 24px">
+      <p style="font-size:13px;color:var(--text-secondary);margin:0">
+        <strong style="color:var(--text-primary)">阅读说明：</strong>
+        灰色背景区域为周末（2/15-16、2/22-23），2/14 为情人节（流量异常高），2/15 数据量极低（疑似系统问题），2/23 消费数据全为 0（已知异常，汇总时已剔除）。所有时序图支持 X 轴缩放。
+      </p>
+    </div>
+
+    <h3 class="health-sub-title">5A. 每日来访用户生命周期构成（大盘）</h3>
+    <div class="chart-wide">
+      <div class="chart-container" id="health-visitor-stack" style="height:420px"></div>
+    </div>
+
+    <h3 class="health-sub-title">5B. 每日消费用户生命周期构成（大盘）</h3>
+    <div class="chart-wide">
+      <div class="chart-container" id="health-buyer-stack" style="height:420px"></div>
+    </div>
+
+    <h3 class="health-sub-title">5C. 来访→消费转化率趋势（按生命周期）</h3>
+    <div class="chart-wide">
+      <div class="chart-container" id="health-conversion" style="height:380px"></div>
+    </div>
+
+    <h3 class="health-sub-title">5D. 三组对比：16-30天来访占比趋势</h3>
+    <div class="chart-wide">
+      <div class="chart-container" id="health-group-visitor" style="height:380px"></div>
+    </div>
+
+    <h3 class="health-sub-title">5E. 三组对比：每日消费单杯实收趋势</h3>
+    <div class="chart-wide">
+      <div class="chart-container" id="health-group-unit" style="height:380px"></div>
+    </div>
+
+    <h3 class="health-sub-title">5F. 健康度汇总表格（实验期日均，剔除 2/23 异常）</h3>
+    <div class="health-trio" id="health-summary-area"></div>
+
+    <h3 class="health-sub-title">5G. 关键洞察</h3>
+    <div class="insight-grid" id="health-insights"></div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="container">
+    Lucky US 数据分析 · 0212 老客涨价实验 · 生成于 2026-03-05
+  </div>
+</div>
+
+<script>
+// ========== DATA ==========
+const lifecycles = ['0-15天', '16-30天', '31天+'];
+
+const data = {
+  control: {
+    name: '对照组3',
+    color: '#4dabf7',
+    structure: { '0-15天': 181, '16-30天': 2522, '31天+': 47592, '无订单': 7 },
+    total: 50302,
+    metrics: {
+      '0-15天': { users: 181, buyers: 53, conv: 29.3, cups: 165, revenue: 624.03, unit: 3.78, cpb: 3.11 },
+      '16-30天': { users: 2522, buyers: 429, conv: 17.0, cups: 1322, revenue: 4593.74, unit: 3.47, cpb: 3.08 },
+      '31天+': { users: 47592, buyers: 5361, conv: 11.3, cups: 14021, revenue: 46020.82, unit: 3.28, cpb: 2.62 }
+    },
+    totals: { users: 50302, buyers: 5843, conv: 11.6, cups: 15508, revenue: 51238.59, unit: 3.30, cpb: 2.65 }
+  },
+  group1: {
+    name: '涨价组1',
+    color: '#ff922b',
+    structure: { '0-15天': 131, '16-30天': 1896, '31天+': 36066, '无订单': 2 },
+    total: 38095,
+    metrics: {
+      '0-15天': { users: 131, buyers: 30, conv: 22.9, cups: 82, revenue: 302.64, unit: 3.69, cpb: 2.73 },
+      '16-30天': { users: 1896, buyers: 309, conv: 16.3, cups: 785, revenue: 2881.29, unit: 3.67, cpb: 2.54 },
+      '31天+': { users: 36066, buyers: 3773, conv: 10.5, cups: 9689, revenue: 34878.87, unit: 3.60, cpb: 2.57 }
+    },
+    totals: { users: 38095, buyers: 4112, conv: 10.8, cups: 10556, revenue: 38062.80, unit: 3.61, cpb: 2.57 }
+  },
+  group2: {
+    name: '涨价组2',
+    color: '#51cf66',
+    structure: { '0-15天': 152, '16-30天': 2048, '31天+': 35858, '无订单': 4 },
+    total: 38062,
+    metrics: {
+      '0-15天': { users: 152, buyers: 46, conv: 30.3, cups: 131, revenue: 480.84, unit: 3.67, cpb: 2.85 },
+      '16-30天': { users: 2048, buyers: 367, conv: 17.9, cups: 976, revenue: 3596.40, unit: 3.68, cpb: 2.66 },
+      '31天+': { users: 35858, buyers: 3630, conv: 10.1, cups: 9323, revenue: 33037.63, unit: 3.54, cpb: 2.57 }
+    },
+    totals: { users: 38062, buyers: 4043, conv: 10.6, cups: 10430, revenue: 37114.87, unit: 3.56, cpb: 2.58 }
+  }
+};
+
+// ========== DECOMPOSITION CALC ==========
+function calcDecomp(treatGroup) {
+  const ctrl = data.control;
+  const treat = data[treatGroup];
+  const result = {};
+  let totalDeltaCups = 0, totalDeltaRev = 0;
+  let totalNormCups = 0, totalNormRev = 0;
+
+  lifecycles.forEach(lc => {
+    const ratio = treat.structure[lc] / ctrl.structure[lc];
+    const normCups = ctrl.metrics[lc].cups * ratio;
+    const normRev = ctrl.metrics[lc].revenue * ratio;
+    const deltaCups = treat.metrics[lc].cups - normCups;
+    const deltaRev = treat.metrics[lc].revenue - normRev;
+    const deltaUnit = treat.metrics[lc].unit - ctrl.metrics[lc].unit;
+    totalDeltaCups += deltaCups;
+    totalDeltaRev += deltaRev;
+    totalNormCups += normCups;
+    totalNormRev += normRev;
+    result[lc] = { ratio, normCups, normRev, deltaCups, deltaRev, deltaUnit };
+  });
+
+  result._total = {
+    deltaCups: totalDeltaCups,
+    deltaRev: totalDeltaRev,
+    normCups: totalNormCups,
+    normRev: totalNormRev,
+    deltaUnit: treat.totals.unit - ctrl.totals.unit
+  };
+  return result;
+}
+
+const decompG1 = calcDecomp('group1');
+const decompG2 = calcDecomp('group2');
+
+// ========== HELPERS ==========
+function fmt(n, d=0) { return n.toLocaleString('en-US', {minimumFractionDigits:d, maximumFractionDigits:d}); }
+function fmtPct(n) { return n.toFixed(1) + '%'; }
+function fmtDelta(n, d=0, prefix='') {
+  const s = (n>=0?'+':'') + (prefix) + fmt(Math.abs(n), d);
+  return n>=0 ? (prefix ? '+' + prefix + fmt(Math.abs(n),d) : '+'+fmt(n,d)) : (prefix ? '-' + prefix + fmt(Math.abs(n),d) : fmt(n,d));
+}
+function colorClass(n) { return n > 0 ? 'val-pos' : n < 0 ? 'val-neg' : ''; }
+
+// ========== RENDER KPI ==========
+function renderKPIs() {
+  const container = document.getElementById('kpi-cards');
+  [data.control, data.group1, data.group2].forEach(g => {
+    const effective = g.total - (g.structure['无订单'] || 0);
+    const pct = (effective / g.total * 100).toFixed(2);
+    container.innerHTML += `
+      <div class="kpi-card">
+        <div class="kpi-label" style="color:${g.color}">${g.name}</div>
+        <div class="kpi-value" style="color:${g.color}">${fmt(g.total)}</div>
+        <div class="kpi-sub">有效用户 <span>${fmt(effective)}</span>（<span>${pct}%</span>）</div>
+      </div>`;
+  });
+}
+
+// ========== RENDER STRUCTURE TABLE ==========
+function renderStructureTable() {
+  const tbody = document.getElementById('structure-tbody');
+  let html = '';
+  lifecycles.forEach(lc => {
+    const c = data.control, g1 = data.group1, g2 = data.group2;
+    const cN = c.structure[lc], g1N = g1.structure[lc], g2N = g2.structure[lc];
+    const cP = (cN/c.total*100).toFixed(1), g1P = (g1N/g1.total*100).toFixed(1), g2P = (g2N/g2.total*100).toFixed(1);
+    html += `<tr><td>${lc}</td><td>${fmt(cN)}</td><td>${cP}%</td><td>${fmt(g1N)}</td><td>${g1P}%</td><td>${fmt(g2N)}</td><td>${g2P}%</td></tr>`;
+  });
+  // Total row
+  html += `<tr class="row-total"><td>合计</td>
+    <td>${fmt(data.control.total)}</td><td>100%</td>
+    <td>${fmt(data.group1.total)}</td><td>100%</td>
+    <td>${fmt(data.group2.total)}</td><td>100%</td></tr>`;
+  tbody.innerHTML = html;
+}
+
+// ========== RENDER PIE CHARTS ==========
+function renderPie(domId, groupData, color) {
+  const chart = echarts.init(document.getElementById(domId));
+  const colors = ['#667eea','#f093fb','#4fd1c5'];
+  const pieData = lifecycles.map((lc,i) => ({
+    name: lc,
+    value: groupData.structure[lc],
+    itemStyle: { color: colors[i] }
+  }));
+  chart.setOption({
+    tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+    series: [{
+      type: 'pie', radius: ['42%','72%'], center: ['50%','54%'],
+      label: { color: '#e8e8f0', fontSize: 12, formatter: '{b}\n{d}%' },
+      labelLine: { lineStyle: { color: '#555' } },
+      data: pieData,
+      emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.5)' } }
+    }]
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// ========== RENDER BAR STRUCTURE CHART ==========
+function renderBarStructure() {
+  const chart = echarts.init(document.getElementById('bar-structure'));
+  const groups = [data.control, data.group1, data.group2];
+  chart.setOption({
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      formatter: params => params.map(p => `${p.marker}${p.seriesName}: ${p.value.toFixed(1)}%`).join('<br/>')
+    },
+    legend: { textStyle: { color: '#8b8da8' }, top: 0 },
+    grid: { left: 60, right: 30, top: 40, bottom: 40 },
+    xAxis: {
+      type: 'category',
+      data: groups.map(g => g.name),
+      axisLabel: { color: '#8b8da8' },
+      axisLine: { lineStyle: { color: '#333560' } }
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: { color: '#8b8da8', formatter: '{value}%' },
+      splitLine: { lineStyle: { color: '#252748' } },
+      max: 100
+    },
+    series: lifecycles.map((lc, i) => ({
+      name: lc,
+      type: 'bar',
+      stack: 'total',
+      barWidth: 60,
+      itemStyle: { color: ['#667eea','#f093fb','#4fd1c5'][i] },
+      data: groups.map(g => +(g.structure[lc] / g.total * 100).toFixed(2)),
+      label: {
+        show: true,
+        position: 'inside',
+        color: '#fff',
+        fontSize: 12,
+        formatter: p => p.value > 3 ? p.value.toFixed(1) + '%' : ''
+      }
+    }))
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// ========== DECOMP TABLES ==========
+function renderDecompTable(tableId, decomp, treatGroup, metric) {
+  const treat = data[treatGroup];
+  const ctrl = data.control;
+  const table = document.getElementById(tableId);
+  let html = '<thead><tr><th>生命周期</th>';
+
+  if (metric === 'cups') {
+    html += '<th>拉齐系数</th><th>涨价组杯量</th><th>对照组拉齐杯量</th><th>Δ杯量</th><th>贡献占比</th></tr></thead><tbody>';
+    let totalTreatCups = 0, totalNormCups = 0;
+    lifecycles.forEach(lc => {
+      const d = decomp[lc];
+      const pct = decomp._total.deltaCups !== 0 ? (d.deltaCups / decomp._total.deltaCups * 100) : 0;
+      totalTreatCups += treat.metrics[lc].cups;
+      totalNormCups += d.normCups;
+      html += `<tr><td>${lc}</td>
+        <td>${d.ratio.toFixed(4)}</td>
+        <td>${fmt(treat.metrics[lc].cups)}</td>
+        <td>${fmt(d.normCups, 1)}</td>
+        <td class="${colorClass(d.deltaCups)}">${fmtDelta(d.deltaCups, 1)}</td>
+        <td>${pct.toFixed(1)}%</td></tr>`;
+    });
+    html += `<tr class="row-total"><td>合计</td><td>—</td>
+      <td class="val-bold">${fmt(totalTreatCups)}</td>
+      <td>${fmt(totalNormCups, 1)}</td>
+      <td class="${colorClass(decomp._total.deltaCups)} val-bold">${fmtDelta(decomp._total.deltaCups, 1)}</td>
+      <td>100%</td></tr>`;
+  } else if (metric === 'unit') {
+    html += '<th>涨价组 $/杯</th><th>对照组 $/杯</th><th>Δ $/杯</th></tr></thead><tbody>';
+    lifecycles.forEach(lc => {
+      const d = decomp[lc];
+      html += `<tr><td>${lc}</td>
+        <td>$${treat.metrics[lc].unit.toFixed(2)}</td>
+        <td>$${ctrl.metrics[lc].unit.toFixed(2)}</td>
+        <td class="${colorClass(d.deltaUnit)}">${d.deltaUnit >= 0 ? '+' : ''}$${d.deltaUnit.toFixed(2)}</td></tr>`;
+    });
+    html += `<tr class="row-total"><td>整体</td>
+      <td class="val-bold">$${treat.totals.unit.toFixed(2)}</td>
+      <td>$${ctrl.totals.unit.toFixed(2)}</td>
+      <td class="${colorClass(decomp._total.deltaUnit)} val-bold">${decomp._total.deltaUnit >= 0 ? '+' : ''}$${decomp._total.deltaUnit.toFixed(2)}</td></tr>`;
+  } else if (metric === 'revenue') {
+    html += '<th>拉齐系数</th><th>涨价组实收</th><th>对照组拉齐实收</th><th>Δ实收</th><th>贡献占比</th></tr></thead><tbody>';
+    let totalTreatRev = 0, totalNormRev = 0;
+    lifecycles.forEach(lc => {
+      const d = decomp[lc];
+      const pct = decomp._total.deltaRev !== 0 ? (d.deltaRev / decomp._total.deltaRev * 100) : 0;
+      totalTreatRev += treat.metrics[lc].revenue;
+      totalNormRev += d.normRev;
+      html += `<tr><td>${lc}</td>
+        <td>${d.ratio.toFixed(4)}</td>
+        <td>$${fmt(treat.metrics[lc].revenue, 2)}</td>
+        <td>$${fmt(d.normRev, 2)}</td>
+        <td class="${colorClass(d.deltaRev)}">${d.deltaRev >= 0 ? '+' : '-'}$${fmt(Math.abs(d.deltaRev), 2)}</td>
+        <td>${pct.toFixed(1)}%</td></tr>`;
+    });
+    html += `<tr class="row-total"><td>合计</td><td>—</td>
+      <td class="val-bold">$${fmt(totalTreatRev, 2)}</td>
+      <td>$${fmt(totalNormRev, 2)}</td>
+      <td class="${colorClass(decomp._total.deltaRev)} val-bold">${decomp._total.deltaRev >= 0 ? '+' : '-'}$${fmt(Math.abs(decomp._total.deltaRev), 2)}</td>
+      <td>100%</td></tr>`;
+  }
+
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+// ========== CUPS WATERFALL ==========
+function renderCupsWaterfall() {
+  const chart = echarts.init(document.getElementById('chart-cups-waterfall'));
+  const categories = [];
+  const valuesG1 = [], valuesG2 = [];
+
+  lifecycles.forEach(lc => {
+    categories.push(lc);
+    valuesG1.push(+decompG1[lc].deltaCups.toFixed(1));
+    valuesG2.push(+decompG2[lc].deltaCups.toFixed(1));
+  });
+  categories.push('合计');
+  valuesG1.push(+decompG1._total.deltaCups.toFixed(1));
+  valuesG2.push(+decompG2._total.deltaCups.toFixed(1));
+
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    legend: { textStyle: { color: '#8b8da8' }, top: 0 },
+    grid: { left: 70, right: 30, top: 40, bottom: 40 },
+    xAxis: {
+      type: 'category',
+      data: categories,
+      axisLabel: { color: '#8b8da8' },
+      axisLine: { lineStyle: { color: '#333560' } }
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: { color: '#8b8da8' },
+      splitLine: { lineStyle: { color: '#252748' } },
+      name: '杯量差异',
+      nameTextStyle: { color: '#8b8da8' }
+    },
+    series: [
+      {
+        name: '涨价组1',
+        type: 'bar',
+        barWidth: 28,
+        itemStyle: {
+          color: params => params.value >= 0 ? '#51cf66' : '#ff6b6b'
+        },
+        data: valuesG1,
+        label: { show: true, position: 'top', color: '#ccc', fontSize: 11, formatter: p => (p.value>=0?'+':'') + p.value }
+      },
+      {
+        name: '涨价组2',
+        type: 'bar',
+        barWidth: 28,
+        itemStyle: {
+          color: params => params.value >= 0 ? '#38d9a9' : '#f06595'
+        },
+        data: valuesG2,
+        label: { show: true, position: 'top', color: '#ccc', fontSize: 11, formatter: p => (p.value>=0?'+':'') + p.value }
+      }
+    ]
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// ========== UNIT PRICE BAR ==========
+function renderUnitBar() {
+  const chart = echarts.init(document.getElementById('chart-unit-bar'));
+  const categories = [...lifecycles, '整体'];
+  const g1Vals = lifecycles.map(lc => +decompG1[lc].deltaUnit.toFixed(2));
+  g1Vals.push(+decompG1._total.deltaUnit.toFixed(2));
+  const g2Vals = lifecycles.map(lc => +decompG2[lc].deltaUnit.toFixed(2));
+  g2Vals.push(+decompG2._total.deltaUnit.toFixed(2));
+
+  chart.setOption({
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      formatter: params => params.map(p => `${p.marker}${p.seriesName}: ${p.value>=0?'+':''}$${p.value.toFixed(2)}/杯`).join('<br/>')
+    },
+    legend: { textStyle: { color: '#8b8da8' }, top: 0 },
+    grid: { left: 80, right: 30, top: 40, bottom: 40 },
+    xAxis: {
+      type: 'category',
+      data: categories,
+      axisLabel: { color: '#8b8da8' },
+      axisLine: { lineStyle: { color: '#333560' } }
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: { color: '#8b8da8', formatter: '${value}' },
+      splitLine: { lineStyle: { color: '#252748' } },
+      name: 'Δ 单杯实收 ($)',
+      nameTextStyle: { color: '#8b8da8' }
+    },
+    series: [
+      {
+        name: '涨价组1',
+        type: 'bar',
+        barWidth: 28,
+        itemStyle: { color: '#ff922b' },
+        data: g1Vals,
+        label: {
+          show: true, position: 'top', color: '#ccc', fontSize: 11,
+          formatter: p => (p.value>=0?'+':'') + '$' + p.value.toFixed(2)
+        }
+      },
+      {
+        name: '涨价组2',
+        type: 'bar',
+        barWidth: 28,
+        itemStyle: { color: '#51cf66' },
+        data: g2Vals,
+        label: {
+          show: true, position: 'top', color: '#ccc', fontSize: 11,
+          formatter: p => (p.value>=0?'+':'') + '$' + p.value.toFixed(2)
+        }
+      }
+    ]
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// ========== REVENUE BRIDGE ==========
+function renderRevBridge() {
+  const chart = echarts.init(document.getElementById('chart-rev-bridge'));
+
+  // Build bridge data for both groups
+  function buildBridge(decomp, treat, color, name) {
+    const base = decomp._total.normRev; // normalized control total
+    const steps = [];
+    let cumulative = base;
+
+    // Start: normalized control
+    steps.push({ name: '对照组(拉齐)', value: base, isTotal: true });
+
+    lifecycles.forEach(lc => {
+      const delta = decomp[lc].deltaRev;
+      steps.push({ name: 'Δ ' + lc, value: delta, isTotal: false });
+      cumulative += delta;
+    });
+
+    steps.push({ name: treat.name, value: cumulative, isTotal: true });
+
+    // ECharts waterfall: transparent base + colored bar
+    const transparentData = [];
+    const barData = [];
+    let runningBase = 0;
+
+    steps.forEach((s, i) => {
+      if (s.isTotal) {
+        transparentData.push(0);
+        barData.push(+s.value.toFixed(2));
+        runningBase = s.value;
+      } else {
+        if (s.value >= 0) {
+          transparentData.push(+(runningBase).toFixed(2));
+          barData.push(+s.value.toFixed(2));
+          runningBase += s.value;
+        } else {
+          runningBase += s.value;
+          transparentData.push(+(runningBase).toFixed(2));
+          barData.push(+Math.abs(s.value).toFixed(2));
+        }
+      }
+    });
+
+    return { steps, transparentData, barData };
+  }
+
+  const b1 = buildBridge(decompG1, data.group1, '#ff922b', '涨价组1');
+  const b2 = buildBridge(decompG2, data.group2, '#51cf66', '涨价组2');
+
+  // Combine categories
+  const cats1 = b1.steps.map(s => '组1: ' + s.name);
+  const cats2 = b2.steps.map(s => '组2: ' + s.name);
+  const allCats = [...cats1, '', ...cats2];
+
+  const transparent1 = [...b1.transparentData, 0, ...Array(b2.steps.length).fill(0)];
+  const bar1 = [...b1.barData, 0, ...Array(b2.steps.length).fill(0)];
+  const transparent2 = [...Array(b1.steps.length).fill(0), 0, ...b2.transparentData];
+  const bar2 = [...Array(b1.steps.length).fill(0), 0, ...b2.barData];
+
+  // Color function
+  function getColor(steps, baseColor) {
+    return steps.map(s => {
+      if (s.isTotal) return baseColor;
+      return s.value >= 0 ? '#51cf66' : '#ff6b6b';
+    });
+  }
+
+  const colors1 = getColor(b1.steps, '#ff922b');
+  const colors2 = getColor(b2.steps, '#51cf66');
+
+  chart.setOption({
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      formatter: params => {
+        const name = params[0].name;
+        if (!name) return '';
+        let val = 0;
+        params.forEach(p => { if (p.seriesIndex % 2 === 1) val = p.value; });
+        return name + '<br/>$' + fmt(val, 2);
+      }
+    },
+    grid: { left: 90, right: 30, top: 20, bottom: 50 },
+    xAxis: {
+      type: 'category',
+      data: allCats,
+      axisLabel: { color: '#8b8da8', fontSize: 11, rotate: 30 },
+      axisLine: { lineStyle: { color: '#333560' } }
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: { color: '#8b8da8', formatter: '${value}' },
+      splitLine: { lineStyle: { color: '#252748' } }
+    },
+    series: [
+      {
+        name: 'base1',
+        type: 'bar',
+        stack: 'g1',
+        barWidth: 30,
+        itemStyle: { color: 'transparent' },
+        data: transparent1,
+        tooltip: { show: false }
+      },
+      {
+        name: '涨价组1',
+        type: 'bar',
+        stack: 'g1',
+        barWidth: 30,
+        data: bar1.map((v, i) => ({
+          value: v,
+          itemStyle: { color: i < colors1.length ? colors1[i] : 'transparent' }
+        })),
+        label: {
+          show: true, position: 'top', color: '#aaa', fontSize: 10,
+          formatter: p => {
+            if (p.dataIndex >= b1.steps.length || p.value === 0) return '';
+            const s = b1.steps[p.dataIndex];
+            if (s.isTotal) return '$' + fmt(p.value, 0);
+            const sign = s.value >= 0 ? '+' : '-';
+            return sign + '$' + fmt(Math.abs(s.value), 0);
+          }
+        }
+      },
+      {
+        name: 'base2',
+        type: 'bar',
+        stack: 'g2',
+        barWidth: 30,
+        itemStyle: { color: 'transparent' },
+        data: transparent2,
+        tooltip: { show: false }
+      },
+      {
+        name: '涨价组2',
+        type: 'bar',
+        stack: 'g2',
+        barWidth: 30,
+        data: bar2.map((v, i) => {
+          const idx = i - b1.steps.length - 1;
+          return {
+            value: v,
+            itemStyle: { color: idx >= 0 && idx < colors2.length ? colors2[idx] : 'transparent' }
+          };
+        }),
+        label: {
+          show: true, position: 'top', color: '#aaa', fontSize: 10,
+          formatter: p => {
+            const idx = p.dataIndex - b1.steps.length - 1;
+            if (idx < 0 || idx >= b2.steps.length || p.value === 0) return '';
+            const s = b2.steps[idx];
+            if (s.isTotal) return '$' + fmt(p.value, 0);
+            const sign = s.value >= 0 ? '+' : '-';
+            return sign + '$' + fmt(Math.abs(s.value), 0);
+          }
+        }
+      }
+    ]
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// ========== INSIGHTS ==========
+function renderInsights() {
+  // Core contradiction
+  const g1CupDelta = decompG1._total.deltaCups;
+  const g2CupDelta = decompG2._total.deltaCups;
+  const g1UnitDelta = decompG1._total.deltaUnit;
+  const g2UnitDelta = decompG2._total.deltaUnit;
+  const g1RevDelta = decompG1._total.deltaRev;
+  const g2RevDelta = decompG2._total.deltaRev;
+
+  document.getElementById('insight-core').innerHTML =
+    `涨价组1单杯实收提升 +$${g1UnitDelta.toFixed(2)}，但拉齐后杯量减少 ${fmt(Math.abs(g1CupDelta),0)} 杯，` +
+    `净实收损失 $${fmt(Math.abs(g1RevDelta),0)}。涨价组2情况类似：单杯 +$${g2UnitDelta.toFixed(2)}，` +
+    `杯量损失 ${fmt(Math.abs(g2CupDelta),0)} 杯，净实收损失 $${fmt(Math.abs(g2RevDelta),0)}。` +
+    `<strong>提价带来的单杯收入增长不足以覆盖杯量下降的损失。</strong>`;
+
+  // Lifecycle insight
+  const g1OldPct = (decompG1['31天+'].deltaCups / decompG1._total.deltaCups * 100).toFixed(1);
+  const g2OldPct = (decompG2['31天+'].deltaCups / decompG2._total.deltaCups * 100).toFixed(1);
+  document.getElementById('insight-lifecycle').innerHTML =
+    `31天+老客贡献了杯量降幅的 ${g1OldPct}%（组1）和 ${g2OldPct}%（组2），是实验效果的绝对主力。` +
+    `新客（0-15天）样本量极小（131~181人），波动大但影响可忽略。` +
+    `<strong>涨价策略需重点关注老客价格敏感度。</strong>`;
+
+  // Group 1 summary
+  document.getElementById('summary-g1').innerHTML = `
+    <li><strong style="color:var(--color-positive)">优势：</strong>单杯实收提升 +$${g1UnitDelta.toFixed(2)}（+${(g1UnitDelta/data.control.totals.unit*100).toFixed(1)}%），16-30天层单杯提升最多 +$${decompG1['16-30天'].deltaUnit.toFixed(2)}</li>
+    <li><strong style="color:var(--color-negative)">劣势：</strong>转化率下降 -0.8pp，杯量拉齐后减少 ${fmt(Math.abs(g1CupDelta),0)} 杯，净实收损失 $${fmt(Math.abs(g1RevDelta),0)}</li>
+    <li><strong>老客层：</strong>31天+用户杯量降幅 ${fmt(Math.abs(decompG1['31天+'].deltaCups),0)} 杯，贡献了总降幅的 ${g1OldPct}%</li>
+    <li><strong>结论：</strong>75折券策略的提价幅度对老客购买频次有明显抑制，杯量损失 > 单价提升</li>`;
+
+  // Group 2 summary
+  document.getElementById('summary-g2').innerHTML = `
+    <li><strong style="color:var(--color-positive)">优势：</strong>单杯实收提升 +$${g2UnitDelta.toFixed(2)}（+${(g2UnitDelta/data.control.totals.unit*100).toFixed(1)}%），新客层转化率反而最高 30.3%</li>
+    <li><strong style="color:var(--color-negative)">劣势：</strong>转化率下降 -1.0pp，杯量拉齐后减少 ${fmt(Math.abs(g2CupDelta),0)} 杯，净实收损失 $${fmt(Math.abs(g2RevDelta),0)}</li>
+    <li><strong>老客层：</strong>31天+用户杯量降幅 ${fmt(Math.abs(decompG2['31天+'].deltaCups),0)} 杯，贡献了总降幅的 ${g2OldPct}%</li>
+    <li><strong>结论：</strong>7折券策略单杯实收略低于组1，但杯量损失更大，总实收损失是组1的 ${(g2RevDelta/g1RevDelta).toFixed(1)} 倍</li>`;
+
+  // Decision
+  document.getElementById('summary-decision').innerHTML = `
+    <li><strong>两个涨价组都未能实现"提价增收"</strong>：虽然单杯实收分别提升 $${g1UnitDelta.toFixed(2)} 和 $${g2UnitDelta.toFixed(2)}，但杯量降幅导致总实收分别减少 $${fmt(Math.abs(g1RevDelta),0)} 和 $${fmt(Math.abs(g2RevDelta),0)}</li>
+    <li><strong>关键人群是 31天+老客</strong>：该群体占用户 94.5%，贡献了超过 79% 的杯量降幅。老客对价格变化最敏感</li>
+    <li><strong>组1（75折）略优于组2（7折）</strong>：虽然折扣幅度更小，但组1的实收损失（$${fmt(Math.abs(g1RevDelta),0)}）显著低于组2（$${fmt(Math.abs(g2RevDelta),0)}），说明 75折是更优的涨价幅度</li>
+    <li><strong>建议</strong>：如果必须涨价，选择 75折策略（组1），并考虑对老客进行分层定价——高频老客维持原价保杯量，低频/沉睡用户适度提价提收入</li>
+    <li><strong>下一步</strong>：拉取 3月数据观察趋势变化（用户是否逐渐接受新价格），并按 RFM 分层做更细致的价格弹性分析</li>`;
+}
+
+// ========== RECENCY DATA ==========
+const recencyBuckets = ['0-7天', '8-14天', '15-21天', '22-30天', '31天+'];
+const recencyActiveBuckets = ['0-7天', '8-14天', '15-21天'];
+const recencyGroups = [
+  { key: 'control', name: '对照组3', color: '#4dabf7' },
+  { key: 'group1', name: '涨价组1', color: '#ff922b' },
+  { key: 'group2', name: '涨价组2', color: '#51cf66' }
+];
+
+const recencyData = {
+  control: {
+    dist: { '0-7天': 3383, '8-14天': 1915, '15-21天': 1584, '22-30天': 1505, '31天+': 41908 },
+    total: 50295,
+    pct: { '0-7天': 6.7, '8-14天': 3.8, '15-21天': 3.1, '22-30天': 3.0, '31天+': 83.3 },
+    metrics: {
+      '0-7天': { users: 3383, buyers: 3383, conv: 100, cups: 11082, rev: 37537.74, unit: 3.39, cpb: 3.28 },
+      '8-14天': { users: 1915, buyers: 1915, conv: 100, cups: 3597, rev: 11135.47, unit: 3.10, cpb: 1.88 },
+      '15-21天': { users: 1584, buyers: 545, conv: 34.4, cups: 829, rev: 2565.38, unit: 3.09, cpb: 1.52 }
+    },
+    activePct: 16.7
+  },
+  group1: {
+    dist: { '0-7天': 2287, '8-14天': 1417, '15-21天': 1141, '22-30天': 1179, '31天+': 32069 },
+    total: 38093,
+    pct: { '0-7天': 6.0, '8-14天': 3.7, '15-21天': 3.0, '22-30天': 3.1, '31天+': 84.2 },
+    metrics: {
+      '0-7天': { users: 2287, buyers: 2287, conv: 100, cups: 7406, rev: 27146.09, unit: 3.67, cpb: 3.24 },
+      '8-14天': { users: 1417, buyers: 1417, conv: 100, cups: 2554, rev: 8935.33, unit: 3.50, cpb: 1.80 },
+      '15-21天': { users: 1141, buyers: 408, conv: 35.8, cups: 596, rev: 1981.38, unit: 3.32, cpb: 1.46 }
+    },
+    activePct: 15.8
+  },
+  group2: {
+    dist: { '0-7天': 2202, '8-14天': 1433, '15-21天': 1224, '22-30天': 1229, '31天+': 31970 },
+    total: 38058,
+    pct: { '0-7天': 5.8, '8-14天': 3.8, '15-21天': 3.2, '22-30天': 3.2, '31天+': 84.0 },
+    metrics: {
+      '0-7天': { users: 2202, buyers: 2202, conv: 100, cups: 7321, rev: 26478.66, unit: 3.62, cpb: 3.32 },
+      '8-14天': { users: 1433, buyers: 1433, conv: 100, cups: 2550, rev: 8794.04, unit: 3.45, cpb: 1.78 },
+      '15-21天': { users: 1224, buyers: 408, conv: 33.3, cups: 559, rev: 1842.17, unit: 3.30, cpb: 1.37 }
+    },
+    activePct: 16.0
+  }
+};
+
+// ========== RENDER RECENCY DIST TABLE ==========
+function renderRecencyDistTable() {
+  const tbody = document.getElementById('recency-dist-tbody');
+  let html = '';
+  recencyBuckets.forEach(b => {
+    html += `<tr><td>${b}</td>`;
+    recencyGroups.forEach(g => {
+      const rd = recencyData[g.key];
+      html += `<td>${fmt(rd.dist[b])}</td><td>${rd.pct[b]}%</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '<tr class="row-total"><td>合计</td>';
+  recencyGroups.forEach(g => {
+    html += `<td>${fmt(recencyData[g.key].total)}</td><td>100%</td>`;
+  });
+  html += '</tr>';
+  tbody.innerHTML = html;
+}
+
+// ========== RENDER RECENCY ACTIVE DIST CHART ==========
+function renderRecencyActiveDistChart() {
+  const chart = echarts.init(document.getElementById('chart-recency-active-dist'));
+  const activeBuckets = ['0-7天', '8-14天', '15-21天', '22-30天'];
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' },
+      formatter: params => params.map(p => `${p.marker}${p.seriesName}: ${fmt(p.value)} 人（${(p.value / recencyData[recencyGroups[params.indexOf(p) !== -1 ? 0 : 0].key].total * 100).toFixed(1)}%）`).join('<br/>')
+    },
+    legend: { textStyle: { color: '#8b8da8' }, top: 0 },
+    grid: { left: 60, right: 30, top: 40, bottom: 40 },
+    xAxis: {
+      type: 'category', data: activeBuckets,
+      axisLabel: { color: '#8b8da8' },
+      axisLine: { lineStyle: { color: '#333560' } }
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: { color: '#8b8da8' },
+      splitLine: { lineStyle: { color: '#252748' } },
+      name: '人数',
+      nameTextStyle: { color: '#8b8da8' }
+    },
+    series: recencyGroups.map(g => ({
+      name: g.name, type: 'bar', barWidth: 24,
+      itemStyle: { color: g.color },
+      data: activeBuckets.map(b => recencyData[g.key].dist[b]),
+      label: { show: true, position: 'top', color: '#aaa', fontSize: 10,
+        formatter: p => fmt(p.value)
+      }
+    }))
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// ========== RENDER RECENCY FULL DIST CHART ==========
+function renderRecencyFullDistChart() {
+  const chart = echarts.init(document.getElementById('chart-recency-full-dist'));
+  const bucketColors = ['#667eea','#f093fb','#4fd1c5','#ffd43b','#868e96'];
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' },
+      formatter: params => params.map(p => `${p.marker}${p.seriesName}: ${p.value.toFixed(1)}%`).join('<br/>')
+    },
+    legend: { textStyle: { color: '#8b8da8' }, top: 0 },
+    grid: { left: 60, right: 30, top: 40, bottom: 40 },
+    xAxis: {
+      type: 'category', data: recencyGroups.map(g => g.name),
+      axisLabel: { color: '#8b8da8' },
+      axisLine: { lineStyle: { color: '#333560' } }
+    },
+    yAxis: {
+      type: 'value', max: 100,
+      axisLabel: { color: '#8b8da8', formatter: '{value}%' },
+      splitLine: { lineStyle: { color: '#252748' } }
+    },
+    series: recencyBuckets.map((b, i) => ({
+      name: b, type: 'bar', stack: 'total', barWidth: 60,
+      itemStyle: { color: bucketColors[i] },
+      data: recencyGroups.map(g => recencyData[g.key].pct[b]),
+      label: {
+        show: true, position: 'inside', color: '#fff', fontSize: 11,
+        formatter: p => p.value > 3 ? p.value.toFixed(1) + '%' : ''
+      }
+    }))
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// ========== RENDER RECENCY KPIs ==========
+function renderRecencyKPIs() {
+  const container = document.getElementById('recency-kpi-cards');
+  recencyGroups.forEach(g => {
+    const rd = recencyData[g.key];
+    const activeUsers = rd.dist['0-7天'] + rd.dist['8-14天'] + rd.dist['15-21天'] + rd.dist['22-30天'];
+    container.innerHTML += `
+      <div class="kpi-card">
+        <div class="kpi-label" style="color:${g.color}">${g.name} · 0-30天活跃占比</div>
+        <div class="kpi-value" style="color:${g.color}">${rd.activePct}%</div>
+        <div class="kpi-sub">活跃 <span>${fmt(activeUsers)}</span> / 总计 <span>${fmt(rd.total)}</span></div>
+      </div>`;
+  });
+}
+
+// ========== RENDER RECENCY ACTIVE TABLE ==========
+function renderRecencyActiveTable() {
+  const tbody = document.getElementById('recency-active-tbody');
+  let html = '';
+  recencyActiveBuckets.forEach((b, bi) => {
+    recencyGroups.forEach((g, gi) => {
+      const m = recencyData[g.key].metrics[b];
+      const ctrlM = recencyData.control.metrics[b];
+      const isCtrl = g.key === 'control';
+      const unitDelta = m.unit - ctrlM.unit;
+      const unitExtra = isCtrl ? '' :
+        ` <span class="${unitDelta >= 0 ? 'val-pos' : 'val-neg'}">(${unitDelta >= 0 ? '+' : ''}$${unitDelta.toFixed(2)})</span>`;
+      const sepStyle = bi > 0 && gi === 0 ? ' style="border-top:2px solid var(--border)"' : '';
+      html += `<tr${sepStyle}>
+        <td>${gi === 0 ? b : ''}</td>
+        <td style="text-align:left;color:${g.color};font-family:-apple-system,'PingFang SC',sans-serif">${g.name}</td>
+        <td>${fmt(m.users)}</td>
+        <td>${fmt(m.buyers)}</td>
+        <td>${m.conv}%</td>
+        <td>${fmt(m.cups)}</td>
+        <td>$${fmt(m.rev, 2)}</td>
+        <td>$${m.unit.toFixed(2)}${unitExtra}</td>
+        <td>${m.cpb.toFixed(2)}</td>
+      </tr>`;
+    });
+  });
+  tbody.innerHTML = html;
+}
+
+// ========== RENDER RECENCY UNIT PRICE CHART ==========
+function renderRecencyUnitChart() {
+  const chart = echarts.init(document.getElementById('chart-recency-unit-price'));
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' },
+      formatter: params => params.map(p => `${p.marker}${p.seriesName}: $${p.value.toFixed(2)}/杯`).join('<br/>')
+    },
+    legend: { textStyle: { color: '#8b8da8' }, top: 0 },
+    grid: { left: 70, right: 30, top: 40, bottom: 40 },
+    xAxis: {
+      type: 'category', data: recencyActiveBuckets,
+      axisLabel: { color: '#8b8da8' },
+      axisLine: { lineStyle: { color: '#333560' } }
+    },
+    yAxis: {
+      type: 'value', min: 2.8,
+      axisLabel: { color: '#8b8da8', formatter: '${value}' },
+      splitLine: { lineStyle: { color: '#252748' } },
+      name: '单杯实收 ($)',
+      nameTextStyle: { color: '#8b8da8' }
+    },
+    series: recencyGroups.map(g => ({
+      name: g.name, type: 'bar', barWidth: 28,
+      itemStyle: { color: g.color },
+      data: recencyActiveBuckets.map(b => recencyData[g.key].metrics[b].unit),
+      label: { show: true, position: 'top', color: '#ccc', fontSize: 11,
+        formatter: p => '$' + p.value.toFixed(2)
+      }
+    }))
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// ========== RENDER RECENCY CUPS/BUYER CHART ==========
+function renderRecencyCpbChart() {
+  const chart = echarts.init(document.getElementById('chart-recency-cups-buyer'));
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' },
+      formatter: params => params.map(p => `${p.marker}${p.seriesName}: ${p.value.toFixed(2)} 杯/人`).join('<br/>')
+    },
+    legend: { textStyle: { color: '#8b8da8' }, top: 0 },
+    grid: { left: 70, right: 30, top: 40, bottom: 40 },
+    xAxis: {
+      type: 'category', data: recencyActiveBuckets,
+      axisLabel: { color: '#8b8da8' },
+      axisLine: { lineStyle: { color: '#333560' } }
+    },
+    yAxis: {
+      type: 'value', min: 1,
+      axisLabel: { color: '#8b8da8' },
+      splitLine: { lineStyle: { color: '#252748' } },
+      name: '人均杯量',
+      nameTextStyle: { color: '#8b8da8' }
+    },
+    series: recencyGroups.map(g => ({
+      name: g.name, type: 'bar', barWidth: 28,
+      itemStyle: { color: g.color },
+      data: recencyActiveBuckets.map(b => recencyData[g.key].metrics[b].cpb),
+      label: { show: true, position: 'top', color: '#ccc', fontSize: 11,
+        formatter: p => p.value.toFixed(2)
+      }
+    }))
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// ========== TABS ==========
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  event.target.classList.add('active');
+
+  // Re-render charts when tab becomes visible
+  setTimeout(() => {
+    if (tab === 'cups') {
+      const c = echarts.getInstanceByDom(document.getElementById('chart-cups-waterfall'));
+      if (c) c.resize();
+    } else if (tab === 'unit') {
+      const c = echarts.getInstanceByDom(document.getElementById('chart-unit-bar'));
+      if (c) c.resize();
+    } else if (tab === 'revenue') {
+      const c = echarts.getInstanceByDom(document.getElementById('chart-rev-bridge'));
+      if (c) c.resize();
+    }
+  }, 50);
+}
+
+// ========== PART 5: HEALTH MONITORING DATA ==========
+const health_dates = ["02-12","02-13","02-14","02-15","02-16","02-17","02-18","02-19","02-20","02-21","02-22","02-23","02-24","02-25","02-26","02-27","02-28"];
+const health_fullDates = ["2026-02-12","2026-02-13","2026-02-14","2026-02-15","2026-02-16","2026-02-17","2026-02-18","2026-02-19","2026-02-20","2026-02-21","2026-02-22","2026-02-23","2026-02-24","2026-02-25","2026-02-26","2026-02-27","2026-02-28"];
+
+const health_h3 = {
+  '0-15天': {v:[52,19,44,4,5,0,0,0,0,0,0,0,0,0,0,0,0],b:[30,10,7,2,2,0,0,0,0,0,0,0,0,0,0,0,0],cr:[57.7,52.6,15.9,50.0,40.0,0,0,0,0,0,0,0,0,0,0,0,0]},
+  '16-30天': {v:[1128,962,1633,249,478,517,818,254,600,501,78,146,139,162,189,88,20],b:[220,172,88,73,87,139,129,117,67,39,23,0,31,45,43,19,4],cr:[19.5,17.9,5.4,29.3,18.2,26.9,15.8,46.1,11.2,7.8,29.5,0.0,22.3,27.8,22.8,21.6,20.0]},
+  '31天+': {v:[15266,16178,24134,2606,10029,11084,20909,4040,19391,4653,8649,9584,11084,20879,5128,20589,3503],b:[2019,1788,1313,1039,1143,1925,1969,2016,1328,1286,623,0,1604,1950,2196,1904,1354],cr:[13.2,11.1,5.4,39.9,11.4,17.4,9.4,49.9,6.8,27.6,7.2,0.0,14.5,9.3,42.8,9.2,38.7]}
+};
+
+const health_h1 = {
+  ctrl: {'0-15天':[19,8,18,0,4,0,0,0,0,0,0,0,0,0,0,0,0],'16-30天':[449,391,661,88,181,188,348,103,242,205,35,53,46,60,75,35,8],'31天+':[6091,6491,9634,1061,3991,4393,8338,1610,7736,1887,3451,3825,4452,8397,2116,8263,1434]},
+  g1: {'0-15天':[12,5,17,1,1,0,0,0,0,0,0,0,0,0,0,0,0],'16-30天':[333,293,455,72,156,170,242,72,186,139,20,49,41,43,48,28,4],'31天+':[4595,4854,7220,785,3027,3359,6358,1203,5821,1410,2584,2866,3308,6234,1525,6167,1013]},
+  g2: {'0-15天':[21,6,9,3,0,0,0,0,0,0,0,0,0,0,0,0,0],'16-30天':[346,278,517,89,141,159,228,79,172,157,23,44,52,59,66,25,8],'31天+':[4580,4833,7280,760,3011,3332,6213,1227,5834,1356,2614,2893,3324,6248,1487,6159,1056]}
+};
+
+const health_h2_daily = {
+  ctrl: {cups:[1256,1136,876,755,749,1136,1208,1118,797,841,412,0,901,1141,1256,1109,817],rev:[4162.74,3805.03,2786.0,2438.16,2453.46,3687.03,4025.69,3714.0,2727.2,2688.15,1347.33,0,3087.03,3897.38,4151.88,3651.5,2616.01],unit:[3.31,3.35,3.18,3.23,3.28,3.25,3.33,3.32,3.42,3.2,3.27,0,3.43,3.42,3.31,3.29,3.2]},
+  g1: {cups:[818,793,577,452,501,817,847,820,585,537,238,0,651,751,873,723,573],rev:[2956.83,2845.49,2028.59,1607.95,1762.47,2939.98,3046.92,3024.7,2168.01,1895.77,866.89,0,2399.7,2698.74,3162.83,2629.56,2028.37],unit:[3.61,3.59,3.52,3.56,3.52,3.6,3.6,3.69,3.71,3.53,3.64,0,3.69,3.59,3.62,3.64,3.54]},
+  g2: {cups:[903,782,593,471,497,806,747,792,516,502,298,0,659,789,785,755,535],rev:[3068.92,2784.27,2083.46,1607.62,1763.68,2879.76,2690.41,2840.83,1901.82,1795.1,1066.35,0,2415.25,2799.2,2804.56,2731.62,1882.02],unit:[3.4,3.56,3.51,3.41,3.55,3.57,3.6,3.59,3.69,3.58,3.58,0,3.67,3.55,3.57,3.62,3.52]}
+};
+
+const health_h2_detail = {
+  ctrl: {
+    '0-15天': {b:[11,4,3,1,1,0,0,0,0,0,0,0,0,0,0,0,0],c:[18,12,6,1,1,0,0,0,0,0,0,0,0,0,0,0,0],r:[72.02,43.12,21.78,1.99,3.67,0,0,0,0,0,0,0,0,0,0,0,0]},
+    '16-30天': {b:[95,64,40,23,35,52,53,48,32,19,9,0,10,18,20,10,3],c:[138,96,65,41,48,84,78,63,44,33,14,0,15,19,27,11,6],r:[487.42,354.74,232.82,145.26,173.02,298.42,272.13,224.09,162.31,108.37,51.81,0,48.49,70.53,97.88,42.29,25.46]},
+    '31天+': {b:[832,755,547,449,480,780,853,818,556,568,270,0,658,834,954,816,587],c:[1100,1028,805,713,700,1052,1130,1055,753,808,398,0,886,1122,1229,1098,811],r:[3603.3,3407.17,2531.4,2290.91,2276.77,3388.61,3753.56,3489.91,2564.89,2579.78,1295.52,0,3038.54,3826.85,4054.0,3609.21,2590.55]}
+  },
+  g1: {
+    '0-15天': {b:[6,2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0],c:[7,2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0],r:[22.12,2.23,5.56,2.45,4.05,0,0,0,0,0,0,0,0,0,0,0,0]},
+    '16-30天': {b:[43,62,25,19,27,38,32,29,18,5,5,0,9,10,11,5,0],c:[56,81,37,24,40,52,38,40,23,6,5,0,10,12,14,5,0],r:[213.73,309.8,140.35,91.94,152.8,206.1,143.92,154.39,88.73,21.4,18.69,0,40.23,42.56,55.72,19.52,0]},
+    '31天+': {b:[585,512,375,299,330,589,596,610,413,382,166,0,476,556,641,543,393],c:[755,710,539,427,460,765,809,780,562,531,233,0,641,739,859,718,573],r:[2720.98,2533.46,1882.68,1513.56,1605.62,2733.88,2903.0,2870.31,2079.28,1874.37,848.2,0,2359.47,2656.18,3107.11,2610.04,2028.37]}
+  },
+  g2: {
+    '0-15天': {b:[13,4,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0],c:[18,4,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0],r:[68.56,18.07,11.06,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+    '16-30天': {b:[82,46,23,31,25,49,44,40,17,15,9,0,12,17,12,4,1],c:[108,67,43,46,39,73,56,48,22,26,17,0,15,21,16,5,2],r:[367.86,238.01,150.87,163.62,133.72,284.62,216.27,182.11,82.62,93.99,57.77,0,51.16,77.51,56.29,20.83,6.36]},
+    '31天+': {b:[602,521,391,291,333,556,520,588,359,336,187,0,470,560,601,545,374],c:[777,711,547,425,458,733,691,744,494,476,281,0,644,768,769,750,533],r:[2632.5,2528.19,1921.53,1444.0,1629.96,2595.14,2474.14,2658.72,1819.2,1701.11,1008.58,0,2364.09,2721.69,2748.27,2710.79,1875.66]}
+  }
+};
+
+// Health: valid date indices (exclude 02-23 index 11 for aggregation)
+const health_validIdx = health_dates.map((_,i) => i).filter(i => i !== 11);
+const health_lcs = ['0-15天','16-30天','31天+'];
+const health_lcColors = ['#667eea','#f093fb','#4fd1c5'];
+const health_groups = [{key:'ctrl',name:'对照组3',color:'#4dabf7'},{key:'g1',name:'涨价组1',color:'#ff922b'},{key:'g2',name:'涨价组2',color:'#51cf66'}];
+
+function health_dataZoom() {
+  return [
+    {type:'inside',start:0,end:100},
+    {type:'slider',start:0,end:100,height:20,bottom:5,borderColor:'#333560',fillerColor:'rgba(99,102,241,0.15)',handleStyle:{color:'#6366f1'},textStyle:{color:'#8b8da8'}}
+  ];
+}
+
+function health_markArea() {
+  return {
+    silent: true,
+    data: [
+      [{xAxis:'02-14',itemStyle:{color:'rgba(255,107,107,0.06)'}},{xAxis:'02-14'}],
+      [{xAxis:'02-15',itemStyle:{color:'rgba(255,255,255,0.04)'}},{xAxis:'02-16'}],
+      [{xAxis:'02-22',itemStyle:{color:'rgba(255,255,255,0.04)'}},{xAxis:'02-23'}]
+    ]
+  };
+}
+
+function health_tooltipDate(name) {
+  const idx = health_dates.indexOf(name);
+  let extra = '';
+  if (health_fullDates[idx] === '2026-02-14') extra = ' <span style="color:#ff6b6b">情人节</span>';
+  if (health_fullDates[idx] === '2026-02-15') extra = ' <span style="color:#ffd43b">数据偏低</span>';
+  if (health_fullDates[idx] === '2026-02-23') extra = ' <span style="color:#ff6b6b">数据异常</span>';
+  return name + extra;
+}
+
+// 5A: Visitor lifecycle stacked area + total line
+function health_renderVisitorStack() {
+  const chart = echarts.init(document.getElementById('health-visitor-stack'));
+  const totalV = health_dates.map((_,i) => health_lcs.reduce((s,lc) => s + health_h3[lc].v[i], 0));
+
+  chart.setOption({
+    tooltip: {
+      trigger: 'axis',
+      formatter: ps => {
+        const idx = health_dates.indexOf(ps[0].name);
+        let html = health_tooltipDate(ps[0].name) + '<br/>';
+        ps.forEach(p => {
+          if (p.seriesName === '总来访') {
+            html += `${p.marker}${p.seriesName}: ${p.value.toLocaleString()}<br/>`;
+          } else {
+            const raw = health_h3[p.seriesName]?.v[idx] || 0;
+            html += `${p.marker}${p.seriesName}: ${p.value}% (${raw.toLocaleString()})<br/>`;
+          }
+        });
+        return html;
+      }
+    },
+    legend: {textStyle:{color:'#8b8da8'},top:0},
+    grid: {left:60,right:60,top:40,bottom:60},
+    dataZoom: health_dataZoom(),
+    xAxis: {type:'category',data:health_dates,axisLabel:{color:'#8b8da8'},axisLine:{lineStyle:{color:'#333560'}}},
+    yAxis: [
+      {type:'value',max:100,axisLabel:{color:'#8b8da8',formatter:'{value}%'},splitLine:{lineStyle:{color:'#252748'}}},
+      {type:'value',axisLabel:{color:'#8b8da8'},splitLine:{show:false},name:'总来访',nameTextStyle:{color:'#8b8da8'}}
+    ],
+    series: [
+      ...health_lcs.map((lc,i) => ({
+        name: lc, type: 'line', stack: 'pct', areaStyle: {opacity:0.6}, smooth: true,
+        itemStyle: {color: health_lcColors[i]}, symbol: 'none',
+        data: health_dates.map((_,j) => totalV[j]>0 ? +(health_h3[lc].v[j]/totalV[j]*100).toFixed(1) : 0),
+        ...(i===0 ? {markArea: health_markArea()} : {})
+      })),
+      {
+        name: '总来访', type: 'line', yAxisIndex: 1,
+        lineStyle: {color:'#ffd43b',width:2,type:'dashed'}, itemStyle:{color:'#ffd43b'},
+        symbol:'circle', symbolSize:4, data: totalV,
+        markPoint: {data:[{name:'情人节',xAxis:2,yAxis:totalV[2],symbol:'pin',symbolSize:30,itemStyle:{color:'#ff6b6b'},label:{show:true,formatter:'V-Day',color:'#fff',fontSize:9}}]}
+      }
+    ]
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// 5B: Buyer lifecycle stacked area + total line
+function health_renderBuyerStack() {
+  const chart = echarts.init(document.getElementById('health-buyer-stack'));
+  const totalB = health_dates.map((_,i) => health_lcs.reduce((s,lc) => s + health_h3[lc].b[i], 0));
+
+  chart.setOption({
+    tooltip: {
+      trigger: 'axis',
+      formatter: ps => {
+        const idx = health_dates.indexOf(ps[0].name);
+        let html = health_tooltipDate(ps[0].name) + '<br/>';
+        ps.forEach(p => {
+          if (p.seriesName === '总消费') {
+            html += `${p.marker}${p.seriesName}: ${p.value.toLocaleString()}<br/>`;
+          } else {
+            const raw = health_h3[p.seriesName]?.b[idx] || 0;
+            html += `${p.marker}${p.seriesName}: ${totalB[idx]>0 ? p.value+'%' : '—'} (${raw.toLocaleString()})<br/>`;
+          }
+        });
+        return html;
+      }
+    },
+    legend: {textStyle:{color:'#8b8da8'},top:0},
+    grid: {left:60,right:60,top:40,bottom:60},
+    dataZoom: health_dataZoom(),
+    xAxis: {type:'category',data:health_dates,axisLabel:{color:'#8b8da8'},axisLine:{lineStyle:{color:'#333560'}}},
+    yAxis: [
+      {type:'value',max:100,axisLabel:{color:'#8b8da8',formatter:'{value}%'},splitLine:{lineStyle:{color:'#252748'}}},
+      {type:'value',axisLabel:{color:'#8b8da8'},splitLine:{show:false},name:'总消费人数',nameTextStyle:{color:'#8b8da8'}}
+    ],
+    series: [
+      ...health_lcs.map((lc,i) => ({
+        name: lc, type: 'line', stack: 'pct', areaStyle: {opacity:0.6}, smooth: true,
+        itemStyle: {color: health_lcColors[i]}, symbol: 'none',
+        data: health_dates.map((_,j) => totalB[j]>0 ? +(health_h3[lc].b[j]/totalB[j]*100).toFixed(1) : null),
+        ...(i===0 ? {markArea: health_markArea()} : {})
+      })),
+      {
+        name: '总消费', type: 'line', yAxisIndex: 1,
+        lineStyle: {color:'#ffd43b',width:2,type:'dashed'}, itemStyle:{color:'#ffd43b'},
+        symbol:'circle', symbolSize:4, data: totalB,
+        markPoint: {data:[{name:'异常',xAxis:11,yAxis:0,symbol:'pin',symbolSize:30,itemStyle:{color:'#ff6b6b'},label:{show:true,formatter:'异常',color:'#fff',fontSize:9}}]}
+      }
+    ]
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// 5C: Conversion rate by lifecycle
+function health_renderConversion() {
+  const chart = echarts.init(document.getElementById('health-conversion'));
+
+  chart.setOption({
+    tooltip: {
+      trigger: 'axis',
+      formatter: ps => {
+        let html = health_tooltipDate(ps[0].name) + '<br/>';
+        ps.forEach(p => {
+          if (p.value !== null && p.value !== undefined) {
+            html += `${p.marker}${p.seriesName}: ${p.value}%<br/>`;
+          }
+        });
+        return html;
+      }
+    },
+    legend: {textStyle:{color:'#8b8da8'},top:0},
+    grid: {left:60,right:30,top:40,bottom:60},
+    dataZoom: health_dataZoom(),
+    xAxis: {type:'category',data:health_dates,axisLabel:{color:'#8b8da8'},axisLine:{lineStyle:{color:'#333560'}}},
+    yAxis: {type:'value',axisLabel:{color:'#8b8da8',formatter:'{value}%'},splitLine:{lineStyle:{color:'#252748'}},name:'转化率',nameTextStyle:{color:'#8b8da8'}},
+    series: health_lcs.map((lc,i) => ({
+      name: lc, type: 'line', smooth: true,
+      lineStyle: {color: health_lcColors[i], width: 2},
+      itemStyle: {color: health_lcColors[i]},
+      symbol: 'circle', symbolSize: 6,
+      data: health_h3[lc].cr.map(v => v > 0 ? v : null),
+      connectNulls: false,
+      ...(i===0 ? {markArea: health_markArea()} : {})
+    }))
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// 5D: Group comparison - 16-30天 visitor share
+function health_renderGroupVisitor() {
+  const chart = echarts.init(document.getElementById('health-group-visitor'));
+
+  chart.setOption({
+    tooltip: {
+      trigger: 'axis',
+      formatter: ps => {
+        let html = health_tooltipDate(ps[0].name) + '<br/>';
+        ps.forEach(p => {
+          html += `${p.marker}${p.seriesName}: ${p.value !== null ? p.value + '%' : '—'}<br/>`;
+        });
+        return html;
+      }
+    },
+    legend: {textStyle:{color:'#8b8da8'},top:0},
+    grid: {left:60,right:30,top:40,bottom:60},
+    dataZoom: health_dataZoom(),
+    xAxis: {type:'category',data:health_dates,axisLabel:{color:'#8b8da8'},axisLine:{lineStyle:{color:'#333560'}}},
+    yAxis: {type:'value',axisLabel:{color:'#8b8da8',formatter:'{value}%'},splitLine:{lineStyle:{color:'#252748'}},name:'16-30天来访占比',nameTextStyle:{color:'#8b8da8'}},
+    series: health_groups.map((g,i) => {
+      const h = health_h1[g.key];
+      const total = health_dates.map((_,j) => h['0-15天'][j] + h['16-30天'][j] + h['31天+'][j]);
+      const share = health_dates.map((_,j) => total[j] > 0 ? +(h['16-30天'][j]/total[j]*100).toFixed(2) : null);
+      return {
+        name: g.name, type: 'line', smooth: true,
+        lineStyle: {color: g.color, width: 2},
+        itemStyle: {color: g.color},
+        symbol: 'circle', symbolSize: 5,
+        data: share,
+        ...(i===0 ? {markArea: health_markArea()} : {})
+      };
+    })
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// 5E: Group unit price trend
+function health_renderGroupUnit() {
+  const chart = echarts.init(document.getElementById('health-group-unit'));
+
+  chart.setOption({
+    tooltip: {
+      trigger: 'axis',
+      formatter: ps => {
+        let html = health_tooltipDate(ps[0].name) + '<br/>';
+        ps.forEach(p => {
+          html += `${p.marker}${p.seriesName}: ${p.value > 0 ? '$'+p.value.toFixed(2) : '—'}<br/>`;
+        });
+        return html;
+      }
+    },
+    legend: {textStyle:{color:'#8b8da8'},top:0},
+    grid: {left:70,right:30,top:40,bottom:60},
+    dataZoom: health_dataZoom(),
+    xAxis: {type:'category',data:health_dates,axisLabel:{color:'#8b8da8'},axisLine:{lineStyle:{color:'#333560'}}},
+    yAxis: {type:'value',min:3.0,axisLabel:{color:'#8b8da8',formatter:'${value}'},splitLine:{lineStyle:{color:'#252748'}},name:'单杯实收 ($)',nameTextStyle:{color:'#8b8da8'}},
+    series: health_groups.map((g,i) => ({
+      name: g.name, type: 'line', smooth: true,
+      lineStyle: {color: g.color, width: 2},
+      itemStyle: {color: g.color},
+      symbol: 'circle', symbolSize: 5,
+      data: health_h2_daily[g.key].unit.map(v => v > 0 ? v : null),
+      connectNulls: true,
+      ...(i===0 ? {markArea: health_markArea()} : {})
+    }))
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// 5F: Summary tables
+function health_renderSummaryTables() {
+  const container = document.getElementById('health-summary-area');
+  const nDays = health_validIdx.length;
+
+  health_groups.forEach(g => {
+    const card = document.createElement('div');
+    card.className = 'decomp-card';
+    let html = `<h4 style="color:${g.color};margin-bottom:12px">${g.name}</h4>`;
+    html += '<div class="table-wrapper" style="border:none"><table><thead><tr><th>生命周期</th><th>日均来访</th><th>日均消费</th><th>转化率</th><th>日均杯量</th><th>单杯实收</th></tr></thead><tbody>';
+
+    let totalV=0, totalB=0, totalC=0, totalR=0;
+    health_lcs.forEach(lc => {
+      const h1g = health_h1[g.key];
+      const h2g = health_h2_detail[g.key];
+      const sumV = health_validIdx.reduce((s,i) => s + h1g[lc][i], 0);
+      const sumB = health_validIdx.reduce((s,i) => s + h2g[lc].b[i], 0);
+      const sumC = health_validIdx.reduce((s,i) => s + h2g[lc].c[i], 0);
+      const sumR = health_validIdx.reduce((s,i) => s + h2g[lc].r[i], 0);
+      totalV += sumV; totalB += sumB; totalC += sumC; totalR += sumR;
+      const conv = sumV > 0 ? (sumB/sumV*100).toFixed(1) : '0.0';
+      const unit = sumC > 0 ? '$' + (sumR/sumC).toFixed(2) : '—';
+      html += `<tr><td>${lc}</td><td>${Math.round(sumV/nDays)}</td><td>${Math.round(sumB/nDays)}</td><td>${conv}%</td><td>${(sumC/nDays).toFixed(1)}</td><td>${unit}</td></tr>`;
+    });
+
+    const tConv = totalV>0 ? (totalB/totalV*100).toFixed(1) : '0.0';
+    const tUnit = totalC>0 ? '$' + (totalR/totalC).toFixed(2) : '—';
+    html += `<tr class="row-total"><td>合计</td><td>${Math.round(totalV/nDays)}</td><td>${Math.round(totalB/nDays)}</td><td>${tConv}%</td><td>${(totalC/nDays).toFixed(1)}</td><td>${tUnit}</td></tr>`;
+    html += '</tbody></table></div>';
+    card.innerHTML = html;
+    container.appendChild(card);
+  });
+}
+
+// 5G: Key insights
+function health_renderInsights() {
+  const container = document.getElementById('health-insights');
+
+  // Compute stats
+  const oldShareArr = health_validIdx.map(i => {
+    const total = health_lcs.reduce((s,lc) => s+health_h3[lc].v[i],0);
+    return total > 0 ? (health_h3['31天+'].v[i]/total*100) : 0;
+  });
+  const oldShareAvg = (oldShareArr.reduce((a,b)=>a+b,0)/oldShareArr.length).toFixed(1);
+
+  const oldCr = health_validIdx.map(i => health_h3['31天+'].cr[i]).filter(v => v > 0);
+  const oldCrAvg = oldCr.length > 0 ? (oldCr.reduce((a,b)=>a+b,0)/oldCr.length).toFixed(1) : '0';
+
+  const newCr = health_h3['0-15天'].cr.filter(v => v > 0);
+  const newCrAvg = newCr.length > 0 ? (newCr.reduce((a,b)=>a+b,0)/newCr.length).toFixed(1) : '0';
+
+  const avgUnit = g => {
+    const vals = health_validIdx.map(i=>health_h2_daily[g].unit[i]).filter(v=>v>0);
+    return vals.length > 0 ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2) : '0';
+  };
+  const g1u = avgUnit('g1'), g2u = avgUnit('g2'), ctu = avgUnit('ctrl');
+
+  const midShareArr = health_validIdx.map(i => {
+    const total = health_lcs.reduce((s,lc) => s+health_h3[lc].v[i],0);
+    return total > 0 ? (health_h3['16-30天'].v[i]/total*100) : 0;
+  });
+  const midShareAvg = (midShareArr.reduce((a,b)=>a+b,0)/midShareArr.length).toFixed(1);
+
+  container.innerHTML = `
+    <div class="insight-card" style="border-left-color:#4fd1c5">
+      <span class="insight-tag" style="background:rgba(79,209,197,0.12);color:#4fd1c5">结构特征</span>
+      <h4>31天+老客占每日来访的 ${oldShareAvg}%</h4>
+      <p>老客是流量的绝对主体，但消费转化率日均仅 ${oldCrAvg}%，波动范围极大（5%~50%，受营业场景影响）。来访流量大但转化效率低，是杯量增长的核心瓶颈。</p>
+    </div>
+    <div class="insight-card" style="border-left-color:#667eea">
+      <span class="insight-tag" style="background:rgba(102,126,234,0.12);color:#667eea">新客特征</span>
+      <h4>0-15天新客来访极少，但转化率最高（${newCrAvg}%）</h4>
+      <p>新客每日来访仅个位数（实验首5天有数据，合计约120人次），但转化率高达 ${newCrAvg}%（对比31天+ ${oldCrAvg}%）。实验第6天起几乎无新客来访，说明新客池已基本耗尽。</p>
+    </div>
+    <div class="insight-card" style="border-left-color:#ff922b">
+      <span class="insight-tag" style="background:rgba(255,146,43,0.12);color:#ff922b">涨价效应</span>
+      <h4>涨价组单杯实收始终高于对照组</h4>
+      <p>整个实验期内，涨价组1日均 $${g1u}/杯、涨价组2 $${g2u}/杯，均高于对照组 $${ctu}/杯。涨价效应在时间维度上稳定持续，但单日波动涨价组略更大（受周末/节日影响）。</p>
+    </div>
+    <div class="insight-card" style="border-left-color:#f093fb">
+      <span class="insight-tag" style="background:rgba(240,147,251,0.12);color:#f093fb">中间层价值</span>
+      <h4>16-30天用户是最有价值的中间层</h4>
+      <p>来访占比约 ${midShareAvg}%，但转化率远高于31天+老客。这部分用户处于购买习惯形成期，三组间16-30天来访占比趋势高度一致，说明涨价未显著加速中间层流失。</p>
+    </div>
+  `;
+}
+
+function healthInitAll() {
+  health_renderVisitorStack();
+  health_renderBuyerStack();
+  health_renderConversion();
+  health_renderGroupVisitor();
+  health_renderGroupUnit();
+  health_renderSummaryTables();
+  health_renderInsights();
+}
+
+// ========== INIT ==========
+function init() {
+  renderKPIs();
+  renderStructureTable();
+  renderPie('pie-control', data.control, '#4dabf7');
+  renderPie('pie-group1', data.group1, '#ff922b');
+  renderPie('pie-group2', data.group2, '#51cf66');
+  renderBarStructure();
+
+  // Decomp tables
+  renderDecompTable('cups-table-g1', decompG1, 'group1', 'cups');
+  renderDecompTable('cups-table-g2', decompG2, 'group2', 'cups');
+  renderDecompTable('unit-table-g1', decompG1, 'group1', 'unit');
+  renderDecompTable('unit-table-g2', decompG2, 'group2', 'unit');
+  renderDecompTable('rev-table-g1', decompG1, 'group1', 'revenue');
+  renderDecompTable('rev-table-g2', decompG2, 'group2', 'revenue');
+
+  // Charts
+  renderCupsWaterfall();
+  renderUnitBar();
+  renderRevBridge();
+
+  // Insights
+  renderInsights();
+
+  // Recency (Part 3)
+  renderRecencyDistTable();
+  renderRecencyActiveDistChart();
+  renderRecencyFullDistChart();
+  renderRecencyKPIs();
+  renderRecencyActiveTable();
+  renderRecencyUnitChart();
+  renderRecencyCpbChart();
+
+  // Health monitoring (Part 5)
+  healthInitAll();
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

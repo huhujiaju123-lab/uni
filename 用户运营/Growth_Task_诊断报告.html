@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucky US 频次诊断报告 — 任务挑战提频工具前置调研</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  /* ========== CSS 变量 ========== */
+  :root {
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #16213e;
+    --bg-card: #0f3460;
+    --bg-card-alt: #1a1a3e;
+    --bg-table-header: #0f3460;
+    --bg-table-row: #1a1a3e;
+    --bg-table-row-alt: #16213e;
+    --text-primary: #f0f0f0;
+    --text-secondary: #a0b4c8;
+    --text-muted: #7889a0;
+    --accent-blue: #4fc3f7;
+    --accent-orange: #ff7043;
+    --accent-green: #66bb6a;
+    --accent-yellow: #ffca28;
+    --accent-purple: #ab47bc;
+    --accent-red: #ef5350;
+    --accent-cyan: #26c6da;
+    --border-color: rgba(79, 195, 247, 0.15);
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --gradient-header: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
+    --gradient-accent: linear-gradient(135deg, #4fc3f7, #ab47bc);
+    --gradient-summary: linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #006064 100%);
+  }
+
+  /* ========== 全局重置 ========== */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ========== 顶部导航栏 ========== */
+  .top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(26, 26, 46, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 32px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .top-nav .brand {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-blue);
+    letter-spacing: 0.5px;
+  }
+
+  .top-nav .nav-links {
+    display: flex;
+    gap: 4px;
+  }
+
+  .top-nav .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+
+  .top-nav .nav-links a:hover {
+    color: var(--accent-blue);
+    background: rgba(79, 195, 247, 0.08);
+  }
+
+  /* ========== 主容器 ========== */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 24px 60px;
+  }
+
+  /* ========== 页面头部 ========== */
+  .page-header {
+    text-align: center;
+    padding: 48px 0 40px;
+    position: relative;
+  }
+
+  .page-header::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: var(--gradient-accent);
+    margin: 24px auto 0;
+    border-radius: 2px;
+  }
+
+  .page-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .page-header .subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  .page-header .date {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  /* ========== Executive Summary ========== */
+  .exec-summary {
+    background: var(--gradient-summary);
+    border-radius: var(--radius);
+    padding: 36px;
+    margin-bottom: 48px;
+    border: 1px solid rgba(79, 195, 247, 0.2);
+    box-shadow: var(--shadow);
+  }
+
+  .exec-summary h2 {
+    font-size: 20px;
+    color: var(--accent-blue);
+    margin-bottom: 24px;
+    font-weight: 600;
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .kpi-card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm);
+    padding: 20px 16px;
+    text-align: center;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .kpi-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(79, 195, 247, 0.3);
+  }
+
+  .kpi-card .kpi-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .kpi-card .kpi-value.highlight-blue { color: var(--accent-blue); }
+  .kpi-card .kpi-value.highlight-orange { color: var(--accent-orange); }
+  .kpi-card .kpi-value.highlight-green { color: var(--accent-green); }
+  .kpi-card .kpi-value.highlight-yellow { color: var(--accent-yellow); }
+  .kpi-card .kpi-value.highlight-purple { color: var(--accent-purple); }
+  .kpi-card .kpi-value.highlight-red { color: var(--accent-red); }
+
+  .kpi-card .kpi-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  .insight-box {
+    background: rgba(255, 202, 40, 0.08);
+    border-left: 3px solid var(--accent-yellow);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: var(--accent-yellow);
+    line-height: 1.6;
+  }
+
+  /* ========== 模块通用 ========== */
+  .module {
+    margin-bottom: 48px;
+  }
+
+  .module-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .module-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--gradient-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .module-header h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .sub-section {
+    margin-bottom: 36px;
+  }
+
+  .sub-section h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--accent-blue);
+    margin-bottom: 16px;
+    padding-left: 12px;
+    border-left: 3px solid var(--accent-blue);
+  }
+
+  /* ========== 图表容器 ========== */
+  .chart-container {
+    background: var(--bg-card-alt);
+    border-radius: var(--radius);
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 16px;
+  }
+
+  .chart-wrapper {
+    position: relative;
+    width: 100%;
+    max-height: 400px;
+  }
+
+  /* ========== 分析文字块 ========== */
+  .analysis-block {
+    background: rgba(79, 195, 247, 0.05);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+  }
+
+  .analysis-block strong {
+    color: var(--accent-blue);
+  }
+
+  .analysis-block ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .analysis-block ul li {
+    padding: 3px 0;
+    padding-left: 18px;
+    position: relative;
+  }
+
+  .analysis-block ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 12px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-blue);
+  }
+
+  /* ========== 表格 ========== */
+  .data-table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  .data-table thead th {
+    background: var(--bg-table-header);
+    color: var(--accent-blue);
+    font-weight: 600;
+    padding: 12px 16px;
+    text-align: center;
+    white-space: nowrap;
+    border-bottom: 2px solid var(--border-color);
+    font-size: 13px;
+  }
+
+  .data-table tbody td {
+    padding: 10px 16px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text-primary);
+  }
+
+  .data-table tbody tr:nth-child(odd) {
+    background: var(--bg-table-row);
+  }
+
+  .data-table tbody tr:nth-child(even) {
+    background: var(--bg-table-row-alt);
+  }
+
+  .data-table tbody tr:hover {
+    background: rgba(79, 195, 247, 0.08);
+  }
+
+  .data-table tbody td:first-child {
+    font-weight: 600;
+    text-align: left;
+    color: var(--text-primary);
+  }
+
+  /* ========== 热力图矩阵 ========== */
+  .heatmap-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .heatmap-table thead th {
+    background: var(--bg-table-header);
+    color: var(--accent-blue);
+    font-weight: 600;
+    padding: 12px 10px;
+    text-align: center;
+    border-bottom: 2px solid var(--border-color);
+    font-size: 12px;
+  }
+
+  .heatmap-table tbody td {
+    padding: 12px 10px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.04);
+    font-size: 12px;
+    line-height: 1.5;
+    vertical-align: middle;
+    transition: transform 0.15s;
+  }
+
+  .heatmap-table tbody td:first-child {
+    font-weight: 600;
+    text-align: left;
+    background: var(--bg-table-header);
+    color: var(--text-primary);
+    white-space: nowrap;
+    padding-left: 14px;
+    font-size: 13px;
+  }
+
+  .heatmap-table tbody td:hover {
+    transform: scale(1.04);
+  }
+
+  .heatmap-cell {
+    border-radius: 4px;
+    display: inline-block;
+    padding: 2px 0;
+    width: 100%;
+  }
+
+  .heatmap-cell .pct {
+    font-weight: 700;
+    display: block;
+    font-size: 14px;
+  }
+
+  .heatmap-cell .cnt {
+    font-size: 11px;
+    opacity: 0.7;
+    display: block;
+  }
+
+  /* ========== 推荐参数表 ========== */
+  .param-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  .param-table thead th {
+    background: linear-gradient(135deg, #0f3460, #1a237e);
+    color: var(--accent-yellow);
+    font-weight: 600;
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 2px solid var(--accent-yellow);
+    font-size: 13px;
+  }
+
+  .param-table tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+
+  .param-table tbody tr:nth-child(odd) {
+    background: rgba(255, 202, 40, 0.03);
+  }
+
+  .param-table tbody tr:nth-child(even) {
+    background: rgba(171, 71, 188, 0.03);
+  }
+
+  .param-table tbody tr:hover {
+    background: rgba(79, 195, 247, 0.08);
+  }
+
+  .param-table tbody td:first-child {
+    font-weight: 700;
+    color: var(--accent-yellow);
+    white-space: nowrap;
+  }
+
+  .param-table tbody td:nth-child(2) {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .param-table tbody td:nth-child(3) {
+    color: var(--text-secondary);
+    font-size: 13px;
+  }
+
+  /* ========== 结论框 ========== */
+  .conclusion-box {
+    background: linear-gradient(135deg, rgba(102, 187, 106, 0.1) 0%, rgba(79, 195, 247, 0.1) 100%);
+    border: 2px solid var(--accent-green);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-top: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .conclusion-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-green), var(--accent-blue), var(--accent-purple));
+  }
+
+  .conclusion-box h3 {
+    font-size: 18px;
+    color: var(--accent-green);
+    margin-bottom: 14px;
+    font-weight: 700;
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .conclusion-box p {
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--text-primary);
+  }
+
+  .conclusion-box strong {
+    color: var(--accent-yellow);
+  }
+
+  /* ========== 历史活动卡片 ========== */
+  .history-card {
+    background: var(--bg-card-alt);
+    border-radius: var(--radius);
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+  }
+
+  .history-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .history-card .tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .tag-warn { background: rgba(255, 112, 67, 0.15); color: var(--accent-orange); }
+  .tag-info { background: rgba(79, 195, 247, 0.15); color: var(--accent-blue); }
+  .tag-caution { background: rgba(255, 202, 40, 0.15); color: var(--accent-yellow); }
+
+  .history-card ul {
+    list-style: none;
+    padding: 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .history-card ul li {
+    padding: 4px 0 4px 18px;
+    position: relative;
+  }
+
+  .history-card ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 13px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--text-muted);
+  }
+
+  .history-card .conclusion-line {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .conclusion-line.warn { color: var(--accent-orange); }
+  .conclusion-line.info { color: var(--accent-blue); }
+  .conclusion-line.caution { color: var(--accent-yellow); }
+
+  /* ========== 回到顶部 ========== */
+  .back-to-top {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--gradient-accent);
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(79, 195, 247, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .back-to-top:hover {
+    transform: translateY(-3px);
+  }
+
+  /* ========== 页脚 ========== */
+  .page-footer {
+    text-align: center;
+    padding: 32px 0 24px;
+    border-top: 1px solid var(--border-color);
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* ========== 动画 ========== */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ========== 响应式 ========== */
+  @media (max-width: 768px) {
+    .container { padding: 70px 16px 40px; }
+    .page-header h1 { font-size: 24px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .kpi-card .kpi-value { font-size: 22px; }
+    .kpi-card .kpi-label { font-size: 11px; }
+    .exec-summary { padding: 24px 16px; }
+    .chart-container { padding: 16px 12px; }
+    .module-header h2 { font-size: 18px; }
+    .conclusion-box { padding: 20px 16px; }
+    .top-nav .nav-links { display: none; }
+    .data-table { font-size: 12px; }
+    .data-table thead th, .data-table tbody td { padding: 8px 10px; }
+    .heatmap-table { font-size: 11px; }
+    .heatmap-table thead th, .heatmap-table tbody td { padding: 8px 6px; }
+    .heatmap-cell .pct { font-size: 12px; }
+    .param-table tbody td:first-child { white-space: normal; }
+  }
+
+  @media (max-width: 480px) {
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .page-header h1 { font-size: 20px; }
+    .top-nav { padding: 0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<nav class="top-nav">
+  <div class="brand">Lucky US Growth</div>
+  <div class="nav-links">
+    <a href="#summary">Summary</a>
+    <a href="#module1">频次基线</a>
+    <a href="#module2">提频空间</a>
+    <a href="#module3">消费节奏</a>
+    <a href="#module4">历史效果</a>
+    <a href="#module5">参数推导</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- 页面头部 -->
+  <header class="page-header">
+    <h1>Lucky US 频次诊断报告</h1>
+    <div class="subtitle">任务挑战提频工具前置调研</div>
+    <div class="date">2026-03-10 | Lucky US Growth Team</div>
+  </header>
+
+  <!-- ========== Executive Summary ========== -->
+  <section id="summary" class="exec-summary fade-in">
+    <h2>Executive Summary</h2>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-value highlight-blue">~13,500</div>
+        <div class="kpi-label">周活跃用户 (人/周)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value highlight-blue">~35,600</div>
+        <div class="kpi-label">月活跃用户 (人/月)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value highlight-orange">76%</div>
+        <div class="kpi-label">1次用户占比 (周)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value highlight-orange">63%</div>
+        <div class="kpi-label">1次用户占比 (月)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value highlight-green">12,912</div>
+        <div class="kpi-label">"差一步"用户池 (33%活跃)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value highlight-red">~4-5%</div>
+        <div class="kpi-label">多杯率 (极低)</div>
+      </div>
+    </div>
+    <div class="insight-box">
+      核心洞察：绝大多数用户"来一次走一次"，提频是最大增长杠杆。12,912 名低频+中低频用户已有消费习惯，是任务挑战的最佳目标人群。
+    </div>
+  </section>
+
+  <!-- ========== 模块 1：频次基线摸底 ========== -->
+  <section id="module1" class="module fade-in">
+    <div class="module-header">
+      <div class="module-number">1</div>
+      <h2>频次基线摸底</h2>
+    </div>
+
+    <!-- 1.1 周频次分布 -->
+    <div class="sub-section">
+      <h3>1.1 周频次分布</h3>
+      <div class="chart-container">
+        <div class="chart-wrapper">
+          <canvas id="chartWeeklyFreq"></canvas>
+        </div>
+      </div>
+      <div class="analysis-block">
+        <ul>
+          <li><strong>76%</strong> 周活跃用户仅下单 1 次，频次高度集中</li>
+          <li>2 次用户占 15-16%，3 次以上用户仅 8%</li>
+          <li>W10 杯量回升（15,356 人），可能与季节性回暖有关</li>
+          <li>各周分布极其稳定，无自然提频趋势</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 1.2 月频次趋势 -->
+    <div class="sub-section">
+      <h3>1.2 月频次趋势</h3>
+      <div class="chart-container">
+        <div class="chart-wrapper">
+          <canvas id="chartMonthlyFreq"></canvas>
+        </div>
+      </div>
+      <div class="analysis-block">
+        <ul>
+          <li>三个月频次分布几乎不变，1 次用户占比从 64% 略降至 63%</li>
+          <li>3 次以上用户微增（从 19% 到 21%），可能受涨价实验影响</li>
+          <li><strong>结论：用户频次已进入"稳态"，无外部干预不会自然提升</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 1.3 多杯率 -->
+    <div class="sub-section">
+      <h3>1.3 多杯率趋势</h3>
+      <div class="chart-container">
+        <div class="chart-wrapper">
+          <canvas id="chartMultiCup"></canvas>
+        </div>
+      </div>
+      <div class="analysis-block">
+        <ul>
+          <li>杯/单比例稳定在 <strong>1.04-1.05</strong>，约 95% 订单为单杯</li>
+          <li>多杯消费空间极大但当前几乎不存在</li>
+          <li>任务挑战如果以"杯"为单位计数，可有效鼓励多杯购买</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 模块 2：提频空间识别 ========== -->
+  <section id="module2" class="module fade-in">
+    <div class="module-header">
+      <div class="module-number">2</div>
+      <h2>提频空间识别</h2>
+    </div>
+
+    <!-- 2.1 频次迁移矩阵 -->
+    <div class="sub-section">
+      <h3>2.1 频次迁移矩阵（1月 -> 2月）</h3>
+      <div class="data-table-wrapper">
+        <table class="heatmap-table" id="heatmapTable">
+          <thead>
+            <tr>
+              <th style="text-align:left;">1月 \ 2月</th>
+              <th>1次</th>
+              <th>2次</th>
+              <th>3-4次</th>
+              <th>5+次</th>
+              <th>流失</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 由 JS 动态渲染 -->
+          </tbody>
+        </table>
+      </div>
+      <div class="analysis-block">
+        <ul>
+          <li><strong>1 次用户 77% 流失</strong>，是最大漏洞，仅 9.6% 实现提频</li>
+          <li>提频成功率随原频次递增：1次 9.6% -> 2次 14.4% -> 3-4次 12.2%（到5+）</li>
+          <li>5+ 次用户留存率最高：45.6% 不变 + 20.3% 向上 = 最稳定群体</li>
+          <li>新增用户 22,254 人，但 76% 只消费 1 次</li>
+          <li><strong>最佳提频目标：2 次和 3-4 次用户</strong> —— 已有消费习惯，且有自然提频潜力</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 2.2 频次分层用户规模 -->
+    <div class="sub-section">
+      <h3>2.2 频次分层用户规模</h3>
+      <div class="chart-container">
+        <div class="chart-wrapper">
+          <canvas id="chartFreqTier"></canvas>
+        </div>
+      </div>
+      <div class="analysis-block">
+        <ul>
+          <li><strong>"差一步"用户 = 低频(9,267) + 中低频(3,645) = 12,912 人（33%）</strong></li>
+          <li>这些用户 4 周内复购 2-5 次，已形成消费习惯</li>
+          <li>极低频 25,011 人（64%），多数为新客或即将流失，提频难度大</li>
+          <li>中高频仅 1,240 人（3%），是忠诚核心，无需额外激励</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 模块 3：消费节奏与时机 ========== -->
+  <section id="module3" class="module fade-in">
+    <div class="module-header">
+      <div class="module-number">3</div>
+      <h2>消费节奏与时机</h2>
+    </div>
+
+    <!-- 3.1 星期分布 -->
+    <div class="sub-section">
+      <h3>3.1 星期消费分布</h3>
+      <div class="chart-container">
+        <div class="chart-wrapper">
+          <canvas id="chartWeekday"></canvas>
+        </div>
+      </div>
+      <div class="analysis-block">
+        <ul>
+          <li>周中（Wed-Thu）为消费高峰，周三最高 17,131 单</li>
+          <li>周末比工作日低 <strong>24%</strong>（12,033 vs 15,772 单均值）</li>
+          <li>人均单量周中也高于周末（1.47 vs 1.28）</li>
+          <li><strong>周末是提频突破口 —— 任务可引导周末消费</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 3.2 最长连续消费天数 -->
+    <div class="sub-section">
+      <h3>3.2 最长连续消费天数分布</h3>
+      <div class="chart-container">
+        <div class="chart-wrapper" style="max-height:360px;">
+          <canvas id="chartConsecutive"></canvas>
+        </div>
+      </div>
+      <div class="analysis-block">
+        <ul>
+          <li><strong>85.4% 用户最长只连续消费过 1 天</strong></li>
+          <li>连续 3 天以上仅 4.8%，连续习惯极难建立</li>
+          <li><strong>"7 天打卡 5 杯"任务对绝大多数用户不现实</strong></li>
+          <li>建议任务周期不超过 7 天，目标杯数 3-4 杯（非连续要求）</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 模块 4：历史活动提频效果 ========== -->
+  <section id="module4" class="module fade-in">
+    <div class="module-header">
+      <div class="module-number">4</div>
+      <h2>历史活动提频效果</h2>
+    </div>
+
+    <!-- 4.1 Coffee Pass -->
+    <div class="history-card">
+      <h4>
+        4.1 Coffee Pass 效果
+        <span class="tag tag-warn">需求前置</span>
+      </h4>
+      <div class="chart-container" style="margin-bottom:16px;">
+        <div class="chart-wrapper" style="max-height:300px;">
+          <canvas id="chartCoffeePass"></canvas>
+        </div>
+      </div>
+      <ul>
+        <li>购买用户 121 人，售出 695 张券</li>
+        <li>前 30 天周均杯量：1.65 -> 购买后：2.06（<strong>+25%</strong>）</li>
+        <li>后两周回落至 1.11（低于基线水平）</li>
+      </ul>
+      <div class="conclusion-line warn">
+        结论：Coffee Pass 是消费前置，非真正提频。任务挑战需避免同样陷阱 —— 不计连续天数，只看窗口内总杯数。
+      </div>
+    </div>
+
+    <!-- 4.2 涨价实验 -->
+    <div class="history-card">
+      <h4>
+        4.2 涨价实验 0212
+        <span class="tag tag-info">价格弹性</span>
+      </h4>
+      <ul>
+        <li>3 组：涨价组 1（38,093 人）/ 涨价组 2（38,058 人）/ 对照组 3（50,295 人）</li>
+        <li>涨价组单杯实收 +8~9%，但转化率 -0.8~1pp</li>
+        <li>总收入略降，用户对价格敏感</li>
+      </ul>
+      <div class="conclusion-line info">
+        结论：价格敏感度高，任务奖励中的折扣力度需参考涨价实验的价格弹性。免费杯/大额券是有效激励。
+      </div>
+    </div>
+
+    <!-- 4.3 Share the Luck -->
+    <div class="history-card">
+      <h4>
+        4.3 Share the Luck
+        <span class="tag tag-caution">裂变质量</span>
+      </h4>
+      <ul>
+        <li>2 月拉新占比 6.78% -> 5.23%（-1.55pp）</li>
+        <li>裂变系数停滞：人均仅邀 1.1 人，84% 用户仅邀 1 人</li>
+        <li>被邀请新客首月转化较低</li>
+      </ul>
+      <div class="conclusion-line caution">
+        结论：裂变用户质量一般。任务挑战如包含"邀请好友"元素需谨慎，核心应聚焦自身消费频次。
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 模块 5：任务参数推导 ========== -->
+  <section id="module5" class="module fade-in">
+    <div class="module-header">
+      <div class="module-number">5</div>
+      <h2>任务参数推导</h2>
+    </div>
+
+    <div class="sub-section">
+      <h3>推荐参数一览</h3>
+      <div class="data-table-wrapper">
+        <table class="param-table">
+          <thead>
+            <tr>
+              <th>参数</th>
+              <th>推荐值</th>
+              <th>推导依据</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>目标人群</td>
+              <td>低频+中低频用户（12,912 人）</td>
+              <td>模块2：4 周内 2-5 单，有消费习惯但未形成高频</td>
+            </tr>
+            <tr>
+              <td>任务周期</td>
+              <td>7 天</td>
+              <td>模块3：85% 用户最长连续仅 1 天，7 天已是上限</td>
+            </tr>
+            <tr>
+              <td>目标杯数</td>
+              <td>3 杯/7天（低频）<br>5 杯/7天（中低频）</td>
+              <td>模块1：低频周均 0.5-1 单 -> 目标 +50%~100%</td>
+            </tr>
+            <tr>
+              <td>奖励力度</td>
+              <td>免费 1 杯（价值 ~$3.98-$5）</td>
+              <td>Coffee Pass $3.98/杯为参考，奖励 <= 增量毛利</td>
+            </tr>
+            <tr>
+              <td>周末激励</td>
+              <td>周末消费额外 +1 杯奖励</td>
+              <td>模块3：周末订单量低 24%，有明显提频空间</td>
+            </tr>
+            <tr>
+              <td>分层策略</td>
+              <td>低频: 7天3杯送1杯<br>中低频: 7天5杯送1杯<br>中频: 7天7杯送1杯</td>
+              <td>各层 +50%~+40%，确保目标可达但有挑战性</td>
+            </tr>
+            <tr>
+              <td>防需求前置</td>
+              <td>不计连续天数，只看窗口内总杯数</td>
+              <td>Coffee Pass 教训：连续要求导致需求前置而非真正提频</td>
+            </tr>
+            <tr>
+              <td>预期提频增量</td>
+              <td>低频 +1 杯/周（+50%）<br>~9,267 杯/周增量</td>
+              <td>保守估计 50% 参与率 x 每人 +1 杯</td>
+            </tr>
+            <tr>
+              <td>ROI 估算</td>
+              <td>奖励成本 ~$4/人<br>vs 增量收入 ~$4.5/人</td>
+              <td>接近盈亏平衡，需靠后续留存回报</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 总结框 -->
+    <div class="conclusion-box">
+      <h3>核心结论</h3>
+      <p>
+        Lucky US 用户频次高度集中在 1 次/周，提频是最大增长杠杆。<strong>12,912 名"差一步"用户（33% 活跃用户）</strong>是任务挑战的核心目标。
+        建议采用<strong>"7 天 N 杯"窗口制</strong>（非连续打卡），分层设定目标，周末额外激励。
+        关键风险是 Coffee Pass 已证明的"需求前置"效应 —— 任务设计必须避免只是把未来消费提前。
+        ROI 接近盈亏平衡，真正的回报在于<strong>用户频次习惯的长期改变</strong>。
+      </p>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="page-footer">
+    Lucky US Growth Team | 频次诊断报告 v1.0 | 2026-03-10
+  </footer>
+
+</div>
+
+<!-- 回到顶部 -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script>
+// ========== Chart.js 全局配置 ==========
+Chart.defaults.color = '#a0b4c8';
+Chart.defaults.font.family = "-apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.plugins.legend.labels.boxWidth = 14;
+Chart.defaults.plugins.legend.labels.padding = 16;
+
+const COLORS = {
+  blue: '#4fc3f7',
+  orange: '#ff7043',
+  green: '#66bb6a',
+  yellow: '#ffca28',
+  purple: '#ab47bc',
+  red: '#ef5350',
+  cyan: '#26c6da',
+  blueAlpha: 'rgba(79, 195, 247, 0.7)',
+  orangeAlpha: 'rgba(255, 112, 67, 0.7)',
+  greenAlpha: 'rgba(102, 187, 106, 0.7)',
+  yellowAlpha: 'rgba(255, 202, 40, 0.7)',
+  purpleAlpha: 'rgba(171, 71, 188, 0.7)',
+};
+
+// ========== 1.1 周频次分布（堆叠条形图） ==========
+new Chart(document.getElementById('chartWeeklyFreq'), {
+  type: 'bar',
+  data: {
+    labels: ['W07 (2/10)', 'W08 (2/17)', 'W09 (2/24)', 'W10 (3/3)'],
+    datasets: [
+      { label: '1次', data: [10157, 9923, 10317, 11648], backgroundColor: COLORS.blueAlpha, borderColor: COLORS.blue, borderWidth: 1 },
+      { label: '2次', data: [2196, 1943, 1824, 2303], backgroundColor: COLORS.orangeAlpha, borderColor: COLORS.orange, borderWidth: 1 },
+      { label: '3次', data: [653, 643, 589, 799], backgroundColor: COLORS.greenAlpha, borderColor: COLORS.green, borderWidth: 1 },
+      { label: '4次', data: [284, 266, 212, 352], backgroundColor: COLORS.yellowAlpha, borderColor: COLORS.yellow, borderWidth: 1 },
+      { label: '5+次', data: [152, 196, 154, 254], backgroundColor: COLORS.purpleAlpha, borderColor: COLORS.purple, borderWidth: 1 },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2.2,
+    scales: {
+      x: { stacked: true, grid: { color: 'rgba(255,255,255,0.05)' } },
+      y: { stacked: true, grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: '用户数' } }
+    },
+    plugins: {
+      title: { display: true, text: '每周活跃用户频次分布（堆叠）', color: '#f0f0f0', font: { size: 15, weight: '600' }, padding: { bottom: 16 } },
+      tooltip: {
+        callbacks: {
+          afterBody: function(context) {
+            const idx = context[0].dataIndex;
+            const total = context[0].chart.data.datasets.reduce((s, ds) => s + ds.data[idx], 0);
+            const val = context[0].raw;
+            return '占比: ' + (val / total * 100).toFixed(1) + '%';
+          }
+        }
+      }
+    }
+  }
+});
+
+// ========== 1.2 月频次趋势（分组条形图） ==========
+new Chart(document.getElementById('chartMonthlyFreq'), {
+  type: 'bar',
+  data: {
+    labels: ['2025-12', '2026-01', '2026-02'],
+    datasets: [
+      { label: '1次', data: [22872, 21536, 22309], backgroundColor: COLORS.blue, borderRadius: 3 },
+      { label: '2次', data: [6043, 5757, 5986], backgroundColor: COLORS.orange, borderRadius: 3 },
+      { label: '3-4次', data: [4076, 4078, 4174], backgroundColor: COLORS.green, borderRadius: 3 },
+      { label: '5-7次', data: [1715, 1899, 1919], backgroundColor: COLORS.yellow, borderRadius: 3 },
+      { label: '8+次', data: [1005, 1225, 1251], backgroundColor: COLORS.purple, borderRadius: 3 },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2.2,
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.05)' } },
+      y: { grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: '用户数' } }
+    },
+    plugins: {
+      title: { display: true, text: '月度频次分布对比', color: '#f0f0f0', font: { size: 15, weight: '600' }, padding: { bottom: 16 } }
+    }
+  }
+});
+
+// ========== 1.3 多杯率折线图 ==========
+new Chart(document.getElementById('chartMultiCup'), {
+  type: 'line',
+  data: {
+    labels: ['W06', 'W07', 'W08', 'W09', 'W10'],
+    datasets: [
+      {
+        label: '杯/单 比例',
+        data: [1.05, 1.04, 1.05, 1.05, 1.04],
+        borderColor: COLORS.orange,
+        backgroundColor: 'rgba(255, 112, 67, 0.1)',
+        borderWidth: 3,
+        pointRadius: 6,
+        pointBackgroundColor: COLORS.orange,
+        fill: true,
+        tension: 0.3,
+        yAxisID: 'y'
+      },
+      {
+        label: '订单数',
+        data: [20882, 24625, 21040, 20375, 24761],
+        borderColor: COLORS.blue,
+        borderWidth: 2,
+        borderDash: [5, 5],
+        pointRadius: 4,
+        pointBackgroundColor: COLORS.blue,
+        fill: false,
+        tension: 0.3,
+        yAxisID: 'y1'
+      },
+      {
+        label: '杯量',
+        data: [21922, 25705, 22050, 21314, 25866],
+        borderColor: COLORS.green,
+        borderWidth: 2,
+        borderDash: [5, 5],
+        pointRadius: 4,
+        pointBackgroundColor: COLORS.green,
+        fill: false,
+        tension: 0.3,
+        yAxisID: 'y1'
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2.4,
+    interaction: { mode: 'index', intersect: false },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.05)' } },
+      y: {
+        type: 'linear', position: 'left',
+        min: 1.00, max: 1.10,
+        grid: { color: 'rgba(255,255,255,0.05)' },
+        title: { display: true, text: '杯/单' },
+        ticks: { callback: v => v.toFixed(2) }
+      },
+      y1: {
+        type: 'linear', position: 'right',
+        grid: { drawOnChartArea: false },
+        title: { display: true, text: '数量' }
+      }
+    },
+    plugins: {
+      title: { display: true, text: '每周多杯率趋势（杯/单 & 绝对量）', color: '#f0f0f0', font: { size: 15, weight: '600' }, padding: { bottom: 16 } }
+    }
+  }
+});
+
+// ========== 2.1 频次迁移矩阵热力图 ==========
+(function() {
+  const rows = [
+    { label: '1次 (21,536人)', data: [
+      { cnt: 2929, pct: 13.6 }, { cnt: 1117, pct: 5.2 }, { cnt: 639, pct: 3.0 }, { cnt: 301, pct: 1.4 }, { cnt: 16550, pct: 76.9 }
+    ]},
+    { label: '2次 (5,757人)', data: [
+      { cnt: 1353, pct: 23.5 }, { cnt: 715, pct: 12.4 }, { cnt: 534, pct: 9.3 }, { cnt: 292, pct: 5.1 }, { cnt: 2863, pct: 49.7 }
+    ]},
+    { label: '3-4次 (4,078人)', data: [
+      { cnt: 863, pct: 21.2 }, { cnt: 639, pct: 15.7 }, { cnt: 717, pct: 17.6 }, { cnt: 497, pct: 12.2 }, { cnt: 1362, pct: 33.4 }
+    ]},
+    { label: '5+次 (3,124人)', data: [
+      { cnt: 329, pct: 10.5 }, { cnt: 401, pct: 12.8 }, { cnt: 633, pct: 20.3 }, { cnt: 1426, pct: 45.6 }, { cnt: 335, pct: 10.7 }
+    ]},
+    { label: '新增', data: [
+      { cnt: 16835, pct: null }, { cnt: 3114, pct: null }, { cnt: 1651, pct: null }, { cnt: 654, pct: null }, { cnt: null, pct: null }
+    ]}
+  ];
+
+  /* 根据百分比映射颜色深浅 */
+  function heatColor(pct) {
+    if (pct === null) return 'transparent';
+    /* 低值用蓝底，高值用暖色 */
+    if (pct <= 5) return 'rgba(79, 195, 247, 0.10)';
+    if (pct <= 10) return 'rgba(79, 195, 247, 0.20)';
+    if (pct <= 15) return 'rgba(79, 195, 247, 0.30)';
+    if (pct <= 20) return 'rgba(102, 187, 106, 0.35)';
+    if (pct <= 30) return 'rgba(255, 202, 40, 0.35)';
+    if (pct <= 50) return 'rgba(255, 112, 67, 0.40)';
+    return 'rgba(239, 83, 80, 0.50)';
+  }
+
+  const tbody = document.querySelector('#heatmapTable tbody');
+  rows.forEach(function(row) {
+    const tr = document.createElement('tr');
+    const tdLabel = document.createElement('td');
+    tdLabel.textContent = row.label;
+    tr.appendChild(tdLabel);
+
+    row.data.forEach(function(cell) {
+      const td = document.createElement('td');
+      td.style.backgroundColor = heatColor(cell.pct);
+      if (cell.pct !== null) {
+        td.innerHTML = '<span class="heatmap-cell"><span class="pct">' + cell.pct + '%</span><span class="cnt">' + cell.cnt.toLocaleString() + '人</span></span>';
+      } else if (cell.cnt !== null) {
+        td.innerHTML = '<span class="heatmap-cell"><span class="pct" style="color:#a0b4c8;">' + cell.cnt.toLocaleString() + '</span><span class="cnt">新增</span></span>';
+        td.style.backgroundColor = 'rgba(171,71,188,0.12)';
+      } else {
+        td.textContent = '—';
+        td.style.color = '#555';
+      }
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+})();
+
+// ========== 2.2 频次分层用户规模（水平条形图） ==========
+new Chart(document.getElementById('chartFreqTier'), {
+  type: 'bar',
+  data: {
+    labels: ['极低频 (<0.5/周)', '低频 (0.5-1/周)', '中低频 (1-2/周)', '中频 (2-3/周)', '高频 (3+/周)'],
+    datasets: [{
+      label: '用户数',
+      data: [25011, 9267, 3645, 754, 486],
+      backgroundColor: [
+        'rgba(120, 137, 160, 0.6)',
+        COLORS.blueAlpha,
+        COLORS.greenAlpha,
+        COLORS.yellowAlpha,
+        COLORS.purpleAlpha
+      ],
+      borderColor: [
+        '#7889a0',
+        COLORS.blue,
+        COLORS.green,
+        COLORS.yellow,
+        COLORS.purple
+      ],
+      borderWidth: 1,
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2,
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: '用户数' } },
+      y: { grid: { display: false } }
+    },
+    plugins: {
+      title: { display: true, text: '频次分层用户规模（4 周累计）', color: '#f0f0f0', font: { size: 15, weight: '600' }, padding: { bottom: 16 } },
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          afterLabel: function(context) {
+            const total = 39163;
+            return '占比: ' + (context.raw / total * 100).toFixed(1) + '%  |  4周均单量: ' + [1.0, 2.3, 5.0, 9.1, 18.1][context.dataIndex];
+          }
+        }
+      }
+    }
+  }
+});
+
+// ========== 3.1 星期分布（双轴：条形+折线） ==========
+new Chart(document.getElementById('chartWeekday'), {
+  type: 'bar',
+  data: {
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    datasets: [
+      {
+        label: '订单数',
+        data: [14556, 15570, 17131, 16585, 15016, 12654, 11412],
+        backgroundColor: function(ctx) {
+          return ctx.dataIndex >= 5 ? 'rgba(255, 112, 67, 0.6)' : 'rgba(79, 195, 247, 0.6)';
+        },
+        borderColor: function(ctx) {
+          return ctx.dataIndex >= 5 ? COLORS.orange : COLORS.blue;
+        },
+        borderWidth: 1,
+        borderRadius: 4,
+        yAxisID: 'y'
+      },
+      {
+        label: '人均单量',
+        type: 'line',
+        data: [1.36, 1.42, 1.47, 1.44, 1.39, 1.27, 1.28],
+        borderColor: COLORS.yellow,
+        backgroundColor: 'rgba(255, 202, 40, 0.1)',
+        borderWidth: 3,
+        pointRadius: 5,
+        pointBackgroundColor: COLORS.yellow,
+        fill: false,
+        tension: 0.3,
+        yAxisID: 'y1'
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2.2,
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.05)' } },
+      y: { grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: '订单数' } },
+      y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: '人均单量' }, min: 1.1, max: 1.6 }
+    },
+    plugins: {
+      title: { display: true, text: '星期消费分布（2月-3月初）', color: '#f0f0f0', font: { size: 15, weight: '600' }, padding: { bottom: 16 } }
+    }
+  }
+});
+
+// ========== 3.2 最长连续消费天数（横向条形图） ==========
+new Chart(document.getElementById('chartConsecutive'), {
+  type: 'bar',
+  data: {
+    labels: ['1天', '2天', '3天', '4-5天', '6+天'],
+    datasets: [{
+      label: '用户数',
+      data: [55753, 6380, 1761, 1100, 261],
+      backgroundColor: [
+        'rgba(239, 83, 80, 0.6)',
+        'rgba(255, 112, 67, 0.6)',
+        'rgba(255, 202, 40, 0.6)',
+        'rgba(102, 187, 106, 0.6)',
+        'rgba(79, 195, 247, 0.6)'
+      ],
+      borderColor: [
+        COLORS.red,
+        COLORS.orange,
+        COLORS.yellow,
+        COLORS.green,
+        COLORS.blue
+      ],
+      borderWidth: 1,
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2,
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: '用户数' } },
+      y: { grid: { display: false } }
+    },
+    plugins: {
+      title: { display: true, text: '最长连续消费天数分布', color: '#f0f0f0', font: { size: 15, weight: '600' }, padding: { bottom: 16 } },
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          afterLabel: function(ctx) {
+            const total = 65255;
+            return '占比: ' + (ctx.raw / total * 100).toFixed(1) + '%';
+          }
+        }
+      }
+    }
+  }
+});
+
+// ========== 4.1 Coffee Pass 效果折线图 ==========
+new Chart(document.getElementById('chartCoffeePass'), {
+  type: 'line',
+  data: {
+    labels: ['购买前4周', '购买前3周', '购买前2周', '购买前1周', '购买后1周', '购买后2周', '购买后3周', '购买后4周', '到期后1周', '到期后2周'],
+    datasets: [{
+      label: '周均杯量',
+      data: [1.55, 1.60, 1.70, 1.75, 2.10, 2.20, 2.00, 1.95, 1.15, 1.11],
+      borderColor: COLORS.green,
+      backgroundColor: 'rgba(102, 187, 106, 0.08)',
+      borderWidth: 3,
+      pointRadius: 5,
+      pointBackgroundColor: function(ctx) {
+        if (ctx.dataIndex >= 4 && ctx.dataIndex <= 7) return COLORS.green;
+        if (ctx.dataIndex >= 8) return COLORS.red;
+        return COLORS.blue;
+      },
+      fill: true,
+      tension: 0.35,
+      segment: {
+        borderColor: function(ctx) {
+          if (ctx.p1DataIndex >= 8) return COLORS.red;
+          if (ctx.p1DataIndex >= 4) return COLORS.green;
+          return COLORS.blue;
+        },
+        borderDash: function(ctx) {
+          if (ctx.p1DataIndex >= 8) return [5, 5];
+          return undefined;
+        }
+      }
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2.8,
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.05)' } },
+      y: { grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: '周均杯量' }, min: 0.8, max: 2.5 }
+    },
+    plugins: {
+      title: { display: true, text: 'Coffee Pass 前后消费变化', color: '#f0f0f0', font: { size: 14, weight: '600' }, padding: { bottom: 12 } },
+      legend: { display: false },
+      annotation: {}
+    }
+  }
+});
+
+// ========== 滚动显示动画 ==========
+(function() {
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.fade-in').forEach(function(el) {
+    observer.observe(el);
+  });
+})();
+
+// ========== 回到顶部按钮 ==========
+(function() {
+  const btn = document.getElementById('backToTop');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 400) {
+      btn.classList.add('visible');
+    } else {
+      btn.classList.remove('visible');
+    }
+  });
+})();
+
+// ========== 平滑滚动 ==========
+document.querySelectorAll('.nav-links a').forEach(function(link) {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>

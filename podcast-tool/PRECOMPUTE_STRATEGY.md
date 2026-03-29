@@ -339,7 +339,7 @@ def run_daily():
 
 ---
 
-## 四、云端同步与服务
+## 五、云端同步与服务
 
 ### 4.1 同步方案
 
@@ -386,7 +386,7 @@ def check_cache(url):
 
 ---
 
-## 五、本地 transcript.json 精简
+## 六、本地 transcript.json 精简
 
 现有 Deepgram 的 `transcript.json` 平均 9.7 MB/集（包含词级时间戳和完整 API 响应），**下游从未使用**（只用 transcript.txt）。
 
@@ -417,7 +417,7 @@ def check_cache(url):
 
 ---
 
-## 六、实现阶段
+## 七、实现阶段
 
 ### Phase 1：Whisper 本地转录集成（替代 Deepgram）
 
@@ -466,7 +466,7 @@ def check_cache(url):
 
 ---
 
-## 七、风险与注意事项
+## 八、风险与注意事项
 
 ### 小宇宙反爬
 
@@ -495,7 +495,7 @@ caffeinate -i python precompute.py
 
 ---
 
-## 八、文件清单（新增/修改）
+## 九、文件清单（新增/修改）
 
 ```
 podcast-tool/

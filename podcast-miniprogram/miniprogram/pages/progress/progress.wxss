@@ -1,0 +1,146 @@
+.page-progress {
+  padding: 48rpx 32rpx;
+  min-height: 100vh;
+}
+
+/* Meta Card */
+.meta-card {
+  display: flex;
+  gap: 20rpx;
+  background: var(--bg-card);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 48rpx;
+  border: 1rpx solid var(--border);
+}
+
+.meta-cover {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+}
+
+.meta-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.meta-name {
+  font-size: 24rpx;
+  color: var(--gold);
+  margin-bottom: 4rpx;
+}
+
+.meta-title {
+  font-size: 28rpx;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+/* Steps */
+.steps-container {
+  padding: 0 16rpx;
+}
+
+.step-item {
+  display: flex;
+  gap: 20rpx;
+  align-items: flex-start;
+  padding-bottom: 40rpx;
+}
+
+.step-icon-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60rpx;
+  flex-shrink: 0;
+}
+
+.step-icon {
+  font-size: 36rpx;
+  line-height: 1;
+}
+
+.step-line {
+  width: 2rpx;
+  height: 60rpx;
+  background: var(--border);
+  margin-top: 12rpx;
+}
+
+.step-done .step-line {
+  background: var(--gold);
+}
+
+.step-content {
+  flex: 1;
+  padding-top: 4rpx;
+}
+
+.step-name {
+  font-size: 30rpx;
+  color: var(--text-muted);
+}
+
+.step-running .step-name,
+.step-done .step-name {
+  color: var(--text);
+}
+
+.step-detail {
+  font-size: 24rpx;
+  color: var(--text-dim);
+  margin-top: 4rpx;
+}
+
+.step-check {
+  color: var(--success);
+  font-size: 32rpx;
+  font-weight: 600;
+  padding-top: 4rpx;
+}
+
+/* Spinner */
+.step-spinner {
+  margin-top: 8rpx;
+}
+
+.spinner-dot {
+  width: 12rpx;
+  height: 12rpx;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Error */
+.error-card {
+  background: var(--bg-card);
+  border: 1rpx solid var(--danger);
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-top: 32rpx;
+  text-align: center;
+}
+
+.error-text {
+  color: var(--danger);
+  font-size: 28rpx;
+}
+
+/* Hint */
+.hint-text {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 24rpx;
+  margin-top: 48rpx;
+}

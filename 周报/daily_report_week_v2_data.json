@@ -1,0 +1,1580 @@
+{
+  "Q1_biz_thisweek": [
+    {
+      "dt": "2026-03-05",
+      "shops": "11",
+      "cups": "3395",
+      "orders": "3264",
+      "revenue": "11566.45",
+      "avg_cup_price": "3.41"
+    },
+    {
+      "dt": "2026-03-06",
+      "shops": "11",
+      "cups": "3810",
+      "orders": "3634",
+      "revenue": "13135.20",
+      "avg_cup_price": "3.45"
+    },
+    {
+      "dt": "2026-03-07",
+      "shops": "11",
+      "cups": "3536",
+      "orders": "3392",
+      "revenue": "11606.11",
+      "avg_cup_price": "3.28"
+    },
+    {
+      "dt": "2026-03-08",
+      "shops": "11",
+      "cups": "3443",
+      "orders": "3320",
+      "revenue": "11072.65",
+      "avg_cup_price": "3.22"
+    },
+    {
+      "dt": "2026-03-09",
+      "shops": "11",
+      "cups": "4471",
+      "orders": "4297",
+      "revenue": "14768.25",
+      "avg_cup_price": "3.30"
+    },
+    {
+      "dt": "2026-03-10",
+      "shops": "11",
+      "cups": "4746",
+      "orders": "4603",
+      "revenue": "15629.12",
+      "avg_cup_price": "3.29"
+    },
+    {
+      "dt": "2026-03-11",
+      "shops": "11",
+      "cups": "5152",
+      "orders": "4878",
+      "revenue": "17505.10",
+      "avg_cup_price": "3.40"
+    }
+  ],
+  "Q1_biz_lastweek": [
+    {
+      "dt": "2026-02-26",
+      "shops": "11",
+      "cups": "4346",
+      "orders": "4189",
+      "revenue": "14655.14",
+      "avg_cup_price": "3.37"
+    },
+    {
+      "dt": "2026-02-27",
+      "shops": "11",
+      "cups": "3961",
+      "orders": "3753",
+      "revenue": "13520.54",
+      "avg_cup_price": "3.41"
+    },
+    {
+      "dt": "2026-02-28",
+      "shops": "11",
+      "cups": "3593",
+      "orders": "3433",
+      "revenue": "12105.77",
+      "avg_cup_price": "3.37"
+    },
+    {
+      "dt": "2026-03-01",
+      "shops": "11",
+      "cups": "2846",
+      "orders": "2715",
+      "revenue": "9354.02",
+      "avg_cup_price": "3.29"
+    },
+    {
+      "dt": "2026-03-02",
+      "shops": "11",
+      "cups": "3617",
+      "orders": "3465",
+      "revenue": "12225.21",
+      "avg_cup_price": "3.38"
+    },
+    {
+      "dt": "2026-03-03",
+      "shops": "11",
+      "cups": "3507",
+      "orders": "3370",
+      "revenue": "11964.47",
+      "avg_cup_price": "3.41"
+    },
+    {
+      "dt": "2026-03-04",
+      "shops": "11",
+      "cups": "4558",
+      "orders": "4316",
+      "revenue": "15500.72",
+      "avg_cup_price": "3.40"
+    }
+  ],
+  "Q2_user_2026-03-05": [
+    {
+      "dt": "2026-03-05",
+      "user_type": "新客",
+      "users": "427",
+      "cups": "502",
+      "revenue": "1283.39",
+      "avg_cup_price": "2.56"
+    },
+    {
+      "dt": "2026-03-05",
+      "user_type": "老客",
+      "users": "2399",
+      "cups": "2893",
+      "revenue": "10283.06",
+      "avg_cup_price": "3.55"
+    }
+  ],
+  "Q2_user_2026-03-06": [
+    {
+      "dt": "2026-03-06",
+      "user_type": "新客",
+      "users": "566",
+      "cups": "674",
+      "revenue": "1736.62",
+      "avg_cup_price": "2.58"
+    },
+    {
+      "dt": "2026-03-06",
+      "user_type": "老客",
+      "users": "2521",
+      "cups": "3136",
+      "revenue": "11398.58",
+      "avg_cup_price": "3.63"
+    }
+  ],
+  "Q2_user_2026-03-07": [
+    {
+      "dt": "2026-03-07",
+      "user_type": "新客",
+      "users": "888",
+      "cups": "1083",
+      "revenue": "2803.52",
+      "avg_cup_price": "2.59"
+    },
+    {
+      "dt": "2026-03-07",
+      "user_type": "老客",
+      "users": "1829",
+      "cups": "2453",
+      "revenue": "8802.59",
+      "avg_cup_price": "3.59"
+    }
+  ],
+  "Q2_user_2026-03-08": [
+    {
+      "dt": "2026-03-08",
+      "user_type": "新客",
+      "users": "955",
+      "cups": "1147",
+      "revenue": "2949.98",
+      "avg_cup_price": "2.57"
+    },
+    {
+      "dt": "2026-03-08",
+      "user_type": "老客",
+      "users": "1721",
+      "cups": "2296",
+      "revenue": "8122.67",
+      "avg_cup_price": "3.54"
+    }
+  ],
+  "Q2_user_2026-03-09": [
+    {
+      "dt": "2026-03-09",
+      "user_type": "新客",
+      "users": "673",
+      "cups": "808",
+      "revenue": "2059.47",
+      "avg_cup_price": "2.55"
+    },
+    {
+      "dt": "2026-03-09",
+      "user_type": "老客",
+      "users": "3052",
+      "cups": "3663",
+      "revenue": "12708.78",
+      "avg_cup_price": "3.47"
+    }
+  ],
+  "Q2_user_2026-03-10": [
+    {
+      "dt": "2026-03-10",
+      "user_type": "新客",
+      "users": "710",
+      "cups": "824",
+      "revenue": "2083.40",
+      "avg_cup_price": "2.53"
+    },
+    {
+      "dt": "2026-03-10",
+      "user_type": "老客",
+      "users": "3237",
+      "cups": "3922",
+      "revenue": "13545.72",
+      "avg_cup_price": "3.45"
+    }
+  ],
+  "Q2_user_2026-03-11": [
+    {
+      "dt": "2026-03-11",
+      "user_type": "新客",
+      "users": "690",
+      "cups": "834",
+      "revenue": "2167.20",
+      "avg_cup_price": "2.60"
+    },
+    {
+      "dt": "2026-03-11",
+      "user_type": "老客",
+      "users": "3407",
+      "cups": "4318",
+      "revenue": "15337.90",
+      "avg_cup_price": "3.55"
+    }
+  ],
+  "Q3_discount": [
+    {
+      "dt": "2026-03-05",
+      "discount_tier": "A_≤3折",
+      "cups": "179",
+      "revenue": "232.09"
+    },
+    {
+      "dt": "2026-03-05",
+      "discount_tier": "B_3-5折",
+      "cups": "820",
+      "revenue": "2013.56"
+    },
+    {
+      "dt": "2026-03-05",
+      "discount_tier": "C_5-7折",
+      "cups": "1520",
+      "revenue": "5042.43"
+    },
+    {
+      "dt": "2026-03-05",
+      "discount_tier": "D_7折+",
+      "cups": "876",
+      "revenue": "4278.37"
+    },
+    {
+      "dt": "2026-03-06",
+      "discount_tier": "A_≤3折",
+      "cups": "232",
+      "revenue": "323.05"
+    },
+    {
+      "dt": "2026-03-06",
+      "discount_tier": "B_3-5折",
+      "cups": "954",
+      "revenue": "2328.43"
+    },
+    {
+      "dt": "2026-03-06",
+      "discount_tier": "C_5-7折",
+      "cups": "1643",
+      "revenue": "5520.94"
+    },
+    {
+      "dt": "2026-03-06",
+      "discount_tier": "D_7折+",
+      "cups": "981",
+      "revenue": "4962.78"
+    },
+    {
+      "dt": "2026-03-07",
+      "discount_tier": "A_≤3折",
+      "cups": "222",
+      "revenue": "434.32"
+    },
+    {
+      "dt": "2026-03-07",
+      "discount_tier": "B_3-5折",
+      "cups": "1202",
+      "revenue": "2895.22"
+    },
+    {
+      "dt": "2026-03-07",
+      "discount_tier": "C_5-7折",
+      "cups": "1500",
+      "revenue": "5064.42"
+    },
+    {
+      "dt": "2026-03-07",
+      "discount_tier": "D_7折+",
+      "cups": "612",
+      "revenue": "3212.15"
+    },
+    {
+      "dt": "2026-03-08",
+      "discount_tier": "A_≤3折",
+      "cups": "229",
+      "revenue": "448.25"
+    },
+    {
+      "dt": "2026-03-08",
+      "discount_tier": "B_3-5折",
+      "cups": "1152",
+      "revenue": "2740.64"
+    },
+    {
+      "dt": "2026-03-08",
+      "discount_tier": "C_5-7折",
+      "cups": "1535",
+      "revenue": "5114.57"
+    },
+    {
+      "dt": "2026-03-08",
+      "discount_tier": "D_7折+",
+      "cups": "527",
+      "revenue": "2769.19"
+    },
+    {
+      "dt": "2026-03-09",
+      "discount_tier": "A_≤3折",
+      "cups": "279",
+      "revenue": "369.65"
+    },
+    {
+      "dt": "2026-03-09",
+      "discount_tier": "B_3-5折",
+      "cups": "1283",
+      "revenue": "3138.13"
+    },
+    {
+      "dt": "2026-03-09",
+      "discount_tier": "C_5-7折",
+      "cups": "1978",
+      "revenue": "6603.44"
+    },
+    {
+      "dt": "2026-03-09",
+      "discount_tier": "D_7折+",
+      "cups": "931",
+      "revenue": "4657.03"
+    },
+    {
+      "dt": "2026-03-10",
+      "discount_tier": "A_≤3折",
+      "cups": "314",
+      "revenue": "434.23"
+    },
+    {
+      "dt": "2026-03-10",
+      "discount_tier": "B_3-5折",
+      "cups": "1459",
+      "revenue": "3585.79"
+    },
+    {
+      "dt": "2026-03-10",
+      "discount_tier": "C_5-7折",
+      "cups": "1952",
+      "revenue": "6526.45"
+    },
+    {
+      "dt": "2026-03-10",
+      "discount_tier": "D_7折+",
+      "cups": "1021",
+      "revenue": "5082.65"
+    },
+    {
+      "dt": "2026-03-11",
+      "discount_tier": "A_≤3折",
+      "cups": "272",
+      "revenue": "357.09"
+    },
+    {
+      "dt": "2026-03-11",
+      "discount_tier": "B_3-5折",
+      "cups": "1319",
+      "revenue": "3239.70"
+    },
+    {
+      "dt": "2026-03-11",
+      "discount_tier": "C_5-7折",
+      "cups": "2317",
+      "revenue": "7688.05"
+    },
+    {
+      "dt": "2026-03-11",
+      "discount_tier": "D_7折+",
+      "cups": "1244",
+      "revenue": "6220.26"
+    }
+  ],
+  "Q3_funnel": [
+    {
+      "dt": "2026-03-05",
+      "uv_total": "5144",
+      "uv_home": "5088",
+      "uv_menu": "4892",
+      "uv_detail": "2794",
+      "uv_confirm": "2744",
+      "uv_order": "2443"
+    },
+    {
+      "dt": "2026-03-06",
+      "uv_total": "5320",
+      "uv_home": "5271",
+      "uv_menu": "5093",
+      "uv_detail": "3012",
+      "uv_confirm": "2949",
+      "uv_order": "2647"
+    },
+    {
+      "dt": "2026-03-07",
+      "uv_total": "4427",
+      "uv_home": "4396",
+      "uv_menu": "4222",
+      "uv_detail": "2680",
+      "uv_confirm": "2543",
+      "uv_order": "2273"
+    },
+    {
+      "dt": "2026-03-08",
+      "uv_total": "4280",
+      "uv_home": "4247",
+      "uv_menu": "4069",
+      "uv_detail": "2613",
+      "uv_confirm": "2488",
+      "uv_order": "2179"
+    },
+    {
+      "dt": "2026-03-09",
+      "uv_total": "6052",
+      "uv_home": "5986",
+      "uv_menu": "5805",
+      "uv_detail": "3625",
+      "uv_confirm": "3601",
+      "uv_order": "3239"
+    },
+    {
+      "dt": "2026-03-10",
+      "uv_total": "6830",
+      "uv_home": "6757",
+      "uv_menu": "6562",
+      "uv_detail": "4224",
+      "uv_confirm": "3996",
+      "uv_order": "3484"
+    },
+    {
+      "dt": "2026-03-11",
+      "uv_total": "6680",
+      "uv_home": "6609",
+      "uv_menu": "6408",
+      "uv_detail": "4082",
+      "uv_confirm": "3995",
+      "uv_order": "3621"
+    }
+  ],
+  "Q4_top_products": [
+    {
+      "product": "Regular/Cold/Regular Ice/Medium Roast/Espresso(2)/Coconut Milk",
+      "cups": "1368",
+      "revenue": "4229.45",
+      "avg_price": "3.09"
+    },
+    {
+      "product": "Regular/Cold/Regular Ice",
+      "cups": "1033",
+      "revenue": "3043.37",
+      "avg_price": "2.95"
+    },
+    {
+      "product": "Large/Cold/Regular Ice",
+      "cups": "680",
+      "revenue": "2371.92",
+      "avg_price": "3.49"
+    },
+    {
+      "product": "Large/Cold/Regular Ice/Medium Roast/Espresso(3)/Coconut Milk",
+      "cups": "577",
+      "revenue": "2134.28",
+      "avg_price": "3.70"
+    },
+    {
+      "product": "Regular/Cold/Light Ice/Medium Roast/Espresso(2)/Coconut Milk",
+      "cups": "534",
+      "revenue": "1592.72",
+      "avg_price": "2.98"
+    },
+    {
+      "product": "Regular/Hot/Drip Coffee Beans",
+      "cups": "491",
+      "revenue": "913.47",
+      "avg_price": "1.86"
+    },
+    {
+      "product": "Regular/Cold/Regular Ice/Whole Milk/Cane Sugar Syrup(4)/Matcha Sauce(8)/Matcha Powder",
+      "cups": "456",
+      "revenue": "1426.96",
+      "avg_price": "3.13"
+    },
+    {
+      "product": "Regular/Cold/Regular Ice/Coconut Milk/Matcha Sauce(2)",
+      "cups": "419",
+      "revenue": "1376.64",
+      "avg_price": "3.29"
+    },
+    {
+      "product": "Regular/Hot/Dark Roast/Espresso(2)/2% Milk/Regular Hot",
+      "cups": "376",
+      "revenue": "1152.69",
+      "avg_price": "3.07"
+    },
+    {
+      "product": "Regular/Cold/Regular Ice/Medium Roast/Espresso(2)/2% Milk/Cane Sugar Syrup(2)/Chocolate Sauce(3)/Chocolate Powder",
+      "cups": "371",
+      "revenue": "1214.23",
+      "avg_price": "3.27"
+    }
+  ],
+  "Q5_shop": [
+    {
+      "dt": "2026-03-05",
+      "shop_name": "8th & Broadway",
+      "cups": "635",
+      "orders": "614",
+      "revenue": "2186.26"
+    },
+    {
+      "dt": "2026-03-05",
+      "shop_name": "37th & Broadway",
+      "cups": "480",
+      "orders": "457",
+      "revenue": "1665.99"
+    },
+    {
+      "dt": "2026-03-05",
+      "shop_name": "52nd & Madison",
+      "cups": "376",
+      "orders": "352",
+      "revenue": "1156.40"
+    },
+    {
+      "dt": "2026-03-05",
+      "shop_name": "102 Fulton",
+      "cups": "374",
+      "orders": "359",
+      "revenue": "1328.94"
+    },
+    {
+      "dt": "2026-03-05",
+      "shop_name": "33rd & 10th",
+      "cups": "279",
+      "orders": "274",
+      "revenue": "988.02"
+    },
+    {
+      "dt": "2026-03-05",
+      "shop_name": "221 Grand",
+      "cups": "278",
+      "orders": "267",
+      "revenue": "927.38"
+    },
+    {
+      "dt": "2026-03-05",
+      "shop_name": "28th & 6th",
+      "cups": "242",
+      "orders": "230",
+      "revenue": "818.10"
+    },
+    {
+      "dt": "2026-03-05",
+      "shop_name": "54th & 8th",
+      "cups": "239",
+      "orders": "232",
+      "revenue": "816.23"
+    },
+    {
+      "dt": "2026-03-05",
+      "shop_name": "100 Maiden Ln",
+      "cups": "234",
+      "orders": "230",
+      "revenue": "798.72"
+    },
+    {
+      "dt": "2026-03-05",
+      "shop_name": "15th & 3rd",
+      "cups": "202",
+      "orders": "195",
+      "revenue": "713.13"
+    },
+    {
+      "dt": "2026-03-05",
+      "shop_name": "21st & 3rd",
+      "cups": "56",
+      "orders": "54",
+      "revenue": "167.28"
+    },
+    {
+      "dt": "2026-03-06",
+      "shop_name": "8th & Broadway",
+      "cups": "594",
+      "orders": "578",
+      "revenue": "2011.84"
+    },
+    {
+      "dt": "2026-03-06",
+      "shop_name": "221 Grand",
+      "cups": "477",
+      "orders": "436",
+      "revenue": "1535.33"
+    },
+    {
+      "dt": "2026-03-06",
+      "shop_name": "37th & Broadway",
+      "cups": "436",
+      "orders": "421",
+      "revenue": "1461.28"
+    },
+    {
+      "dt": "2026-03-06",
+      "shop_name": "28th & 6th",
+      "cups": "351",
+      "orders": "335",
+      "revenue": "1187.29"
+    },
+    {
+      "dt": "2026-03-06",
+      "shop_name": "102 Fulton",
+      "cups": "349",
+      "orders": "336",
+      "revenue": "1254.94"
+    },
+    {
+      "dt": "2026-03-06",
+      "shop_name": "54th & 8th",
+      "cups": "341",
+      "orders": "323",
+      "revenue": "1312.31"
+    },
+    {
+      "dt": "2026-03-06",
+      "shop_name": "52nd & Madison",
+      "cups": "296",
+      "orders": "283",
+      "revenue": "925.45"
+    },
+    {
+      "dt": "2026-03-06",
+      "shop_name": "21st & 3rd",
+      "cups": "271",
+      "orders": "262",
+      "revenue": "965.54"
+    },
+    {
+      "dt": "2026-03-06",
+      "shop_name": "33rd & 10th",
+      "cups": "266",
+      "orders": "251",
+      "revenue": "948.94"
+    },
+    {
+      "dt": "2026-03-06",
+      "shop_name": "100 Maiden Ln",
+      "cups": "221",
+      "orders": "210",
+      "revenue": "801.68"
+    },
+    {
+      "dt": "2026-03-06",
+      "shop_name": "15th & 3rd",
+      "cups": "208",
+      "orders": "199",
+      "revenue": "730.60"
+    },
+    {
+      "dt": "2026-03-07",
+      "shop_name": "221 Grand",
+      "cups": "640",
+      "orders": "596",
+      "revenue": "2039.10"
+    },
+    {
+      "dt": "2026-03-07",
+      "shop_name": "8th & Broadway",
+      "cups": "579",
+      "orders": "569",
+      "revenue": "1869.49"
+    },
+    {
+      "dt": "2026-03-07",
+      "shop_name": "54th & 8th",
+      "cups": "413",
+      "orders": "393",
+      "revenue": "1442.62"
+    },
+    {
+      "dt": "2026-03-07",
+      "shop_name": "28th & 6th",
+      "cups": "337",
+      "orders": "321",
+      "revenue": "1150.69"
+    },
+    {
+      "dt": "2026-03-07",
+      "shop_name": "102 Fulton",
+      "cups": "333",
+      "orders": "322",
+      "revenue": "1114.38"
+    },
+    {
+      "dt": "2026-03-07",
+      "shop_name": "37th & Broadway",
+      "cups": "317",
+      "orders": "311",
+      "revenue": "997.30"
+    },
+    {
+      "dt": "2026-03-07",
+      "shop_name": "21st & 3rd",
+      "cups": "308",
+      "orders": "294",
+      "revenue": "996.93"
+    },
+    {
+      "dt": "2026-03-07",
+      "shop_name": "15th & 3rd",
+      "cups": "223",
+      "orders": "217",
+      "revenue": "723.71"
+    },
+    {
+      "dt": "2026-03-07",
+      "shop_name": "52nd & Madison",
+      "cups": "151",
+      "orders": "145",
+      "revenue": "492.00"
+    },
+    {
+      "dt": "2026-03-07",
+      "shop_name": "33rd & 10th",
+      "cups": "122",
+      "orders": "121",
+      "revenue": "408.76"
+    },
+    {
+      "dt": "2026-03-07",
+      "shop_name": "100 Maiden Ln",
+      "cups": "113",
+      "orders": "103",
+      "revenue": "371.13"
+    },
+    {
+      "dt": "2026-03-08",
+      "shop_name": "221 Grand",
+      "cups": "683",
+      "orders": "644",
+      "revenue": "2069.03"
+    },
+    {
+      "dt": "2026-03-08",
+      "shop_name": "8th & Broadway",
+      "cups": "527",
+      "orders": "516",
+      "revenue": "1704.94"
+    },
+    {
+      "dt": "2026-03-08",
+      "shop_name": "54th & 8th",
+      "cups": "389",
+      "orders": "377",
+      "revenue": "1315.81"
+    },
+    {
+      "dt": "2026-03-08",
+      "shop_name": "28th & 6th",
+      "cups": "338",
+      "orders": "325",
+      "revenue": "1145.85"
+    },
+    {
+      "dt": "2026-03-08",
+      "shop_name": "37th & Broadway",
+      "cups": "289",
+      "orders": "283",
+      "revenue": "901.83"
+    },
+    {
+      "dt": "2026-03-08",
+      "shop_name": "102 Fulton",
+      "cups": "260",
+      "orders": "246",
+      "revenue": "902.94"
+    },
+    {
+      "dt": "2026-03-08",
+      "shop_name": "21st & 3rd",
+      "cups": "239",
+      "orders": "229",
+      "revenue": "771.49"
+    },
+    {
+      "dt": "2026-03-08",
+      "shop_name": "15th & 3rd",
+      "cups": "219",
+      "orders": "214",
+      "revenue": "711.31"
+    },
+    {
+      "dt": "2026-03-08",
+      "shop_name": "100 Maiden Ln",
+      "cups": "194",
+      "orders": "191",
+      "revenue": "607.48"
+    },
+    {
+      "dt": "2026-03-08",
+      "shop_name": "33rd & 10th",
+      "cups": "155",
+      "orders": "150",
+      "revenue": "474.85"
+    },
+    {
+      "dt": "2026-03-08",
+      "shop_name": "52nd & Madison",
+      "cups": "150",
+      "orders": "145",
+      "revenue": "467.12"
+    },
+    {
+      "dt": "2026-03-09",
+      "shop_name": "8th & Broadway",
+      "cups": "810",
+      "orders": "786",
+      "revenue": "2671.53"
+    },
+    {
+      "dt": "2026-03-09",
+      "shop_name": "37th & Broadway",
+      "cups": "544",
+      "orders": "530",
+      "revenue": "1872.94"
+    },
+    {
+      "dt": "2026-03-09",
+      "shop_name": "221 Grand",
+      "cups": "496",
+      "orders": "459",
+      "revenue": "1612.53"
+    },
+    {
+      "dt": "2026-03-09",
+      "shop_name": "102 Fulton",
+      "cups": "397",
+      "orders": "378",
+      "revenue": "1317.73"
+    },
+    {
+      "dt": "2026-03-09",
+      "shop_name": "52nd & Madison",
+      "cups": "379",
+      "orders": "369",
+      "revenue": "1134.30"
+    },
+    {
+      "dt": "2026-03-09",
+      "shop_name": "54th & 8th",
+      "cups": "376",
+      "orders": "359",
+      "revenue": "1281.39"
+    },
+    {
+      "dt": "2026-03-09",
+      "shop_name": "33rd & 10th",
+      "cups": "361",
+      "orders": "352",
+      "revenue": "1180.70"
+    },
+    {
+      "dt": "2026-03-09",
+      "shop_name": "28th & 6th",
+      "cups": "348",
+      "orders": "335",
+      "revenue": "1128.08"
+    },
+    {
+      "dt": "2026-03-09",
+      "shop_name": "21st & 3rd",
+      "cups": "313",
+      "orders": "301",
+      "revenue": "1084.86"
+    },
+    {
+      "dt": "2026-03-09",
+      "shop_name": "100 Maiden Ln",
+      "cups": "233",
+      "orders": "223",
+      "revenue": "760.11"
+    },
+    {
+      "dt": "2026-03-09",
+      "shop_name": "15th & 3rd",
+      "cups": "214",
+      "orders": "205",
+      "revenue": "724.08"
+    },
+    {
+      "dt": "2026-03-10",
+      "shop_name": "37th & Broadway",
+      "cups": "742",
+      "orders": "708",
+      "revenue": "2519.49"
+    },
+    {
+      "dt": "2026-03-10",
+      "shop_name": "52nd & Madison",
+      "cups": "538",
+      "orders": "524",
+      "revenue": "1604.78"
+    },
+    {
+      "dt": "2026-03-10",
+      "shop_name": "102 Fulton",
+      "cups": "500",
+      "orders": "491",
+      "revenue": "1660.63"
+    },
+    {
+      "dt": "2026-03-10",
+      "shop_name": "221 Grand",
+      "cups": "477",
+      "orders": "453",
+      "revenue": "1571.38"
+    },
+    {
+      "dt": "2026-03-10",
+      "shop_name": "33rd & 10th",
+      "cups": "455",
+      "orders": "444",
+      "revenue": "1530.92"
+    },
+    {
+      "dt": "2026-03-10",
+      "shop_name": "54th & 8th",
+      "cups": "429",
+      "orders": "412",
+      "revenue": "1410.78"
+    },
+    {
+      "dt": "2026-03-10",
+      "shop_name": "28th & 6th",
+      "cups": "390",
+      "orders": "384",
+      "revenue": "1280.40"
+    },
+    {
+      "dt": "2026-03-10",
+      "shop_name": "8th & Broadway",
+      "cups": "316",
+      "orders": "311",
+      "revenue": "1068.05"
+    },
+    {
+      "dt": "2026-03-10",
+      "shop_name": "21st & 3rd",
+      "cups": "313",
+      "orders": "306",
+      "revenue": "1051.14"
+    },
+    {
+      "dt": "2026-03-10",
+      "shop_name": "100 Maiden Ln",
+      "cups": "303",
+      "orders": "294",
+      "revenue": "993.86"
+    },
+    {
+      "dt": "2026-03-10",
+      "shop_name": "15th & 3rd",
+      "cups": "283",
+      "orders": "276",
+      "revenue": "937.69"
+    },
+    {
+      "dt": "2026-03-11",
+      "shop_name": "8th & Broadway",
+      "cups": "800",
+      "orders": "775",
+      "revenue": "2726.93"
+    },
+    {
+      "dt": "2026-03-11",
+      "shop_name": "37th & Broadway",
+      "cups": "699",
+      "orders": "671",
+      "revenue": "2394.94"
+    },
+    {
+      "dt": "2026-03-11",
+      "shop_name": "52nd & Madison",
+      "cups": "551",
+      "orders": "526",
+      "revenue": "1691.50"
+    },
+    {
+      "dt": "2026-03-11",
+      "shop_name": "102 Fulton",
+      "cups": "507",
+      "orders": "490",
+      "revenue": "1748.77"
+    },
+    {
+      "dt": "2026-03-11",
+      "shop_name": "221 Grand",
+      "cups": "499",
+      "orders": "417",
+      "revenue": "1846.53"
+    },
+    {
+      "dt": "2026-03-11",
+      "shop_name": "33rd & 10th",
+      "cups": "463",
+      "orders": "440",
+      "revenue": "1556.48"
+    },
+    {
+      "dt": "2026-03-11",
+      "shop_name": "28th & 6th",
+      "cups": "421",
+      "orders": "405",
+      "revenue": "1428.05"
+    },
+    {
+      "dt": "2026-03-11",
+      "shop_name": "54th & 8th",
+      "cups": "400",
+      "orders": "380",
+      "revenue": "1399.03"
+    },
+    {
+      "dt": "2026-03-11",
+      "shop_name": "21st & 3rd",
+      "cups": "306",
+      "orders": "295",
+      "revenue": "990.01"
+    },
+    {
+      "dt": "2026-03-11",
+      "shop_name": "100 Maiden Ln",
+      "cups": "282",
+      "orders": "267",
+      "revenue": "973.17"
+    },
+    {
+      "dt": "2026-03-11",
+      "shop_name": "15th & 3rd",
+      "cups": "224",
+      "orders": "212",
+      "revenue": "749.69"
+    }
+  ],
+  "Q6_channel": [
+    {
+      "dt": "2026-03-05",
+      "channel": "iOS",
+      "users": "2385",
+      "cups": "2830",
+      "revenue": "9320.26"
+    },
+    {
+      "dt": "2026-03-05",
+      "channel": "Android",
+      "users": "279",
+      "cups": "332",
+      "revenue": "1100.82"
+    },
+    {
+      "dt": "2026-03-05",
+      "channel": "H5",
+      "users": "159",
+      "cups": "189",
+      "revenue": "834.52"
+    },
+    {
+      "dt": "2026-03-05",
+      "channel": "UberEats",
+      "users": "1",
+      "cups": "19",
+      "revenue": "135.94"
+    },
+    {
+      "dt": "2026-03-05",
+      "channel": "DoorDash",
+      "users": "1",
+      "cups": "16",
+      "revenue": "104.21"
+    },
+    {
+      "dt": "2026-03-05",
+      "channel": "GrubHub",
+      "users": "1",
+      "cups": "9",
+      "revenue": "70.70"
+    },
+    {
+      "dt": "2026-03-06",
+      "channel": "iOS",
+      "users": "2612",
+      "cups": "3136",
+      "revenue": "10214.53"
+    },
+    {
+      "dt": "2026-03-06",
+      "channel": "Android",
+      "users": "278",
+      "cups": "340",
+      "revenue": "1145.00"
+    },
+    {
+      "dt": "2026-03-06",
+      "channel": "H5",
+      "users": "194",
+      "cups": "238",
+      "revenue": "1093.45"
+    },
+    {
+      "dt": "2026-03-06",
+      "channel": "UberEats",
+      "users": "1",
+      "cups": "46",
+      "revenue": "328.22"
+    },
+    {
+      "dt": "2026-03-06",
+      "channel": "DoorDash",
+      "users": "1",
+      "cups": "38",
+      "revenue": "269.57"
+    },
+    {
+      "dt": "2026-03-06",
+      "channel": "GrubHub",
+      "users": "1",
+      "cups": "12",
+      "revenue": "84.43"
+    },
+    {
+      "dt": "2026-03-07",
+      "channel": "iOS",
+      "users": "2258",
+      "cups": "2871",
+      "revenue": "8750.23"
+    },
+    {
+      "dt": "2026-03-07",
+      "channel": "H5",
+      "users": "221",
+      "cups": "304",
+      "revenue": "1386.44"
+    },
+    {
+      "dt": "2026-03-07",
+      "channel": "Android",
+      "users": "236",
+      "cups": "284",
+      "revenue": "908.43"
+    },
+    {
+      "dt": "2026-03-07",
+      "channel": "UberEats",
+      "users": "1",
+      "cups": "60",
+      "revenue": "434.12"
+    },
+    {
+      "dt": "2026-03-07",
+      "channel": "DoorDash",
+      "users": "1",
+      "cups": "11",
+      "revenue": "81.74"
+    },
+    {
+      "dt": "2026-03-07",
+      "channel": "GrubHub",
+      "users": "1",
+      "cups": "6",
+      "revenue": "45.15"
+    },
+    {
+      "dt": "2026-03-08",
+      "channel": "iOS",
+      "users": "2223",
+      "cups": "2795",
+      "revenue": "8381.36"
+    },
+    {
+      "dt": "2026-03-08",
+      "channel": "H5",
+      "users": "229",
+      "cups": "292",
+      "revenue": "1299.98"
+    },
+    {
+      "dt": "2026-03-08",
+      "channel": "Android",
+      "users": "222",
+      "cups": "283",
+      "revenue": "882.08"
+    },
+    {
+      "dt": "2026-03-08",
+      "channel": "UberEats",
+      "users": "1",
+      "cups": "34",
+      "revenue": "241.26"
+    },
+    {
+      "dt": "2026-03-08",
+      "channel": "DoorDash",
+      "users": "1",
+      "cups": "29",
+      "revenue": "206.81"
+    },
+    {
+      "dt": "2026-03-08",
+      "channel": "GrubHub",
+      "users": "1",
+      "cups": "10",
+      "revenue": "61.16"
+    },
+    {
+      "dt": "2026-03-09",
+      "channel": "iOS",
+      "users": "3203",
+      "cups": "3794",
+      "revenue": "12056.60"
+    },
+    {
+      "dt": "2026-03-09",
+      "channel": "Android",
+      "users": "315",
+      "cups": "374",
+      "revenue": "1220.10"
+    },
+    {
+      "dt": "2026-03-09",
+      "channel": "H5",
+      "users": "204",
+      "cups": "249",
+      "revenue": "1122.18"
+    },
+    {
+      "dt": "2026-03-09",
+      "channel": "DoorDash",
+      "users": "1",
+      "cups": "23",
+      "revenue": "156.61"
+    },
+    {
+      "dt": "2026-03-09",
+      "channel": "UberEats",
+      "users": "1",
+      "cups": "21",
+      "revenue": "144.23"
+    },
+    {
+      "dt": "2026-03-09",
+      "channel": "GrubHub",
+      "users": "1",
+      "cups": "10",
+      "revenue": "68.53"
+    },
+    {
+      "dt": "2026-03-10",
+      "channel": "iOS",
+      "users": "3349",
+      "cups": "3980",
+      "revenue": "12647.43"
+    },
+    {
+      "dt": "2026-03-10",
+      "channel": "Android",
+      "users": "344",
+      "cups": "419",
+      "revenue": "1337.32"
+    },
+    {
+      "dt": "2026-03-10",
+      "channel": "H5",
+      "users": "251",
+      "cups": "301",
+      "revenue": "1323.17"
+    },
+    {
+      "dt": "2026-03-10",
+      "channel": "UberEats",
+      "users": "1",
+      "cups": "21",
+      "revenue": "147.38"
+    },
+    {
+      "dt": "2026-03-10",
+      "channel": "DoorDash",
+      "users": "1",
+      "cups": "16",
+      "revenue": "109.66"
+    },
+    {
+      "dt": "2026-03-10",
+      "channel": "GrubHub",
+      "users": "1",
+      "cups": "9",
+      "revenue": "64.16"
+    },
+    {
+      "dt": "2026-03-11",
+      "channel": "iOS",
+      "users": "3472",
+      "cups": "4234",
+      "revenue": "13737.49"
+    },
+    {
+      "dt": "2026-03-11",
+      "channel": "Android",
+      "users": "399",
+      "cups": "508",
+      "revenue": "1680.51"
+    },
+    {
+      "dt": "2026-03-11",
+      "channel": "H5",
+      "users": "223",
+      "cups": "291",
+      "revenue": "1257.07"
+    },
+    {
+      "dt": "2026-03-11",
+      "channel": "GrubHub",
+      "users": "1",
+      "cups": "63",
+      "revenue": "447.91"
+    },
+    {
+      "dt": "2026-03-11",
+      "channel": "UberEats",
+      "users": "1",
+      "cups": "31",
+      "revenue": "218.78"
+    },
+    {
+      "dt": "2026-03-11",
+      "channel": "DoorDash",
+      "users": "1",
+      "cups": "25",
+      "revenue": "163.34"
+    }
+  ],
+  "Q7_hourly": [
+    {
+      "hr": "7",
+      "orders": "1213",
+      "users": "884"
+    },
+    {
+      "hr": "8",
+      "orders": "2878",
+      "users": "2188"
+    },
+    {
+      "hr": "9",
+      "orders": "2981",
+      "users": "2405"
+    },
+    {
+      "hr": "10",
+      "orders": "2217",
+      "users": "1889"
+    },
+    {
+      "hr": "11",
+      "orders": "1985",
+      "users": "1787"
+    },
+    {
+      "hr": "12",
+      "orders": "2267",
+      "users": "2069"
+    },
+    {
+      "hr": "13",
+      "orders": "2561",
+      "users": "2336"
+    },
+    {
+      "hr": "14",
+      "orders": "2336",
+      "users": "2169"
+    },
+    {
+      "hr": "15",
+      "orders": "1973",
+      "users": "1823"
+    },
+    {
+      "hr": "16",
+      "orders": "1464",
+      "users": "1393"
+    },
+    {
+      "hr": "17",
+      "orders": "1066",
+      "users": "1005"
+    },
+    {
+      "hr": "18",
+      "orders": "701",
+      "users": "654"
+    },
+    {
+      "hr": "19",
+      "orders": "444",
+      "users": "417"
+    },
+    {
+      "hr": "20",
+      "orders": "57",
+      "users": "56"
+    }
+  ],
+  "Q8_category": [
+    {
+      "dt": "2026-03-05",
+      "category": "Drink",
+      "items": "3395",
+      "revenue": "11566.45"
+    },
+    {
+      "dt": "2026-03-05",
+      "category": "Food",
+      "items": "414",
+      "revenue": "1662.98"
+    },
+    {
+      "dt": "2026-03-06",
+      "category": "Drink",
+      "items": "3810",
+      "revenue": "13135.20"
+    },
+    {
+      "dt": "2026-03-06",
+      "category": "Food",
+      "items": "454",
+      "revenue": "1804.66"
+    },
+    {
+      "dt": "2026-03-07",
+      "category": "Drink",
+      "items": "3536",
+      "revenue": "11606.11"
+    },
+    {
+      "dt": "2026-03-07",
+      "category": "Food",
+      "items": "293",
+      "revenue": "1192.43"
+    },
+    {
+      "dt": "2026-03-08",
+      "category": "Drink",
+      "items": "3443",
+      "revenue": "11072.65"
+    },
+    {
+      "dt": "2026-03-08",
+      "category": "Food",
+      "items": "277",
+      "revenue": "1128.23"
+    },
+    {
+      "dt": "2026-03-09",
+      "category": "Drink",
+      "items": "4471",
+      "revenue": "14768.25"
+    },
+    {
+      "dt": "2026-03-09",
+      "category": "Food",
+      "items": "415",
+      "revenue": "1639.59"
+    },
+    {
+      "dt": "2026-03-10",
+      "category": "Drink",
+      "items": "4746",
+      "revenue": "15629.12"
+    },
+    {
+      "dt": "2026-03-10",
+      "category": "Food",
+      "items": "384",
+      "revenue": "1514.91"
+    },
+    {
+      "dt": "2026-03-11",
+      "category": "Drink",
+      "items": "5152",
+      "revenue": "17505.10"
+    },
+    {
+      "dt": "2026-03-11",
+      "category": "Food",
+      "items": "489",
+      "revenue": "1958.22"
+    }
+  ],
+  "weather": [
+    {
+      "dt": "2026-03-05",
+      "tmax": 5.8,
+      "tmin": 2.4,
+      "precip": 14.9
+    },
+    {
+      "dt": "2026-03-06",
+      "tmax": 5.9,
+      "tmin": 2.5,
+      "precip": 13.5
+    },
+    {
+      "dt": "2026-03-07",
+      "tmax": 9.6,
+      "tmin": 2.7,
+      "precip": 0.0
+    },
+    {
+      "dt": "2026-03-08",
+      "tmax": 20.5,
+      "tmin": 9.2,
+      "precip": 0.9
+    },
+    {
+      "dt": "2026-03-09",
+      "tmax": 21.0,
+      "tmin": 4.2,
+      "precip": 0.0
+    },
+    {
+      "dt": "2026-03-10",
+      "tmax": 24.4,
+      "tmin": 6.5,
+      "precip": 0.0
+    },
+    {
+      "dt": "2026-03-11",
+      "tmax": 22.3,
+      "tmin": 11.3,
+      "precip": 0.5
+    }
+  ]
+}

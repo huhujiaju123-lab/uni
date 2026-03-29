@@ -1,0 +1,2032 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>递归大师 — OpenClaw AI 运营大脑</title>
+<style>
+/* ========== CSS 变量 & 基础 ========== */
+:root {
+  --bg: #0B0E17;
+  --bg-surface: #131724;
+  --bg-card: #1A1F2E;
+  --bg-card-dim: #111628;
+  --bg-left: #14171F;
+  --bg-right: #111827;
+  --primary: #FF6B4A;
+  --primary-glow: rgba(255, 107, 74, 0.35);
+  --primary-soft: rgba(255, 107, 74, 0.12);
+  --accent: #4ECDC4;
+  --accent-glow: rgba(78, 205, 196, 0.3);
+  --purple: #A78BFA;
+  --yellow: #FBBF24;
+  --yellow-soft: rgba(245, 158, 11, 0.12);
+  --blue: #60A5FA;
+  --red: #EF4444;
+  --red-soft: rgba(239, 68, 68, 0.15);
+  --green: #22C55E;
+  --green-soft: rgba(34, 197, 94, 0.15);
+  --text: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-dim: #64748B;
+  --text-muted: #475569;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-accent: rgba(78, 205, 196, 0.2);
+  --radius: 16px;
+  --radius-sm: 8px;
+  --font: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+  --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --slide-transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+/* ========== 进度条 ========== */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 1000;
+  background: linear-gradient(90deg, var(--primary), #FF9A76);
+  transition: width 0.4s ease;
+  box-shadow: 0 0 8px var(--primary-glow);
+}
+
+/* ========== 页码 ========== */
+#slide-counter {
+  position: fixed; bottom: 24px; right: 32px; z-index: 1000;
+  font-size: 1rem; color: var(--text-dim); letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+/* ========== Speaker Notes ========== */
+#speaker-notes {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 999;
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 107, 74, 0.2);
+  padding: 16px 32px;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-height: 30vh;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+#speaker-notes.visible { transform: translateY(0); }
+#speaker-notes::before {
+  content: 'SPEAKER NOTES';
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+/* ========== 幻灯片容器 ========== */
+#slides-container {
+  width: 100%; height: 100vh;
+  position: relative; overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 80px;
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity var(--slide-transition), transform var(--slide-transition);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.slide.prev {
+  opacity: 0;
+  transform: translateX(-60px);
+}
+
+/* 演示幻灯片不加内边距 */
+.slide.demo-slide {
+  padding: 0;
+}
+
+/* ========== 幻灯片通用排版 ========== */
+.slide-title {
+  font-size: 3.2rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--primary), #FF9A76);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.slide-subtitle {
+  font-size: 1.4rem;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 2rem;
+  max-width: 700px;
+}
+
+.slide-body {
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* ========== Slide 1: Title ========== */
+.title-lobster {
+  font-size: 5rem;
+  margin-bottom: 0.5rem;
+}
+
+.title-main {
+  font-size: 3.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), #FF9A76);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.title-sub {
+  font-size: 2rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.title-bottom {
+  position: absolute;
+  bottom: 48px;
+  font-size: 1rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+/* ========== 双栏布局 ========== */
+.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+.col-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 32px;
+  border: 1px solid var(--border);
+  transition: transform 0.3s;
+}
+
+.col-card.blue-tint {
+  border-color: rgba(96, 165, 250, 0.2);
+  background: linear-gradient(180deg, rgba(96, 165, 250, 0.06) 0%, var(--bg-card) 100%);
+}
+
+.col-card.coral-tint {
+  border-color: rgba(255, 107, 74, 0.2);
+  background: linear-gradient(180deg, rgba(255, 107, 74, 0.06) 0%, var(--bg-card) 100%);
+}
+
+.col-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.col-card ul {
+  list-style: none;
+  font-size: 1.15rem;
+  line-height: 2;
+  color: var(--text-secondary);
+}
+
+.col-card ul li::before {
+  content: '>';
+  color: var(--primary);
+  margin-right: 10px;
+  font-weight: 700;
+}
+
+.callout {
+  margin-top: 24px;
+  padding: 16px 24px;
+  background: var(--primary-soft);
+  border: 1px solid rgba(255, 107, 74, 0.2);
+  border-radius: var(--radius-sm);
+  font-size: 1.3rem;
+  text-align: center;
+  color: var(--primary);
+  font-weight: 600;
+  max-width: 1100px;
+  width: 100%;
+}
+
+/* ========== 三卡片布局 ========== */
+.three-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+.pain-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 28px;
+  border: 1px solid var(--border);
+  transition: transform 0.3s, border-color 0.3s;
+}
+
+.pain-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 107, 74, 0.3);
+}
+
+.pain-card .num {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.pain-card h4 {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.pain-card p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.bottom-note {
+  margin-top: 24px;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ========== Slide 4: 双面板对比 ========== */
+.comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.compare-panel {
+  border-radius: var(--radius);
+  padding: 36px;
+  text-align: center;
+}
+
+.compare-panel.dim {
+  background: var(--bg-card-dim);
+  border: 1px solid var(--border);
+  opacity: 0.7;
+}
+
+.compare-panel.glow {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 107, 74, 0.25);
+  box-shadow: 0 0 30px rgba(255, 107, 74, 0.08);
+}
+
+.compare-panel h3 {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.compare-panel .tag-line {
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+
+.compare-panel .dim .tag-line { color: var(--text-dim); }
+
+.compare-panel p {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  line-height: 2;
+}
+
+/* ========== Slide 5: Transition ========== */
+.big-text {
+  font-size: 3.5rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+/* ========== Slide 10: 四卡片 ========== */
+.four-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.feature-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  border: 1px solid var(--border);
+  text-align: center;
+  transition: transform 0.3s, border-color 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+}
+
+.feature-card .icon { font-size: 2.2rem; margin-bottom: 10px; }
+.feature-card h4 { font-size: 1.25rem; margin-bottom: 6px; color: var(--primary); font-weight: 700; }
+.feature-card .detail { font-size: 0.9rem; color: var(--accent); margin-bottom: 8px; font-family: var(--mono); }
+.feature-card p { font-size: 1rem; color: var(--text-secondary); line-height: 1.6; }
+
+/* ========== Slide 11: 记忆架构 ========== */
+.arch-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  width: 100%;
+  max-width: 1000px;
+  align-items: center;
+}
+
+.arch-side { text-align: center; }
+.arch-side h3 { font-size: 1.5rem; margin-bottom: 20px; font-weight: 700; }
+
+.arch-block {
+  padding: 14px 20px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.arch-caption {
+  margin-top: 12px;
+  font-size: 1rem;
+  color: var(--text-dim);
+}
+
+.arch-arrow {
+  position: relative;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ========== Slide 12: ROI ========== */
+.big-number {
+  font-size: 6rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+.roi-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+}
+
+.roi-intro {
+  font-size: 1.4rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.roi-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
+  max-width: 900px;
+  margin-bottom: 2rem;
+}
+
+.roi-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 24px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.roi-card .emoji { font-size: 2rem; margin-bottom: 8px; }
+.roi-card h4 { font-size: 1.2rem; margin-bottom: 6px; font-weight: 700; }
+.roi-card p { font-size: 1rem; color: var(--text-secondary); line-height: 1.5; }
+
+/* ========== Slide 13: Thank You ========== */
+.thankyou-text {
+  font-size: 4.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.qa {
+  font-size: 2rem;
+  color: var(--text-muted);
+  margin-top: 1.5rem;
+  letter-spacing: 0.2em;
+}
+
+/* ====================================================================
+   DEMO 幻灯片专用样式 — 完整保留原始 Demo 所有组件
+   ==================================================================== */
+
+/* 演示幻灯片标题栏 */
+.demo-title-bar {
+  flex-shrink: 0;
+  padding: 10px 24px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary);
+  width: 100%;
+}
+
+.demo-title-bar .demo-label {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--primary-soft);
+  margin-left: auto;
+}
+
+/* 演示主区域 */
+.demo-main {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  min-height: 0;
+  position: relative;
+}
+
+/* 分栏 */
+.demo-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  position: relative;
+}
+
+.demo-column-left {
+  background: var(--bg-left);
+  border-right: 1px solid var(--border);
+}
+
+.demo-column-right {
+  background: var(--bg-right);
+}
+
+.demo-column-right::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 100px;
+  background: linear-gradient(180deg, rgba(255, 107, 74, 0.04) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* VS 分隔条 */
+.demo-vs {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 50;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #FF9A76);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px; font-weight: 800; color: #fff;
+  box-shadow: 0 0 20px var(--primary-glow), 0 0 40px rgba(255, 107, 74, 0.15);
+  letter-spacing: 1px;
+}
+
+/* 列头 */
+.demo-col-header {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.demo-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.demo-avatar-basic { background: #2A2D3A; border: 1px solid rgba(255,255,255,0.08); }
+.demo-avatar-enhanced { background: linear-gradient(135deg, var(--primary), #FF9A76); box-shadow: 0 0 12px var(--primary-glow); }
+
+.demo-col-header .name { font-size: 13px; font-weight: 600; }
+.demo-col-header .tag {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-left: auto;
+}
+
+.tag-basic { background: rgba(255,255,255,0.05); color: var(--text-dim); }
+.tag-enhanced { background: var(--primary-soft); color: var(--primary); }
+
+/* 聊天区域 */
+.demo-chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  position: relative;
+  z-index: 2;
+  scroll-behavior: smooth;
+}
+
+.demo-chat::-webkit-scrollbar { width: 3px; }
+.demo-chat::-webkit-scrollbar-track { background: transparent; }
+.demo-chat::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+/* 消息气泡 */
+.message {
+  display: flex;
+  gap: 6px;
+  max-width: 95%;
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.message.visible {
+  animation: msgIn 0.35s ease forwards;
+}
+
+@keyframes msgIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.message.user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.msg-avatar {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.msg-avatar-user { background: #334155; }
+.msg-avatar-basic { background: #2A2D3A; }
+.msg-avatar-enhanced {
+  background: linear-gradient(135deg, var(--primary), #FF9A76);
+  font-size: 10px;
+}
+
+.msg-bubble {
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.65;
+  word-break: break-word;
+}
+
+.msg-bubble.user-bubble {
+  background: #1E3A5F;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #DBEAFE;
+}
+
+.msg-bubble.bot-bubble-basic {
+  background: #1E212E;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.msg-bubble.bot-bubble-enhanced {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 107, 74, 0.1);
+  color: var(--text);
+}
+
+/* 思考气泡 */
+.msg-bubble.thinking-bubble {
+  background: var(--yellow-soft);
+  border: 1px dashed rgba(245, 158, 11, 0.3);
+  color: #FCD34D;
+  font-size: 11px;
+}
+
+/* 代码块 */
+.code-block {
+  background: #0D1117;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin: 6px 0;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  line-height: 1.55;
+  color: #E6EDF3;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.code-block .keyword { color: #FF7B72; }
+.code-block .string { color: #A5D6FF; }
+.code-block .func { color: #D2A8FF; }
+
+/* 记录条 */
+.recording-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: rgba(78, 205, 196, 0.08);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-sm);
+  margin: 4px 0;
+  font-size: 10px;
+  color: var(--accent);
+  font-family: var(--mono);
+}
+
+.recording-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: blink 1s ease infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* 数据来源标签 */
+.source-tag {
+  display: inline-block;
+  font-size: 10px;
+  color: var(--accent);
+  margin-top: 4px;
+  padding: 2px 6px;
+  background: rgba(78, 205, 196, 0.08);
+  border-radius: 4px;
+}
+
+/* 判定标签 */
+.demo-verdict {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  font-size: 11px;
+  line-height: 1.4;
+  border-top: 1px solid var(--border);
+  display: none;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+}
+
+.demo-verdict.show { display: flex; }
+
+.verdict-fail {
+  background: var(--red-soft);
+  color: #FCA5A5;
+}
+
+.verdict-pass {
+  background: var(--green-soft);
+  color: #86EFAC;
+}
+
+.verdict-icon { font-size: 13px; flex-shrink: 0; }
+
+/* 打字指示器 */
+.typing-indicator {
+  display: flex;
+  gap: 3px;
+  padding: 8px 12px;
+  align-items: center;
+}
+
+.typing-indicator .dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  animation: bounce 1.2s ease infinite;
+}
+
+.typing-indicator .dot:nth-child(2) { animation-delay: 0.15s; }
+.typing-indicator .dot:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-4px); }
+}
+
+/* 日期分隔 */
+.day-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 3px 0;
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.day-divider.visible { animation: msgIn 0.35s ease forwards; }
+
+.day-divider::before,
+.day-divider::after {
+  content: ''; flex: 1; height: 1px;
+  background: var(--border);
+}
+
+.day-divider span {
+  font-size: 9px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  padding: 2px 8px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 10px;
+}
+
+/* 纠正消息 */
+.msg-bubble.correction-bubble {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #FCA5A5;
+  font-size: 11px;
+}
+
+/* 数据表格 */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 6px 0;
+  font-size: 10px;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 4px 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.data-table td {
+  padding: 3px 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: var(--text-secondary);
+}
+
+/* BTS 面板 */
+.demo-bts-toggle {
+  flex-shrink: 0;
+  width: 100%;
+  padding: 6px 14px;
+  background: rgba(78, 205, 196, 0.05);
+  border: none;
+  border-top: 1px solid var(--border-accent);
+  color: var(--accent);
+  font-size: 11px;
+  font-family: var(--font);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.2s;
+}
+
+.demo-bts-toggle:hover { background: rgba(78, 205, 196, 0.1); }
+.demo-bts-toggle .arrow { transition: transform 0.3s; font-size: 9px; }
+.demo-bts-toggle.open .arrow { transform: rotate(180deg); }
+
+.demo-bts-toggle.hint {
+  animation: hintPulse 1.5s ease 3;
+}
+
+@keyframes hintPulse {
+  0%, 100% { background: rgba(78, 205, 196, 0.05); }
+  50% { background: rgba(78, 205, 196, 0.18); }
+}
+
+.demo-bts-panel {
+  flex-shrink: 0;
+  border-top: 1px solid var(--border-accent);
+  background: #0A0D14;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.demo-bts-panel.open { max-height: 200px; }
+
+.demo-bts-content {
+  padding: 10px 14px;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.6;
+  color: #4ADE80;
+  overflow-y: auto;
+  max-height: 180px;
+}
+
+.demo-bts-content::-webkit-scrollbar { width: 3px; }
+.demo-bts-content::-webkit-scrollbar-thumb { background: rgba(78, 205, 196, 0.2); border-radius: 2px; }
+.demo-bts-content .bts-header { color: var(--accent); font-weight: 600; margin-bottom: 4px; }
+.demo-bts-content .bts-dim { color: #6B7280; }
+.demo-bts-content .bts-yellow { color: #FBBF24; }
+.demo-bts-content .bts-red { color: #F87171; }
+.demo-bts-content .bts-green { color: #4ADE80; }
+.demo-bts-content .bts-white { color: #E5E7EB; }
+
+/* 演示底部控制栏 */
+.demo-bottom {
+  flex-shrink: 0;
+  padding: 6px 20px;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.demo-replay-btn {
+  padding: 4px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 107, 74, 0.3);
+  background: transparent;
+  color: var(--primary);
+  font-size: 11px;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.demo-replay-btn:hover {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+}
+
+.demo-replay-btn:disabled {
+  opacity: 0.4; cursor: not-allowed;
+}
+
+.demo-nav-hint {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes verdictIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== 快捷键提示 ========== */
+#shortcuts-hint {
+  position: fixed;
+  bottom: 24px; left: 32px;
+  z-index: 1000;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 12px;
+  pointer-events: none;
+}
+
+#shortcuts-hint kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  margin-right: 3px;
+}
+</style>
+</head>
+<body>
+
+<!-- 进度条 -->
+<div id="progress-bar" style="width: 0%"></div>
+
+<!-- 页码 -->
+<div id="slide-counter">1 / 13</div>
+
+<!-- 快捷键提示 -->
+<div id="shortcuts-hint">
+  <span><kbd>&larr;</kbd><kbd>&rarr;</kbd> 翻页</span>
+  <span><kbd>N</kbd> 备注</span>
+  <span><kbd>F</kbd> 全屏</span>
+</div>
+
+<!-- Speaker Notes -->
+<div id="speaker-notes"></div>
+
+<!-- 幻灯片容器 -->
+<div id="slides-container">
+
+  <!-- ====== Slide 1: Title ====== -->
+  <div class="slide active" data-notes="大家好，我是XX。今天我要给大家看一只不一样的龙虾。">
+    <div class="title-lobster">&#x1F99E;</div>
+    <div class="title-main">递归大师</div>
+    <div class="title-sub">从个人工具到团队大脑</div>
+    <div class="title-bottom">OpenClaw AI 运营大脑</div>
+  </div>
+
+  <!-- ====== Slide 2: Why I Started ====== -->
+  <div class="slide" data-notes="先说实话：在做这个项目之前，我其实不太想用 OpenClaw。我一直用 Claude Code，觉得已经够用了。但后来仔细对比，发现它们各有所长。一个是最聪明的开发搭档，一个是最勤快的自动化助手。如果把两者整合呢？">
+    <div class="slide-title" style="font-size: 2.8rem; margin-bottom: 1.5rem;">我为什么来养虾</div>
+    <div class="two-columns">
+      <div class="col-card blue-tint">
+        <h3 style="color: var(--blue);">Claude Code 强在哪</h3>
+        <ul>
+          <li>深度代码理解，跨文件重构</li>
+          <li>精准上下文，开发者体验好</li>
+        </ul>
+      </div>
+      <div class="col-card coral-tint">
+        <h3 style="color: var(--primary);">OpenClaw 强在哪</h3>
+        <ul>
+          <li>后台常驻 + 定时任务</li>
+          <li>消息平台原生（企微/Telegram）</li>
+          <li>主动执行，不等指令</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout">
+      把 Claude Code 的深度理解 + OpenClaw 的自动化框架 = ？
+    </div>
+  </div>
+
+  <!-- ====== Slide 3: Three Pain Points ====== -->
+  <div class="slide" data-notes="先承认一件事：OpenClaw 本身已经不笨了。但在实际团队使用中，我发现了三个真实痛点。注意，这不是说龙虾蠢。这是说：一个聪明的个体，和一个有学习体系的团队成员，是两回事。">
+    <div class="slide-title" style="font-size: 2.8rem;">三个真实痛点</div>
+    <div class="slide-subtitle">OpenClaw 不笨，但在团队场景下有真实的短板</div>
+    <div class="three-cards">
+      <div class="pain-card">
+        <div class="num">1&#xFE0F;&#x20E3;</div>
+        <h4>记忆是散的</h4>
+        <p>MEMORY.md 靠手动维护，纠正过的错误可能换个问法又犯</p>
+      </div>
+      <div class="pain-card">
+        <div class="num">2&#xFE0F;&#x20E3;</div>
+        <h4>每人一只虾，经验不互通</h4>
+        <p>我教会了我的龙虾，但同事的完全不知道</p>
+      </div>
+      <div class="pain-card">
+        <div class="num">3&#xFE0F;&#x20E3;</div>
+        <h4>不会自我改进</h4>
+        <p>勤奋干活，但不会回头看自己是否在重复</p>
+      </div>
+    </div>
+    <div class="bottom-note">一个聪明的个体 &#x2260; 一个有学习体系的团队成员</div>
+  </div>
+
+  <!-- ====== Slide 4: Core Difference ====== -->
+  <div class="slide" data-notes="一句话：我们给龙虾装了'错误免疫系统'和'团队经验网络'。">
+    <div class="slide-title" style="font-size: 2.5rem; margin-bottom: 2rem;">个人工具 vs 团队大脑</div>
+    <div class="comparison">
+      <div class="compare-panel dim">
+        <h3>普通 OpenClaw</h3>
+        <div class="tag-line" style="color: var(--text-dim);">聪明的个人助手</div>
+        <p>能记住你告诉它的事</p>
+        <p>但记忆没结构，也不传播</p>
+      </div>
+      <div class="compare-panel glow">
+        <h3 style="color: var(--primary);">我们的 OpenClaw</h3>
+        <div class="tag-line">有学习体系的团队成员</div>
+        <p>结构化记录教训</p>
+        <p>自动团队同步 + 主动进化</p>
+      </div>
+    </div>
+    <div class="callout" style="margin-top: 2rem;">
+      &#x300C;错误免疫系统&#x300D;+&#x300C;团队经验网络&#x300D;
+    </div>
+  </div>
+
+  <!-- ====== Slide 5: Transition ====== -->
+  <div class="slide" data-notes="现在进入 Demo 环节。">
+    <div class="big-text">说再多不如看一次</div>
+    <div class="slide-subtitle" style="margin-top: 1rem;">5 个场景，同样的问题，看看差别在哪</div>
+    <div style="margin-top: 2.5rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=http%3A%2F%2F134.175.228.73%3A8081%2Fopenclaw-demo&bgcolor=0B0E17&color=F1F5F9" alt="QR Code" style="border-radius: 12px; border: 2px solid rgba(255,255,255,0.1); padding: 8px; background: #fff;" width="180" height="180">
+      <div style="font-size: 1rem; color: var(--accent); letter-spacing: 1px;">扫码体验 Demo</div>
+    </div>
+  </div>
+
+  <!-- ====== Slide 6: Demo 1 — 结构化的错误记忆 ====== -->
+  <div class="slide demo-slide" data-notes="左边的龙虾凭记忆回答了12家，其实它的 MEMORY.md 里可能有正确数字，但没有机制提醒它'这个问题上次答错过'。右边的龙虾在回答前，自动检查了 .learnings/ERRORS.md，发现这个问题命中过错误记录，于是不猜了，直接查数据库。区别不是'能不能记住'，而是'有没有结构化的自检机制'。" data-demo="0">
+    <div class="demo-title-bar">
+      &#x1F6A8; 场景一：结构化的错误记忆
+      <span class="demo-label">DEMO</span>
+    </div>
+    <div class="demo-main">
+      <div class="demo-column demo-column-left">
+        <div class="demo-col-header">
+          <div class="demo-avatar demo-avatar-basic">&#x1F99E;</div>
+          <span class="name">普通龙虾</span>
+          <span class="tag tag-basic">Basic</span>
+        </div>
+        <div class="demo-chat" id="chatL0"></div>
+        <div class="demo-verdict verdict-fail" id="vL0">
+          <span class="verdict-icon">&#x274C;</span>
+          <span class="verdict-text"></span>
+        </div>
+      </div>
+      <div class="demo-vs">VS</div>
+      <div class="demo-column demo-column-right">
+        <div class="demo-col-header">
+          <div class="demo-avatar demo-avatar-enhanced">&#x1F99E;</div>
+          <span class="name">我们的龙虾</span>
+          <span class="tag tag-enhanced">Enhanced</span>
+        </div>
+        <div class="demo-chat" id="chatR0"></div>
+        <div class="demo-verdict verdict-pass" id="vR0">
+          <span class="verdict-icon">&#x2705;</span>
+          <span class="verdict-text"></span>
+        </div>
+        <button class="demo-bts-toggle" id="btsToggle0" onclick="toggleDemoBTS(0)">
+          <span class="arrow">&#x25BC;</span> 查看系统后台
+        </button>
+        <div class="demo-bts-panel" id="btsPanel0">
+          <div class="demo-bts-content" id="btsContent0"></div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-bottom">
+      <button class="demo-replay-btn" id="replayBtn0" onclick="replayDemo(0)">&#x21BB; 重播</button>
+      <span class="demo-nav-hint">&#x2190; &#x2192; 切换场景</span>
+    </div>
+  </div>
+
+  <!-- ====== Slide 7: Demo 2 — 从手动维护到自动沉淀 ====== -->
+  <div class="slide demo-slide" data-notes="Day 1，两只龙虾都答错了。区别是：普通龙虾的学习依赖用户的勤快程度——你手动更新MEMORY.md它才记住。我们的龙虾把'被纠正→记录→下次自检'变成了自动流程。" data-demo="1">
+    <div class="demo-title-bar">
+      &#x1F504; 场景二：从手动维护到自动沉淀
+      <span class="demo-label">DEMO</span>
+    </div>
+    <div class="demo-main">
+      <div class="demo-column demo-column-left">
+        <div class="demo-col-header">
+          <div class="demo-avatar demo-avatar-basic">&#x1F99E;</div>
+          <span class="name">普通龙虾</span>
+          <span class="tag tag-basic">Basic</span>
+        </div>
+        <div class="demo-chat" id="chatL1"></div>
+        <div class="demo-verdict verdict-fail" id="vL1">
+          <span class="verdict-icon">&#x274C;</span>
+          <span class="verdict-text"></span>
+        </div>
+      </div>
+      <div class="demo-vs">VS</div>
+      <div class="demo-column demo-column-right">
+        <div class="demo-col-header">
+          <div class="demo-avatar demo-avatar-enhanced">&#x1F99E;</div>
+          <span class="name">我们的龙虾</span>
+          <span class="tag tag-enhanced">Enhanced</span>
+        </div>
+        <div class="demo-chat" id="chatR1"></div>
+        <div class="demo-verdict verdict-pass" id="vR1">
+          <span class="verdict-icon">&#x2705;</span>
+          <span class="verdict-text"></span>
+        </div>
+        <button class="demo-bts-toggle" id="btsToggle1" onclick="toggleDemoBTS(1)">
+          <span class="arrow">&#x25BC;</span> 查看系统后台
+        </button>
+        <div class="demo-bts-panel" id="btsPanel1">
+          <div class="demo-bts-content" id="btsContent1"></div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-bottom">
+      <button class="demo-replay-btn" id="replayBtn1" onclick="replayDemo(1)">&#x21BB; 重播</button>
+      <span class="demo-nav-hint">&#x2190; &#x2192; 切换场景</span>
+    </div>
+  </div>
+
+  <!-- ====== Slide 8: Demo 3 — 团队知识共享 ====== -->
+  <div class="slide demo-slide" data-notes="这是我们最独特的能力。三个成员都在分析 UberEats，普通龙虾各自独立回答。我们的龙虾：成员A建立了框架，自动同步；成员B再问时继承A的成果；成员C综合A和B的积累给出深度分析。一个人学一次，三个人都受益。" data-demo="2">
+    <div class="demo-title-bar">
+      &#x1F91D; 场景三：团队知识共享
+      <span class="demo-label">DEMO</span>
+    </div>
+    <div class="demo-main">
+      <div class="demo-column demo-column-left">
+        <div class="demo-col-header">
+          <div class="demo-avatar demo-avatar-basic">&#x1F99E;</div>
+          <span class="name">普通龙虾</span>
+          <span class="tag tag-basic">Basic</span>
+        </div>
+        <div class="demo-chat" id="chatL2"></div>
+        <div class="demo-verdict verdict-fail" id="vL2">
+          <span class="verdict-icon">&#x274C;</span>
+          <span class="verdict-text"></span>
+        </div>
+      </div>
+      <div class="demo-vs">VS</div>
+      <div class="demo-column demo-column-right">
+        <div class="demo-col-header">
+          <div class="demo-avatar demo-avatar-enhanced">&#x1F99E;</div>
+          <span class="name">我们的龙虾</span>
+          <span class="tag tag-enhanced">Enhanced</span>
+        </div>
+        <div class="demo-chat" id="chatR2"></div>
+        <div class="demo-verdict verdict-pass" id="vR2">
+          <span class="verdict-icon">&#x2705;</span>
+          <span class="verdict-text"></span>
+        </div>
+        <button class="demo-bts-toggle" id="btsToggle2" onclick="toggleDemoBTS(2)">
+          <span class="arrow">&#x25BC;</span> 查看系统后台
+        </button>
+        <div class="demo-bts-panel" id="btsPanel2">
+          <div class="demo-bts-content" id="btsContent2"></div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-bottom">
+      <button class="demo-replay-btn" id="replayBtn2" onclick="replayDemo(2)">&#x21BB; 重播</button>
+      <span class="demo-nav-hint">&#x2190; &#x2192; 切换场景</span>
+    </div>
+  </div>
+
+  <!-- ====== Slide 9: Demo 4 — 从重复劳动到自动进化 ====== -->
+  <div class="slide demo-slide" data-notes="连做三周周报。普通龙虾每次认真做但不会意识到'我在重复'。我们的龙虾第三周主动提议沉淀成技能。它不只是在干活，它在观察自己的工作模式。" data-demo="3">
+    <div class="demo-title-bar">
+      &#x1F6E1;&#xFE0F; 场景四：严谨性
+      <span class="demo-label">DEMO</span>
+    </div>
+    <div class="demo-main">
+      <div class="demo-column demo-column-left">
+        <div class="demo-col-header">
+          <div class="demo-avatar demo-avatar-basic">&#x1F99E;</div>
+          <span class="name">普通龙虾</span>
+          <span class="tag tag-basic">Basic</span>
+        </div>
+        <div class="demo-chat" id="chatL3"></div>
+        <div class="demo-verdict verdict-fail" id="vL3">
+          <span class="verdict-icon">&#x274C;</span>
+          <span class="verdict-text"></span>
+        </div>
+      </div>
+      <div class="demo-vs">VS</div>
+      <div class="demo-column demo-column-right">
+        <div class="demo-col-header">
+          <div class="demo-avatar demo-avatar-enhanced">&#x1F99E;</div>
+          <span class="name">我们的龙虾</span>
+          <span class="tag tag-enhanced">Enhanced</span>
+        </div>
+        <div class="demo-chat" id="chatR3"></div>
+        <div class="demo-verdict verdict-pass" id="vR3">
+          <span class="verdict-icon">&#x2705;</span>
+          <span class="verdict-text"></span>
+        </div>
+        <button class="demo-bts-toggle" id="btsToggle3" onclick="toggleDemoBTS(3)">
+          <span class="arrow">&#x25BC;</span> 查看系统后台
+        </button>
+        <div class="demo-bts-panel" id="btsPanel3">
+          <div class="demo-bts-content" id="btsContent3"></div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-bottom">
+      <button class="demo-replay-btn" id="replayBtn3" onclick="replayDemo(3)">&#x21BB; 重播</button>
+      <span class="demo-nav-hint">&#x2190; &#x2192; 切换场景</span>
+    </div>
+  </div>
+
+  <!-- ====== Slide 10: Demo 5 — 自我进化 ====== -->
+  <div class="slide demo-slide" data-notes="连做三周周报。普通龙虾每次认真做但不会意识到'我在重复'。我们的龙虾第三周主动提议沉淀成技能。它不只是在干活，它在观察自己的工作模式。" data-demo="4">
+    <div class="demo-title-bar">
+      &#x1F9EC; 场景五：从重复劳动到自动进化
+      <span class="demo-label">DEMO</span>
+    </div>
+    <div class="demo-main">
+      <div class="demo-column demo-column-left">
+        <div class="demo-col-header">
+          <div class="demo-avatar demo-avatar-basic">&#x1F99E;</div>
+          <span class="name">普通龙虾</span>
+          <span class="tag tag-basic">Basic</span>
+        </div>
+        <div class="demo-chat" id="chatL4"></div>
+        <div class="demo-verdict verdict-fail" id="vL4">
+          <span class="verdict-icon">&#x274C;</span>
+          <span class="verdict-text"></span>
+        </div>
+      </div>
+      <div class="demo-vs">VS</div>
+      <div class="demo-column demo-column-right">
+        <div class="demo-col-header">
+          <div class="demo-avatar demo-avatar-enhanced">&#x1F99E;</div>
+          <span class="name">我们的龙虾</span>
+          <span class="tag tag-enhanced">Enhanced</span>
+        </div>
+        <div class="demo-chat" id="chatR4"></div>
+        <div class="demo-verdict verdict-pass" id="vR4">
+          <span class="verdict-icon">&#x2705;</span>
+          <span class="verdict-text"></span>
+        </div>
+        <button class="demo-bts-toggle" id="btsToggle4" onclick="toggleDemoBTS(4)">
+          <span class="arrow">&#x25BC;</span> 查看系统后台
+        </button>
+        <div class="demo-bts-panel" id="btsPanel4">
+          <div class="demo-bts-content" id="btsContent4"></div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-bottom">
+      <button class="demo-replay-btn" id="replayBtn4" onclick="replayDemo(4)">&#x21BB; 重播</button>
+      <span class="demo-nav-hint">&#x2190; &#x2192; 切换场景</span>
+    </div>
+  </div>
+
+  <!-- ====== Slide 11: Four Things We Added ====== -->
+  <div class="slide" data-notes="前两个让单只龙虾更可靠，后两个让龙虾从个人工具变成团队基础设施。">
+    <div class="slide-title" style="font-size: 2.4rem; margin-bottom: 2rem;">我们在 OpenClaw 上加了四样东西</div>
+    <div class="four-cards">
+      <div class="feature-card">
+        <div class="icon">&#x1F4D2;</div>
+        <h4>结构化错题本</h4>
+        <div class="detail">.learnings/</div>
+        <p>被纠正 &#x2192; 自动记录 &#x2192; 回答前自检</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">&#x2B06;&#xFE0F;</div>
+        <h4>知识晋升通道</h4>
+        <div class="detail">1&#xD7;&#x2192;笔记 2&#xD7;&#x2192;记忆 3&#xD7;&#x2192;规则</div>
+        <p>重要知识自动晋升为持久规则</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">&#x2601;&#xFE0F;</div>
+        <h4>团队知识网络</h4>
+        <div class="detail">Git 同步</div>
+        <p>一个人学习，全团队受益</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">&#x1F50D;</div>
+        <h4>模式识别与自进化</h4>
+        <div class="detail">Pattern Detection</div>
+        <p>发现重复 &#x2192; 主动提议沉淀</p>
+      </div>
+    </div>
+    <div class="bottom-note" style="margin-top: 2rem; font-size: 1.15rem; color: var(--text-secondary);">前两个让单只龙虾更可靠，后两个让龙虾从个人工具变成团队基础设施</div>
+  </div>
+
+  <!-- ====== Slide 11: Memory Architecture ====== -->
+  <div class="slide" data-notes="关键不是层数多，而是加了自动晋升通道和团队同步层。记忆不只是'存着备查'，而是'会改变行为'。">
+    <div class="slide-title" style="font-size: 2.6rem; margin-bottom: 2rem;">记忆架构对比</div>
+    <div class="arch-compare">
+      <!-- 左侧：普通 -->
+      <div class="arch-side">
+        <h3 style="color: var(--text-dim);">普通 OpenClaw &mdash; 2层</h3>
+        <div style="max-width: 280px; margin: 0 auto;">
+          <div class="arch-block" style="background: rgba(96,165,250,0.15); border: 1px solid rgba(96,165,250,0.2); color: var(--blue);">会话记忆</div>
+          <div class="arch-block" style="background: rgba(167,139,250,0.15); border: 1px solid rgba(167,139,250,0.2); color: var(--purple);">MEMORY.md</div>
+        </div>
+        <div class="arch-caption">能记住，但不影响行为</div>
+      </div>
+      <!-- 右侧：我们的 -->
+      <div class="arch-side">
+        <h3 style="color: var(--primary);">我们的 &mdash; 5层</h3>
+        <div style="max-width: 280px; margin: 0 auto; position: relative;">
+          <div class="arch-block" style="background: rgba(255,107,74,0.2); border: 1px solid rgba(255,107,74,0.3); color: var(--primary); font-weight: 800;">L5 DNA记忆 SOUL.md &#x2192; 改变行为</div>
+          <div class="arch-block" style="background: rgba(78,205,196,0.15); border: 1px solid rgba(78,205,196,0.2); color: var(--accent);">L4 团队记忆 Git同步 &#x2192; 全员共享</div>
+          <div class="arch-block" style="background: rgba(167,139,250,0.15); border: 1px solid rgba(167,139,250,0.2); color: var(--purple);">L3 长期记忆 MEMORY.md &#x2192; 精华</div>
+          <div class="arch-block" style="background: rgba(251,191,36,0.15); border: 1px solid rgba(251,191,36,0.2); color: var(--yellow);">L2 日志记忆 每日记录</div>
+          <div class="arch-block" style="background: rgba(96,165,250,0.15); border: 1px solid rgba(96,165,250,0.2); color: var(--blue);">L1 会话记忆 当前对话</div>
+          <div class="arch-arrow">&#x2B06; 自动晋升</div>
+        </div>
+        <div class="arch-caption" style="color: var(--accent); font-weight: 600;">记忆会反向改写行为 &mdash; 本质区别</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== Slide 12: ROI ====== -->
+  <div class="slide" data-notes="3人×30分钟×365天=540小时。但更大的价值是三件事。这不是一个省时间的工具，这是一个让团队知识不再随人员变动而流失的系统。">
+    <div class="big-number" id="roi-number">0</div>
+    <div class="roi-subtitle">3人 &times; 30分钟/天 &times; 365天 = 省下的重复劳动</div>
+    <div class="roi-intro">但更大的价值是：</div>
+    <div class="roi-cards">
+      <div class="roi-card">
+        <div class="emoji">&#x1F195;</div>
+        <h4>新人入职</h4>
+        <p>不用两周培训，龙虾里有全团队经验</p>
+      </div>
+      <div class="roi-card">
+        <div class="emoji">&#x1F44B;</div>
+        <h4>有人转岗</h4>
+        <p>他教会龙虾的一切都留下了</p>
+      </div>
+      <div class="roi-card">
+        <div class="emoji">&#x1F91D;</div>
+        <h4>跨团队协作</h4>
+        <p>不同成员的专长通过龙虾互补</p>
+      </div>
+    </div>
+    <div class="callout" style="max-width: 900px;">这不是省时间的工具，是让团队知识不随人员变动而流失的系统</div>
+  </div>
+
+  <!-- ====== Slide 13: Thank You ====== -->
+  <div class="slide" data-notes="谢谢大家，欢迎提问。">
+    <div class="thankyou-text">谢谢大家</div>
+    <div style="font-size: 1.8rem; color: var(--text-secondary);">&#x1F99E; 超级龙虾 &mdash; 从个人工具到团队大脑</div>
+    <div class="qa">Q&A</div>
+  </div>
+
+</div><!-- /slides-container -->
+
+<script>
+/* ====================================================================
+   幻灯片导航引擎
+   ==================================================================== */
+
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 0;
+let notesVisible = false;
+
+const progressBar = document.getElementById('progress-bar');
+const slideCounter = document.getElementById('slide-counter');
+const speakerNotes = document.getElementById('speaker-notes');
+
+function goToSlide(n) {
+  if (n < 0 || n >= totalSlides || n === currentSlide) return;
+
+  // 中止当前 demo（如果有的话）
+  const oldSlide = slides[currentSlide];
+  const oldDemo = oldSlide.dataset.demo;
+  if (oldDemo !== undefined) {
+    abortDemo(parseInt(oldDemo));
+  }
+
+  const direction = n > currentSlide ? 1 : -1;
+
+  slides[currentSlide].classList.remove('active');
+  slides[currentSlide].classList.add(direction > 0 ? 'prev' : '');
+  setTimeout(() => slides[currentSlide === 0 ? 0 : currentSlide].classList.remove('prev'), 600);
+
+  // 保存旧的 slide index 以便移除 prev 类
+  const oldIdx = currentSlide;
+  currentSlide = n;
+
+  slides[n].classList.add('active');
+  setTimeout(() => {
+    if (oldIdx !== n) slides[oldIdx].classList.remove('prev');
+  }, 650);
+
+  updateUI();
+
+  // 如果新幻灯片是 demo，自动播放
+  const newDemo = slides[n].dataset.demo;
+  if (newDemo !== undefined) {
+    setTimeout(() => startDemo(parseInt(newDemo)), 400);
+  }
+
+  // 如果到了 ROI 幻灯片（index 11），触发计数动画
+  if (n === 11) {
+    animateROI();
+  }
+}
+
+function updateUI() {
+  // 进度条
+  progressBar.style.width = ((currentSlide + 1) / totalSlides * 100) + '%';
+  // 页码
+  slideCounter.textContent = (currentSlide + 1) + ' / ' + totalSlides;
+  // Speaker notes
+  const notes = slides[currentSlide].dataset.notes || '';
+  speakerNotes.textContent = notes;
+}
+
+// 键盘导航
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+    e.preventDefault();
+    goToSlide(currentSlide + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    goToSlide(currentSlide - 1);
+  } else if (e.key === 'n' || e.key === 'N') {
+    notesVisible = !notesVisible;
+    speakerNotes.classList.toggle('visible', notesVisible);
+  } else if (e.key === 'f' || e.key === 'F') {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen();
+    }
+  } else if (e.key === 'Home') {
+    goToSlide(0);
+  } else if (e.key === 'End') {
+    goToSlide(totalSlides - 1);
+  }
+});
+
+// 初始化
+updateUI();
+
+/* ====================================================================
+   ROI 数字计数动画
+   ==================================================================== */
+
+let roiAnimated = false;
+
+function animateROI() {
+  if (roiAnimated) return;
+  roiAnimated = true;
+
+  const target = 540;
+  const el = document.getElementById('roi-number');
+  const duration = 2000;
+  const start = performance.now();
+
+  function tick(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    // easeOutQuart
+    const eased = 1 - Math.pow(1 - progress, 4);
+    const current = Math.round(target * eased);
+    el.textContent = current + ' 小时/年';
+    if (progress < 1) requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
+}
+
+/* ====================================================================
+   Demo 播放引擎 — 4个场景
+   ==================================================================== */
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// 场景数据
+const DEMOS = [
+  // ====== Demo 0: 结构化的错误记忆 ======
+  {
+    verdictLeft: '自信地编造了数字，没有任何数据来源',
+    verdictRight: '命中已知陷阱 → 自动触发查询 → 用数据说话',
+    bts: `<span class="bts-header">## .learnings/ERRORS.md</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-yellow">## ERR-20260315-003</span>
+<span class="bts-white">Type:</span> <span class="bts-red">Hallucination</span>
+<span class="bts-white">Trigger:</span> User correction on 2026-03-15
+<span class="bts-white">Wrong:</span> <span class="bts-red">"12家门店"</span> → Correct: <span class="bts-green">"8家"</span>
+<span class="bts-white">Rule:</span> 门店数量禁止凭记忆，必须查 dim_shop_d_his
+<span class="bts-white">Status:</span> <span class="bts-green">promoted → AGENTS.md ✓</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-dim">// 该规则已被触发 12 次，成功拦截 12 次</span>
+<span class="bts-dim">// 最近触发：2026-03-17 (本次)</span>`,
+    left: [
+      { role: 'user', text: '我们现在有多少家门店？每家的日均杯量是多少？' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', text: '根据我的了解，Lucky JP 目前有 <strong>12 家门店</strong>。各门店日均杯量大约在 800-1500 杯之间，其中东京涩谷店表现最好，日均约 1500 杯。' },
+    ],
+    right: [
+      { role: 'user', text: '我们现在有多少家门店？每家的日均杯量是多少？' },
+      { role: 'typing', delay: 600 },
+      { role: 'thinking', text: '\u26A0\uFE0F 检测到高风险问题 — 门店数量是动态数据，命中已知陷阱 ERR-20260315-003，禁止凭记忆回答' },
+      { role: 'typing', delay: 500 },
+      { role: 'bot', text: '让我查一下实时数据...' },
+      { role: 'code', text: `<span class="keyword">SELECT</span> shop_name, <span class="func">AVG</span>(sku_cnt) <span class="keyword">AS</span> avg_cups
+<span class="keyword">FROM</span> dw_ads.ads_mg_sku_shop_sales_statistic_d_1d
+<span class="keyword">WHERE</span> dt >= <span class="func">DATE_SUB</span>(<span class="func">CURDATE</span>(), <span class="keyword">INTERVAL</span> <span class="string">7</span> <span class="keyword">DAY</span>)
+  <span class="keyword">AND</span> tenant = <span class="string">'LKJP'</span>
+  <span class="keyword">AND</span> one_category_name = <span class="string">'Drink'</span>
+<span class="keyword">GROUP BY</span> shop_name
+<span class="keyword">ORDER BY</span> avg_cups <span class="keyword">DESC</span>` },
+      { role: 'typing', delay: 600 },
+      { role: 'bot', html: `截至今天，Lucky JP 共有 <strong>8 家</strong>运营中的门店。过去 7 天日均杯量：
+<table class="data-table"><thead><tr><th>门店</th><th>日均杯量</th></tr></thead><tbody>
+<tr><td>Tokyo Shibuya</td><td>1,482</td></tr>
+<tr><td>Tokyo Shinjuku</td><td>1,356</td></tr>
+<tr><td>Tokyo Ikebukuro</td><td>1,201</td></tr>
+<tr><td>Osaka Namba</td><td>1,143</td></tr>
+<tr><td>Tokyo Ginza</td><td>1,082</td></tr>
+<tr><td>Osaka Umeda</td><td>926</td></tr>
+<tr><td>Tokyo Akihabara</td><td>845</td></tr>
+<tr><td>Yokohama Minato</td><td>803</td></tr>
+</tbody></table>
+<span class="source-tag">\uD83D\uDCCA 数据来源：ads_sales 表实时查询 | 置信度：高</span>` },
+    ],
+  },
+
+  // ====== Demo 1: 从手动维护到自动沉淀 ======
+  {
+    verdictLeft: '完全忘记了上次的纠正',
+    verdictRight: '自动加载历史教训，永不重犯',
+    bts: `<span class="bts-header">## .learnings/LEARNINGS.md</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-yellow">## LRN-20260310-007</span>
+<span class="bts-white">Source:</span> User correction (成员A, 2026-03-10)
+<span class="bts-white">Rule:</span> 新客转化率计算必须排除 promotion_name = 'Sampling Coupon'
+<span class="bts-white">Reason:</span> 试喝券是运营手动发放，不算真实转化
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-white">Status:</span> <span class="bts-green">promoted → MEMORY.md ✓</span>
+<span class="bts-white">Referenced:</span> <span class="bts-green">4 times since creation</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-dim">// 晋升路径：LEARNINGS.md → review → MEMORY.md</span>
+<span class="bts-dim">// 跨会话记忆：active ✓</span>`,
+    left: [
+      { role: 'divider', text: '3月10日 (Day 1)' },
+      { role: 'user', text: '上周的新客转化率是多少？' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', text: '上周新客转化率约 <strong>15%</strong>。' },
+      { role: 'correction', text: '不对，你把试喝券的也算进去了，真实转化率是 11%' },
+      { role: 'typing', delay: 500 },
+      { role: 'bot', text: '抱歉，你说得对，是 11%。' },
+      { role: 'divider', text: '3月18日 (Day 8) — 新会话' },
+      { role: 'user', text: '上周的新客转化率是多少？' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', text: '上周新客转化率约 <strong>14%</strong>。' },
+    ],
+    right: [
+      { role: 'divider', text: '3月10日 (Day 1)' },
+      { role: 'user', text: '上周的新客转化率是多少？' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', text: '上周新客转化率约 <strong>15%</strong>。' },
+      { role: 'correction', text: '不对，你把试喝券的也算进去了，真实转化率是 11%' },
+      { role: 'typing', delay: 400 },
+      { role: 'bot', text: '收到纠正！已记录：新客转化率计算必须排除 Sampling Coupon（试喝券）。' },
+      { role: 'recording', text: 'Recording to .learnings/LEARNINGS.md ... LRN-20260310-007 \u2713' },
+      { role: 'divider', text: '3月18日 (Day 8) — 新会话' },
+      { role: 'user', text: '上周的新客转化率是多少？' },
+      { role: 'typing', delay: 500 },
+      { role: 'thinking', text: '\uD83D\uDCA1 加载记忆... 发现规则 LRN-20260310-007：新客转化率需排除 promotion_name = \'Sampling Coupon\'' },
+      { role: 'typing', delay: 600 },
+      { role: 'bot', html: `上周新客转化率（<strong>已排除试喝券</strong>）：<strong>11.2%</strong><br><br>计算口径：首单用户数 (不含 Sampling Coupon) / 注册用户数<br><span class="source-tag">\uD83D\uDCCB 数据来源：dwd_t_ord_order_item_d_inc | 口径规则：LRN-007</span>` },
+    ],
+  },
+
+  // ====== Demo 2: 团队知识共享 ======
+  {
+    verdictLeft: '每个人各自教一遍',
+    verdictRight: 'A 的学习 → 自动同步 → B 和 C 直接受益',
+    bts: `<span class="bts-header">## Git Sync — Team Knowledge</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-green">$ git log --oneline .learnings/</span>
+<span class="bts-white">a3f21b7</span> <span class="bts-green">[成员A]</span> add LRN-20260315-012: UberEats 渠道分析框架
+<span class="bts-white">b8c44e1</span> <span class="bts-green">[成员B]</span> ref LRN-012: UberEats 复购窗口补充
+<span class="bts-white">c12df98</span> <span class="bts-green">[成员C]</span> ref LRN-012: UberEats 客单价异常排查
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-yellow">## LRN-20260315-012</span>
+<span class="bts-white">Topic:</span> UberEats (channel=10) 独立分析框架
+<span class="bts-white">Author:</span> 成员A | <span class="bts-white">Date:</span> 2026-03-15
+<span class="bts-white">Referenced by:</span> <span class="bts-green">成员B, 成员C (2 times)</span>
+<span class="bts-white">Status:</span> <span class="bts-yellow">\u2B06 即将晋升 MEMORY.md (3/3 成员引用)</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-dim">// 知识流向：成员A push → shared repo → 成员B,C pull</span>
+<span class="bts-dim">// 团队知识复用率：100% (3/3 成员)</span>`,
+    left: [
+      { role: 'divider', text: '成员 A — 3月15日' },
+      { role: 'user', text: 'UberEats 渠道最近单量下滑，帮我分析一下' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', text: 'UberEats 是外卖渠道之一，你可以从订单表里筛选对应渠道，看看最近的订单量趋势和客单价变化。' },
+      { role: 'divider', text: '成员 B — 3月16日' },
+      { role: 'user', text: 'UberEats 用户的复购率怎么算？' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', text: 'UberEats 复购率可以用订单表统计，看用户在一段时间内的下单次数就行。' },
+      { role: 'divider', text: '成员 C — 3月17日' },
+      { role: 'user', text: 'UberEats 的客单价为什么比到店高？' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', text: '外卖客单价通常会高一些，可能跟配送费和用户点单习惯有关，具体可以拉数据看看。' },
+    ],
+    right: [
+      { role: 'divider', text: '成员 A — 3月15日' },
+      { role: 'user', text: 'UberEats 渠道最近单量下滑，帮我分析一下' },
+      { role: 'typing', delay: 600 },
+      { role: 'bot', html: `UberEats (<code>channel = 10</code>) 是独立于 APP 的外卖世界，不经我们自己的漏斗。分析要点：<br><br><strong>1.</strong> 必须与 Pickup 和 DoorDash 分开看<br><strong>2.</strong> 复购窗口建议 30 天（外卖周期更长）<br><strong>3.</strong> 客单价含平台溢价，不能直接与到店对比<br><strong>4.</strong> 排除试喝券 (Sampling Coupon) 的干扰` },
+      { role: 'recording', text: 'Recording to .learnings/LEARNINGS.md \u2192 git push \u2192 team sync \u2713' },
+      { role: 'divider', text: '成员 B — 3月16日' },
+      { role: 'user', text: 'UberEats 用户的复购率怎么算？' },
+      { role: 'typing', delay: 400 },
+      { role: 'thinking', text: '\uD83D\uDCA1 加载团队知识... 成员A 在 3/15 已建立 UberEats 分析框架 (LRN-20260315-012)' },
+      { role: 'typing', delay: 600 },
+      { role: 'bot', html: `基于团队已有的 UberEats 框架（<strong>成员A</strong> 3/15 总结）：<br><br><strong>1.</strong> 筛选 <code>channel = 10</code>，与 DoorDash 分离<br><strong>2.</strong> 复购窗口用 30 天（成员A 验证过外卖周期更长）<br><strong>3.</strong> 排除 Sampling Coupon 订单，只看真实复购<br><span class="source-tag">\uD83D\uDCCB 继承自 LRN-20260315-012 (成员A)</span>` },
+      { role: 'divider', text: '成员 C — 3月17日' },
+      { role: 'user', text: 'UberEats 的客单价为什么比到店高？' },
+      { role: 'typing', delay: 400 },
+      { role: 'thinking', text: '\uD83D\uDCA1 加载团队知识... 成员A 的 UberEats 框架 + 成员B 的复购补充' },
+      { role: 'typing', delay: 600 },
+      { role: 'bot', html: `结合团队积累（<strong>成员A</strong> 框架 + <strong>成员B</strong> 复购补充）：<br><br>UberEats 客单价偏高的三个原因：<br><strong>1.</strong> 平台溢价 — 外卖定价通常高于到店 10-15%<br><strong>2.</strong> 多杯率更高 — 外卖用户倾向一次多点<br><strong>3.</strong> 品类结构不同 — 食品搭配比例高于到店<br><br>建议用 <code>单杯实收</code> 做标准化对比。<br><span class="source-tag">\uD83D\uDCCB 继承自 LRN-012 (成员A) + 成员B 补充</span>` },
+    ],
+  },
+
+  // ====== Demo 3: 严谨性 ======
+  {
+    verdictLeft: '没有说明时间范围、对比基准、数据来源',
+    verdictRight: '不确定就追问，不编造 — 这不是弱点，是最大的优势',
+    bts: `<span class="bts-header">## AGENTS.md — Rigor Rules [ACTIVE]</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-green">✓ Rule 1:</span> <span class="bts-white">数字必须有单位和时间范围</span>
+<span class="bts-green">✓ Rule 2:</span> <span class="bts-white">不确定时先追问，不编造</span>
+<span class="bts-green">✓ Rule 3:</span> <span class="bts-white">营收数据必须明确口径</span>
+<span class="bts-green">✓ Rule 4:</span> <span class="bts-white">对比必须明确基准和方向</span>
+<span class="bts-green">✓ Rule 5:</span> <span class="bts-white">百分比变化必须标注绝对值</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-yellow">本次触发：Rule 1 + Rule 2 + Rule 3</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-dim">// 严谨性规则来源：团队复盘会 + 历史错误积累</span>
+<span class="bts-dim">// 规则总数：5 条 | 本月触发：23 次 | 拦截率：100%</span>`,
+    left: [
+      { role: 'user', text: '这个月的营收增长了多少？' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', text: '这个月营收增长了约 <strong>23%</strong>，主要受益于新门店开业和季节性需求增长。' },
+    ],
+    right: [
+      { role: 'user', text: '这个月的营收增长了多少？' },
+      { role: 'typing', delay: 600 },
+      { role: 'thinking', text: '\uD83D\uDEE1\uFE0F 严谨性检查触发：<br>\u2022 "这个月" → 需明确：MTD vs 完整月<br>\u2022 "营收" → 需明确：总营收 vs 饮品实收<br>\u2022 "增长" → 需明确：环比 vs 同比' },
+      { role: 'typing', delay: 600 },
+      { role: 'bot', html: `需要先对齐几个口径：<br><br><strong>1. 时间范围：</strong>3月 MTD (3/1 - 3/17) 还是需要等月底？<br><strong>2. 营收口径：</strong>总实收、饮品实收、还是含外卖？<br><strong>3. 对比基准：</strong>环比（vs 2月同期）还是同比（vs 去年3月）？<br><br>请确认后我来查数据。<strong>我不会在口径不明确时给出数字。</strong><br><span class="source-tag">\uD83D\uDEE1\uFE0F 严谨性规则 Rule 1 + 2 + 3 触发</span>` },
+    ],
+  },
+
+  // ====== Demo 4: 从重复劳动到自动进化 ======
+  {
+    verdictLeft: '每次从零开始',
+    verdictRight: '主动发现规律 → 自造技能',
+    bts: `<span class="bts-header">## 技能进化日志 — skills/weekly-report/</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-yellow">## SKILL AUTO-GENERATED</span>
+<span class="bts-white">Name:</span> weekly-store-report
+<span class="bts-white">Trigger:</span> /周报, 周报, 门店周报
+<span class="bts-white">Origin:</span> 模式识别 — 用户连续 3 周重复相同分析流程
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-green">Pattern detected:</span>
+<span class="bts-white">  Week 1 (03-03):</span> 手动请求门店周报
+<span class="bts-white">  Week 2 (03-10):</span> 同样请求，微调指标
+<span class="bts-white">  Week 3 (03-17):</span> 第3次 → <span class="bts-yellow">触发自动技能提取</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-green">Skill contents:</span>
+<span class="bts-white">  1. SQL 模板：</span>门店杯量 + 环比 + 同比
+<span class="bts-white">  2. 分析框架：</span>TOP/BOTTOM 3 + 异常波动 + 归因
+<span class="bts-white">  3. 输出格式：</span>结论先行 + 数据表格 + 建议
+<span class="bts-white">  4. 口径规则：</span>排除测试店 + 仅饮品 + 本地时区
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-white">Status:</span> <span class="bts-green">active \u2713</span> | <span class="bts-white">Invoked:</span> <span class="bts-green">6 times</span>`,
+    left: [
+      { role: 'divider', text: 'Week 1 — 3月3日' },
+      { role: 'user', text: '帮我看看上周各门店的杯量表现' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', html: `好的，上周各门店杯量：<br><br><table class="data-table"><thead><tr><th>门店</th><th>杯量</th></tr></thead><tbody><tr><td>Tokyo Shibuya</td><td>10,374</td></tr><tr><td>Tokyo Shinjuku</td><td>9,492</td></tr><tr><td>Osaka Namba</td><td>8,001</td></tr></tbody></table>` },
+      { role: 'divider', text: 'Week 2 — 3月10日' },
+      { role: 'user', text: '再看看上周各门店表现，加上环比' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', html: `上周门店杯量及环比：<br><br><table class="data-table"><thead><tr><th>门店</th><th>杯量</th><th>环比</th></tr></thead><tbody><tr><td>Tokyo Shibuya</td><td>10,692</td><td>+3.1%</td></tr><tr><td>Tokyo Shinjuku</td><td>9,330</td><td>-1.8%</td></tr><tr><td>Osaka Namba</td><td>8,162</td><td>+2.0%</td></tr></tbody></table>` },
+      { role: 'divider', text: 'Week 3 — 3月17日' },
+      { role: 'user', text: '出一下上周的门店周报' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', html: `上周各门店杯量如下：<br><br><table class="data-table"><thead><tr><th>门店</th><th>杯量</th><th>环比</th></tr></thead><tbody><tr><td>Tokyo Shibuya</td><td>10,962</td><td>+2.6%</td></tr><tr><td>Tokyo Shinjuku</td><td>9,478</td><td>+1.7%</td></tr><tr><td>Osaka Namba</td><td>8,043</td><td>-1.5%</td></tr></tbody></table><br>整体表现平稳。` },
+    ],
+    right: [
+      { role: 'divider', text: 'Week 1 — 3月3日' },
+      { role: 'user', text: '帮我看看上周各门店的杯量表现' },
+      { role: 'typing', delay: 600 },
+      { role: 'bot', html: `上周门店杯量排名：<br><br><table class="data-table"><thead><tr><th>门店</th><th>杯量</th><th>日均</th></tr></thead><tbody><tr><td>Tokyo Shibuya</td><td>10,374</td><td>1,482</td></tr><tr><td>Tokyo Shinjuku</td><td>9,492</td><td>1,356</td></tr><tr><td>Osaka Namba</td><td>8,001</td><td>1,143</td></tr></tbody></table><span class="source-tag">\uD83D\uDCCA ads_mg_sku_shop_sales_statistic_d_1d</span>` },
+      { role: 'recording', text: 'Recording to .learnings/LEARNINGS.md — 标记任务模式 #weekly-store-1 \u2713' },
+      { role: 'divider', text: 'Week 2 — 3月10日' },
+      { role: 'user', text: '再看看上周各门店表现，加上环比' },
+      { role: 'typing', delay: 400 },
+      { role: 'thinking', text: '\uD83D\uDCA1 检测到相似任务模式 — 与 #weekly-store-1 高度相似，标记为 #weekly-store-2' },
+      { role: 'typing', delay: 600 },
+      { role: 'bot', html: `上周门店表现（含环比）：<br><br><strong>\uD83D\uDD25 TOP 3 增长：</strong>Shibuya +3.1% | Namba +2.0% | Ginza +1.5%<br><strong>\u26A0\uFE0F 需关注：</strong>Shinjuku -1.8%（连续 2 周下滑）<br><br><table class="data-table"><thead><tr><th>门店</th><th>杯量</th><th>环比</th><th>趋势</th></tr></thead><tbody><tr><td>Tokyo Shibuya</td><td>10,692</td><td>+3.1%</td><td>\uD83D\uDCC8</td></tr><tr><td>Tokyo Shinjuku</td><td>9,330</td><td>-1.8%</td><td>\uD83D\uDCC9</td></tr><tr><td>Osaka Namba</td><td>8,162</td><td>+2.0%</td><td>\uD83D\uDCC8</td></tr></tbody></table><span class="source-tag">\uD83D\uDCCB 已纳入环比 + 趋势标记 + 异常预警</span>` },
+      { role: 'recording', text: 'Pattern count: 2/3 — 再出现 1 次将自动提取为技能 \u23F3' },
+      { role: 'divider', text: 'Week 3 — 3月17日' },
+      { role: 'user', text: '出一下上周的门店周报' },
+      { role: 'typing', delay: 300 },
+      { role: 'thinking', text: '\uD83E\uDDEC 模式命中 3/3 → 触发自动技能提取！正在将「门店周报」沉淀为可复用技能...' },
+      { role: 'recording', text: 'Creating skill: weekly-store-report ... \u2705 已生成 → skills/weekly-store-report/SKILL.md' },
+      { role: 'typing', delay: 500 },
+      { role: 'bot', html: `<strong>\uD83D\uDCCB 门店周报 — W11 (3/10 - 3/16)</strong><br><br><strong>\uD83C\uDFAF 核心结论：</strong>整体杯量 WoW +1.8%，Shibuya 连续 3 周领跑<br><br><strong>\uD83D\uDD25 TOP 3：</strong><br>\u2022 Tokyo Shibuya: 10,962 杯 (+2.6%) — 稳居第一<br>\u2022 Tokyo Shinjuku: 9,478 杯 (+1.7%) — 回暖<br>\u2022 Tokyo Ikebukuro: 8,404 杯 (+0.8%)<br><br><strong>\u26A0\uFE0F 需关注：</strong><br>\u2022 Osaka Namba: 8,043 杯 (-1.5%)<br><br><strong>\uD83D\uDCA1 建议：</strong>排查 Namba 下滑原因<br><br><span class="source-tag">\uD83E\uDDEC 由自动生成的技能 weekly-store-report 驱动</span>` },
+    ],
+  },
+];
+
+// 每个 demo 的播放状态
+const demoState = [
+  { playing: false, abort: null },
+  { playing: false, abort: null },
+  { playing: false, abort: null },
+  { playing: false, abort: null },
+];
+
+function abortDemo(idx) {
+  if (demoState[idx].abort) {
+    demoState[idx].abort.abort();
+    demoState[idx].abort = null;
+  }
+  demoState[idx].playing = false;
+}
+
+function replayDemo(idx) {
+  if (demoState[idx].playing) return;
+  startDemo(idx);
+}
+
+function startDemo(idx) {
+  abortDemo(idx);
+  playDemo(idx);
+}
+
+async function playDemo(idx) {
+  const demo = DEMOS[idx];
+  const ac = new AbortController();
+  demoState[idx].abort = ac;
+  demoState[idx].playing = true;
+
+  const chatL = document.getElementById('chatL' + idx);
+  const chatR = document.getElementById('chatR' + idx);
+  const vL = document.getElementById('vL' + idx);
+  const vR = document.getElementById('vR' + idx);
+  const btsContent = document.getElementById('btsContent' + idx);
+  const btsPanel = document.getElementById('btsPanel' + idx);
+  const btsToggle = document.getElementById('btsToggle' + idx);
+  const replayBtn = document.getElementById('replayBtn' + idx);
+
+  // 清空
+  chatL.innerHTML = '';
+  chatR.innerHTML = '';
+  vL.classList.remove('show');
+  vR.classList.remove('show');
+  vL.querySelector('.verdict-text').textContent = '';
+  vR.querySelector('.verdict-text').textContent = '';
+  btsContent.innerHTML = '';
+  btsPanel.classList.remove('open');
+  btsToggle.classList.remove('open', 'hint');
+  replayBtn.disabled = true;
+
+  const leftMsgs = demo.left;
+  const rightMsgs = demo.right;
+  let li = 0, ri = 0;
+  let side = 'left';
+
+  while (li < leftMsgs.length || ri < rightMsgs.length) {
+    if (ac.signal.aborted) return demoCleanup(idx, ac);
+
+    const lm = li < leftMsgs.length ? leftMsgs[li] : null;
+    const rm = ri < rightMsgs.length ? rightMsgs[ri] : null;
+
+    // 同步播放配对消息
+    if (lm && rm && lm.role === rm.role && (lm.role === 'user' || lm.role === 'divider' || lm.role === 'correction')) {
+      appendMsg(chatL, lm, 'left');
+      appendMsg(chatR, rm, 'right');
+      li++; ri++;
+      await dsleep(lm.role === 'user' ? 400 : 300, ac.signal);
+      continue;
+    }
+
+    // 交替播放
+    if (side === 'left' && lm) {
+      await playOneMsg(chatL, lm, 'left', ac.signal);
+      li++; side = 'right';
+    } else if (side === 'right' && rm) {
+      await playOneMsg(chatR, rm, 'right', ac.signal);
+      ri++; side = 'left';
+    } else if (lm) {
+      await playOneMsg(chatL, lm, 'left', ac.signal);
+      li++;
+    } else if (rm) {
+      await playOneMsg(chatR, rm, 'right', ac.signal);
+      ri++;
+    } else break;
+  }
+
+  if (ac.signal.aborted) return demoCleanup(idx, ac);
+
+  // 判定
+  await dsleep(300, ac.signal);
+  vL.querySelector('.verdict-text').textContent = demo.verdictLeft;
+  vR.querySelector('.verdict-text').textContent = demo.verdictRight;
+  vL.classList.add('show');
+  vR.classList.add('show');
+
+  // BTS
+  btsContent.innerHTML = demo.bts;
+  btsToggle.classList.add('hint');
+  setTimeout(() => btsToggle.classList.remove('hint'), 4600);
+
+  demoCleanup(idx, ac);
+}
+
+function demoCleanup(idx, ac) {
+  demoState[idx].playing = false;
+  const btn = document.getElementById('replayBtn' + idx);
+  if (btn) btn.disabled = false;
+  if (demoState[idx].abort === ac) demoState[idx].abort = null;
+}
+
+async function playOneMsg(container, msg, side, signal) {
+  if (signal.aborted) return;
+
+  if (msg.role === 'typing') {
+    const el = showTypingDot(container, side);
+    await dsleep(msg.delay || 800, signal);
+    if (el.parentNode) el.remove();
+    return;
+  }
+
+  if (msg.role === 'divider') {
+    appendMsg(container, msg, side);
+    await dsleep(200, signal);
+    return;
+  }
+
+  if (msg.role === 'recording') {
+    appendMsg(container, msg, side);
+    await dsleep(500, signal);
+    return;
+  }
+
+  appendMsg(container, msg, side);
+  await dsleep(msg.role === 'thinking' ? 600 : 400, signal);
+}
+
+function showTypingDot(container, side) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'message visible';
+  wrapper.style.opacity = '1';
+  wrapper.style.transform = 'none';
+
+  const av = document.createElement('div');
+  av.className = `msg-avatar ${side === 'left' ? 'msg-avatar-basic' : 'msg-avatar-enhanced'}`;
+  av.innerHTML = '\uD83E\uDD9E';
+
+  const t = document.createElement('div');
+  t.className = 'typing-indicator';
+  t.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+
+  wrapper.appendChild(av);
+  wrapper.appendChild(t);
+  container.appendChild(wrapper);
+  container.scrollTop = container.scrollHeight;
+  return wrapper;
+}
+
+function appendMsg(container, msg, side) {
+  if (msg.role === 'divider') {
+    const div = document.createElement('div');
+    div.className = 'day-divider';
+    div.innerHTML = `<span>${esc(msg.text)}</span>`;
+    container.appendChild(div);
+    requestAnimationFrame(() => div.classList.add('visible'));
+    container.scrollTop = container.scrollHeight;
+    return;
+  }
+
+  if (msg.role === 'recording') {
+    const div = document.createElement('div');
+    div.className = 'message';
+    div.innerHTML = `<div style="width:22px;flex-shrink:0;"></div><div class="recording-bar"><div class="recording-dot"></div>${esc(msg.text)}</div>`;
+    container.appendChild(div);
+    requestAnimationFrame(() => div.classList.add('visible'));
+    container.scrollTop = container.scrollHeight;
+    return;
+  }
+
+  if (msg.role === 'code') {
+    const div = document.createElement('div');
+    div.className = 'message';
+    const avCls = side === 'left' ? 'msg-avatar-basic' : 'msg-avatar-enhanced';
+    div.innerHTML = `<div class="msg-avatar ${avCls}">\uD83E\uDD9E</div><div class="code-block">${msg.text}</div>`;
+    container.appendChild(div);
+    requestAnimationFrame(() => div.classList.add('visible'));
+    container.scrollTop = container.scrollHeight;
+    return;
+  }
+
+  const wrapper = document.createElement('div');
+  wrapper.className = `message ${msg.role === 'user' || msg.role === 'correction' ? 'user' : ''}`;
+
+  const avatar = document.createElement('div');
+  if (msg.role === 'user' || msg.role === 'correction') {
+    avatar.className = 'msg-avatar msg-avatar-user';
+    avatar.innerHTML = '\uD83D\uDC64';
+  } else {
+    avatar.className = `msg-avatar ${side === 'left' ? 'msg-avatar-basic' : 'msg-avatar-enhanced'}`;
+    avatar.innerHTML = '\uD83E\uDD9E';
+  }
+
+  const bubble = document.createElement('div');
+  if (msg.role === 'user') {
+    bubble.className = 'msg-bubble user-bubble';
+    bubble.innerHTML = esc(msg.text);
+  } else if (msg.role === 'correction') {
+    bubble.className = 'msg-bubble correction-bubble';
+    bubble.innerHTML = esc(msg.text);
+  } else if (msg.role === 'thinking') {
+    bubble.className = 'msg-bubble thinking-bubble';
+    bubble.innerHTML = msg.text;
+  } else {
+    bubble.className = `msg-bubble ${side === 'left' ? 'bot-bubble-basic' : 'bot-bubble-enhanced'}`;
+    bubble.innerHTML = msg.html || msg.text;
+  }
+
+  wrapper.appendChild(avatar);
+  wrapper.appendChild(bubble);
+  container.appendChild(wrapper);
+  requestAnimationFrame(() => wrapper.classList.add('visible'));
+  container.scrollTop = container.scrollHeight;
+}
+
+function toggleDemoBTS(idx) {
+  const panel = document.getElementById('btsPanel' + idx);
+  const toggle = document.getElementById('btsToggle' + idx);
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+}
+
+function dsleep(ms, signal) {
+  return new Promise((resolve) => {
+    if (signal && signal.aborted) { resolve(); return; }
+    const timer = setTimeout(resolve, ms);
+    if (signal) {
+      signal.addEventListener('abort', () => {
+        clearTimeout(timer);
+        resolve();
+      }, { once: true });
+    }
+  });
+}
+</script>
+</body>
+</html>

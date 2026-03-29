@@ -1,0 +1,2861 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>递归大师 — 技术改造蓝图</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ==================== CSS 变量 ==================== */
+:root {
+  --bg: #FAFAFA;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F5F5F5;
+  --bg-surface: #F0F0F0;
+  --coral: #E85D3A;
+  --coral-dim: rgba(232,93,58,0.08);
+  --coral-glow: rgba(232,93,58,0.12);
+  --teal: #3BBCB3;
+  --teal-dim: rgba(59,188,179,0.08);
+  --teal-glow: rgba(59,188,179,0.12);
+  --gray-box: #F0F0F0;
+  --gray-border: #E0E0E0;
+  --text: #333333;
+  --text-dim: #888888;
+  --text-bright: #1a1a1a;
+  --border: #E5E5E5;
+  --mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+  --sans: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --radius: 8px;
+  --phase1: #3BBCB3;
+  --phase2: #E85D3A;
+  --phase3: #8B5CF6;
+  --phase4: #D97706;
+}
+
+/* ==================== 全局重置 ==================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #D0D0D0 #FAFAFA;
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #D0D0D0; border-radius: 3px; }
+
+/* ==================== 通用组件 ==================== */
+.container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+
+section {
+  padding: 80px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-title .num {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--coral);
+  background: var(--coral-dim);
+  padding: 4px 10px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+.section-subtitle {
+  color: var(--text-dim);
+  font-size: 15px;
+  margin-bottom: 48px;
+  padding-left: 2px;
+  line-height: 1.8;
+}
+
+code, .mono {
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.code-block {
+  background: #F5F5F5;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.8;
+  overflow-x: auto;
+  color: var(--text-dim);
+  margin: 12px 0;
+}
+
+.code-block .comment { color: #999999; }
+.code-block .keyword { color: var(--coral); }
+.code-block .string { color: #0D9488; }
+.code-block .path { color: #7C3AED; }
+
+/* ==================== 顶部导航 ==================== */
+.topnav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  transition: all 0.3s;
+}
+
+.topnav-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+
+.topnav-logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-bright);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topnav-logo span { font-size: 18px; }
+
+.topnav-links {
+  display: flex;
+  gap: 4px;
+}
+
+.topnav-links a {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.topnav-links a:hover {
+  color: var(--text-bright);
+  background: rgba(0,0,0,0.04);
+}
+
+/* ==================== Header ==================== */
+.hero {
+  padding: 120px 0 60px;
+  text-align: center;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(ellipse, var(--coral-dim) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-icon {
+  font-size: 56px;
+  margin-bottom: 20px;
+  display: inline-block;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.hero h1 {
+  font-size: 42px;
+  font-weight: 800;
+  color: var(--text-bright);
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+
+.hero h1 .highlight { color: var(--coral); }
+
+.hero .subtitle {
+  font-size: 17px;
+  color: var(--text-dim);
+  max-width: 720px;
+  margin: 0 auto 32px;
+  line-height: 1.8;
+}
+
+/* 图例 */
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 24px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.legend-dot.gray { background: #E0E0E0; border: 1px solid #CCCCCC; }
+.legend-dot.coral { background: var(--coral); }
+.legend-dot.teal { background: var(--teal); }
+
+/* ==================== 递归循环视觉 ==================== */
+.recursion-banner {
+  margin: 40px auto 0;
+  max-width: 680px;
+  background: linear-gradient(135deg, rgba(232,93,58,0.05), rgba(59,188,179,0.05));
+  border: 1px solid rgba(232,93,58,0.15);
+  border-radius: 12px;
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.recursion-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+  animation: spin-slow 8s linear infinite;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.recursion-text {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.recursion-text strong {
+  color: var(--coral);
+}
+
+.recursion-loop {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  flex-wrap: wrap;
+}
+
+.recursion-loop .loop-step {
+  padding: 2px 8px;
+  background: rgba(0,0,0,0.04);
+  border-radius: 4px;
+}
+
+.recursion-loop .loop-arrow {
+  color: var(--coral);
+}
+
+/* ==================== 改造全景图 ==================== */
+.arch-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 40px 0;
+  position: relative;
+}
+
+/* 中央连接线 */
+.arch-diagram::before {
+  content: '';
+  position: absolute;
+  top: 60px;
+  bottom: 60px;
+  left: 50%;
+  width: 2px;
+  background: linear-gradient(to bottom,
+    var(--coral) 0%,
+    var(--teal) 20%,
+    var(--teal) 35%,
+    var(--gray-border) 45%,
+    var(--gray-border) 55%,
+    var(--coral) 65%,
+    var(--coral) 100%
+  );
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.arch-node {
+  position: relative;
+  z-index: 1;
+  width: 560px;
+  padding: 18px 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.arch-node:hover {
+  transform: translateY(-2px);
+}
+
+.arch-node .node-num {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 800;
+  min-width: 36px;
+  flex-shrink: 0;
+}
+
+.arch-node .node-body {
+  text-align: left;
+  flex: 1;
+}
+
+.arch-node .node-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.arch-node .node-desc {
+  font-size: 13px;
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+.arch-node .node-badge {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* 节点颜色类型 */
+.arch-node.new {
+  background: var(--coral-dim);
+  border: 1px solid rgba(232,93,58,0.2);
+}
+.arch-node.new .node-num { color: var(--coral); }
+.arch-node.new .node-title { color: var(--coral); }
+.arch-node.new .node-badge {
+  background: var(--coral-dim);
+  color: var(--coral);
+  border: 1px solid rgba(232,93,58,0.2);
+}
+.arch-node.new:hover {
+  background: rgba(232,93,58,0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.arch-node.enhanced {
+  background: var(--teal-dim);
+  border: 1px solid rgba(59,188,179,0.2);
+}
+.arch-node.enhanced .node-num { color: var(--teal); }
+.arch-node.enhanced .node-title { color: var(--teal); }
+.arch-node.enhanced .node-badge {
+  background: var(--teal-dim);
+  color: var(--teal);
+  border: 1px solid rgba(59,188,179,0.2);
+}
+.arch-node.enhanced:hover {
+  background: rgba(59,188,179,0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.arch-node.original {
+  background: #F5F5F5;
+  border: 1px solid var(--gray-border);
+}
+.arch-node.original .node-num { color: var(--text-dim); }
+.arch-node.original .node-title { color: var(--text); }
+.arch-node.original .node-badge {
+  background: #EEEEEE;
+  color: var(--text-dim);
+  border: 1px solid var(--gray-border);
+}
+.arch-node.original:hover {
+  background: #EEEEEE;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+/* 箭头连接器 */
+.arch-arrow {
+  position: relative;
+  z-index: 1;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arch-arrow i {
+  color: var(--text-dim);
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+/* 脉冲动画 —— 浅色版微妙阴影 */
+@keyframes pulse-coral {
+  0%, 100% { box-shadow: 0 2px 8px rgba(232,93,58,0); }
+  50% { box-shadow: 0 4px 16px rgba(232,93,58,0.1); }
+}
+@keyframes pulse-teal {
+  0%, 100% { box-shadow: 0 2px 8px rgba(59,188,179,0); }
+  50% { box-shadow: 0 4px 16px rgba(59,188,179,0.1); }
+}
+
+.arch-node.new { animation: pulse-coral 4s ease-in-out infinite; }
+.arch-node.enhanced { animation: pulse-teal 4s ease-in-out infinite 1s; }
+
+/* ==================== Demo + 原理 交替卡片 ==================== */
+.pair-section {
+  margin-bottom: 64px;
+}
+.pair-label {
+  font-size: 20px; font-weight: 700; color: var(--text-bright);
+  margin-bottom: 24px; display: flex; align-items: center; gap: 12px;
+}
+.pair-num {
+  font-family: var(--mono); font-size: 13px; color: var(--coral);
+  background: var(--coral-dim); padding: 4px 10px; border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+/* Demo 卡片 */
+.demo-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; margin-bottom: 16px;
+}
+.demo-card-header {
+  padding: 16px 24px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.demo-badge {
+  font-size: 12px; font-weight: 700; color: var(--coral);
+  background: var(--coral-dim); padding: 4px 12px; border-radius: 20px;
+  white-space: nowrap;
+}
+.demo-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.demo-card-body { padding: 24px; }
+
+.demo-compare {
+  display: flex; gap: 16px; align-items: stretch;
+}
+.demo-side {
+  flex: 1; padding: 16px; border-radius: 10px; min-width: 0;
+}
+.demo-before {
+  background: #F8F8F8; border: 1px solid #E8E8E8;
+}
+.demo-after {
+  background: rgba(232,93,58,0.03); border: 1px solid rgba(232,93,58,0.12);
+}
+.demo-side-label {
+  font-size: 13px; font-weight: 700; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 6px;
+}
+.demo-before .demo-side-label { color: var(--text-dim); }
+.demo-after .demo-side-label { color: var(--coral); }
+
+.demo-bubble {
+  background: #F5F5F5; border: 1px solid #E8E8E8;
+  border-radius: 8px; padding: 10px 14px; margin-bottom: 8px;
+  font-size: 13px; color: var(--text); line-height: 1.6;
+}
+.demo-bubble.think {
+  background: rgba(217,119,6,0.06); border-color: rgba(217,119,6,0.15);
+  color: #B45309; font-size: 12px;
+}
+.demo-verdict {
+  font-size: 12px; font-weight: 700; margin-top: 8px; padding: 6px 10px;
+  border-radius: 6px;
+}
+.demo-verdict.bad { color: #DC2626; background: rgba(220,38,38,0.06); }
+.demo-verdict.good { color: #0D9488; background: rgba(13,148,136,0.06); }
+.demo-vs {
+  display: flex; align-items: center; font-size: 14px; font-weight: 800;
+  color: var(--text-dim); opacity: 0.4; flex-shrink: 0;
+}
+.demo-link {
+  display: block; padding: 12px 24px; text-align: center;
+  font-size: 13px; font-weight: 600; color: var(--coral);
+  text-decoration: none; border-top: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.demo-link:hover { background: rgba(232,93,58,0.04); }
+.demo-link i { margin-left: 4px; font-size: 11px; }
+
+/* 原理卡片 */
+.principle-card {
+  background: rgba(59,188,179,0.03); border: 1px solid rgba(59,188,179,0.12);
+  border-radius: 12px; overflow: hidden; padding-bottom: 24px;
+}
+.principle-header {
+  padding: 16px 24px; border-bottom: 1px solid rgba(59,188,179,0.08);
+  display: flex; align-items: center; gap: 12px;
+}
+.principle-badge {
+  font-size: 12px; font-weight: 700; color: var(--teal);
+  background: var(--teal-dim); padding: 4px 12px; border-radius: 20px;
+  white-space: nowrap;
+}
+.principle-title { font-size: 15px; font-weight: 600; color: var(--teal); }
+
+@media (max-width: 768px) {
+  .demo-compare { flex-direction: column; }
+  .demo-vs { justify-content: center; padding: 4px 0; }
+}
+
+/* ==================== 构件标签 ==================== */
+.block-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 8px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s;
+}
+.block-chip:hover { transform: translateY(-2px); }
+.block-chip .chip-file {
+  font-family: var(--mono); font-size: 11px; opacity: 0.6; font-weight: 400;
+}
+.chip-coral { background: rgba(232,93,58,0.06); color: var(--coral); border: 1px solid rgba(232,93,58,0.15); }
+.chip-coral:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.chip-teal { background: rgba(59,188,179,0.06); color: var(--teal); border: 1px solid rgba(59,188,179,0.15); }
+.chip-teal:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.chip-purple { background: rgba(139,92,246,0.06); color: #7C3AED; border: 1px solid rgba(139,92,246,0.15); }
+.chip-purple:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+/* ==================== 场景选择器 ==================== */
+.scenario-tabs {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 32px;
+}
+.scenario-tab {
+  padding: 10px 18px; border-radius: 8px;
+  background: #F5F5F5; border: 1px solid var(--border);
+  color: var(--text-dim); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.25s;
+}
+.scenario-tab:hover {
+  background: #EEEEEE; color: var(--text);
+}
+.scenario-tab.active {
+  background: var(--coral-dim); color: var(--coral);
+  border-color: rgba(232,93,58,0.3);
+}
+
+/* ==================== 流程图场景 ==================== */
+.flow-scene { display: none; }
+.flow-scene.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.scene-desc {
+  font-size: 14px; color: var(--text-dim); line-height: 1.7;
+  margin-bottom: 28px; padding: 14px 18px;
+  background: #F8F8F8; border: 1px solid var(--border);
+  border-radius: var(--radius); border-left: 3px solid var(--coral);
+}
+
+/* ==================== 流程图节点 ==================== */
+.flow-chart {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 20px 0;
+}
+.flow-row {
+  display: flex; justify-content: center; width: 100%;
+}
+
+/* 开始/结束节点 */
+.f-node {
+  padding: 14px 24px; border-radius: 10px;
+  text-align: center; font-size: 14px; font-weight: 600;
+  max-width: 420px; cursor: default; transition: all 0.2s;
+}
+.f-node .f-sub {
+  display: block; font-size: 11px; font-weight: 400;
+  margin-top: 4px; opacity: 0.7;
+}
+.f-start {
+  background: #F5F5F5; border: 1px dashed #D0D0D0;
+  color: var(--text-dim); border-radius: 24px;
+}
+.f-end {
+  background: #F5F5F5; border: 1px dashed #D0D0D0;
+  color: var(--text-dim); border-radius: 24px;
+}
+
+/* 处理节点 */
+.f-process { cursor: pointer; }
+.f-process.f-coral {
+  background: rgba(232,93,58,0.06); border: 1px solid rgba(232,93,58,0.2); color: var(--coral);
+}
+.f-process.f-coral:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-2px); }
+.f-process.f-teal {
+  background: rgba(59,188,179,0.06); border: 1px solid rgba(59,188,179,0.2); color: var(--teal);
+}
+.f-process.f-teal:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-2px); }
+.f-process.f-gray {
+  background: #F0F0F0; border: 1px solid #D8D8D8; color: var(--text);
+}
+.f-process.f-purple {
+  background: rgba(139,92,246,0.06); border: 1px solid rgba(139,92,246,0.2); color: #7C3AED;
+}
+.f-process.f-purple:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-2px); }
+.f-process.f-yellow {
+  background: rgba(217,119,6,0.06); border: 1px solid rgba(217,119,6,0.2); color: #B45309;
+}
+.f-process.f-highlight {
+  animation: pulse-coral 3s ease-in-out infinite;
+}
+
+/* 小节点（分支内） */
+.f-small { padding: 10px 16px; font-size: 13px; max-width: 200px; }
+
+/* 决策菱形 */
+.f-decision { padding: 0; background: none; border: none; }
+.f-diamond {
+  width: 80px; height: 80px;
+  background: rgba(217,119,6,0.04); border: 2px solid rgba(217,119,6,0.3);
+  transform: rotate(45deg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #B45309;
+  margin: 0 auto;
+}
+.f-diamond > * { transform: rotate(-45deg); }
+
+/* 箭头 */
+.f-arrow {
+  color: var(--text-dim); font-size: 14px; padding: 8px 0;
+  display: flex; align-items: center; gap: 8px; opacity: 0.5;
+}
+.f-arrow-alert { opacity: 1; }
+.f-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+}
+.f-label-alert { color: var(--coral); }
+.f-arrow-mini {
+  color: var(--text-dim); font-size: 12px; padding: 4px 0;
+  text-align: center; opacity: 0.4;
+}
+
+/* 分支行 */
+.f-branch-row {
+  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+  width: 100%;
+}
+.f-branch {
+  display: flex; flex-direction: column; align-items: center;
+  flex: 1; min-width: 140px; max-width: 220px;
+}
+.f-branch-label {
+  font-size: 12px; font-weight: 700; color: var(--text-dim);
+  margin-bottom: 2px; letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+  .scenario-tabs { flex-direction: column; }
+  .f-branch-row { flex-direction: column; align-items: center; }
+  .f-branch { max-width: 280px; }
+  .f-diamond { width: 64px; height: 64px; font-size: 11px; }
+}
+
+/* 入口节点特殊样式 */
+.arch-entry {
+  position: relative;
+  z-index: 1;
+  background: #F5F5F5;
+  border: 1px dashed #D0D0D0;
+  border-radius: 24px;
+  padding: 12px 32px;
+  font-size: 14px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.arch-entry i { color: var(--text-dim); }
+
+/* ==================== 模块详解卡片 ==================== */
+.module-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 32px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.module-card:hover {
+  border-color: #D0D0D0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.module-card-header {
+  padding: 28px 32px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.module-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.module-icon.coral { background: var(--coral-dim); color: var(--coral); }
+.module-icon.teal { background: var(--teal-dim); color: var(--teal); }
+
+.module-header-text { flex: 1; }
+
+.module-header-text h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 4px;
+}
+
+.module-header-text .module-tagline {
+  font-size: 15px;
+  color: var(--text);
+  margin-top: 8px;
+  line-height: 1.7;
+}
+
+.module-header-text .module-why {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-top: 6px;
+  line-height: 1.7;
+}
+
+.module-card-body {
+  padding: 24px 32px 28px;
+}
+
+.module-card-body h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 20px 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.module-card-body h4:first-child { margin-top: 0; }
+
+.module-card-body h4 i {
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+.module-card-body .explain-text {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  margin: 8px 0 16px;
+}
+
+.module-card-body .explain-text strong {
+  color: var(--text);
+}
+
+/* 折叠技术备注 */
+.tech-details {
+  margin: 16px 0 8px;
+}
+
+.tech-details summary {
+  font-size: 13px;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 8px 14px;
+  background: #F8F8F8;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+}
+
+.tech-details summary:hover {
+  background: #F0F0F0;
+  border-color: #D0D0D0;
+}
+
+.tech-details summary i {
+  font-size: 11px;
+  opacity: 0.5;
+}
+
+.tech-details[open] summary {
+  border-radius: var(--radius) var(--radius) 0 0;
+  border-bottom-color: transparent;
+}
+
+.tech-details .tech-content {
+  padding: 16px 20px;
+  background: #FAFAFA;
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+/* 文件树 */
+.file-tree {
+  background: #F5F5F5;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 2;
+  margin: 12px 0;
+}
+
+.file-tree .dir { color: #7C3AED; }
+.file-tree .file { color: var(--text-dim); }
+.file-tree .arrow { color: var(--coral); margin: 0 4px; }
+.file-tree .desc { color: #999999; font-size: 12px; }
+
+/* 数据流 */
+.dataflow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  background: #F8F8F8;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 12px 0;
+  font-size: 13px;
+}
+
+.dataflow-step {
+  background: #FFFFFF;
+  border: 1px solid #E8E8E8;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.dataflow-arrow {
+  color: var(--coral);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+/* ==================== 记忆层级（阶梯） ==================== */
+.memory-ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 20px 0;
+  position: relative;
+}
+
+.ladder-step {
+  display: flex;
+  align-items: stretch;
+  position: relative;
+}
+
+.ladder-level {
+  width: 60px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dim);
+  position: relative;
+}
+
+.ladder-level::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  top: -1px;
+  width: 2px;
+  background: var(--border);
+}
+
+.ladder-step:first-child .ladder-level::after { top: 50%; }
+.ladder-step:last-child .ladder-level::after { bottom: 50%; }
+
+.ladder-content {
+  flex: 1;
+  padding: 10px 20px;
+  margin: 3px 0;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: all 0.2s;
+}
+
+.ladder-content:hover { transform: translateX(4px); }
+
+.ladder-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.ladder-desc {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.ladder-speed {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ladder-tag {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-left: 6px;
+  font-weight: 600;
+}
+
+.ladder-tag.base { background: #EEEEEE; color: var(--text-dim); }
+.ladder-tag.new { background: var(--coral-dim); color: var(--coral); }
+
+.ladder-step:nth-child(1) .ladder-content { background: rgba(232,93,58,0.05); border-left: 3px solid var(--coral); }
+.ladder-step:nth-child(1) .ladder-name { color: var(--coral); }
+.ladder-step:nth-child(1) .ladder-speed { background: rgba(232,93,58,0.06); color: var(--coral); }
+
+.ladder-step:nth-child(2) .ladder-content { background: rgba(232,93,58,0.04); border-left: 3px solid rgba(232,93,58,0.5); }
+.ladder-step:nth-child(2) .ladder-name { color: rgba(232,93,58,0.85); }
+.ladder-step:nth-child(2) .ladder-speed { background: rgba(232,93,58,0.05); color: rgba(232,93,58,0.85); }
+
+.ladder-step:nth-child(3) .ladder-content { background: rgba(59,188,179,0.05); border-left: 3px solid var(--teal); }
+.ladder-step:nth-child(3) .ladder-name { color: var(--teal); }
+.ladder-step:nth-child(3) .ladder-speed { background: rgba(59,188,179,0.06); color: var(--teal); }
+
+.ladder-step:nth-child(4) .ladder-content { background: rgba(139,92,246,0.05); border-left: 3px solid #8B5CF6; }
+.ladder-step:nth-child(4) .ladder-name { color: #7C3AED; }
+.ladder-step:nth-child(4) .ladder-speed { background: rgba(139,92,246,0.06); color: #7C3AED; }
+
+.ladder-step:nth-child(5) .ladder-content { background: rgba(217,119,6,0.05); border-left: 3px solid #D97706; }
+.ladder-step:nth-child(5) .ladder-name { color: #B45309; }
+.ladder-step:nth-child(5) .ladder-speed { background: rgba(217,119,6,0.06); color: #B45309; }
+
+/* 晋升箭头 */
+.promotion-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 0;
+  color: var(--text-dim);
+  font-size: 10px;
+  opacity: 0.4;
+}
+
+/* ==================== 晋升规则阶梯 ==================== */
+.promotion-ladder {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  margin: 20px 0;
+  padding: 24px;
+  background: #F8F8F8;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  min-height: 200px;
+}
+
+.promo-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.promo-bar {
+  width: 100%;
+  border-radius: 6px 6px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 12px 8px;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.promo-bar:hover { filter: brightness(1.2); }
+
+.promo-step:nth-child(1) .promo-bar { height: 60px; background: linear-gradient(180deg, rgba(232,93,58,0.15), rgba(232,93,58,0.04)); border: 1px solid rgba(232,93,58,0.2); }
+.promo-step:nth-child(2) .promo-bar { height: 100px; background: linear-gradient(180deg, rgba(232,93,58,0.2), rgba(232,93,58,0.06)); border: 1px solid rgba(232,93,58,0.25); }
+.promo-step:nth-child(3) .promo-bar { height: 140px; background: linear-gradient(180deg, rgba(59,188,179,0.2), rgba(59,188,179,0.06)); border: 1px solid rgba(59,188,179,0.25); }
+.promo-step:nth-child(4) .promo-bar { height: 180px; background: linear-gradient(180deg, rgba(217,119,6,0.2), rgba(217,119,6,0.06)); border: 1px solid rgba(217,119,6,0.25); }
+
+.promo-count {
+  font-family: var(--mono);
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.promo-step:nth-child(1) .promo-count { color: var(--coral); }
+.promo-step:nth-child(2) .promo-count { color: var(--coral); }
+.promo-step:nth-child(3) .promo-count { color: var(--teal); }
+.promo-step:nth-child(4) .promo-count { color: #B45309; }
+
+.promo-label {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+  font-weight: 600;
+}
+
+.promo-desc {
+  font-size: 11px;
+  color: var(--text-dim);
+  opacity: 0.7;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.promo-target {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  opacity: 0.7;
+}
+
+.promo-arrow-right {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: var(--text-dim);
+  opacity: 0.3;
+  flex-shrink: 0;
+  padding-bottom: 40px;
+}
+
+/* ==================== 触发机制 ==================== */
+.trigger-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.trigger-item {
+  background: #FAFAFA;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  transition: all 0.2s;
+}
+
+.trigger-item:hover {
+  border-color: #D0D0D0;
+  background: #F5F5F5;
+}
+
+.trigger-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.trigger-desc {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.trigger-hook {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--coral);
+  margin-bottom: 4px;
+}
+
+.trigger-target {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--teal);
+  margin-top: 4px;
+}
+
+/* ==================== 技能自进化流程 ==================== */
+.evolution-flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 20px 0;
+  padding: 20px;
+  background: #F8F8F8;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+.evo-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.evo-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.evo-icon.coral { background: rgba(232,93,58,0.08); color: var(--coral); }
+.evo-icon.teal { background: rgba(59,188,179,0.08); color: var(--teal); }
+.evo-icon.purple { background: rgba(139,92,246,0.08); color: #7C3AED; }
+.evo-icon.yellow { background: rgba(217,119,6,0.08); color: #B45309; }
+.evo-icon.green { background: rgba(16,185,129,0.08); color: #059669; }
+
+.evo-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.evo-sub {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.evo-arrow {
+  color: var(--text-dim);
+  font-size: 12px;
+  opacity: 0.4;
+  padding: 0 6px;
+  flex-shrink: 0;
+}
+
+.evo-decision {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.evo-diamond {
+  width: 36px;
+  height: 36px;
+  background: rgba(217,119,6,0.06);
+  border: 1px solid rgba(217,119,6,0.25);
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #B45309;
+}
+
+.evo-diamond span { transform: rotate(-45deg); }
+
+/* ==================== 团队同步图 ==================== */
+.team-sync {
+  margin: 20px 0;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.team-member {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  min-width: 0;
+}
+
+.team-member-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-bright);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.team-member-name i { font-size: 14px; }
+
+.team-member-path {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.team-file-list {
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 2;
+}
+
+.team-file-list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.team-file-list .shared { color: var(--teal); }
+.team-file-list .private { color: var(--text-dim); opacity: 0.5; }
+.team-file-list .tag {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-left: auto;
+}
+.team-file-list .tag.shared-tag { background: rgba(59,188,179,0.08); color: #0D9488; }
+.team-file-list .tag.private-tag { background: #F0F0F0; color: var(--text-dim); }
+
+.team-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: var(--text-dim);
+  opacity: 0.4;
+  gap: 8px;
+}
+
+.team-connector i { font-size: 14px; }
+.team-connector span { font-size: 10px; font-family: var(--mono); writing-mode: vertical-lr; letter-spacing: 2px; }
+
+.team-remote {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba(139,92,246,0.04), rgba(59,188,179,0.04));
+  border: 1px dashed rgba(139,92,246,0.25);
+  border-radius: 10px;
+  padding: 16px 24px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.team-remote-title {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: #7C3AED;
+  font-weight: 700;
+}
+
+.team-remote-desc {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* ==================== 路线图 ==================== */
+.roadmap {
+  margin: 20px 0;
+  overflow-x: auto;
+}
+
+.roadmap-track {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  min-width: 900px;
+}
+
+.roadmap-phase {
+  position: relative;
+}
+
+.roadmap-phase-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.phase-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.phase-1 .phase-dot { background: rgba(59,188,179,0.08); color: var(--phase1); border: 2px solid rgba(59,188,179,0.25); }
+.phase-2 .phase-dot { background: rgba(232,93,58,0.08); color: var(--phase2); border: 2px solid rgba(232,93,58,0.25); }
+.phase-3 .phase-dot { background: rgba(139,92,246,0.08); color: var(--phase3); border: 2px solid rgba(139,92,246,0.25); }
+.phase-4 .phase-dot { background: rgba(217,119,6,0.08); color: var(--phase4); border: 2px solid rgba(217,119,6,0.25); }
+
+.phase-info h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-bright);
+}
+
+.phase-info .days {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text-dim);
+}
+
+.roadmap-phase-bar {
+  height: 4px;
+  border-radius: 2px;
+  margin-bottom: 16px;
+}
+
+.phase-1 .roadmap-phase-bar { background: linear-gradient(90deg, var(--phase1), transparent); }
+.phase-2 .roadmap-phase-bar { background: linear-gradient(90deg, var(--phase2), transparent); }
+.phase-3 .roadmap-phase-bar { background: linear-gradient(90deg, var(--phase3), transparent); }
+.phase-4 .roadmap-phase-bar { background: linear-gradient(90deg, var(--phase4), transparent); }
+
+.roadmap-tasks {
+  list-style: none;
+  font-size: 13px;
+  line-height: 2.2;
+}
+
+.roadmap-tasks li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-dim);
+}
+
+.roadmap-tasks li.done { color: var(--text); }
+
+.task-check {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.task-check.done {
+  background: rgba(16,185,129,0.1);
+  color: #059669;
+  border: 1px solid rgba(16,185,129,0.25);
+}
+
+.task-check.todo {
+  background: transparent;
+  border: 1px solid #D0D0D0;
+  color: transparent;
+}
+
+/* ==================== 文件清单 ==================== */
+.file-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 13px;
+}
+
+.file-table thead th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--border);
+}
+
+.file-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+.file-table tbody tr:hover {
+  background: #F8F8F8;
+}
+
+.file-table td {
+  padding: 12px 16px;
+  vertical-align: middle;
+}
+
+.file-table .file-name {
+  font-family: var(--mono);
+  color: var(--text);
+  font-size: 12px;
+}
+
+.file-table .action-badge {
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.action-badge.new-file { background: rgba(232,93,58,0.08); color: var(--coral); }
+.action-badge.rewrite { background: rgba(59,188,179,0.08); color: #0D9488; }
+.action-badge.modify { background: rgba(217,119,6,0.08); color: #B45309; }
+.action-badge.new-dir { background: rgba(139,92,246,0.08); color: #7C3AED; }
+.action-badge.enhance { background: rgba(16,185,129,0.08); color: #059669; }
+
+.module-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: var(--mono);
+}
+
+.priority-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.priority-badge.p0 { color: var(--coral); background: rgba(232,93,58,0.08); }
+.priority-badge.p1 { color: #B45309; background: rgba(217,119,6,0.08); }
+.priority-badge.p2 { color: var(--text-dim); background: #F0F0F0; }
+
+/* ==================== 冲突解决策略 ==================== */
+.conflict-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.conflict-item {
+  background: #FAFAFA;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.conflict-item h5 {
+  font-size: 13px;
+  color: #0D9488;
+  margin-bottom: 6px;
+}
+
+.conflict-item p {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* ==================== Tooltip ==================== */
+.tooltip {
+  position: relative;
+}
+
+.tooltip .tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #FFFFFF;
+  border: 1px solid #D0D0D0;
+  color: var(--text-dim);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 50;
+  transition: all 0.2s;
+  pointer-events: none;
+}
+
+.tooltip .tooltip-text::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #D0D0D0;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* ==================== 回到顶部 ==================== */
+.back-to-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  opacity: 0;
+  transform: translateY(10px);
+  z-index: 90;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: rgba(232,93,58,0.06);
+  border-color: rgba(232,93,58,0.2);
+  color: var(--coral);
+}
+
+/* ==================== 两栏布局 ==================== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1000px) {
+  .container { padding: 0 20px; }
+  .team-grid { grid-template-columns: 1fr; }
+  .team-connector { min-height: auto; writing-mode: initial; flex-direction: row; padding: 8px 0; }
+  .team-connector span { writing-mode: initial; }
+  .two-col { grid-template-columns: 1fr; }
+  .trigger-grid { grid-template-columns: 1fr; }
+  .conflict-grid { grid-template-columns: 1fr; }
+  .arch-node { width: 100%; max-width: 560px; }
+  .roadmap-track { grid-template-columns: 1fr 1fr; }
+  .recursion-banner { flex-direction: column; text-align: center; }
+}
+
+@media (max-width: 640px) {
+  .hero h1 { font-size: 28px; }
+  .section-title { font-size: 22px; }
+  .topnav-links { display: none; }
+  .roadmap-track { grid-template-columns: 1fr; min-width: unset; }
+}
+
+/* ==================== 淡入动画 ==================== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-in.delay-1 { transition-delay: 0.1s; }
+.fade-in.delay-2 { transition-delay: 0.2s; }
+.fade-in.delay-3 { transition-delay: 0.3s; }
+.fade-in.delay-4 { transition-delay: 0.4s; }
+
+/* SOUL.md 内容展示 */
+.soul-preview {
+  background: #F5F5F5;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 12px 0;
+  font-size: 13px;
+  line-height: 2;
+}
+
+.soul-preview .soul-section {
+  margin-bottom: 12px;
+}
+
+.soul-preview .soul-heading {
+  color: #0D9488;
+  font-weight: 700;
+  font-family: var(--mono);
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.soul-preview .soul-line {
+  color: var(--text-dim);
+  padding-left: 16px;
+  position: relative;
+}
+
+.soul-preview .soul-line::before {
+  content: '-';
+  position: absolute;
+  left: 4px;
+  color: var(--text-dim);
+  opacity: 0.4;
+}
+
+.soul-preview .soul-identity {
+  color: var(--text);
+  font-weight: 600;
+}
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="topnav-logo">
+      <span>&#x267B;</span> 递归大师
+    </div>
+    <div class="topnav-links">
+      <a href="#panorama">全景图</a>
+      <a href="#modules">模块详解</a>
+      <a href="#roadmap">路线图</a>
+      <a href="#inventory">文件清单</a>
+    </div>
+  </div>
+</nav>
+
+<!-- 回到顶部 -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <i class="fa-solid fa-arrow-up"></i>
+</button>
+
+<!-- ==================== Hero ==================== -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-icon">&#x267B;</div>
+    <h1>递归大师 &mdash; <span class="highlight">技术改造蓝图</span></h1>
+    <p class="subtitle">OpenClaw 本身是一个强大的 AI 编程助手。我们做的事情，是在它的标准能力之上加一层「自我进化」的机制&mdash;&mdash;让它能从错误中学习、从重复中提炼经验、在团队间共享知识，越用越聪明。</p>
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-dot gray"></div>
+        <span>OpenClaw 原有能力</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot coral"></div>
+        <span>我们新增的</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot teal"></div>
+        <span>我们改造增强的</span>
+      </div>
+    </div>
+
+    <!-- 递归概念提示 -->
+    <div class="recursion-banner">
+      <div class="recursion-icon">&#x267B;</div>
+      <div class="recursion-text">
+        为什么叫「<strong>递归</strong>大师」？因为整个系统的核心就是一个不断自我调用的循环：使用中犯错，犯错后记录，记录变成经验，经验指导下一次使用。每一轮都比上一轮更强，这就是递归。
+        <div class="recursion-loop">
+          <span class="loop-step">使用</span>
+          <span class="loop-arrow">&rarr;</span>
+          <span class="loop-step">犯错</span>
+          <span class="loop-arrow">&rarr;</span>
+          <span class="loop-step">记录</span>
+          <span class="loop-arrow">&rarr;</span>
+          <span class="loop-step">学习</span>
+          <span class="loop-arrow">&rarr;</span>
+          <span class="loop-step">使用得更好</span>
+          <span class="loop-arrow">&rarr;</span>
+          <span class="loop-step" style="color:var(--coral);">&#x267B; 循环</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ==================== Section 1: 改造全景图 ==================== -->
+<section id="panorama">
+  <div class="container">
+    <div class="section-title">
+      <span class="num">SECTION 01</span>
+      改造全景图
+    </div>
+    <p class="section-subtitle">递归大师有 6 个核心构件。不同场景下，信息会走不同的链路流经这些构件。<br>点击场景标签切换链路，点击构件跳转详细说明。</p>
+
+    <!-- 构件区：固定模块一览 -->
+    <div style="margin-bottom: 40px;">
+      <div style="font-size:14px; color:var(--text-dim); margin-bottom:16px; font-weight:600; letter-spacing:1px;">BUILDING BLOCKS</div>
+      <div style="display:flex; flex-wrap:wrap; gap:10px;">
+        <span class="block-chip chip-coral" onclick="document.getElementById('mod1').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-shield-halved"></i> 错题本 <span class="chip-file">ERRORS.md</span></span>
+        <span class="block-chip chip-coral" onclick="document.getElementById('mod4').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-book"></i> 学习记录 <span class="chip-file">LEARNINGS.md</span></span>
+        <span class="block-chip chip-coral" onclick="document.getElementById('mod5b').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-repeat"></i> 模式记录 <span class="chip-file">PATTERNS.md</span></span>
+        <span class="block-chip chip-teal" onclick="document.getElementById('mod3').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-database"></i> 长期记忆 <span class="chip-file">MEMORY.md</span></span>
+        <span class="block-chip chip-teal" onclick="document.getElementById('mod2').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-brain"></i> 核心人格 <span class="chip-file">SOUL.md</span></span>
+        <span class="block-chip chip-purple" onclick="document.getElementById('mod6').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-cloud"></i> 团队同步 <span class="chip-file">Git</span></span>
+      </div>
+    </div>
+
+    <!-- ===== 交替式：Demo → 原理 → Demo → 原理 ===== -->
+
+    <!-- ━━━━━ 第 1 组：幻觉陷阱 ━━━━━ -->
+    <div class="pair-section">
+      <div class="pair-label"><span class="pair-num">01</span> 幻觉陷阱 — 回答前先查错题本</div>
+
+      <!-- Demo -->
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-badge"><i class="fa-solid fa-play-circle"></i> Demo</span>
+          <span class="demo-title">问题：我们现在有多少家门店？</span>
+        </div>
+        <div class="demo-card-body">
+          <div class="demo-compare">
+            <div class="demo-side demo-before">
+              <div class="demo-side-label"><i class="fa-solid fa-xmark"></i> 普通龙虾</div>
+              <div class="demo-bubble">"Lucky JP 目前有 <strong>12 家</strong>门店，东京涩谷店表现最好..."</div>
+              <div class="demo-verdict bad">自信地编造了数字</div>
+            </div>
+            <div class="demo-vs">VS</div>
+            <div class="demo-side demo-after">
+              <div class="demo-side-label"><i class="fa-solid fa-check"></i> 递归大师</div>
+              <div class="demo-bubble think">&#9888; 命中已知陷阱 ERR-003，禁止凭记忆回答</div>
+              <div class="demo-bubble">查询数据库... 共 <strong style="color:var(--teal);">8 家</strong>运营门店</div>
+              <div class="demo-verdict good">命中陷阱 → 自动查库 → 用数据说话</div>
+            </div>
+          </div>
+        </div>
+        <a class="demo-link" href="http://134.175.228.73:8081/openclaw-demo" target="_blank">查看完整交互 Demo <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </div>
+
+      <!-- 原理流程图 -->
+      <div class="principle-card">
+        <div class="principle-header">
+          <span class="principle-badge"><i class="fa-solid fa-diagram-project"></i> 原理</span>
+          <span class="principle-title">背后发生了什么？</span>
+        </div>
+        <div class="flow-chart">
+          <div class="flow-row">
+            <div class="f-node f-start"><i class="fa-solid fa-user"></i> 用户问"有多少家门店？"</div>
+          </div>
+          <div class="flow-row"><div class="f-arrow"><i class="fa-solid fa-arrow-down"></i></div></div>
+          <div class="flow-row">
+            <div class="f-node f-process f-coral" onclick="document.getElementById('mod1').scrollIntoView({behavior:'smooth'})">查错题本<span class="f-sub">ERRORS.md</span></div>
+          </div>
+          <div class="flow-row"><div class="f-arrow"><i class="fa-solid fa-arrow-down"></i></div></div>
+          <div class="flow-row">
+            <div class="f-node f-decision"><div class="f-diamond">命中？</div></div>
+          </div>
+          <div class="flow-row"><div class="f-arrow f-arrow-alert"><i class="fa-solid fa-arrow-down"></i> <span class="f-label f-label-alert">命中 ERR-003！</span></div></div>
+          <div class="flow-row">
+            <div class="f-node f-process f-coral f-highlight">注入陷阱警告<span class="f-sub">"门店数量上次答错，必须查库"</span></div>
+          </div>
+          <div class="flow-row"><div class="f-arrow"><i class="fa-solid fa-arrow-down"></i></div></div>
+          <div class="flow-row">
+            <div class="f-node f-process f-teal">加载 SOUL.md + MEMORY.md<span class="f-sub">带着警告一起推理</span></div>
+          </div>
+          <div class="flow-row"><div class="f-arrow"><i class="fa-solid fa-arrow-down"></i></div></div>
+          <div class="flow-row">
+            <div class="f-node f-process f-gray">AI 查询数据库，而非凭记忆回答</div>
+          </div>
+          <div class="flow-row"><div class="f-arrow"><i class="fa-solid fa-arrow-down"></i></div></div>
+          <div class="flow-row">
+            <div class="f-node f-end"><i class="fa-solid fa-reply"></i> "共 8 家运营门店。数据来源：实时查询"</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ━━━━━ 第 2 组：重复犯错 ━━━━━ -->
+    <div class="pair-section">
+      <div class="pair-label"><span class="pair-num">02</span> 8 天后同一个问题 — 被纠正后自动记录</div>
+
+      <!-- Demo -->
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-badge"><i class="fa-solid fa-play-circle"></i> Demo</span>
+          <span class="demo-title">Day 1 被纠正后，Day 8 再问一次</span>
+        </div>
+        <div class="demo-card-body">
+          <div class="demo-compare">
+            <div class="demo-side demo-before">
+              <div class="demo-side-label"><i class="fa-solid fa-xmark"></i> 普通龙虾</div>
+              <div class="demo-bubble">Day 1："转化率约 15%" → 被纠正 → "抱歉，是 11%"</div>
+              <div class="demo-bubble">Day 8："转化率约 <strong>14%</strong>"</div>
+              <div class="demo-verdict bad">完全忘了，又犯同样的错</div>
+            </div>
+            <div class="demo-vs">VS</div>
+            <div class="demo-side demo-after">
+              <div class="demo-side-label"><i class="fa-solid fa-check"></i> 递归大师</div>
+              <div class="demo-bubble">Day 1：被纠正 → <span style="color:var(--coral);">自动记录到 .learnings/</span></div>
+              <div class="demo-bubble think">Day 8：加载规则 LRN-007：需排除试喝券</div>
+              <div class="demo-bubble">转化率（已排除试喝券）：<strong style="color:var(--teal);">11.2%</strong></div>
+              <div class="demo-verdict good">自动加载教训，永不重犯</div>
+            </div>
+          </div>
+        </div>
+        <a class="demo-link" href="http://134.175.228.73:8081/openclaw-demo" target="_blank">查看完整交互 Demo <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </div>
+
+      <!-- 原理流程图 -->
+      <div class="principle-card">
+        <div class="principle-header">
+          <span class="principle-badge"><i class="fa-solid fa-diagram-project"></i> 原理</span>
+          <span class="principle-title">纠正后的知识是怎么沉淀的？</span>
+        </div>
+        <div class="flow-chart">
+          <div class="flow-row">
+            <div class="f-node f-start" style="border-color:rgba(239,68,68,0.4); background:rgba(239,68,68,0.06);"><i class="fa-solid fa-user"></i> 用户说"不对，要排除试喝券，是 11%"</div>
+          </div>
+          <div class="flow-row"><div class="f-arrow"><i class="fa-solid fa-arrow-down"></i></div></div>
+          <div class="flow-row">
+            <div class="f-node f-process f-coral" onclick="document.getElementById('mod4').scrollIntoView({behavior:'smooth'})">自动写入错题本 + 学习记录<span class="f-sub">ERRORS.md + LEARNINGS.md</span></div>
+          </div>
+          <div class="flow-row"><div class="f-arrow"><i class="fa-solid fa-arrow-down"></i></div></div>
+          <div class="flow-row">
+            <div class="f-node f-decision"><div class="f-diamond">出现几次？</div></div>
+          </div>
+          <div class="flow-row">
+            <div class="f-branch-row">
+              <div class="f-branch">
+                <div class="f-branch-label">1 次</div>
+                <div class="f-arrow-mini"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="f-node f-process f-small f-coral">留在错题本<span class="f-sub">先观察</span></div>
+              </div>
+              <div class="f-branch">
+                <div class="f-branch-label">2 次</div>
+                <div class="f-arrow-mini"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="f-node f-process f-small f-teal">升入长期记忆<span class="f-sub">MEMORY.md</span></div>
+              </div>
+              <div class="f-branch">
+                <div class="f-branch-label">3 次</div>
+                <div class="f-arrow-mini"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="f-node f-process f-small f-purple">写入操作规则<span class="f-sub">AGENTS.md</span></div>
+              </div>
+              <div class="f-branch">
+                <div class="f-branch-label">反复验证</div>
+                <div class="f-arrow-mini"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="f-node f-process f-small f-yellow">写入核心人格<span class="f-sub">SOUL.md</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="flow-row" style="margin-top:16px;">
+            <div class="f-node f-end"><i class="fa-solid fa-cloud-arrow-up"></i> Git 推送 → 团队同步</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ━━━━━ 第 3 组：团队共享 ━━━━━ -->
+    <div class="pair-section">
+      <div class="pair-label"><span class="pair-num">03</span> 团队知识共享 — A 的经验，B 和 C 都能用</div>
+
+      <!-- Demo -->
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-badge"><i class="fa-solid fa-play-circle"></i> Demo</span>
+          <span class="demo-title">三个成员都在问 UberEats 相关问题</span>
+        </div>
+        <div class="demo-card-body">
+          <div class="demo-compare">
+            <div class="demo-side demo-before">
+              <div class="demo-side-label"><i class="fa-solid fa-xmark"></i> 普通龙虾</div>
+              <div class="demo-bubble">成员 A 研究了 UberEats → 得到专业框架</div>
+              <div class="demo-bubble">成员 B 问类似问题 → 从零开始，泛泛而答</div>
+              <div class="demo-bubble">成员 C 问类似问题 → 还是从零开始</div>
+              <div class="demo-verdict bad">每个人各教一遍，知识不流通</div>
+            </div>
+            <div class="demo-vs">VS</div>
+            <div class="demo-side demo-after">
+              <div class="demo-side-label"><i class="fa-solid fa-check"></i> 递归大师</div>
+              <div class="demo-bubble">成员 A：建立 UberEats 分析框架 → <span style="color:var(--coral);">自动记录 + git push</span></div>
+              <div class="demo-bubble think">成员 B：加载成员 A 的框架 (LRN-012) → 精准回答复购率</div>
+              <div class="demo-bubble think">成员 C：综合 A + B 积累 → 深度分析客单价</div>
+              <div class="demo-verdict good">A 的学习 → B/C 直接受益</div>
+            </div>
+          </div>
+        </div>
+        <a class="demo-link" href="http://134.175.228.73:8081/openclaw-demo" target="_blank">查看完整交互 Demo <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </div>
+
+      <!-- 原理流程图 -->
+      <div class="principle-card">
+        <div class="principle-header">
+          <span class="principle-badge"><i class="fa-solid fa-diagram-project"></i> 原理</span>
+          <span class="principle-title">知识是怎么在团队间流动的？</span>
+        </div>
+        <div class="flow-chart">
+          <div class="flow-row">
+            <div class="f-node f-start"><i class="fa-solid fa-user"></i> 成员 A 教会龙虾 UberEats 分析框架</div>
+          </div>
+          <div class="flow-row"><div class="f-arrow"><i class="fa-solid fa-arrow-down"></i></div></div>
+          <div class="flow-row">
+            <div class="f-node f-process f-coral">写入 .learnings/LEARNINGS.md<span class="f-sub">LRN-20260315-012: UberEats 渠道分析框架</span></div>
+          </div>
+          <div class="flow-row"><div class="f-arrow"><i class="fa-solid fa-arrow-down"></i></div></div>
+          <div class="flow-row">
+            <div class="f-node f-process f-purple" onclick="document.getElementById('mod6').scrollIntoView({behavior:'smooth'})">Git Push → 共享仓库<span class="f-sub">自动同步到团队代码库</span></div>
+          </div>
+          <div class="flow-row"><div class="f-arrow"><i class="fa-solid fa-arrow-down"></i></div></div>
+          <div class="flow-row">
+            <div class="f-branch-row">
+              <div class="f-branch">
+                <div class="f-branch-label"><i class="fa-solid fa-user"></i> 成员 B 问复购率</div>
+                <div class="f-arrow-mini"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="f-node f-process f-small f-teal">Git Pull → 加载 A 的框架<span class="f-sub">在 A 的基础上回答</span></div>
+              </div>
+              <div class="f-branch">
+                <div class="f-branch-label"><i class="fa-solid fa-user"></i> 成员 C 问客单价</div>
+                <div class="f-arrow-mini"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="f-node f-process f-small f-teal">Git Pull → 综合 A+B<span class="f-sub">知识越积越深</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="flow-row" style="margin-top:16px;">
+            <div class="f-node f-end"><i class="fa-solid fa-check-double"></i> 三只龙虾知识同步完成</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ━━━━━ 第 4 组：自我进化 ━━━━━ -->
+    <div class="pair-section">
+      <div class="pair-label"><span class="pair-num">04</span> 自我进化 — 从重复劳动中自动提炼技能</div>
+
+      <!-- Demo -->
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-badge"><i class="fa-solid fa-play-circle"></i> Demo</span>
+          <span class="demo-title">连做三周周报，会发生什么？</span>
+        </div>
+        <div class="demo-card-body">
+          <div class="demo-compare">
+            <div class="demo-side demo-before">
+              <div class="demo-side-label"><i class="fa-solid fa-xmark"></i> 普通龙虾</div>
+              <div class="demo-bubble">Week 1：做报告</div>
+              <div class="demo-bubble">Week 2：做报告（重复问同样的问题）</div>
+              <div class="demo-bubble">Week 3：做报告（质量没有提升）</div>
+              <div class="demo-verdict bad">每次从零开始，不会自我优化</div>
+            </div>
+            <div class="demo-vs">VS</div>
+            <div class="demo-side demo-after">
+              <div class="demo-side-label"><i class="fa-solid fa-check"></i> 递归大师</div>
+              <div class="demo-bubble">Week 1：做报告 + 标记模式 #1</div>
+              <div class="demo-bubble think">Week 2：检测到模式 (2/3) → 增强输出</div>
+              <div class="demo-bubble think">Week 3：模式命中 3/3 → <strong style="color:var(--teal);">自动提炼为技能！</strong></div>
+              <div class="demo-verdict good">主动发现规律 → 自造技能 → 进化了</div>
+            </div>
+          </div>
+        </div>
+        <a class="demo-link" href="http://134.175.228.73:8081/openclaw-demo" target="_blank">查看完整交互 Demo <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </div>
+
+      <!-- 原理流程图 -->
+      <div class="principle-card">
+        <div class="principle-header">
+          <span class="principle-badge"><i class="fa-solid fa-diagram-project"></i> 原理</span>
+          <span class="principle-title">重复劳动是怎么变成技能的？</span>
+        </div>
+        <div class="flow-chart">
+          <div class="flow-row">
+            <div class="f-node f-start"><i class="fa-solid fa-user"></i> 用户第 N 次要求做周报</div>
+          </div>
+          <div class="flow-row"><div class="f-arrow"><i class="fa-solid fa-arrow-down"></i></div></div>
+          <div class="flow-row">
+            <div class="f-node f-process f-gray">AI 执行任务</div>
+          </div>
+          <div class="flow-row"><div class="f-arrow"><i class="fa-solid fa-arrow-down"></i></div></div>
+          <div class="flow-row">
+            <div class="f-node f-process f-coral" onclick="document.getElementById('mod5b').scrollIntoView({behavior:'smooth'})">写入模式记录<span class="f-sub">PATTERNS.md — "周报类分析" 计数 +1</span></div>
+          </div>
+          <div class="flow-row"><div class="f-arrow"><i class="fa-solid fa-arrow-down"></i></div></div>
+          <div class="flow-row">
+            <div class="f-node f-decision"><div class="f-diamond">≥ 3 次？</div></div>
+          </div>
+          <div class="flow-row">
+            <div class="f-branch-row">
+              <div class="f-branch">
+                <div class="f-branch-label">还没到</div>
+                <div class="f-arrow-mini"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="f-node f-process f-small f-gray">继续观察<span class="f-sub">累加计数器</span></div>
+              </div>
+              <div class="f-branch" style="flex:1.5;">
+                <div class="f-branch-label f-label-alert">第 3 次！</div>
+                <div class="f-arrow-mini"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="f-node f-process f-small f-coral f-highlight">主动提议创建技能<span class="f-sub">"这个分析做了 3 次，要沉淀成技能吗？"</span></div>
+                <div class="f-arrow-mini"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="f-node f-process f-small f-teal">生成 skills/weekly-report/SKILL.md<span class="f-sub">以后一句话就能出结果</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==================== Section 2: 六大模块详解 ==================== -->
+<section id="modules">
+  <div class="container">
+    <div class="section-title">
+      <span class="num">SECTION 02</span>
+      六大改造模块详解
+    </div>
+    <p class="section-subtitle">每个模块解决一个具体的问题。下面逐一说明它「做什么」和「为什么需要」，技术细节折叠在备注里。</p>
+
+    <!-- 模块 1: 前置拦截层 -->
+    <div class="module-card fade-in" id="mod1">
+      <div class="module-card-header">
+        <div class="module-icon coral"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="module-header-text">
+          <h3>Module 1 &mdash; 错题本前置检查</h3>
+          <p class="module-tagline">在 AI 看到你的问题之前，先翻一遍自己的错题本，看看这个问题有没有已知的坑。</p>
+          <p class="module-why">为什么需要？因为 AI 没有记忆——上次犯过的错，下次照犯不误。这个模块就是给它一个「考试前看错题集」的能力，把历史教训提前注入，避免重蹈覆辙。同时它还会检测你的问题是否和之前做过的某类任务很像，如果是，就推荐直接复用现有的技能模板，省得重新来一遍。</p>
+        </div>
+      </div>
+      <div class="module-card-body">
+        <h4><i class="fa-solid fa-route"></i> 工作流程</h4>
+        <p class="explain-text">流程很直观：你输入问题 &rarr; 脚本在后台快速扫描错误库和模式库 &rarr; 如果命中已知坑，就在问题旁边加一条提醒（比如「这个查询上次因为时区问题出过错，注意用 CONVERT_TZ」）&rarr; 然后才把加了提醒的内容交给 AI 去思考。</p>
+        <div class="dataflow">
+          <span class="dataflow-step">你的问题</span>
+          <span class="dataflow-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+          <span class="dataflow-step">扫描错题本和模式库</span>
+          <span class="dataflow-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+          <span class="dataflow-step">注入提醒信息</span>
+          <span class="dataflow-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+          <span class="dataflow-step">AI 开始思考</span>
+        </div>
+
+        <details class="tech-details">
+          <summary><i class="fa-solid fa-code"></i> 技术实现细节</summary>
+          <div class="tech-content">
+            <h4><i class="fa-solid fa-folder-tree"></i> 文件结构</h4>
+            <div class="file-tree">
+              <span class="dir">.claude/</span><br>
+              &nbsp;&nbsp;<span class="file">settings.json</span> <span class="desc">&larr; hook 注册点（UserPromptSubmit）</span><br>
+              <span class="dir">scripts/</span><br>
+              &nbsp;&nbsp;<span class="file">pre-check.sh</span> <span class="desc">&larr; 前置检查脚本（新建）</span><br>
+              <span class="dir">.learnings/</span><br>
+              &nbsp;&nbsp;<span class="file">ERRORS.md</span> <span class="desc">&larr; 已知陷阱库（status=promoted 条目）</span><br>
+              &nbsp;&nbsp;<span class="file">PATTERNS.md</span> <span class="desc">&larr; 任务模式库（重复检测）</span>
+            </div>
+
+            <h4><i class="fa-solid fa-gear"></i> 实现逻辑</h4>
+            <div class="code-block">
+              <span class="comment"># pre-check.sh 伪代码</span><br>
+              <span class="keyword">INPUT</span> = 用户问题<br>
+              <br>
+              <span class="comment"># Step 1: 匹配已知陷阱</span><br>
+              <span class="keyword">MATCH</span> = grep -i "$INPUT" .learnings/ERRORS.md<br>
+              <span class="keyword">if</span> MATCH:<br>
+              &nbsp;&nbsp;<span class="string">inject("&#9888; 这个问题曾经出错，规则是：$RULE")</span><br>
+              <br>
+              <span class="comment"># Step 2: 检测重复任务模式</span><br>
+              <span class="keyword">PATTERN</span> = match "$INPUT" .learnings/PATTERNS.md<br>
+              <span class="keyword">if</span> PATTERN:<br>
+              &nbsp;&nbsp;<span class="string">inject("检测到相似模式，考虑复用技能 $SKILL")</span>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- 模块 2: SOUL.md 人格改造 -->
+    <div class="module-card fade-in" id="mod2">
+      <div class="module-card-header">
+        <div class="module-icon teal"><i class="fa-solid fa-brain"></i></div>
+        <div class="module-header-text">
+          <h3>Module 2 &mdash; 专家人格植入</h3>
+          <p class="module-tagline">把 AI 从一个「什么都能聊一点」的通用助手，变成一个「深度理解运营分析」的领域专家。</p>
+          <p class="module-why">为什么需要？OpenClaw 默认是一个全能型助手，对所有领域一视同仁。但我们的工作场景非常具体——运营分析、数据查询、AB实验。通过一个叫 SOUL.md 的配置文件，我们把运营专家的思维方式、决策框架、领域知识都写进去，让 AI 每次启动时就「装载」这些专业能力。好比给一个聪明但没有行业经验的新人，发了一本详细的「运营分析手册」。</p>
+        </div>
+      </div>
+      <div class="module-card-body">
+        <h4><i class="fa-solid fa-list-check"></i> 植入了什么</h4>
+        <p class="explain-text">四个关键模块：<strong>身份定义</strong>（你是资深运营分析专家）、<strong>决策框架</strong>（遇到模糊需求先追问再行动、多方案时列 pros/cons）、<strong>推理协议</strong>（复杂问题必须分步推理、每个结论必须引用数据来源）、<strong>领域知识</strong>（杯量/客单价/复购率这些指标体系、环比/同比/漏斗这些分析方法论）。</p>
+
+        <details class="tech-details">
+          <summary><i class="fa-solid fa-code"></i> 技术实现细节：SOUL.md 内容预览</summary>
+          <div class="tech-content">
+            <div class="soul-preview">
+              <div class="soul-section">
+                <div class="soul-heading">## Identity</div>
+                <div class="soul-line soul-identity">你是一个资深运营分析专家，擅长用数据驱动决策。</div>
+              </div>
+              <div class="soul-section">
+                <div class="soul-heading">## Decision Framework</div>
+                <div class="soul-line">面对模糊需求 &rarr; 先追问 &rarr; 列假设 &rarr; 确认后行动</div>
+                <div class="soul-line">面对多个方案 &rarr; 列 pros/cons &rarr; 可逆性优先</div>
+                <div class="soul-line">面对不确定信息 &rarr; 标注置信度（高/中/低）&rarr; 不编造</div>
+              </div>
+              <div class="soul-section">
+                <div class="soul-heading">## Reasoning Protocol</div>
+                <div class="soul-line">复杂问题必须分步推理</div>
+                <div class="soul-line">每个结论必须引用数据来源</div>
+                <div class="soul-line">发现矛盾时立即停下说明</div>
+              </div>
+              <div class="soul-section">
+                <div class="soul-heading">## Domain Knowledge</div>
+                <div class="soul-line">运营指标体系：杯量 / 客单价 / 复购率 / 转化率</div>
+                <div class="soul-line">分析方法论：环比 / 同比 / 漏斗 / 归因</div>
+                <div class="soul-line">常见陷阱：口径不统一 / 幸存者偏差 / 辛普森悖论</div>
+              </div>
+            </div>
+
+            <h4><i class="fa-solid fa-route"></i> 加载流程</h4>
+            <div class="dataflow">
+              <span class="dataflow-step">系统启动</span>
+              <span class="dataflow-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              <span class="dataflow-step">读取 SOUL.md</span>
+              <span class="dataflow-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              <span class="dataflow-step">注入 system prompt</span>
+              <span class="dataflow-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              <span class="dataflow-step">影响全部推理行为</span>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- 模块 3: 记忆系统增强 -->
+    <div class="module-card fade-in" id="mod3">
+      <div class="module-card-header">
+        <div class="module-icon teal"><i class="fa-solid fa-database"></i></div>
+        <div class="module-header-text">
+          <h3>Module 3 &mdash; 结构化学习体系</h3>
+          <p class="module-tagline">从「散装记忆」到「分层管理的知识体系」，让经验不仅能记住，还能沉淀和传播。</p>
+          <p class="module-why">为什么需要？OpenClaw 本身已经有记忆能力（L1-L3），能在对话中记住东西、写日志、保留长期记忆。但这些记忆是「平铺」的，没有筛选和晋升机制。我们新增的 L4-L5 做了两件事：一是让重要经验能通过 Git 在团队间共享（L4 团队记忆），二是让反复验证过的核心经验直接写入 AI 的「性格」里（L5 DNA 记忆），成为它思考问题的本能。</p>
+        </div>
+      </div>
+      <div class="module-card-body">
+        <h4><i class="fa-solid fa-layer-group"></i> 五层记忆体系</h4>
+        <p class="explain-text">可以把这五层想象成一个知识的「蒸馏塔」：最底层是海量的日常对话，往上逐渐浓缩，最顶层只留下最核心的认知。越往上越精炼、越持久、影响范围越大。</p>
+        <div class="memory-ladder">
+          <div class="ladder-step">
+            <div class="ladder-level">L1</div>
+            <div class="ladder-content">
+              <div>
+                <div class="ladder-name">会话内记忆 <span class="ladder-tag base">OpenClaw 已有</span></div>
+                <div class="ladder-desc">对话进行中的即时上下文</div>
+              </div>
+              <div class="ladder-speed">最快 &middot; 会话后消失</div>
+            </div>
+          </div>
+          <div class="promotion-arrow"><i class="fa-solid fa-arrow-down"></i> 每日持久化</div>
+          <div class="ladder-step">
+            <div class="ladder-level">L2</div>
+            <div class="ladder-content">
+              <div>
+                <div class="ladder-name">日志记忆 <span class="ladder-tag base">OpenClaw 已有</span></div>
+                <div class="ladder-desc">每天自动记录的工作日志</div>
+              </div>
+              <div class="ladder-speed">每日 &middot; 自动记录</div>
+            </div>
+          </div>
+          <div class="promotion-arrow"><i class="fa-solid fa-arrow-down"></i> 精华提炼</div>
+          <div class="ladder-step">
+            <div class="ladder-level">L3</div>
+            <div class="ladder-content">
+              <div>
+                <div class="ladder-name">长期记忆 <span class="ladder-tag base">OpenClaw 已有</span></div>
+                <div class="ladder-desc">从日志中提炼的精华，永久保留</div>
+              </div>
+              <div class="ladder-speed">精华 &middot; 永久保留</div>
+            </div>
+          </div>
+          <div class="promotion-arrow"><i class="fa-solid fa-arrow-down"></i> git 同步 <span style="color:var(--coral); margin-left:4px;">&#9733; 新增</span></div>
+          <div class="ladder-step">
+            <div class="ladder-level">L4</div>
+            <div class="ladder-content">
+              <div>
+                <div class="ladder-name">团队记忆 <span class="ladder-tag new">我们新增</span></div>
+                <div class="ladder-desc">通过 Git 在团队间共享的集体经验</div>
+              </div>
+              <div class="ladder-speed">共享 &middot; 全员可见</div>
+            </div>
+          </div>
+          <div class="promotion-arrow"><i class="fa-solid fa-arrow-down"></i> 写入人格 <span style="color:var(--coral); margin-left:4px;">&#9733; 新增</span></div>
+          <div class="ladder-step">
+            <div class="ladder-level">L5</div>
+            <div class="ladder-content">
+              <div>
+                <div class="ladder-name">DNA 记忆 <span class="ladder-tag new">我们新增</span></div>
+                <div class="ladder-desc">写入 SOUL.md，成为 AI 的思维本能</div>
+              </div>
+              <div class="ladder-speed">最慢 &middot; 最永久</div>
+            </div>
+          </div>
+        </div>
+
+        <details class="tech-details">
+          <summary><i class="fa-solid fa-code"></i> 技术实现细节</summary>
+          <div class="tech-content">
+            <h4><i class="fa-solid fa-route"></i> 数据流</h4>
+            <div class="dataflow">
+              <span class="dataflow-step">会话记忆</span>
+              <span class="dataflow-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              <span class="dataflow-step">日志</span>
+              <span class="dataflow-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              <span class="dataflow-step">精华</span>
+              <span class="dataflow-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              <span class="dataflow-step">团队</span>
+              <span class="dataflow-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              <span class="dataflow-step">DNA</span>
+              <span style="color:var(--text-dim); font-size:12px; margin-left:4px;">（逐级晋升）</span>
+            </div>
+            <div class="file-tree" style="margin-top:12px;">
+              <span class="dir">memory/</span><br>
+              &nbsp;&nbsp;<span class="file">YYYY-MM-DD.md</span> <span class="desc">&larr; L2 日志记忆</span><br>
+              &nbsp;&nbsp;<span class="dir">team/</span> <span class="desc">&larr; L4 团队共享记忆（Git 同步）</span><br>
+              &nbsp;&nbsp;<span class="dir">personal/</span> <span class="desc">&larr; 个人私有记忆（不同步）</span><br>
+              <span class="file">MEMORY.md</span> <span class="desc">&larr; L3 长期记忆索引</span><br>
+              <span class="file">SOUL.md</span> <span class="desc">&larr; L5 DNA 记忆（写入人格）</span>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- 模块 4: 负反馈引擎 -->
+    <div class="module-card fade-in" id="mod4">
+      <div class="module-card-header">
+        <div class="module-icon coral"><i class="fa-solid fa-bug-slash"></i></div>
+        <div class="module-header-text">
+          <h3>Module 4 &mdash; 负反馈引擎</h3>
+          <p class="module-tagline">每次犯错都是一次学习机会。这个模块确保错误不会白犯——自动记录、自动分类、自动升级。</p>
+          <p class="module-why">为什么需要？AI 天生没有「痛感」。它犯了错不会难受，下次还会犯同样的错。负反馈引擎就是给它装了一个「痛觉神经」：出错了自动记下来，被用户纠正了也记下来，然后通过一套晋升规则，让频繁出现的错误从「临时便签」逐步升级为「铁律」，最终写入 AI 的 DNA。</p>
+        </div>
+      </div>
+      <div class="module-card-body">
+        <h4><i class="fa-solid fa-bolt"></i> 什么时候会触发记录</h4>
+        <p class="explain-text">四种场景会自动触发：</p>
+        <div class="trigger-grid">
+          <div class="trigger-item">
+            <div class="trigger-label">命令执行失败</div>
+            <div class="trigger-desc">AI 跑了一条命令结果报错，自动记录错误原因</div>
+          </div>
+          <div class="trigger-item">
+            <div class="trigger-label">用户纠正</div>
+            <div class="trigger-desc">你说了「不对」「别这样做」，系统捕捉到纠正语气并记录</div>
+          </div>
+          <div class="trigger-item">
+            <div class="trigger-label">每日自动回顾</div>
+            <div class="trigger-desc">每天结束时自动聚类分析，找出重复出现的错误模式</div>
+          </div>
+          <div class="trigger-item">
+            <div class="trigger-label">用户主动说「记住」</div>
+            <div class="trigger-desc">你主动告诉 AI 一条规则，直接写入对应的文件</div>
+          </div>
+        </div>
+
+        <h4><i class="fa-solid fa-stairs"></i> 经验晋升机制</h4>
+        <p class="explain-text">不是所有错误都值得永久记住。这套机制用「出现频率」来决定一条经验的重要性，频率越高，保存层级越高：</p>
+        <div class="promotion-ladder">
+          <div class="promo-step">
+            <div class="promo-bar">
+              <div class="promo-count">1x</div>
+            </div>
+            <div class="promo-label">临时记录</div>
+            <div class="promo-desc">先记着，可能是偶发</div>
+          </div>
+          <div class="promo-arrow-right"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="promo-step">
+            <div class="promo-bar">
+              <div class="promo-count">2x</div>
+            </div>
+            <div class="promo-label">预警升级</div>
+            <div class="promo-desc">两次了，写入长期记忆</div>
+          </div>
+          <div class="promo-arrow-right"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="promo-step">
+            <div class="promo-bar">
+              <div class="promo-count">3x</div>
+            </div>
+            <div class="promo-label">硬规则</div>
+            <div class="promo-desc">三次了，变成操作规范</div>
+          </div>
+          <div class="promo-arrow-right"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="promo-step">
+            <div class="promo-bar">
+              <div class="promo-count">&check;</div>
+            </div>
+            <div class="promo-label">永久 DNA</div>
+            <div class="promo-desc">写入人格，成为本能</div>
+          </div>
+        </div>
+
+        <details class="tech-details">
+          <summary><i class="fa-solid fa-code"></i> 技术实现细节</summary>
+          <div class="tech-content">
+            <h4><i class="fa-solid fa-folder-tree"></i> 文件结构</h4>
+            <div class="file-tree">
+              <span class="dir">.learnings/</span><br>
+              &nbsp;&nbsp;<span class="file">ERRORS.md</span> <span class="desc">&larr; 错误记录（ERR-ID, 类型, 根因, 防治规则）</span><br>
+              &nbsp;&nbsp;<span class="file">LEARNINGS.md</span> <span class="desc">&larr; 学习记录（用户纠正, 新发现）</span><br>
+              &nbsp;&nbsp;<span class="file">FEATURE_REQUESTS.md</span> <span class="desc">&larr; 缺失能力登记</span><br>
+              &nbsp;&nbsp;<span class="file">PATTERNS.md</span> <span class="desc">&larr; 任务模式库（重复检测）</span>
+            </div>
+            <h4><i class="fa-solid fa-bolt"></i> Hook 触发点</h4>
+            <div class="trigger-grid">
+              <div class="trigger-item">
+                <div class="trigger-hook">Hook: PostToolUse</div>
+                <div class="trigger-desc">命令执行失败时自动记录</div>
+                <div class="trigger-target">&rarr; ERRORS.md</div>
+              </div>
+              <div class="trigger-item">
+                <div class="trigger-hook">Hook: UserPromptSubmit</div>
+                <div class="trigger-desc">检测到用户纠正语气时记录</div>
+                <div class="trigger-target">&rarr; LEARNINGS.md</div>
+              </div>
+              <div class="trigger-item">
+                <div class="trigger-hook">Cron: 每日回顾</div>
+                <div class="trigger-desc">模式聚类 + 频率统计</div>
+                <div class="trigger-target">&rarr; PATTERNS.md</div>
+              </div>
+              <div class="trigger-item">
+                <div class="trigger-hook">手动: 用户说「记住」</div>
+                <div class="trigger-desc">直接写入对应文件</div>
+                <div class="trigger-target">&rarr; 对应文件</div>
+              </div>
+            </div>
+            <h4><i class="fa-solid fa-stairs"></i> 晋升路径（技术视角）</h4>
+            <div class="dataflow">
+              <span class="dataflow-step">.learnings/</span>
+              <span class="dataflow-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              <span class="dataflow-step">MEMORY.md</span>
+              <span class="dataflow-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              <span class="dataflow-step">AGENTS.md</span>
+              <span class="dataflow-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              <span class="dataflow-step">SOUL.md</span>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- 模块 5: 技能自进化引擎 -->
+    <div class="module-card fade-in" id="mod5b">
+      <div class="module-card-header">
+        <div class="module-icon coral"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+        <div class="module-header-text">
+          <h3>Module 5 &mdash; 技能自进化引擎</h3>
+          <p class="module-tagline">如果你让 AI 做了三次类似的事情，它会主动把这类工作提炼成一个可复用的「技能模板」，以后一键调用。</p>
+          <p class="module-why">为什么需要？日常工作中有大量重复劳动：每周跑类似的 SQL、每次做 AB 实验分析步骤都差不多、日报格式基本固定。与其每次从头教 AI，不如让它自己发现这些重复模式，主动提炼成技能。好比一个勤快的助理，干了三次同样的活之后，自己写了个 SOP 拿来给你审批。</p>
+        </div>
+      </div>
+      <div class="module-card-body">
+        <h4><i class="fa-solid fa-diagram-project"></i> 工作流程</h4>
+        <p class="explain-text">整个流程分五步：<strong>做事</strong>（正常执行任务）&rarr; <strong>计数</strong>（后台默默记录相似任务的出现次数）&rarr; <strong>触发</strong>（同一类任务出现 3 次以上）&rarr; <strong>生成草案</strong>（自动把步骤、模板、规则提炼成一个技能文档）&rarr; <strong>人工审批</strong>（你确认后才正式入库，不会自作主张）。</p>
+        <div class="evolution-flow">
+          <div class="evo-step">
+            <div class="evo-icon coral"><i class="fa-solid fa-play"></i></div>
+            <div class="evo-label">执行任务</div>
+            <div class="evo-sub">日常工作</div>
+          </div>
+          <div class="evo-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="evo-step">
+            <div class="evo-icon purple"><i class="fa-solid fa-calculator"></i></div>
+            <div class="evo-label">模式计数</div>
+            <div class="evo-sub">后台统计</div>
+          </div>
+          <div class="evo-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="evo-decision">
+            <div class="evo-diamond"><span>&ge;3?</span></div>
+            <div class="evo-sub" style="margin-top:4px;">够 3 次了吗</div>
+          </div>
+          <div class="evo-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="evo-step">
+            <div class="evo-icon teal"><i class="fa-solid fa-file-code"></i></div>
+            <div class="evo-label">生成技能草案</div>
+            <div class="evo-sub">自动提炼</div>
+          </div>
+          <div class="evo-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="evo-decision">
+            <div class="evo-diamond"><span>Y/N</span></div>
+            <div class="evo-sub" style="margin-top:4px;">你来审批</div>
+          </div>
+          <div class="evo-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="evo-step">
+            <div class="evo-icon yellow"><i class="fa-solid fa-box-archive"></i></div>
+            <div class="evo-label">正式入库</div>
+            <div class="evo-sub">可复用技能</div>
+          </div>
+          <div class="evo-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="evo-step">
+            <div class="evo-icon green"><i class="fa-solid fa-code-branch"></i></div>
+            <div class="evo-label">团队共享</div>
+            <div class="evo-sub">全员可用</div>
+          </div>
+        </div>
+
+        <details class="tech-details">
+          <summary><i class="fa-solid fa-code"></i> 技术实现细节</summary>
+          <div class="tech-content">
+            <h4><i class="fa-solid fa-hat-wizard"></i> 元技能 skill-evolver 职责</h4>
+            <div class="code-block">
+              <span class="comment"># skill-evolver 元技能核心职责</span><br>
+              <br>
+              <span class="keyword">1. 监测</span> &rarr; 读取 .learnings/PATTERNS.md 中的高频模式<br>
+              <span class="keyword">2. 提取</span> &rarr; 自动生成 SKILL.md 草案（SQL模板 + 分析框架 + 口径规则）<br>
+              <span class="keyword">3. 审批</span> &rarr; 提交给用户确认，不自动上线<br>
+              <span class="keyword">4. 部署</span> &rarr; 审批通过后写入 skills/ 并 git push
+            </div>
+            <div class="file-tree">
+              <span class="dir">skills/</span><br>
+              &nbsp;&nbsp;<span class="dir">skill-evolver/</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="file">SKILL.md</span> <span class="desc">&larr; 元技能（负责生成其他技能的技能）</span><br>
+              &nbsp;&nbsp;<span class="dir">daily-report/</span> <span class="desc">&larr; 示例：日报技能</span><br>
+              &nbsp;&nbsp;<span class="dir">ab-experiment/</span> <span class="desc">&larr; 示例：AB 实验分析技能</span>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- 模块 6: 团队同步层 -->
+    <div class="module-card fade-in" id="mod6">
+      <div class="module-card-header">
+        <div class="module-icon coral"><i class="fa-solid fa-people-group"></i></div>
+        <div class="module-header-text">
+          <h3>Module 6 &mdash; 团队知识同步</h3>
+          <p class="module-tagline">一个人踩过的坑、学到的经验、提炼的技能，自动同步给团队所有人，避免重复交学费。</p>
+          <p class="module-why">为什么需要？如果每个人都在自己的机器上单独使用 AI 助手，那 A 踩过的坑 B 还会再踩一次。通过 Git 版本管理，我们把知识分成两类：<strong>共享区</strong>（人格设定、操作规则、技能库、错误库、团队记忆）所有人同步，一人学会全员受益；<strong>私有区</strong>（个人工作笔记）只在本地，不影响别人。</p>
+        </div>
+      </div>
+      <div class="module-card-body">
+        <h4><i class="fa-solid fa-sitemap"></i> 同步架构</h4>
+        <p class="explain-text">三个团队成员各自有一份本地工作区，通过 Git 远程仓库保持同步。共享文件推送上去后，其他人 pull 就能获取最新的知识。私有文件通过 .gitignore 排除，完全不会互相干扰。</p>
+        <div class="team-sync">
+          <div class="team-grid">
+            <!-- 成员 A -->
+            <div class="team-member">
+              <div class="team-member-name"><i class="fa-solid fa-user" style="color:var(--coral)"></i> 成员 A</div>
+              <div class="team-member-path">~/.openclaw/workspace/</div>
+              <ul class="team-file-list">
+                <li><span class="shared">SOUL.md</span> <span class="tag shared-tag">共享</span></li>
+                <li><span class="shared">AGENTS.md</span> <span class="tag shared-tag">共享</span></li>
+                <li><span class="shared">.learnings/</span> <span class="tag shared-tag">共享</span></li>
+                <li><span class="shared">skills/</span> <span class="tag shared-tag">共享</span></li>
+                <li><span class="shared">memory/team/</span> <span class="tag shared-tag">共享</span></li>
+                <li><span class="private">memory/personal/</span> <span class="tag private-tag">私有</span></li>
+              </ul>
+            </div>
+
+            <div class="team-connector">
+              <i class="fa-solid fa-arrows-left-right"></i>
+              <span>push/pull</span>
+            </div>
+
+            <!-- 成员 B -->
+            <div class="team-member">
+              <div class="team-member-name"><i class="fa-solid fa-user" style="color:var(--teal)"></i> 成员 B</div>
+              <div class="team-member-path">~/.openclaw/workspace/</div>
+              <ul class="team-file-list">
+                <li><span class="shared">SOUL.md</span> <span class="tag shared-tag">共享</span></li>
+                <li><span class="shared">AGENTS.md</span> <span class="tag shared-tag">共享</span></li>
+                <li><span class="shared">.learnings/</span> <span class="tag shared-tag">共享</span></li>
+                <li><span class="shared">skills/</span> <span class="tag shared-tag">共享</span></li>
+                <li><span class="shared">memory/team/</span> <span class="tag shared-tag">共享</span></li>
+                <li><span class="private">memory/personal/</span> <span class="tag private-tag">私有</span></li>
+              </ul>
+            </div>
+
+            <div class="team-connector">
+              <i class="fa-solid fa-arrows-left-right"></i>
+              <span>push/pull</span>
+            </div>
+
+            <!-- 成员 C -->
+            <div class="team-member">
+              <div class="team-member-name"><i class="fa-solid fa-user" style="color:#7C3AED"></i> 成员 C</div>
+              <div class="team-member-path">~/.openclaw/workspace/</div>
+              <ul class="team-file-list">
+                <li><span class="shared">SOUL.md</span> <span class="tag shared-tag">共享</span></li>
+                <li><span class="shared">AGENTS.md</span> <span class="tag shared-tag">共享</span></li>
+                <li><span class="shared">.learnings/</span> <span class="tag shared-tag">共享</span></li>
+                <li><span class="shared">skills/</span> <span class="tag shared-tag">共享</span></li>
+                <li><span class="shared">memory/team/</span> <span class="tag shared-tag">共享</span></li>
+                <li><span class="private">memory/personal/</span> <span class="tag private-tag">私有</span></li>
+              </ul>
+            </div>
+
+            <!-- Git Remote -->
+            <div class="team-remote">
+              <div class="team-remote-title"><i class="fa-brands fa-git-alt"></i> &nbsp;Git Remote &mdash; 共享知识中枢</div>
+              <div class="team-remote-desc">人格设定 / 操作规则 / 错误库 / 技能库 / 团队记忆 全部通过 Git 同步</div>
+            </div>
+          </div>
+        </div>
+
+        <h4><i class="fa-solid fa-code-merge"></i> 怎么处理冲突</h4>
+        <p class="explain-text">不同类型的文件用不同的策略，确保不会「你改了我也改了然后冲突一团糟」：</p>
+        <div class="conflict-grid">
+          <div class="conflict-item">
+            <h5>错误库 (.learnings/)</h5>
+            <p>只追加不修改。每条记录有唯一编号，两个人同时加记录也不会冲突。</p>
+          </div>
+          <div class="conflict-item">
+            <h5>人格设定 (SOUL.md)</h5>
+            <p>必须通过 PR 审批。人格改动影响全团队，需要大家达成共识。</p>
+          </div>
+          <div class="conflict-item">
+            <h5>技能库 (skills/)</h5>
+            <p>每个技能是独立目录。新建技能不会冲突，修改已有技能需走 PR。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== Section 3: 实施路线图 ==================== -->
+<section id="roadmap">
+  <div class="container">
+    <div class="section-title">
+      <span class="num">SECTION 03</span>
+      实施路线图
+    </div>
+    <p class="section-subtitle">7 天 4 阶段，从基座搭建到团队联调。</p>
+
+    <div class="roadmap">
+      <div class="roadmap-track">
+        <!-- Phase 1 -->
+        <div class="roadmap-phase phase-1 fade-in">
+          <div class="roadmap-phase-header">
+            <div class="phase-dot">P1</div>
+            <div class="phase-info">
+              <h4>基座搭建</h4>
+              <div class="days">Day 1-2</div>
+            </div>
+          </div>
+          <div class="roadmap-phase-bar"></div>
+          <ul class="roadmap-tasks">
+            <li class="done"><span class="task-check done"><i class="fa-solid fa-check"></i></span> 初始化共享 Git 仓库</li>
+            <li class="done"><span class="task-check done"><i class="fa-solid fa-check"></i></span> 编写 SOUL.md（运营专家人格）</li>
+            <li class="done"><span class="task-check done"><i class="fa-solid fa-check"></i></span> 编写 AGENTS.md（操作规则）</li>
+            <li class="done"><span class="task-check done"><i class="fa-solid fa-check"></i></span> 创建 .learnings/ 目录结构</li>
+          </ul>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="roadmap-phase phase-2 fade-in delay-1">
+          <div class="roadmap-phase-header">
+            <div class="phase-dot">P2</div>
+            <div class="phase-info">
+              <h4>负反馈引擎</h4>
+              <div class="days">Day 3-4</div>
+            </div>
+          </div>
+          <div class="roadmap-phase-bar"></div>
+          <ul class="roadmap-tasks">
+            <li><span class="task-check todo"></span> 实现前置拦截脚本</li>
+            <li><span class="task-check todo"></span> 配置 Hook 触发点</li>
+            <li><span class="task-check todo"></span> 实现错误自动记录流程</li>
+            <li><span class="task-check todo"></span> 实现经验晋升规则</li>
+          </ul>
+        </div>
+
+        <!-- Phase 3 -->
+        <div class="roadmap-phase phase-3 fade-in delay-2">
+          <div class="roadmap-phase-header">
+            <div class="phase-dot">P3</div>
+            <div class="phase-info">
+              <h4>自进化引擎</h4>
+              <div class="days">Day 5-6</div>
+            </div>
+          </div>
+          <div class="roadmap-phase-bar"></div>
+          <ul class="roadmap-tasks">
+            <li><span class="task-check todo"></span> 实现任务模式标记</li>
+            <li><span class="task-check todo"></span> 实现 skill-evolver 元技能</li>
+            <li><span class="task-check todo"></span> 实现自动技能提炼流程</li>
+            <li><span class="task-check todo"></span> 测试「3 次重复自动生成技能」</li>
+          </ul>
+        </div>
+
+        <!-- Phase 4 -->
+        <div class="roadmap-phase phase-4 fade-in delay-3">
+          <div class="roadmap-phase-header">
+            <div class="phase-dot">P4</div>
+            <div class="phase-info">
+              <h4>团队协作</h4>
+              <div class="days">Day 7</div>
+            </div>
+          </div>
+          <div class="roadmap-phase-bar"></div>
+          <ul class="roadmap-tasks">
+            <li><span class="task-check todo"></span> 配置 3 人 Git 同步流程</li>
+            <li><span class="task-check todo"></span> 测试跨成员知识传播</li>
+            <li><span class="task-check todo"></span> 端到端联调</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== Section 4: 文件清单 ==================== -->
+<section id="inventory" style="border-bottom: none;">
+  <div class="container">
+    <div class="section-title">
+      <span class="num">SECTION 04</span>
+      文件清单
+    </div>
+    <p class="section-subtitle">所有需要新建或修改的文件，按优先级排列。一共 11 个变更点。</p>
+
+    <table class="file-table">
+      <thead>
+        <tr>
+          <th>文件路径</th>
+          <th>动作</th>
+          <th>归属模块</th>
+          <th>优先级</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="file-name">SOUL.md</td>
+          <td><span class="action-badge rewrite">重写</span></td>
+          <td><span class="module-badge" style="color:var(--teal); background:var(--teal-dim);">&#9313; 专家人格</span></td>
+          <td><span class="priority-badge p0">P0</span></td>
+        </tr>
+        <tr>
+          <td class="file-name">AGENTS.md</td>
+          <td><span class="action-badge rewrite">重写</span></td>
+          <td><span class="module-badge" style="color:var(--teal); background:var(--teal-dim);">&#9313; 专家人格</span></td>
+          <td><span class="priority-badge p0">P0</span></td>
+        </tr>
+        <tr>
+          <td class="file-name">MEMORY.md</td>
+          <td><span class="action-badge enhance">增强</span></td>
+          <td><span class="module-badge" style="color:var(--teal); background:var(--teal-dim);">&#9314; 学习体系</span></td>
+          <td><span class="priority-badge p0">P0</span></td>
+        </tr>
+        <tr>
+          <td class="file-name">.learnings/ERRORS.md</td>
+          <td><span class="action-badge new-file">新建</span></td>
+          <td><span class="module-badge" style="color:var(--coral); background:var(--coral-dim);">&#9315; 负反馈</span></td>
+          <td><span class="priority-badge p0">P0</span></td>
+        </tr>
+        <tr>
+          <td class="file-name">.learnings/LEARNINGS.md</td>
+          <td><span class="action-badge new-file">新建</span></td>
+          <td><span class="module-badge" style="color:var(--coral); background:var(--coral-dim);">&#9315; 负反馈</span></td>
+          <td><span class="priority-badge p0">P0</span></td>
+        </tr>
+        <tr>
+          <td class="file-name">scripts/pre-check.sh</td>
+          <td><span class="action-badge new-file">新建</span></td>
+          <td><span class="module-badge" style="color:var(--coral); background:var(--coral-dim);">&#9312; 错题本检查</span></td>
+          <td><span class="priority-badge p1">P1</span></td>
+        </tr>
+        <tr>
+          <td class="file-name">.claude/settings.json</td>
+          <td><span class="action-badge modify">修改</span></td>
+          <td><span class="module-badge" style="color:var(--coral); background:var(--coral-dim);">&#9312; 错题本检查</span></td>
+          <td><span class="priority-badge p1">P1</span></td>
+        </tr>
+        <tr>
+          <td class="file-name">.learnings/PATTERNS.md</td>
+          <td><span class="action-badge new-file">新建</span></td>
+          <td><span class="module-badge" style="color:var(--coral); background:var(--coral-dim);">&#9316; 自进化</span></td>
+          <td><span class="priority-badge p1">P1</span></td>
+        </tr>
+        <tr>
+          <td class="file-name">skills/skill-evolver/SKILL.md</td>
+          <td><span class="action-badge new-file">新建</span></td>
+          <td><span class="module-badge" style="color:var(--coral); background:var(--coral-dim);">&#9316; 自进化</span></td>
+          <td><span class="priority-badge p1">P1</span></td>
+        </tr>
+        <tr>
+          <td class="file-name">memory/team/</td>
+          <td><span class="action-badge new-dir">新建目录</span></td>
+          <td><span class="module-badge" style="color:var(--coral); background:var(--coral-dim);">&#9317; 团队同步</span></td>
+          <td><span class="priority-badge p1">P1</span></td>
+        </tr>
+        <tr>
+          <td class="file-name">.learnings/FEATURE_REQUESTS.md</td>
+          <td><span class="action-badge new-file">新建</span></td>
+          <td><span class="module-badge" style="color:var(--coral); background:var(--coral-dim);">&#9315; 负反馈</span></td>
+          <td><span class="priority-badge p2">P2</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 统计面板 -->
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:32px;">
+      <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:20px; text-align:center;">
+        <div style="font-size:28px; font-weight:800; color:var(--coral); font-family:var(--mono);">6</div>
+        <div style="font-size:12px; color:var(--text-dim); margin-top:4px;">新建文件</div>
+      </div>
+      <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:20px; text-align:center;">
+        <div style="font-size:28px; font-weight:800; color:var(--teal); font-family:var(--mono);">3</div>
+        <div style="font-size:12px; color:var(--text-dim); margin-top:4px;">重写/增强</div>
+      </div>
+      <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:20px; text-align:center;">
+        <div style="font-size:28px; font-weight:800; color:#B45309; font-family:var(--mono);">1</div>
+        <div style="font-size:12px; color:var(--text-dim); margin-top:4px;">修改配置</div>
+      </div>
+      <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:20px; text-align:center;">
+        <div style="font-size:28px; font-weight:800; color:#7C3AED; font-family:var(--mono);">1</div>
+        <div style="font-size:12px; color:var(--text-dim); margin-top:4px;">新建目录</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer style="padding:32px 0; text-align:center; border-top:1px solid var(--border);">
+  <div style="font-size:12px; color:var(--text-dim);">
+    <span style="font-family:var(--mono);">&#x267B; 递归大师</span> &middot; OpenClaw 改造蓝图 &middot; 使用 &rarr; 犯错 &rarr; 记录 &rarr; 学习 &rarr; 使用得更好
+  </div>
+</footer>
+
+<script>
+/* ==================== 滚动动画 ==================== */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, {
+  threshold: 0.1,
+  rootMargin: '0px 0px -40px 0px'
+});
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+/* ==================== 回到顶部按钮 ==================== */
+const backToTop = document.getElementById('backToTop');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 400) {
+    backToTop.classList.add('visible');
+  } else {
+    backToTop.classList.remove('visible');
+  }
+});
+
+/* ==================== 导航高亮 ==================== */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.topnav-links a');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const top = section.offsetTop - 100;
+    if (window.scrollY >= top) {
+      current = section.getAttribute('id');
+    }
+  });
+  navLinks.forEach(link => {
+    link.style.color = link.getAttribute('href') === '#' + current
+      ? 'var(--text-bright)'
+      : '';
+    link.style.background = link.getAttribute('href') === '#' + current
+      ? 'rgba(0,0,0,0.04)'
+      : '';
+  });
+});
+
+/* ==================== 顶部导航滚动效果 ==================== */
+const topnav = document.querySelector('.topnav');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 20) {
+    topnav.style.borderBottomColor = 'rgba(0,0,0,0.08)';
+  } else {
+    topnav.style.borderBottomColor = 'var(--border)';
+  }
+});
+
+/* 场景切换代码已移除 — 改为交替排列 */
+</script>
+</body>
+</html>

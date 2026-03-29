@@ -1,0 +1,66 @@
+<!-- 察变内容 -->
+
+<!-- 序卦因果链 -->
+{% if gua.steps.chabian.xugua %}
+<h3 class="fade-in" style="font-size:1rem; color:var(--gold); text-align:center; margin-bottom:0.5rem; letter-spacing:0.1em;">序卦因果</h3>
+<div class="quote-block fade-in" style="text-align:center; font-style:normal;">
+  <p style="font-size:0.9rem;">{{ gua.steps.chabian.xugua.text }}</p>
+  <cite>序卦传</cite>
+</div>
+
+<div class="xugua-flow fade-in fade-in-delay-1">
+  {% for node in gua.steps.chabian.xugua.chain %}
+  {% if not loop.first %}
+  <div class="xugua-arrow">
+    <span>→</span>
+    <span class="arrow-label">故</span>
+  </div>
+  {% endif %}
+  <div class="xugua-node node-{{ node.type }}">
+    <p class="node-name">{{ node.name }}</p>
+    <p class="node-desc">{{ node.desc }}</p>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- 杂卦 -->
+{% if gua.steps.chabian.zagua %}
+<div class="fade-in fade-in-delay-1" style="margin:2rem 0; padding:1.2rem 1.5rem; background:rgba(0,0,0,0.02); border-radius:8px;">
+  <h4 style="font-size:0.85rem; color:var(--vermilion); letter-spacing:0.1em; margin-bottom:0.5rem;">杂卦传</h4>
+  <p style="font-size:0.9rem; color:var(--ink-dark); line-height:1.8;">{{ gua.steps.chabian.zagua }}</p>
+</div>
+{% endif %}
+
+<!-- 综卦/错卦/互卦 比较 -->
+<div style="display:flex; gap:1.5rem; flex-wrap:wrap; justify-content:center; margin:2rem 0;">
+  {% if gua.steps.chabian.zonggua %}
+  <div class="fade-in fade-in-delay-1" style="flex:1; min-width:250px; padding:1.5rem; background:var(--paper-light); border:1px solid rgba(0,0,0,0.06); border-radius:8px;">
+    <h4 style="font-size:0.85rem; color:var(--gold); letter-spacing:0.1em; margin-bottom:0.5rem;">综卦（翻转）</h4>
+    <p style="font-weight:600; margin-bottom:0.3rem;">{{ gua.steps.chabian.zonggua.name }}</p>
+    <p style="font-size:0.85rem; color:var(--ink-medium); line-height:1.7;">{{ gua.steps.chabian.zonggua.comparison }}</p>
+  </div>
+  {% endif %}
+
+  {% if gua.steps.chabian.cuogua %}
+  <div class="fade-in fade-in-delay-2" style="flex:1; min-width:250px; padding:1.5rem; background:var(--paper-light); border:1px solid rgba(0,0,0,0.06); border-radius:8px;">
+    <h4 style="font-size:0.85rem; color:var(--vermilion); letter-spacing:0.1em; margin-bottom:0.5rem;">错卦（阴阳反转）</h4>
+    <p style="font-weight:600; margin-bottom:0.3rem;">{{ gua.steps.chabian.cuogua.name }}</p>
+    <p style="font-size:0.85rem; color:var(--ink-medium); line-height:1.7;">{{ gua.steps.chabian.cuogua.comparison }}</p>
+  </div>
+  {% endif %}
+
+  {% if gua.steps.chabian.hugua %}
+  <div class="fade-in fade-in-delay-3" style="flex:1; min-width:250px; padding:1.5rem; background:var(--paper-light); border:1px solid rgba(0,0,0,0.06); border-radius:8px;">
+    <h4 style="font-size:0.85rem; color:#2a6496; letter-spacing:0.1em; margin-bottom:0.5rem;">互卦（内部结构）</h4>
+    <p style="font-weight:600; margin-bottom:0.3rem;">{{ gua.steps.chabian.hugua.name }}</p>
+    <p style="font-size:0.85rem; color:var(--ink-medium); line-height:1.7;">{{ gua.steps.chabian.hugua.meaning }}</p>
+  </div>
+  {% endif %}
+</div>
+
+{% if gua.steps.chabian.trajectory %}
+<div class="fade-in fade-in-delay-3" style="margin:2rem auto; max-width:600px; text-align:center; padding:1.5rem; border-top:1px solid rgba(0,0,0,0.06);">
+  <p style="font-size:0.9rem; color:var(--ink-dark); line-height:1.9;">{{ gua.steps.chabian.trajectory }}</p>
+</div>
+{% endif %}

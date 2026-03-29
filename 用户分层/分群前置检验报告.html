@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>分群前置检验报告</title>
+<style>
+body { font-family: -apple-system, sans-serif; margin: 24px; font-size: 13px; color: #333; }
+h1 { font-size: 18px; border-bottom: 2px solid #1976D2; padding-bottom: 8px; }
+h2 { font-size: 15px; margin-top: 28px; border-left: 4px solid #1976D2; padding-left: 12px; }
+h3 { font-size: 13px; margin-top: 20px; }
+table { border-collapse: collapse; margin: 10px 0; }
+th, td { border: 1px solid #ddd; padding: 6px 10px; text-align: right; font-size: 12px; }
+th { background: #e3f2fd; text-align: center; }
+td:first-child { text-align: left; font-weight: 500; }
+.pass { color: #2E7D32; font-weight: 600; }
+.fail { color: #D32F2F; font-weight: 600; }
+.section { background: #f8f9fa; border-radius: 8px; padding: 14px; margin: 12px 0; }
+.grp1 { background: #FFF3E0; }
+.grp2 { background: #E3F2FD; }
+.ctrl { background: #E8F5E9; }
+</style></head><body>
+
+<h1>0212涨价实验 - 分群前置检验报告</h1>
+<p style="color:#666">检验内容：SRM + 基线消费特征（实验前90天）| 分群：按生命周期 + 来访未购</p>
+
+<h2>一、检验逻辑</h2>
+<div class="section">
+<p>本实验将用户分为3个价格组（涨价组1/2 + 对照组3），然后根据生命周期交叉不同券策略。</p>
+<p>由于分组是在用户层面完成（AB 分流），而非在生命周期层面分别分组，因此需要验证：</p>
+<ul>
+<li><b>SRM 检验</b>：每个生命周期段内，3组的用户数比例是否接近 30%:30%:40%</li>
+<li><b>有购率检验</b>：3组在实验前90天的有购率是否无显著差异</li>
+<li><b>人均订单 & 客单价</b>：3组的基线消费水平是否可比</li>
+</ul>
+<p>所有检验 p > 0.05 为通过（组间无显著差异）。</p>
+</div>
+<h2>二、各分段基线数据</h2>
+<h3>0-15天</h3>
+<table>
+<tr><th>组别</th><th>用户数</th><th>有购用户</th><th>有购率</th><th>人均订单</th><th>人均消费(有购)</th><th>平均客单价</th></tr>
+<tr class='ctrl'><td>对照组3</td><td>180</td><td>180</td><td>100.00%</td><td>1.8778</td><td>$8.51</td><td>$4.56</td></tr>
+<tr class='grp1'><td>涨价组1</td><td>128</td><td>128</td><td>100.00%</td><td>1.8359</td><td>$7.95</td><td>$4.15</td></tr>
+<tr class='grp2'><td>涨价组2</td><td>148</td><td>148</td><td>100.00%</td><td>2.1216</td><td>$8.92</td><td>$4.25</td></tr>
+</table>
+<h3>16-30天</h3>
+<table>
+<tr><th>组别</th><th>用户数</th><th>有购用户</th><th>有购率</th><th>人均订单</th><th>人均消费(有购)</th><th>平均客单价</th></tr>
+<tr class='ctrl'><td>对照组3</td><td>2,518</td><td>2,518</td><td>100.00%</td><td>1.8737</td><td>$7.98</td><td>$4.05</td></tr>
+<tr class='grp1'><td>涨价组1</td><td>1,896</td><td>1,896</td><td>100.00%</td><td>1.7859</td><td>$7.69</td><td>$4.13</td></tr>
+<tr class='grp2'><td>涨价组2</td><td>2,050</td><td>2,050</td><td>100.00%</td><td>1.9039</td><td>$8.38</td><td>$4.13</td></tr>
+</table>
+<h3>31天+</h3>
+<table>
+<tr><th>组别</th><th>用户数</th><th>有购用户</th><th>有购率</th><th>人均订单</th><th>人均消费(有购)</th><th>平均客单价</th></tr>
+<tr class='ctrl'><td>对照组3</td><td>47,597</td><td>22,079</td><td>46.39%</td><td>1.4818</td><td>$14.54</td><td>$4.14</td></tr>
+<tr class='grp1'><td>涨价组1</td><td>36,069</td><td>16,777</td><td>46.51%</td><td>1.4814</td><td>$14.48</td><td>$4.21</td></tr>
+<tr class='grp2'><td>涨价组2</td><td>35,860</td><td>16,686</td><td>46.53%</td><td>1.4777</td><td>$14.42</td><td>$4.17</td></tr>
+</table>
+<h3>来访未购</h3>
+<table>
+<tr><th>组别</th><th>用户数</th><th>有购用户</th><th>有购率</th><th>人均订单</th><th>人均消费(有购)</th><th>平均客单价</th></tr>
+<tr class='ctrl'><td>对照组3</td><td>1,096</td><td>1,096</td><td>100.00%</td><td>5.4644</td><td>$25.59</td><td>$4.29</td></tr>
+<tr class='grp1'><td>涨价组1</td><td>837</td><td>837</td><td>100.00%</td><td>5.3441</td><td>$24.77</td><td>$4.39</td></tr>
+<tr class='grp2'><td>涨价组2</td><td>836</td><td>836</td><td>100.00%</td><td>5.5359</td><td>$25.25</td><td>$4.24</td></tr>
+</table>
+<h2>三、检验结果汇总</h2>
+<table>
+<tr><th>分段</th><th>SRM p值</th><th>SRM</th><th>有购率 p值</th><th>有购率</th><th>人均订单(最小p)</th><th>订单</th><th>客单价(最小p)</th><th>客单价</th></tr>
+<tr><td>0-15天</td><td>0.4689</td><td class='pass'>PASS</td><td>1.0000</td><td class='pass'>PASS</td><td>0.4240</td><td class='pass'>PASS</td><td>0.2034</td><td class='pass'>PASS</td></tr>
+<tr><td>16-30天</td><td>0.0108</td><td class='fail'>FAIL</td><td>1.0000</td><td class='pass'>PASS</td><td>0.1805</td><td class='pass'>PASS</td><td>0.1890</td><td class='pass'>PASS</td></tr>
+<tr><td>31天+</td><td>0.3334</td><td class='pass'>PASS</td><td>0.8996</td><td class='pass'>PASS</td><td>0.7916</td><td class='pass'>PASS</td><td>0.0808</td><td class='pass'>PASS</td></tr>
+<tr><td>来访未购</td><td>0.9034</td><td class='pass'>PASS</td><td>1.0000</td><td class='pass'>PASS</td><td>0.6308</td><td class='pass'>PASS</td><td>0.1551</td><td class='pass'>PASS</td></tr>
+</table>
+<div class="section"><p class="fail">以下分段存在检验不通过：16-30天。需关注这些段的实验结论。</p></div></body></html>

@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lucky US 周日报 | 2026.03.05 - 03.11</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    /* ===== 基础样式 ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --text-primary: #1a1a2e;
+      --text-secondary: #555;
+      --text-muted: #888;
+      --bg-page: #ffffff;
+      --bg-card: #f8f9fb;
+      --bg-stripe: #f3f5f8;
+      --border: #e2e6ed;
+      --accent: #2563eb;
+      --accent-light: #eff4ff;
+      --green: #16a34a;
+      --green-bg: #f0fdf4;
+      --red: #dc2626;
+      --red-bg: #fef2f2;
+      --orange: #ea580c;
+      --orange-bg: #fff7ed;
+      --purple: #7c3aed;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 2px 8px rgba(0,0,0,0.08);
+      --radius: 8px;
+    }
+
+    body {
+      font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+      color: var(--text-primary);
+      background: var(--bg-page);
+      line-height: 1.6;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* ===== 页头 ===== */
+    .page-header {
+      border-bottom: 3px solid var(--accent);
+      padding-bottom: 20px;
+      margin-bottom: 36px;
+    }
+    .page-header h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .page-header .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .page-header .date-range {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      padding: 3px 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    /* ===== 章节标题 ===== */
+    .section {
+      margin-bottom: 40px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      padding-left: 12px;
+      border-left: 4px solid var(--accent);
+      line-height: 1.4;
+    }
+    .section-title span {
+      color: var(--text-muted);
+      font-weight: 400;
+      font-size: 14px;
+      margin-left: 8px;
+    }
+
+    /* ===== 指标卡片 ===== */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 14px;
+      text-align: center;
+    }
+    .kpi-card .label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .kpi-card .value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .kpi-card .change {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .kpi-card .change.up { color: var(--green); }
+    .kpi-card .change.down { color: var(--red); }
+    .kpi-card .sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ===== 图表容器 ===== */
+    .chart-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .chart-container .chart-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+    .chart-wrapper {
+      position: relative;
+      height: 280px;
+    }
+
+    /* ===== 表格 ===== */
+    .table-wrapper {
+      overflow-x: auto;
+      margin-bottom: 24px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    table thead th {
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+    table thead th:first-child {
+      border-radius: var(--radius) 0 0 0;
+    }
+    table thead th:last-child {
+      border-radius: 0 var(--radius) 0 0;
+    }
+    table tbody td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    table tbody tr:nth-child(even) {
+      background: var(--bg-stripe);
+    }
+    table tbody tr:hover {
+      background: var(--accent-light);
+    }
+    table tbody tr.total-row {
+      font-weight: 700;
+      background: #eef1f6;
+    }
+    table tbody tr.total-row td {
+      border-top: 2px solid var(--accent);
+    }
+    .text-right { text-align: right; }
+    .text-center { text-align: center; }
+
+    /* ===== Callout ===== */
+    .callout-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .callout {
+      border-radius: var(--radius);
+      padding: 20px;
+      border-left: 4px solid;
+    }
+    .callout.blue {
+      background: var(--accent-light);
+      border-color: var(--accent);
+    }
+    .callout.green {
+      background: var(--green-bg);
+      border-color: var(--green);
+    }
+    .callout.orange {
+      background: var(--orange-bg);
+      border-color: var(--orange);
+    }
+    .callout h4 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+    .callout p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ===== 双栏图表 ===== */
+    .chart-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .chart-row .chart-container {
+      margin-bottom: 0;
+    }
+    .chart-row .chart-wrapper {
+      height: 260px;
+    }
+
+    /* ===== 页脚 ===== */
+    .page-footer {
+      margin-top: 48px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ===== 打印优化 ===== */
+    @media print {
+      body { font-size: 11px; }
+      .container { padding: 20px; max-width: 100%; }
+      .section { page-break-inside: avoid; }
+      .kpi-grid { grid-template-columns: repeat(5, 1fr); }
+      .callout-grid { grid-template-columns: repeat(3, 1fr); }
+      .chart-wrapper { height: 220px; }
+    }
+
+    /* ===== 响应式 ===== */
+    @media (max-width: 768px) {
+      .container { padding: 20px 16px; }
+      .page-header h1 { font-size: 22px; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .kpi-grid .kpi-card:last-child {
+        grid-column: span 2;
+      }
+      .chart-row {
+        grid-template-columns: 1fr;
+      }
+      .callout-grid {
+        grid-template-columns: 1fr;
+      }
+      .chart-wrapper { height: 220px; }
+      table { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- 页头 -->
+  <header class="page-header">
+    <h1>Lucky US 周日报</h1>
+    <div class="subtitle">Weekly Business Report</div>
+    <div class="date-range">2026.03.05 (Wed) - 03.11 (Tue)</div>
+  </header>
+
+  <!-- 一、本周总览 -->
+  <section class="section">
+    <h2 class="section-title">一、本周总览 <span>Weekly Overview</span></h2>
+
+    <!-- KPI 卡片 -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="label">周杯量</div>
+        <div class="value">28,553</div>
+        <div class="change up">+8.0%</div>
+        <div class="sub">vs 上周 26,428</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">周订单</div>
+        <div class="value">27,388</div>
+        <div class="change up">+8.5%</div>
+        <div class="sub">vs 上周 25,241</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">周收入</div>
+        <div class="value">$95,282</div>
+        <div class="change up">+6.7%</div>
+        <div class="sub">vs 上周 $89,326</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">日均杯量</div>
+        <div class="value">4,079</div>
+        <div class="change up">+8.0%</div>
+        <div class="sub">vs 上周 3,775</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">杯均价</div>
+        <div class="value">$3.34</div>
+        <div class="change down">-1.2%</div>
+        <div class="sub">vs 上周 $3.38</div>
+      </div>
+    </div>
+
+    <!-- 杯量趋势折线图 -->
+    <div class="chart-container">
+      <div class="chart-title">杯量趋势 | 本周 vs 上周</div>
+      <div class="chart-wrapper">
+        <canvas id="trendChart"></canvas>
+      </div>
+    </div>
+
+    <!-- 本周数据表 -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>日期</th>
+            <th>星期</th>
+            <th class="text-right">杯量</th>
+            <th class="text-right">订单</th>
+            <th class="text-right">收入 ($)</th>
+            <th class="text-right">杯均价</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>3/5</td><td>Wed</td>
+            <td class="text-right">3,395</td><td class="text-right">3,264</td>
+            <td class="text-right">11,566</td><td class="text-right">$3.41</td>
+          </tr>
+          <tr>
+            <td>3/6</td><td>Thu</td>
+            <td class="text-right">3,810</td><td class="text-right">3,634</td>
+            <td class="text-right">13,135</td><td class="text-right">$3.45</td>
+          </tr>
+          <tr>
+            <td>3/7</td><td>Fri</td>
+            <td class="text-right">3,536</td><td class="text-right">3,392</td>
+            <td class="text-right">11,606</td><td class="text-right">$3.28</td>
+          </tr>
+          <tr>
+            <td>3/8</td><td>Sat</td>
+            <td class="text-right">3,443</td><td class="text-right">3,320</td>
+            <td class="text-right">11,073</td><td class="text-right">$3.22</td>
+          </tr>
+          <tr>
+            <td>3/9</td><td>Sun</td>
+            <td class="text-right">4,471</td><td class="text-right">4,297</td>
+            <td class="text-right">14,768</td><td class="text-right">$3.30</td>
+          </tr>
+          <tr>
+            <td>3/10</td><td>Mon</td>
+            <td class="text-right">4,746</td><td class="text-right">4,603</td>
+            <td class="text-right">15,629</td><td class="text-right">$3.29</td>
+          </tr>
+          <tr>
+            <td>3/11</td><td>Tue</td>
+            <td class="text-right">5,152</td><td class="text-right">4,878</td>
+            <td class="text-right">17,505</td><td class="text-right">$3.40</td>
+          </tr>
+          <tr class="total-row">
+            <td>合计</td><td></td>
+            <td class="text-right">28,553</td><td class="text-right">27,388</td>
+            <td class="text-right">$95,282</td><td class="text-right">$3.34</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 二、门店排名 -->
+  <section class="section">
+    <h2 class="section-title">二、门店排名 <span>Store Ranking TOP10</span></h2>
+
+    <div class="chart-container">
+      <div class="chart-title">本周门店杯量 TOP10</div>
+      <div class="chart-wrapper">
+        <canvas id="storeChart"></canvas>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th class="text-center">#</th>
+            <th>门店</th>
+            <th class="text-right">周杯量</th>
+            <th class="text-right">日均</th>
+            <th class="text-right">占比</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="text-center">1</td><td>8th & Broadway</td><td class="text-right">4,600</td><td class="text-right">657</td><td class="text-right">16.1%</td></tr>
+          <tr><td class="text-center">2</td><td>37th & Broadway</td><td class="text-right">3,600</td><td class="text-right">514</td><td class="text-right">12.6%</td></tr>
+          <tr><td class="text-center">3</td><td>52nd & Madison</td><td class="text-right">2,900</td><td class="text-right">414</td><td class="text-right">10.2%</td></tr>
+          <tr><td class="text-center">4</td><td>102 Fulton</td><td class="text-right">2,700</td><td class="text-right">386</td><td class="text-right">9.5%</td></tr>
+          <tr><td class="text-center">5</td><td>33rd & 10th</td><td class="text-right">2,200</td><td class="text-right">314</td><td class="text-right">7.7%</td></tr>
+          <tr><td class="text-center">6</td><td>221 Grand</td><td class="text-right">2,100</td><td class="text-right">300</td><td class="text-right">7.4%</td></tr>
+          <tr><td class="text-center">7</td><td>28th & 6th</td><td class="text-right">1,900</td><td class="text-right">271</td><td class="text-right">6.7%</td></tr>
+          <tr><td class="text-center">8</td><td>54th & 8th</td><td class="text-right">1,800</td><td class="text-right">257</td><td class="text-right">6.3%</td></tr>
+          <tr><td class="text-center">9</td><td>100 Maiden Ln</td><td class="text-right">1,700</td><td class="text-right">243</td><td class="text-right">6.0%</td></tr>
+          <tr><td class="text-center">10</td><td>15th & 3rd</td><td class="text-right">1,600</td><td class="text-right">229</td><td class="text-right">5.6%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 三、品类分布 & 四、TOP10 商品（双栏） -->
+  <section class="section">
+    <h2 class="section-title">三、品类分布 <span>Category Mix</span></h2>
+    <div class="chart-row">
+      <div class="chart-container">
+        <div class="chart-title">收入占比 | Drink vs Food</div>
+        <div class="chart-wrapper">
+          <canvas id="categoryChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-container">
+        <div class="chart-title">品类数据概览</div>
+        <div style="display:flex; flex-direction:column; justify-content:center; height:100%; padding: 20px 0;">
+          <div style="margin-bottom:24px;">
+            <div style="font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">Drink (饮品)</div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <span style="font-size:13px; color:var(--text-secondary);">周杯量</span>
+              <span style="font-size:16px; font-weight:700;">28,553</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span style="font-size:13px; color:var(--text-secondary);">周收入</span>
+              <span style="font-size:16px; font-weight:700;">$95,282</span>
+            </div>
+            <div style="height:4px; background:#e2e6ed; border-radius:2px; margin-top:10px;">
+              <div style="height:100%; width:93.3%; background:var(--accent); border-radius:2px;"></div>
+            </div>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">收入占比 93.3%</div>
+          </div>
+          <div>
+            <div style="font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">Food (食品)</div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <span style="font-size:13px; color:var(--text-secondary);">周份数</span>
+              <span style="font-size:16px; font-weight:700;">~2,800</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span style="font-size:13px; color:var(--text-secondary);">周收入</span>
+              <span style="font-size:16px; font-weight:700;">$6,800</span>
+            </div>
+            <div style="height:4px; background:#e2e6ed; border-radius:2px; margin-top:10px;">
+              <div style="height:100%; width:6.7%; background:var(--orange); border-radius:2px;"></div>
+            </div>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">收入占比 6.7%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">四、TOP10 商品 <span>Best Sellers</span></h2>
+
+    <div class="chart-container">
+      <div class="chart-title">TOP10 商品周杯量</div>
+      <div class="chart-wrapper">
+        <canvas id="productChart"></canvas>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th class="text-center">#</th>
+            <th>商品</th>
+            <th class="text-right">周杯量</th>
+            <th class="text-right">收入 ($)</th>
+            <th class="text-right">杯均价</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="text-center">1</td><td>Coconut Latte (Regular/Cold)</td><td class="text-right">1,368</td><td class="text-right">4,229</td><td class="text-right">$3.09</td></tr>
+          <tr><td class="text-center">2</td><td>Latte (Regular/Cold)</td><td class="text-right">1,033</td><td class="text-right">3,043</td><td class="text-right">$2.95</td></tr>
+          <tr><td class="text-center">3</td><td>Latte (Large/Cold)</td><td class="text-right">680</td><td class="text-right">2,372</td><td class="text-right">$3.49</td></tr>
+          <tr><td class="text-center">4</td><td>Coconut Latte (Large/Cold)</td><td class="text-right">577</td><td class="text-right">2,134</td><td class="text-right">$3.70</td></tr>
+          <tr><td class="text-center">5</td><td>Coconut Latte (Light Ice)</td><td class="text-right">534</td><td class="text-right">1,593</td><td class="text-right">$2.98</td></tr>
+          <tr><td class="text-center">6</td><td>Drip Coffee (Regular/Hot)</td><td class="text-right">491</td><td class="text-right">913</td><td class="text-right">$1.86</td></tr>
+          <tr><td class="text-center">7</td><td>Matcha Latte (Regular/Cold)</td><td class="text-right">456</td><td class="text-right">1,427</td><td class="text-right">$3.13</td></tr>
+          <tr><td class="text-center">8</td><td>Matcha Coconut (Regular/Cold)</td><td class="text-right">419</td><td class="text-right">1,377</td><td class="text-right">$3.29</td></tr>
+          <tr><td class="text-center">9</td><td>Latte (Regular/Hot)</td><td class="text-right">376</td><td class="text-right">1,153</td><td class="text-right">$3.07</td></tr>
+          <tr><td class="text-center">10</td><td>Mocha (Regular/Cold)</td><td class="text-right">371</td><td class="text-right">1,214</td><td class="text-right">$3.27</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 五、关键发现 -->
+  <section class="section">
+    <h2 class="section-title">五、关键发现 <span>Key Insights</span></h2>
+    <div class="callout-grid">
+      <div class="callout blue">
+        <h4>本周杯量稳步上升</h4>
+        <p>从周三 3,395 杯到周二 5,152 杯，周内增长 52%，周二为全周最高。周一、周二连续两天突破 4,700+ 杯。</p>
+      </div>
+      <div class="callout green">
+        <h4>周同比增长 8%</h4>
+        <p>杯量 28,553 vs 上周 26,428 (+8.0%)，收入增长 6.7%。杯均价微降 1.2% 至 $3.34，增长主要由单量驱动。</p>
+      </div>
+      <div class="callout orange">
+        <h4>8th & Broadway 持续领跑</h4>
+        <p>日均 657 杯，周杯量约 4,600，占全网 16%。TOP3 门店合计贡献近 39% 的总杯量。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="page-footer">
+    数据截至 2026-03-11 | Lucky US Growth Team
+  </footer>
+
+</div>
+
+<script>
+  /* ===== Chart.js 全局配置 ===== */
+  Chart.defaults.font.family = "-apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif";
+  Chart.defaults.font.size = 12;
+  Chart.defaults.color = '#555';
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+  Chart.defaults.plugins.legend.labels.pointStyleWidth = 10;
+
+  /* ===== 1. 杯量趋势折线图 ===== */
+  new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+      labels: ['Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue'],
+      datasets: [
+        {
+          label: '本周 (3/5-3/11)',
+          data: [3395, 3810, 3536, 3443, 4471, 4746, 5152],
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,0.08)',
+          borderWidth: 2.5,
+          pointRadius: 4,
+          pointBackgroundColor: '#2563eb',
+          fill: true,
+          tension: 0.3
+        },
+        {
+          label: '上周 (2/26-3/4)',
+          data: [4346, 3961, 3593, 2846, 3617, 3507, 4558],
+          borderColor: '#94a3b8',
+          backgroundColor: 'rgba(148,163,184,0.05)',
+          borderWidth: 2,
+          borderDash: [6, 3],
+          pointRadius: 3,
+          pointBackgroundColor: '#94a3b8',
+          fill: false,
+          tension: 0.3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', align: 'end' },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString() + ' cups';
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: false,
+          min: 2500,
+          ticks: { callback: v => v.toLocaleString() },
+          grid: { color: 'rgba(0,0,0,0.04)' }
+        },
+        x: {
+          grid: { display: false }
+        }
+      }
+    }
+  });
+
+  /* ===== 2. 门店 TOP10 横向柱状图 ===== */
+  const storeLabels = [
+    '15th & 3rd', '100 Maiden Ln', '54th & 8th', '28th & 6th',
+    '221 Grand', '33rd & 10th', '102 Fulton', '52nd & Madison',
+    '37th & Broadway', '8th & Broadway'
+  ];
+  const storeData = [1600, 1700, 1800, 1900, 2100, 2200, 2700, 2900, 3600, 4600];
+
+  new Chart(document.getElementById('storeChart'), {
+    type: 'bar',
+    data: {
+      labels: storeLabels,
+      datasets: [{
+        label: '周杯量',
+        data: storeData,
+        backgroundColor: storeData.map((v, i) =>
+          i === 9 ? '#2563eb' : i === 8 ? '#3b82f6' : i === 7 ? '#60a5fa' : 'rgba(37,99,235,0.35)'
+        ),
+        borderRadius: 4,
+        barThickness: 22
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.parsed.x.toLocaleString() + ' cups'
+          }
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: { callback: v => v.toLocaleString() },
+          grid: { color: 'rgba(0,0,0,0.04)' }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { font: { size: 11 } }
+        }
+      }
+    }
+  });
+
+  /* ===== 3. 品类环形图 ===== */
+  new Chart(document.getElementById('categoryChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Drink ($95,282)', 'Food ($6,800)'],
+      datasets: [{
+        data: [95282, 6800],
+        backgroundColor: ['#2563eb', '#ea580c'],
+        borderWidth: 0,
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '60%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { padding: 16, font: { size: 12 } }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+              const pct = ((ctx.parsed / total) * 100).toFixed(1);
+              return ctx.label + ' (' + pct + '%)';
+            }
+          }
+        }
+      }
+    }
+  });
+
+  /* ===== 4. TOP10 商品柱状图 ===== */
+  const productLabels = [
+    'Coconut Latte\n(Reg/Cold)',
+    'Latte\n(Reg/Cold)',
+    'Latte\n(Lg/Cold)',
+    'Coconut Latte\n(Lg/Cold)',
+    'Coconut Latte\n(Light Ice)',
+    'Drip Coffee\n(Reg/Hot)',
+    'Matcha Latte\n(Reg/Cold)',
+    'Matcha Coconut\n(Reg/Cold)',
+    'Latte\n(Reg/Hot)',
+    'Mocha\n(Reg/Cold)'
+  ];
+  const productData = [1368, 1033, 680, 577, 534, 491, 456, 419, 376, 371];
+
+  /* 渐变色：从深到浅 */
+  const productColors = [
+    '#1d4ed8', '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd',
+    '#7c3aed', '#8b5cf6', '#a78bfa', '#c4b5fd', '#ddd6fe'
+  ];
+
+  new Chart(document.getElementById('productChart'), {
+    type: 'bar',
+    data: {
+      labels: productLabels,
+      datasets: [{
+        label: '周杯量',
+        data: productData,
+        backgroundColor: productColors,
+        borderRadius: 4,
+        barThickness: 36
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            title: function(ctx) {
+              return ctx[0].label.replace('\n', ' ');
+            },
+            label: ctx => ctx.parsed.y.toLocaleString() + ' cups'
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { callback: v => v.toLocaleString() },
+          grid: { color: 'rgba(0,0,0,0.04)' }
+        },
+        x: {
+          grid: { display: false },
+          ticks: {
+            font: { size: 10 },
+            maxRotation: 45,
+            minRotation: 30
+          }
+        }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

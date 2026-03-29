@@ -1,0 +1,2126 @@
+{
+  "H1: 每日来访×组×生命周期": [
+    {
+      "dt": "2026-02-12",
+      "grp": "对照组3",
+      "lifecycle": "0-15天",
+      "visitor_cnt": "19"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "449"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "6091"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "涨价组1",
+      "lifecycle": "0-15天",
+      "visitor_cnt": "12"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "333"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "4595"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "涨价组2",
+      "lifecycle": "0-15天",
+      "visitor_cnt": "21"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "346"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "4580"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "涨价组2",
+      "lifecycle": "未购",
+      "visitor_cnt": "1"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "对照组3",
+      "lifecycle": "0-15天",
+      "visitor_cnt": "8"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "391"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "6491"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "涨价组1",
+      "lifecycle": "0-15天",
+      "visitor_cnt": "5"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "293"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "4854"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "涨价组2",
+      "lifecycle": "0-15天",
+      "visitor_cnt": "6"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "278"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "4833"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "涨价组2",
+      "lifecycle": "未购",
+      "visitor_cnt": "1"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "对照组3",
+      "lifecycle": "0-15天",
+      "visitor_cnt": "18"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "661"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "9634"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "涨价组1",
+      "lifecycle": "0-15天",
+      "visitor_cnt": "17"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "455"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "7220"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "涨价组2",
+      "lifecycle": "0-15天",
+      "visitor_cnt": "9"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "517"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "7280"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "涨价组2",
+      "lifecycle": "未购",
+      "visitor_cnt": "1"
+    },
+    {
+      "dt": "2026-02-15",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "88"
+    },
+    {
+      "dt": "2026-02-15",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "1061"
+    },
+    {
+      "dt": "2026-02-15",
+      "grp": "涨价组1",
+      "lifecycle": "0-15天",
+      "visitor_cnt": "1"
+    },
+    {
+      "dt": "2026-02-15",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "72"
+    },
+    {
+      "dt": "2026-02-15",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "785"
+    },
+    {
+      "dt": "2026-02-15",
+      "grp": "涨价组2",
+      "lifecycle": "0-15天",
+      "visitor_cnt": "3"
+    },
+    {
+      "dt": "2026-02-15",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "89"
+    },
+    {
+      "dt": "2026-02-15",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "760"
+    },
+    {
+      "dt": "2026-02-16",
+      "grp": "对照组3",
+      "lifecycle": "0-15天",
+      "visitor_cnt": "4"
+    },
+    {
+      "dt": "2026-02-16",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "181"
+    },
+    {
+      "dt": "2026-02-16",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "3991"
+    },
+    {
+      "dt": "2026-02-16",
+      "grp": "涨价组1",
+      "lifecycle": "0-15天",
+      "visitor_cnt": "1"
+    },
+    {
+      "dt": "2026-02-16",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "156"
+    },
+    {
+      "dt": "2026-02-16",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "3027"
+    },
+    {
+      "dt": "2026-02-16",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "141"
+    },
+    {
+      "dt": "2026-02-16",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "3011"
+    },
+    {
+      "dt": "2026-02-17",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "188"
+    },
+    {
+      "dt": "2026-02-17",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "4393"
+    },
+    {
+      "dt": "2026-02-17",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "170"
+    },
+    {
+      "dt": "2026-02-17",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "3359"
+    },
+    {
+      "dt": "2026-02-17",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "159"
+    },
+    {
+      "dt": "2026-02-17",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "3332"
+    },
+    {
+      "dt": "2026-02-18",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "348"
+    },
+    {
+      "dt": "2026-02-18",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "8338"
+    },
+    {
+      "dt": "2026-02-18",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "242"
+    },
+    {
+      "dt": "2026-02-18",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "6358"
+    },
+    {
+      "dt": "2026-02-18",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "228"
+    },
+    {
+      "dt": "2026-02-18",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "6213"
+    },
+    {
+      "dt": "2026-02-18",
+      "grp": "涨价组2",
+      "lifecycle": "未购",
+      "visitor_cnt": "1"
+    },
+    {
+      "dt": "2026-02-19",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "103"
+    },
+    {
+      "dt": "2026-02-19",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "1610"
+    },
+    {
+      "dt": "2026-02-19",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "72"
+    },
+    {
+      "dt": "2026-02-19",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "1203"
+    },
+    {
+      "dt": "2026-02-19",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "79"
+    },
+    {
+      "dt": "2026-02-19",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "1227"
+    },
+    {
+      "dt": "2026-02-20",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "242"
+    },
+    {
+      "dt": "2026-02-20",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "7736"
+    },
+    {
+      "dt": "2026-02-20",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "186"
+    },
+    {
+      "dt": "2026-02-20",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "5821"
+    },
+    {
+      "dt": "2026-02-20",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "172"
+    },
+    {
+      "dt": "2026-02-20",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "5834"
+    },
+    {
+      "dt": "2026-02-20",
+      "grp": "涨价组2",
+      "lifecycle": "未购",
+      "visitor_cnt": "1"
+    },
+    {
+      "dt": "2026-02-21",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "205"
+    },
+    {
+      "dt": "2026-02-21",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "1887"
+    },
+    {
+      "dt": "2026-02-21",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "139"
+    },
+    {
+      "dt": "2026-02-21",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "1410"
+    },
+    {
+      "dt": "2026-02-21",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "157"
+    },
+    {
+      "dt": "2026-02-21",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "1356"
+    },
+    {
+      "dt": "2026-02-22",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "35"
+    },
+    {
+      "dt": "2026-02-22",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "3451"
+    },
+    {
+      "dt": "2026-02-22",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "20"
+    },
+    {
+      "dt": "2026-02-22",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "2584"
+    },
+    {
+      "dt": "2026-02-22",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "23"
+    },
+    {
+      "dt": "2026-02-22",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "2614"
+    },
+    {
+      "dt": "2026-02-23",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "53"
+    },
+    {
+      "dt": "2026-02-23",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "3825"
+    },
+    {
+      "dt": "2026-02-23",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "49"
+    },
+    {
+      "dt": "2026-02-23",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "2866"
+    },
+    {
+      "dt": "2026-02-23",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "44"
+    },
+    {
+      "dt": "2026-02-23",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "2893"
+    },
+    {
+      "dt": "2026-02-24",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "46"
+    },
+    {
+      "dt": "2026-02-24",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "4452"
+    },
+    {
+      "dt": "2026-02-24",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "41"
+    },
+    {
+      "dt": "2026-02-24",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "3308"
+    },
+    {
+      "dt": "2026-02-24",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "52"
+    },
+    {
+      "dt": "2026-02-24",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "3324"
+    },
+    {
+      "dt": "2026-02-25",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "60"
+    },
+    {
+      "dt": "2026-02-25",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "8397"
+    },
+    {
+      "dt": "2026-02-25",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "43"
+    },
+    {
+      "dt": "2026-02-25",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "6234"
+    },
+    {
+      "dt": "2026-02-25",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "59"
+    },
+    {
+      "dt": "2026-02-25",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "6248"
+    },
+    {
+      "dt": "2026-02-25",
+      "grp": "涨价组2",
+      "lifecycle": "未购",
+      "visitor_cnt": "1"
+    },
+    {
+      "dt": "2026-02-26",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "75"
+    },
+    {
+      "dt": "2026-02-26",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "2116"
+    },
+    {
+      "dt": "2026-02-26",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "48"
+    },
+    {
+      "dt": "2026-02-26",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "1525"
+    },
+    {
+      "dt": "2026-02-26",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "66"
+    },
+    {
+      "dt": "2026-02-26",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "1487"
+    },
+    {
+      "dt": "2026-02-27",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "35"
+    },
+    {
+      "dt": "2026-02-27",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "8263"
+    },
+    {
+      "dt": "2026-02-27",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "28"
+    },
+    {
+      "dt": "2026-02-27",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "6167"
+    },
+    {
+      "dt": "2026-02-27",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "25"
+    },
+    {
+      "dt": "2026-02-27",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "6159"
+    },
+    {
+      "dt": "2026-02-27",
+      "grp": "涨价组2",
+      "lifecycle": "未购",
+      "visitor_cnt": "1"
+    },
+    {
+      "dt": "2026-02-28",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "8"
+    },
+    {
+      "dt": "2026-02-28",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "visitor_cnt": "1434"
+    },
+    {
+      "dt": "2026-02-28",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "4"
+    },
+    {
+      "dt": "2026-02-28",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "visitor_cnt": "1013"
+    },
+    {
+      "dt": "2026-02-28",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "visitor_cnt": "8"
+    },
+    {
+      "dt": "2026-02-28",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "visitor_cnt": "1056"
+    }
+  ],
+  "H2: 每日消费×组×生命周期": [
+    {
+      "dt": "2026-02-12",
+      "grp": "对照组3",
+      "lifecycle": "0-15天",
+      "buyer_cnt": "11",
+      "total_cups": "18",
+      "total_revenue": "72.02",
+      "unit_price": "4.00"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "95",
+      "total_cups": "138",
+      "total_revenue": "487.42",
+      "unit_price": "3.53"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "buyer_cnt": "832",
+      "total_cups": "1100",
+      "total_revenue": "3603.30",
+      "unit_price": "3.28"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "涨价组1",
+      "lifecycle": "0-15天",
+      "buyer_cnt": "6",
+      "total_cups": "7",
+      "total_revenue": "22.12",
+      "unit_price": "3.16"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "43",
+      "total_cups": "56",
+      "total_revenue": "213.73",
+      "unit_price": "3.82"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "buyer_cnt": "585",
+      "total_cups": "755",
+      "total_revenue": "2720.98",
+      "unit_price": "3.60"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "涨价组2",
+      "lifecycle": "0-15天",
+      "buyer_cnt": "13",
+      "total_cups": "18",
+      "total_revenue": "68.56",
+      "unit_price": "3.81"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "82",
+      "total_cups": "108",
+      "total_revenue": "367.86",
+      "unit_price": "3.41"
+    },
+    {
+      "dt": "2026-02-12",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "buyer_cnt": "602",
+      "total_cups": "777",
+      "total_revenue": "2632.50",
+      "unit_price": "3.39"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "对照组3",
+      "lifecycle": "0-15天",
+      "buyer_cnt": "4",
+      "total_cups": "12",
+      "total_revenue": "43.12",
+      "unit_price": "3.59"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "64",
+      "total_cups": "96",
+      "total_revenue": "354.74",
+      "unit_price": "3.70"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "buyer_cnt": "755",
+      "total_cups": "1028",
+      "total_revenue": "3407.17",
+      "unit_price": "3.31"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "涨价组1",
+      "lifecycle": "0-15天",
+      "buyer_cnt": "2",
+      "total_cups": "2",
+      "total_revenue": "2.23",
+      "unit_price": "1.12"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "62",
+      "total_cups": "81",
+      "total_revenue": "309.80",
+      "unit_price": "3.82"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "buyer_cnt": "512",
+      "total_cups": "710",
+      "total_revenue": "2533.46",
+      "unit_price": "3.57"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "涨价组2",
+      "lifecycle": "0-15天",
+      "buyer_cnt": "4",
+      "total_cups": "4",
+      "total_revenue": "18.07",
+      "unit_price": "4.52"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "46",
+      "total_cups": "67",
+      "total_revenue": "238.01",
+      "unit_price": "3.55"
+    },
+    {
+      "dt": "2026-02-13",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "buyer_cnt": "521",
+      "total_cups": "711",
+      "total_revenue": "2528.19",
+      "unit_price": "3.56"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "对照组3",
+      "lifecycle": "0-15天",
+      "buyer_cnt": "3",
+      "total_cups": "6",
+      "total_revenue": "21.78",
+      "unit_price": "3.63"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "40",
+      "total_cups": "65",
+      "total_revenue": "232.82",
+      "unit_price": "3.58"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "buyer_cnt": "547",
+      "total_cups": "805",
+      "total_revenue": "2531.40",
+      "unit_price": "3.14"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "涨价组1",
+      "lifecycle": "0-15天",
+      "buyer_cnt": "1",
+      "total_cups": "1",
+      "total_revenue": "5.56",
+      "unit_price": "5.56"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "25",
+      "total_cups": "37",
+      "total_revenue": "140.35",
+      "unit_price": "3.79"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "buyer_cnt": "375",
+      "total_cups": "539",
+      "total_revenue": "1882.68",
+      "unit_price": "3.49"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "涨价组2",
+      "lifecycle": "0-15天",
+      "buyer_cnt": "3",
+      "total_cups": "3",
+      "total_revenue": "11.06",
+      "unit_price": "3.69"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "23",
+      "total_cups": "43",
+      "total_revenue": "150.87",
+      "unit_price": "3.51"
+    },
+    {
+      "dt": "2026-02-14",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "buyer_cnt": "391",
+      "total_cups": "547",
+      "total_revenue": "1921.53",
+      "unit_price": "3.51"
+    },
+    {
+      "dt": "2026-02-15",
+      "grp": "对照组3",
+      "lifecycle": "0-15天",
+      "buyer_cnt": "1",
+      "total_cups": "1",
+      "total_revenue": "1.99",
+      "unit_price": "1.99"
+    },
+    {
+      "dt": "2026-02-15",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "23",
+      "total_cups": "41",
+      "total_revenue": "145.26",
+      "unit_price": "3.54"
+    },
+    {
+      "dt": "2026-02-15",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "buyer_cnt": "449",
+      "total_cups": "713",
+      "total_revenue": "2290.91",
+      "unit_price": "3.21"
+    },
+    {
+      "dt": "2026-02-15",
+      "grp": "涨价组1",
+      "lifecycle": "0-15天",
+      "buyer_cnt": "1",
+      "total_cups": "1",
+      "total_revenue": "2.45",
+      "unit_price": "2.45"
+    },
+    {
+      "dt": "2026-02-15",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "19",
+      "total_cups": "24",
+      "total_revenue": "91.94",
+      "unit_price": "3.83"
+    },
+    {
+      "dt": "2026-02-15",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "buyer_cnt": "299",
+      "total_cups": "427",
+      "total_revenue": "1513.56",
+      "unit_price": "3.54"
+    },
+    {
+      "dt": "2026-02-15",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "31",
+      "total_cups": "46",
+      "total_revenue": "163.62",
+      "unit_price": "3.56"
+    },
+    {
+      "dt": "2026-02-15",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "buyer_cnt": "291",
+      "total_cups": "425",
+      "total_revenue": "1444.00",
+      "unit_price": "3.40"
+    },
+    {
+      "dt": "2026-02-16",
+      "grp": "对照组3",
+      "lifecycle": "0-15天",
+      "buyer_cnt": "1",
+      "total_cups": "1",
+      "total_revenue": "3.67",
+      "unit_price": "3.67"
+    },
+    {
+      "dt": "2026-02-16",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "35",
+      "total_cups": "48",
+      "total_revenue": "173.02",
+      "unit_price": "3.60"
+    },
+    {
+      "dt": "2026-02-16",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "buyer_cnt": "480",
+      "total_cups": "700",
+      "total_revenue": "2276.77",
+      "unit_price": "3.25"
+    },
+    {
+      "dt": "2026-02-16",
+      "grp": "涨价组1",
+      "lifecycle": "0-15天",
+      "buyer_cnt": "1",
+      "total_cups": "1",
+      "total_revenue": "4.05",
+      "unit_price": "4.05"
+    },
+    {
+      "dt": "2026-02-16",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "27",
+      "total_cups": "40",
+      "total_revenue": "152.80",
+      "unit_price": "3.82"
+    },
+    {
+      "dt": "2026-02-16",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "buyer_cnt": "330",
+      "total_cups": "460",
+      "total_revenue": "1605.62",
+      "unit_price": "3.49"
+    },
+    {
+      "dt": "2026-02-16",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "25",
+      "total_cups": "39",
+      "total_revenue": "133.72",
+      "unit_price": "3.43"
+    },
+    {
+      "dt": "2026-02-16",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "buyer_cnt": "333",
+      "total_cups": "458",
+      "total_revenue": "1629.96",
+      "unit_price": "3.56"
+    },
+    {
+      "dt": "2026-02-17",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "52",
+      "total_cups": "84",
+      "total_revenue": "298.42",
+      "unit_price": "3.55"
+    },
+    {
+      "dt": "2026-02-17",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "buyer_cnt": "780",
+      "total_cups": "1052",
+      "total_revenue": "3388.61",
+      "unit_price": "3.22"
+    },
+    {
+      "dt": "2026-02-17",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "38",
+      "total_cups": "52",
+      "total_revenue": "206.10",
+      "unit_price": "3.96"
+    },
+    {
+      "dt": "2026-02-17",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "buyer_cnt": "589",
+      "total_cups": "765",
+      "total_revenue": "2733.88",
+      "unit_price": "3.57"
+    },
+    {
+      "dt": "2026-02-17",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "49",
+      "total_cups": "73",
+      "total_revenue": "284.62",
+      "unit_price": "3.90"
+    },
+    {
+      "dt": "2026-02-17",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "buyer_cnt": "556",
+      "total_cups": "733",
+      "total_revenue": "2595.14",
+      "unit_price": "3.54"
+    },
+    {
+      "dt": "2026-02-18",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "53",
+      "total_cups": "78",
+      "total_revenue": "272.13",
+      "unit_price": "3.49"
+    },
+    {
+      "dt": "2026-02-18",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "buyer_cnt": "853",
+      "total_cups": "1130",
+      "total_revenue": "3753.56",
+      "unit_price": "3.32"
+    },
+    {
+      "dt": "2026-02-18",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "32",
+      "total_cups": "38",
+      "total_revenue": "143.92",
+      "unit_price": "3.79"
+    },
+    {
+      "dt": "2026-02-18",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "buyer_cnt": "596",
+      "total_cups": "809",
+      "total_revenue": "2903.00",
+      "unit_price": "3.59"
+    },
+    {
+      "dt": "2026-02-18",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "44",
+      "total_cups": "56",
+      "total_revenue": "216.27",
+      "unit_price": "3.86"
+    },
+    {
+      "dt": "2026-02-18",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "buyer_cnt": "520",
+      "total_cups": "691",
+      "total_revenue": "2474.14",
+      "unit_price": "3.58"
+    },
+    {
+      "dt": "2026-02-19",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "48",
+      "total_cups": "63",
+      "total_revenue": "224.09",
+      "unit_price": "3.56"
+    },
+    {
+      "dt": "2026-02-19",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "buyer_cnt": "818",
+      "total_cups": "1055",
+      "total_revenue": "3489.91",
+      "unit_price": "3.31"
+    },
+    {
+      "dt": "2026-02-19",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "29",
+      "total_cups": "40",
+      "total_revenue": "154.39",
+      "unit_price": "3.86"
+    },
+    {
+      "dt": "2026-02-19",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "buyer_cnt": "610",
+      "total_cups": "780",
+      "total_revenue": "2870.31",
+      "unit_price": "3.68"
+    },
+    {
+      "dt": "2026-02-19",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "40",
+      "total_cups": "48",
+      "total_revenue": "182.11",
+      "unit_price": "3.79"
+    },
+    {
+      "dt": "2026-02-19",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "buyer_cnt": "588",
+      "total_cups": "744",
+      "total_revenue": "2658.72",
+      "unit_price": "3.57"
+    },
+    {
+      "dt": "2026-02-20",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "32",
+      "total_cups": "44",
+      "total_revenue": "162.31",
+      "unit_price": "3.69"
+    },
+    {
+      "dt": "2026-02-20",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "buyer_cnt": "556",
+      "total_cups": "753",
+      "total_revenue": "2564.89",
+      "unit_price": "3.41"
+    },
+    {
+      "dt": "2026-02-20",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "18",
+      "total_cups": "23",
+      "total_revenue": "88.73",
+      "unit_price": "3.86"
+    },
+    {
+      "dt": "2026-02-20",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "buyer_cnt": "413",
+      "total_cups": "562",
+      "total_revenue": "2079.28",
+      "unit_price": "3.70"
+    },
+    {
+      "dt": "2026-02-20",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "17",
+      "total_cups": "22",
+      "total_revenue": "82.62",
+      "unit_price": "3.76"
+    },
+    {
+      "dt": "2026-02-20",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "buyer_cnt": "359",
+      "total_cups": "494",
+      "total_revenue": "1819.20",
+      "unit_price": "3.68"
+    },
+    {
+      "dt": "2026-02-21",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "19",
+      "total_cups": "33",
+      "total_revenue": "108.37",
+      "unit_price": "3.28"
+    },
+    {
+      "dt": "2026-02-21",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "buyer_cnt": "568",
+      "total_cups": "808",
+      "total_revenue": "2579.78",
+      "unit_price": "3.19"
+    },
+    {
+      "dt": "2026-02-21",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "5",
+      "total_cups": "6",
+      "total_revenue": "21.40",
+      "unit_price": "3.57"
+    },
+    {
+      "dt": "2026-02-21",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "buyer_cnt": "382",
+      "total_cups": "531",
+      "total_revenue": "1874.37",
+      "unit_price": "3.53"
+    },
+    {
+      "dt": "2026-02-21",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "15",
+      "total_cups": "26",
+      "total_revenue": "93.99",
+      "unit_price": "3.62"
+    },
+    {
+      "dt": "2026-02-21",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "buyer_cnt": "336",
+      "total_cups": "476",
+      "total_revenue": "1701.11",
+      "unit_price": "3.57"
+    },
+    {
+      "dt": "2026-02-22",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "9",
+      "total_cups": "14",
+      "total_revenue": "51.81",
+      "unit_price": "3.70"
+    },
+    {
+      "dt": "2026-02-22",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "buyer_cnt": "270",
+      "total_cups": "398",
+      "total_revenue": "1295.52",
+      "unit_price": "3.26"
+    },
+    {
+      "dt": "2026-02-22",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "5",
+      "total_cups": "5",
+      "total_revenue": "18.69",
+      "unit_price": "3.74"
+    },
+    {
+      "dt": "2026-02-22",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "buyer_cnt": "166",
+      "total_cups": "233",
+      "total_revenue": "848.20",
+      "unit_price": "3.64"
+    },
+    {
+      "dt": "2026-02-22",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "9",
+      "total_cups": "17",
+      "total_revenue": "57.77",
+      "unit_price": "3.40"
+    },
+    {
+      "dt": "2026-02-22",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "buyer_cnt": "187",
+      "total_cups": "281",
+      "total_revenue": "1008.58",
+      "unit_price": "3.59"
+    },
+    {
+      "dt": "2026-02-24",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "10",
+      "total_cups": "15",
+      "total_revenue": "48.49",
+      "unit_price": "3.23"
+    },
+    {
+      "dt": "2026-02-24",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "buyer_cnt": "658",
+      "total_cups": "886",
+      "total_revenue": "3038.54",
+      "unit_price": "3.43"
+    },
+    {
+      "dt": "2026-02-24",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "9",
+      "total_cups": "10",
+      "total_revenue": "40.23",
+      "unit_price": "4.02"
+    },
+    {
+      "dt": "2026-02-24",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "buyer_cnt": "476",
+      "total_cups": "641",
+      "total_revenue": "2359.47",
+      "unit_price": "3.68"
+    },
+    {
+      "dt": "2026-02-24",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "12",
+      "total_cups": "15",
+      "total_revenue": "51.16",
+      "unit_price": "3.41"
+    },
+    {
+      "dt": "2026-02-24",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "buyer_cnt": "470",
+      "total_cups": "644",
+      "total_revenue": "2364.09",
+      "unit_price": "3.67"
+    },
+    {
+      "dt": "2026-02-25",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "18",
+      "total_cups": "19",
+      "total_revenue": "70.53",
+      "unit_price": "3.71"
+    },
+    {
+      "dt": "2026-02-25",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "buyer_cnt": "834",
+      "total_cups": "1122",
+      "total_revenue": "3826.85",
+      "unit_price": "3.41"
+    },
+    {
+      "dt": "2026-02-25",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "10",
+      "total_cups": "12",
+      "total_revenue": "42.56",
+      "unit_price": "3.55"
+    },
+    {
+      "dt": "2026-02-25",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "buyer_cnt": "556",
+      "total_cups": "739",
+      "total_revenue": "2656.18",
+      "unit_price": "3.59"
+    },
+    {
+      "dt": "2026-02-25",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "17",
+      "total_cups": "21",
+      "total_revenue": "77.51",
+      "unit_price": "3.69"
+    },
+    {
+      "dt": "2026-02-25",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "buyer_cnt": "560",
+      "total_cups": "768",
+      "total_revenue": "2721.69",
+      "unit_price": "3.54"
+    },
+    {
+      "dt": "2026-02-26",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "20",
+      "total_cups": "27",
+      "total_revenue": "97.88",
+      "unit_price": "3.63"
+    },
+    {
+      "dt": "2026-02-26",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "buyer_cnt": "954",
+      "total_cups": "1229",
+      "total_revenue": "4054.00",
+      "unit_price": "3.30"
+    },
+    {
+      "dt": "2026-02-26",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "11",
+      "total_cups": "14",
+      "total_revenue": "55.72",
+      "unit_price": "3.98"
+    },
+    {
+      "dt": "2026-02-26",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "buyer_cnt": "641",
+      "total_cups": "859",
+      "total_revenue": "3107.11",
+      "unit_price": "3.62"
+    },
+    {
+      "dt": "2026-02-26",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "12",
+      "total_cups": "16",
+      "total_revenue": "56.29",
+      "unit_price": "3.52"
+    },
+    {
+      "dt": "2026-02-26",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "buyer_cnt": "601",
+      "total_cups": "769",
+      "total_revenue": "2748.27",
+      "unit_price": "3.57"
+    },
+    {
+      "dt": "2026-02-27",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "10",
+      "total_cups": "11",
+      "total_revenue": "42.29",
+      "unit_price": "3.84"
+    },
+    {
+      "dt": "2026-02-27",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "buyer_cnt": "816",
+      "total_cups": "1098",
+      "total_revenue": "3609.21",
+      "unit_price": "3.29"
+    },
+    {
+      "dt": "2026-02-27",
+      "grp": "涨价组1",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "5",
+      "total_cups": "5",
+      "total_revenue": "19.52",
+      "unit_price": "3.90"
+    },
+    {
+      "dt": "2026-02-27",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "buyer_cnt": "543",
+      "total_cups": "718",
+      "total_revenue": "2610.04",
+      "unit_price": "3.64"
+    },
+    {
+      "dt": "2026-02-27",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "4",
+      "total_cups": "5",
+      "total_revenue": "20.83",
+      "unit_price": "4.17"
+    },
+    {
+      "dt": "2026-02-27",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "buyer_cnt": "545",
+      "total_cups": "750",
+      "total_revenue": "2710.79",
+      "unit_price": "3.61"
+    },
+    {
+      "dt": "2026-02-28",
+      "grp": "对照组3",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "3",
+      "total_cups": "6",
+      "total_revenue": "25.46",
+      "unit_price": "4.24"
+    },
+    {
+      "dt": "2026-02-28",
+      "grp": "对照组3",
+      "lifecycle": "31天+",
+      "buyer_cnt": "587",
+      "total_cups": "811",
+      "total_revenue": "2590.55",
+      "unit_price": "3.19"
+    },
+    {
+      "dt": "2026-02-28",
+      "grp": "涨价组1",
+      "lifecycle": "31天+",
+      "buyer_cnt": "393",
+      "total_cups": "573",
+      "total_revenue": "2028.37",
+      "unit_price": "3.54"
+    },
+    {
+      "dt": "2026-02-28",
+      "grp": "涨价组2",
+      "lifecycle": "16-30天",
+      "buyer_cnt": "1",
+      "total_cups": "2",
+      "total_revenue": "6.36",
+      "unit_price": "3.18"
+    },
+    {
+      "dt": "2026-02-28",
+      "grp": "涨价组2",
+      "lifecycle": "31天+",
+      "buyer_cnt": "374",
+      "total_cups": "533",
+      "total_revenue": "1875.66",
+      "unit_price": "3.52"
+    }
+  ],
+  "H3: 每日大盘趋势(不分组)": [
+    {
+      "dt": "2026-02-12",
+      "lifecycle": "0-15天",
+      "visitors": "52",
+      "buyers": "30",
+      "conversion_rate": "57.7",
+      "cups": "43",
+      "revenue": "162.70"
+    },
+    {
+      "dt": "2026-02-12",
+      "lifecycle": "16-30天",
+      "visitors": "1128",
+      "buyers": "220",
+      "conversion_rate": "19.5",
+      "cups": "302",
+      "revenue": "1069.01"
+    },
+    {
+      "dt": "2026-02-12",
+      "lifecycle": "31天+",
+      "visitors": "15266",
+      "buyers": "2019",
+      "conversion_rate": "13.2",
+      "cups": "2632",
+      "revenue": "8956.78"
+    },
+    {
+      "dt": "2026-02-12",
+      "lifecycle": "未购",
+      "visitors": "1",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "cups": "0",
+      "revenue": "0.00"
+    },
+    {
+      "dt": "2026-02-13",
+      "lifecycle": "0-15天",
+      "visitors": "19",
+      "buyers": "10",
+      "conversion_rate": "52.6",
+      "cups": "18",
+      "revenue": "63.42"
+    },
+    {
+      "dt": "2026-02-13",
+      "lifecycle": "16-30天",
+      "visitors": "962",
+      "buyers": "172",
+      "conversion_rate": "17.9",
+      "cups": "244",
+      "revenue": "902.55"
+    },
+    {
+      "dt": "2026-02-13",
+      "lifecycle": "31天+",
+      "visitors": "16178",
+      "buyers": "1788",
+      "conversion_rate": "11.1",
+      "cups": "2449",
+      "revenue": "8468.82"
+    },
+    {
+      "dt": "2026-02-13",
+      "lifecycle": "未购",
+      "visitors": "1",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "cups": "0",
+      "revenue": "0.00"
+    },
+    {
+      "dt": "2026-02-14",
+      "lifecycle": "0-15天",
+      "visitors": "44",
+      "buyers": "7",
+      "conversion_rate": "15.9",
+      "cups": "10",
+      "revenue": "38.40"
+    },
+    {
+      "dt": "2026-02-14",
+      "lifecycle": "16-30天",
+      "visitors": "1633",
+      "buyers": "88",
+      "conversion_rate": "5.4",
+      "cups": "145",
+      "revenue": "524.04"
+    },
+    {
+      "dt": "2026-02-14",
+      "lifecycle": "31天+",
+      "visitors": "24134",
+      "buyers": "1313",
+      "conversion_rate": "5.4",
+      "cups": "1891",
+      "revenue": "6335.61"
+    },
+    {
+      "dt": "2026-02-14",
+      "lifecycle": "未购",
+      "visitors": "1",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "cups": "0",
+      "revenue": "0.00"
+    },
+    {
+      "dt": "2026-02-15",
+      "lifecycle": "0-15天",
+      "visitors": "4",
+      "buyers": "2",
+      "conversion_rate": "50.0",
+      "cups": "2",
+      "revenue": "4.44"
+    },
+    {
+      "dt": "2026-02-15",
+      "lifecycle": "16-30天",
+      "visitors": "249",
+      "buyers": "73",
+      "conversion_rate": "29.3",
+      "cups": "111",
+      "revenue": "400.82"
+    },
+    {
+      "dt": "2026-02-15",
+      "lifecycle": "31天+",
+      "visitors": "2606",
+      "buyers": "1039",
+      "conversion_rate": "39.9",
+      "cups": "1565",
+      "revenue": "5248.47"
+    },
+    {
+      "dt": "2026-02-16",
+      "lifecycle": "0-15天",
+      "visitors": "5",
+      "buyers": "2",
+      "conversion_rate": "40.0",
+      "cups": "2",
+      "revenue": "7.72"
+    },
+    {
+      "dt": "2026-02-16",
+      "lifecycle": "16-30天",
+      "visitors": "478",
+      "buyers": "87",
+      "conversion_rate": "18.2",
+      "cups": "127",
+      "revenue": "459.54"
+    },
+    {
+      "dt": "2026-02-16",
+      "lifecycle": "31天+",
+      "visitors": "10029",
+      "buyers": "1143",
+      "conversion_rate": "11.4",
+      "cups": "1618",
+      "revenue": "5512.35"
+    },
+    {
+      "dt": "2026-02-17",
+      "lifecycle": "16-30天",
+      "visitors": "517",
+      "buyers": "139",
+      "conversion_rate": "26.9",
+      "cups": "209",
+      "revenue": "789.14"
+    },
+    {
+      "dt": "2026-02-17",
+      "lifecycle": "31天+",
+      "visitors": "11084",
+      "buyers": "1925",
+      "conversion_rate": "17.4",
+      "cups": "2550",
+      "revenue": "8717.63"
+    },
+    {
+      "dt": "2026-02-18",
+      "lifecycle": "16-30天",
+      "visitors": "818",
+      "buyers": "129",
+      "conversion_rate": "15.8",
+      "cups": "172",
+      "revenue": "632.32"
+    },
+    {
+      "dt": "2026-02-18",
+      "lifecycle": "31天+",
+      "visitors": "20909",
+      "buyers": "1969",
+      "conversion_rate": "9.4",
+      "cups": "2630",
+      "revenue": "9130.70"
+    },
+    {
+      "dt": "2026-02-18",
+      "lifecycle": "未购",
+      "visitors": "1",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "cups": "0",
+      "revenue": "0.00"
+    },
+    {
+      "dt": "2026-02-19",
+      "lifecycle": "16-30天",
+      "visitors": "254",
+      "buyers": "117",
+      "conversion_rate": "46.1",
+      "cups": "151",
+      "revenue": "560.59"
+    },
+    {
+      "dt": "2026-02-19",
+      "lifecycle": "31天+",
+      "visitors": "4040",
+      "buyers": "2016",
+      "conversion_rate": "49.9",
+      "cups": "2579",
+      "revenue": "9018.94"
+    },
+    {
+      "dt": "2026-02-20",
+      "lifecycle": "16-30天",
+      "visitors": "600",
+      "buyers": "67",
+      "conversion_rate": "11.2",
+      "cups": "89",
+      "revenue": "333.66"
+    },
+    {
+      "dt": "2026-02-20",
+      "lifecycle": "31天+",
+      "visitors": "19391",
+      "buyers": "1328",
+      "conversion_rate": "6.8",
+      "cups": "1809",
+      "revenue": "6463.37"
+    },
+    {
+      "dt": "2026-02-20",
+      "lifecycle": "未购",
+      "visitors": "1",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "cups": "0",
+      "revenue": "0.00"
+    },
+    {
+      "dt": "2026-02-21",
+      "lifecycle": "16-30天",
+      "visitors": "501",
+      "buyers": "39",
+      "conversion_rate": "7.8",
+      "cups": "65",
+      "revenue": "223.76"
+    },
+    {
+      "dt": "2026-02-21",
+      "lifecycle": "31天+",
+      "visitors": "4653",
+      "buyers": "1286",
+      "conversion_rate": "27.6",
+      "cups": "1815",
+      "revenue": "6155.26"
+    },
+    {
+      "dt": "2026-02-22",
+      "lifecycle": "16-30天",
+      "visitors": "78",
+      "buyers": "23",
+      "conversion_rate": "29.5",
+      "cups": "36",
+      "revenue": "128.27"
+    },
+    {
+      "dt": "2026-02-22",
+      "lifecycle": "31天+",
+      "visitors": "8649",
+      "buyers": "623",
+      "conversion_rate": "7.2",
+      "cups": "912",
+      "revenue": "3152.30"
+    },
+    {
+      "dt": "2026-02-23",
+      "lifecycle": "16-30天",
+      "visitors": "146",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "cups": "0",
+      "revenue": "0.00"
+    },
+    {
+      "dt": "2026-02-23",
+      "lifecycle": "31天+",
+      "visitors": "9584",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "cups": "0",
+      "revenue": "0.00"
+    },
+    {
+      "dt": "2026-02-24",
+      "lifecycle": "16-30天",
+      "visitors": "139",
+      "buyers": "31",
+      "conversion_rate": "22.3",
+      "cups": "40",
+      "revenue": "139.88"
+    },
+    {
+      "dt": "2026-02-24",
+      "lifecycle": "31天+",
+      "visitors": "11084",
+      "buyers": "1604",
+      "conversion_rate": "14.5",
+      "cups": "2171",
+      "revenue": "7762.10"
+    },
+    {
+      "dt": "2026-02-25",
+      "lifecycle": "16-30天",
+      "visitors": "162",
+      "buyers": "45",
+      "conversion_rate": "27.8",
+      "cups": "52",
+      "revenue": "190.60"
+    },
+    {
+      "dt": "2026-02-25",
+      "lifecycle": "31天+",
+      "visitors": "20879",
+      "buyers": "1950",
+      "conversion_rate": "9.3",
+      "cups": "2629",
+      "revenue": "9204.72"
+    },
+    {
+      "dt": "2026-02-25",
+      "lifecycle": "未购",
+      "visitors": "1",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "cups": "0",
+      "revenue": "0.00"
+    },
+    {
+      "dt": "2026-02-26",
+      "lifecycle": "16-30天",
+      "visitors": "189",
+      "buyers": "43",
+      "conversion_rate": "22.8",
+      "cups": "57",
+      "revenue": "209.89"
+    },
+    {
+      "dt": "2026-02-26",
+      "lifecycle": "31天+",
+      "visitors": "5128",
+      "buyers": "2196",
+      "conversion_rate": "42.8",
+      "cups": "2857",
+      "revenue": "9909.38"
+    },
+    {
+      "dt": "2026-02-27",
+      "lifecycle": "16-30天",
+      "visitors": "88",
+      "buyers": "19",
+      "conversion_rate": "21.6",
+      "cups": "21",
+      "revenue": "82.64"
+    },
+    {
+      "dt": "2026-02-27",
+      "lifecycle": "31天+",
+      "visitors": "20589",
+      "buyers": "1904",
+      "conversion_rate": "9.2",
+      "cups": "2566",
+      "revenue": "8930.04"
+    },
+    {
+      "dt": "2026-02-27",
+      "lifecycle": "未购",
+      "visitors": "1",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "cups": "0",
+      "revenue": "0.00"
+    },
+    {
+      "dt": "2026-02-28",
+      "lifecycle": "16-30天",
+      "visitors": "20",
+      "buyers": "4",
+      "conversion_rate": "20.0",
+      "cups": "8",
+      "revenue": "31.82"
+    },
+    {
+      "dt": "2026-02-28",
+      "lifecycle": "31天+",
+      "visitors": "3503",
+      "buyers": "1354",
+      "conversion_rate": "38.7",
+      "cups": "1917",
+      "revenue": "6494.58"
+    }
+  ]
+}

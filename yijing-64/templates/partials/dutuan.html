@@ -1,0 +1,24 @@
+<!-- 读彖内容 -->
+<div class="quote-block fade-in">
+  <p>{{ gua.steps.dutuan.tuanText }}</p>
+  <cite>彖传</cite>
+</div>
+
+<div class="tuan-grid fade-in fade-in-delay-1">
+  {% for card in gua.steps.dutuan.cards %}
+  <div class="tuan-card">
+    <p class="tuan-label">{{ card.label }}</p>
+    <p class="tuan-text">{{ card.text }}</p>
+    <p class="tuan-explain">{{ card.explain }}</p>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="fade-in fade-in-delay-2" style="margin: 2rem auto; max-width: 700px; padding: 2rem; background: rgba(194,58,43,0.04); border: 1px solid rgba(194,58,43,0.1); border-radius: 8px; text-align: center;">
+  <p style="font-size: 0.95rem; line-height: 1.9; color: var(--ink-dark);">{{ gua.steps.dutuan.insight }}</p>
+  {% if gua.steps.dutuan.source %}
+  <span class="source-tag source-{{ gua.steps.dutuan.source }}">
+    {% if gua.steps.dutuan.source == 'classic' %}经典原文{% elif gua.steps.dutuan.source == 'youan' %}佑安释易{% else %}AI 分析{% endif %}
+  </span>
+  {% endif %}
+</div>

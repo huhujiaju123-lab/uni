@@ -1,0 +1,1176 @@
+{
+  "Q0_explore": [
+    {
+      "proposal_no": "LKUSCP118713952489488385",
+      "coupon_name": "Coffee Pass",
+      "coupon_denomination": "0.000000000",
+      "cnt": "695",
+      "user_cnt": "121",
+      "first_create": "2026-01-21T14:01:55",
+      "last_create": "2026-02-19T17:49:14"
+    }
+  ],
+  "Q1_sales": [
+    {
+      "dt": "2026-01-21",
+      "total_coupons": "25",
+      "total_packs": "5.0",
+      "buyer_cnt": "5",
+      "total_revenue": "99.5"
+    },
+    {
+      "dt": "2026-01-22",
+      "total_coupons": "10",
+      "total_packs": "2.0",
+      "buyer_cnt": "2",
+      "total_revenue": "39.8"
+    },
+    {
+      "dt": "2026-01-23",
+      "total_coupons": "5",
+      "total_packs": "1.0",
+      "buyer_cnt": "1",
+      "total_revenue": "19.9"
+    },
+    {
+      "dt": "2026-01-26",
+      "total_coupons": "20",
+      "total_packs": "4.0",
+      "buyer_cnt": "4",
+      "total_revenue": "79.6"
+    },
+    {
+      "dt": "2026-01-27",
+      "total_coupons": "40",
+      "total_packs": "8.0",
+      "buyer_cnt": "8",
+      "total_revenue": "159.2"
+    },
+    {
+      "dt": "2026-01-28",
+      "total_coupons": "10",
+      "total_packs": "2.0",
+      "buyer_cnt": "2",
+      "total_revenue": "39.8"
+    },
+    {
+      "dt": "2026-01-29",
+      "total_coupons": "25",
+      "total_packs": "5.0",
+      "buyer_cnt": "5",
+      "total_revenue": "99.5"
+    },
+    {
+      "dt": "2026-01-30",
+      "total_coupons": "5",
+      "total_packs": "1.0",
+      "buyer_cnt": "1",
+      "total_revenue": "19.9"
+    },
+    {
+      "dt": "2026-02-06",
+      "total_coupons": "120",
+      "total_packs": "24.0",
+      "buyer_cnt": "24",
+      "total_revenue": "477.6"
+    },
+    {
+      "dt": "2026-02-07",
+      "total_coupons": "55",
+      "total_packs": "11.0",
+      "buyer_cnt": "11",
+      "total_revenue": "218.9"
+    },
+    {
+      "dt": "2026-02-08",
+      "total_coupons": "40",
+      "total_packs": "8.0",
+      "buyer_cnt": "8",
+      "total_revenue": "159.2"
+    },
+    {
+      "dt": "2026-02-09",
+      "total_coupons": "50",
+      "total_packs": "10.0",
+      "buyer_cnt": "10",
+      "total_revenue": "199.0"
+    },
+    {
+      "dt": "2026-02-10",
+      "total_coupons": "60",
+      "total_packs": "12.0",
+      "buyer_cnt": "12",
+      "total_revenue": "238.8"
+    },
+    {
+      "dt": "2026-02-11",
+      "total_coupons": "65",
+      "total_packs": "13.0",
+      "buyer_cnt": "13",
+      "total_revenue": "258.7"
+    },
+    {
+      "dt": "2026-02-12",
+      "total_coupons": "35",
+      "total_packs": "7.0",
+      "buyer_cnt": "7",
+      "total_revenue": "139.3"
+    },
+    {
+      "dt": "2026-02-13",
+      "total_coupons": "60",
+      "total_packs": "12.0",
+      "buyer_cnt": "9",
+      "total_revenue": "238.8"
+    },
+    {
+      "dt": "2026-02-14",
+      "total_coupons": "30",
+      "total_packs": "6.0",
+      "buyer_cnt": "6",
+      "total_revenue": "119.4"
+    },
+    {
+      "dt": "2026-02-15",
+      "total_coupons": "35",
+      "total_packs": "7.0",
+      "buyer_cnt": "7",
+      "total_revenue": "139.3"
+    },
+    {
+      "dt": "2026-02-19",
+      "total_coupons": "5",
+      "total_packs": "1.0",
+      "buyer_cnt": "1",
+      "total_revenue": "19.9"
+    }
+  ],
+  "Q1b_packs_dist": [
+    {
+      "packs": "1.0",
+      "user_cnt": "106"
+    },
+    {
+      "packs": "2.0",
+      "user_cnt": "13"
+    },
+    {
+      "packs": "3.0",
+      "user_cnt": "1"
+    },
+    {
+      "packs": "4.0",
+      "user_cnt": "1"
+    }
+  ],
+  "Q2_redemption": [
+    {
+      "use_status": "1",
+      "cnt": "582",
+      "user_cnt": "115"
+    },
+    {
+      "use_status": "2",
+      "cnt": "113",
+      "user_cnt": "43"
+    }
+  ],
+  "Q2b_redeem_dist": [
+    {
+      "used_cnt": "0",
+      "user_cnt": "6"
+    },
+    {
+      "used_cnt": "1",
+      "user_cnt": "5"
+    },
+    {
+      "used_cnt": "2",
+      "user_cnt": "4"
+    },
+    {
+      "used_cnt": "3",
+      "user_cnt": "7"
+    },
+    {
+      "used_cnt": "4",
+      "user_cnt": "16"
+    },
+    {
+      "used_cnt": "5",
+      "user_cnt": "69"
+    },
+    {
+      "used_cnt": "8",
+      "user_cnt": "2"
+    },
+    {
+      "used_cnt": "9",
+      "user_cnt": "2"
+    },
+    {
+      "used_cnt": "10",
+      "user_cnt": "9"
+    },
+    {
+      "used_cnt": "15",
+      "user_cnt": "1"
+    }
+  ],
+  "Q3_redeem_timing": [
+    {
+      "days_to_use": "0",
+      "cnt": "131"
+    },
+    {
+      "days_to_use": "1",
+      "cnt": "47"
+    },
+    {
+      "days_to_use": "2",
+      "cnt": "44"
+    },
+    {
+      "days_to_use": "3",
+      "cnt": "33"
+    },
+    {
+      "days_to_use": "4",
+      "cnt": "39"
+    },
+    {
+      "days_to_use": "5",
+      "cnt": "37"
+    },
+    {
+      "days_to_use": "6",
+      "cnt": "34"
+    },
+    {
+      "days_to_use": "7",
+      "cnt": "33"
+    },
+    {
+      "days_to_use": "8",
+      "cnt": "24"
+    },
+    {
+      "days_to_use": "9",
+      "cnt": "15"
+    },
+    {
+      "days_to_use": "10",
+      "cnt": "18"
+    },
+    {
+      "days_to_use": "11",
+      "cnt": "12"
+    },
+    {
+      "days_to_use": "12",
+      "cnt": "9"
+    },
+    {
+      "days_to_use": "13",
+      "cnt": "19"
+    },
+    {
+      "days_to_use": "14",
+      "cnt": "18"
+    },
+    {
+      "days_to_use": "15",
+      "cnt": "10"
+    },
+    {
+      "days_to_use": "16",
+      "cnt": "8"
+    },
+    {
+      "days_to_use": "17",
+      "cnt": "1"
+    },
+    {
+      "days_to_use": "18",
+      "cnt": "5"
+    },
+    {
+      "days_to_use": "19",
+      "cnt": "9"
+    },
+    {
+      "days_to_use": "20",
+      "cnt": "5"
+    },
+    {
+      "days_to_use": "21",
+      "cnt": "12"
+    },
+    {
+      "days_to_use": "22",
+      "cnt": "4"
+    },
+    {
+      "days_to_use": "23",
+      "cnt": "1"
+    },
+    {
+      "days_to_use": "24",
+      "cnt": "5"
+    },
+    {
+      "days_to_use": "25",
+      "cnt": "1"
+    },
+    {
+      "days_to_use": "26",
+      "cnt": "4"
+    },
+    {
+      "days_to_use": "28",
+      "cnt": "1"
+    },
+    {
+      "days_to_use": "29",
+      "cnt": "1"
+    },
+    {
+      "days_to_use": "34",
+      "cnt": "1"
+    },
+    {
+      "days_to_use": "37",
+      "cnt": "1"
+    }
+  ],
+  "Q4_order_analysis": [],
+  "Q4b_order_trend": [
+    {
+      "dt": "2025-09-22",
+      "order_cnt": "109",
+      "user_cnt": "62",
+      "avg_pay": "7.22",
+      "total_pay": "1683.19"
+    },
+    {
+      "dt": "2025-09-23",
+      "order_cnt": "43",
+      "user_cnt": "33",
+      "avg_pay": "5.14",
+      "total_pay": "344.11"
+    },
+    {
+      "dt": "2025-09-24",
+      "order_cnt": "31",
+      "user_cnt": "23",
+      "avg_pay": "4.73",
+      "total_pay": "222.10"
+    },
+    {
+      "dt": "2025-09-25",
+      "order_cnt": "35",
+      "user_cnt": "29",
+      "avg_pay": "5.26",
+      "total_pay": "289.39"
+    },
+    {
+      "dt": "2025-09-26",
+      "order_cnt": "28",
+      "user_cnt": "22",
+      "avg_pay": "4.61",
+      "total_pay": "193.66"
+    },
+    {
+      "dt": "2025-09-27",
+      "order_cnt": "18",
+      "user_cnt": "11",
+      "avg_pay": "4.22",
+      "total_pay": "109.62"
+    },
+    {
+      "dt": "2025-09-28",
+      "order_cnt": "23",
+      "user_cnt": "19",
+      "avg_pay": "5.13",
+      "total_pay": "179.63"
+    },
+    {
+      "dt": "2025-09-29",
+      "order_cnt": "21",
+      "user_cnt": "18",
+      "avg_pay": "2.40",
+      "total_pay": "59.96"
+    },
+    {
+      "dt": "2025-09-30",
+      "order_cnt": "27",
+      "user_cnt": "20",
+      "avg_pay": "4.27",
+      "total_pay": "166.59"
+    },
+    {
+      "dt": "2025-10-01",
+      "order_cnt": "28",
+      "user_cnt": "25",
+      "avg_pay": "1.87",
+      "total_pay": "59.73"
+    },
+    {
+      "dt": "2025-10-02",
+      "order_cnt": "21",
+      "user_cnt": "18",
+      "avg_pay": "2.68",
+      "total_pay": "67.11"
+    },
+    {
+      "dt": "2025-10-03",
+      "order_cnt": "13",
+      "user_cnt": "11",
+      "avg_pay": "4.41",
+      "total_pay": "83.70"
+    },
+    {
+      "dt": "2025-10-04",
+      "order_cnt": "12",
+      "user_cnt": "9",
+      "avg_pay": "4.53",
+      "total_pay": "81.54"
+    },
+    {
+      "dt": "2025-10-05",
+      "order_cnt": "6",
+      "user_cnt": "5",
+      "avg_pay": "3.62",
+      "total_pay": "28.96"
+    },
+    {
+      "dt": "2025-10-06",
+      "order_cnt": "10",
+      "user_cnt": "7",
+      "avg_pay": "2.25",
+      "total_pay": "27.05"
+    },
+    {
+      "dt": "2025-10-07",
+      "order_cnt": "10",
+      "user_cnt": "10",
+      "avg_pay": "0.18",
+      "total_pay": "1.84"
+    },
+    {
+      "dt": "2025-10-08",
+      "order_cnt": "13",
+      "user_cnt": "9",
+      "avg_pay": "2.59",
+      "total_pay": "38.90"
+    },
+    {
+      "dt": "2025-10-09",
+      "order_cnt": "6",
+      "user_cnt": "6",
+      "avg_pay": "0.45",
+      "total_pay": "2.70"
+    },
+    {
+      "dt": "2025-10-10",
+      "order_cnt": "6",
+      "user_cnt": "6",
+      "avg_pay": "1.41",
+      "total_pay": "8.43"
+    },
+    {
+      "dt": "2025-10-11",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.54",
+      "total_pay": "0.54"
+    },
+    {
+      "dt": "2025-10-12",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2025-10-13",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2025-10-14",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2025-10-15",
+      "order_cnt": "3",
+      "user_cnt": "3",
+      "avg_pay": "2.71",
+      "total_pay": "8.12"
+    },
+    {
+      "dt": "2025-10-16",
+      "order_cnt": "5",
+      "user_cnt": "4",
+      "avg_pay": "0.11",
+      "total_pay": "0.54"
+    },
+    {
+      "dt": "2025-10-17",
+      "order_cnt": "4",
+      "user_cnt": "4",
+      "avg_pay": "0.27",
+      "total_pay": "1.08"
+    },
+    {
+      "dt": "2025-10-18",
+      "order_cnt": "2",
+      "user_cnt": "1",
+      "avg_pay": "0.98",
+      "total_pay": "1.96"
+    },
+    {
+      "dt": "2025-10-19",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "7.90",
+      "total_pay": "7.90"
+    },
+    {
+      "dt": "2025-10-20",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2025-10-21",
+      "order_cnt": "2",
+      "user_cnt": "2",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2025-10-23",
+      "order_cnt": "2",
+      "user_cnt": "2",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2025-10-24",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2025-10-31",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "6.70",
+      "total_pay": "6.70"
+    },
+    {
+      "dt": "2025-11-01",
+      "order_cnt": "2",
+      "user_cnt": "2",
+      "avg_pay": "0.27",
+      "total_pay": "0.54"
+    },
+    {
+      "dt": "2025-11-04",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2025-11-05",
+      "order_cnt": "2",
+      "user_cnt": "2",
+      "avg_pay": "0.71",
+      "total_pay": "1.42"
+    },
+    {
+      "dt": "2025-11-06",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2025-11-16",
+      "order_cnt": "3",
+      "user_cnt": "2",
+      "avg_pay": "0.18",
+      "total_pay": "0.54"
+    },
+    {
+      "dt": "2025-11-21",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2025-11-22",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2025-11-25",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2025-11-26",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2025-12-13",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2025-12-17",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "7.35",
+      "total_pay": "7.35"
+    },
+    {
+      "dt": "2025-12-18",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.59",
+      "total_pay": "0.59"
+    },
+    {
+      "dt": "2025-12-22",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2025-12-30",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2026-01-21",
+      "order_cnt": "10",
+      "user_cnt": "5",
+      "avg_pay": "16.60",
+      "total_pay": "498.04"
+    },
+    {
+      "dt": "2026-01-22",
+      "order_cnt": "5",
+      "user_cnt": "4",
+      "avg_pay": "15.35",
+      "total_pay": "199.54"
+    },
+    {
+      "dt": "2026-01-23",
+      "order_cnt": "4",
+      "user_cnt": "3",
+      "avg_pay": "12.44",
+      "total_pay": "99.50"
+    },
+    {
+      "dt": "2026-01-26",
+      "order_cnt": "10",
+      "user_cnt": "5",
+      "avg_pay": "15.37",
+      "total_pay": "399.62"
+    },
+    {
+      "dt": "2026-01-27",
+      "order_cnt": "26",
+      "user_cnt": "12",
+      "avg_pay": "13.92",
+      "total_pay": "807.19"
+    },
+    {
+      "dt": "2026-01-28",
+      "order_cnt": "9",
+      "user_cnt": "7",
+      "avg_pay": "12.18",
+      "total_pay": "207.11"
+    },
+    {
+      "dt": "2026-01-29",
+      "order_cnt": "20",
+      "user_cnt": "14",
+      "avg_pay": "12.64",
+      "total_pay": "505.76"
+    },
+    {
+      "dt": "2026-01-30",
+      "order_cnt": "7",
+      "user_cnt": "7",
+      "avg_pay": "9.14",
+      "total_pay": "100.58"
+    },
+    {
+      "dt": "2026-01-31",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2026-02-01",
+      "order_cnt": "2",
+      "user_cnt": "2",
+      "avg_pay": "4.22",
+      "total_pay": "8.44"
+    },
+    {
+      "dt": "2026-02-02",
+      "order_cnt": "10",
+      "user_cnt": "8",
+      "avg_pay": "0.30",
+      "total_pay": "3.03"
+    },
+    {
+      "dt": "2026-02-03",
+      "order_cnt": "12",
+      "user_cnt": "12",
+      "avg_pay": "0.23",
+      "total_pay": "2.70"
+    },
+    {
+      "dt": "2026-02-04",
+      "order_cnt": "6",
+      "user_cnt": "5",
+      "avg_pay": "0.28",
+      "total_pay": "1.67"
+    },
+    {
+      "dt": "2026-02-05",
+      "order_cnt": "6",
+      "user_cnt": "6",
+      "avg_pay": "0.09",
+      "total_pay": "0.54"
+    },
+    {
+      "dt": "2026-02-06",
+      "order_cnt": "47",
+      "user_cnt": "28",
+      "avg_pay": "16.75",
+      "total_pay": "2395.17"
+    },
+    {
+      "dt": "2026-02-07",
+      "order_cnt": "28",
+      "user_cnt": "14",
+      "avg_pay": "15.52",
+      "total_pay": "1117.42"
+    },
+    {
+      "dt": "2026-02-08",
+      "order_cnt": "18",
+      "user_cnt": "12",
+      "avg_pay": "16.19",
+      "total_pay": "809.64"
+    },
+    {
+      "dt": "2026-02-09",
+      "order_cnt": "42",
+      "user_cnt": "31",
+      "avg_pay": "12.58",
+      "total_pay": "1031.61"
+    },
+    {
+      "dt": "2026-02-10",
+      "order_cnt": "67",
+      "user_cnt": "44",
+      "avg_pay": "10.62",
+      "total_pay": "1220.88"
+    },
+    {
+      "dt": "2026-02-11",
+      "order_cnt": "56",
+      "user_cnt": "44",
+      "avg_pay": "12.13",
+      "total_pay": "1309.50"
+    },
+    {
+      "dt": "2026-02-12",
+      "order_cnt": "47",
+      "user_cnt": "38",
+      "avg_pay": "9.46",
+      "total_pay": "709.76"
+    },
+    {
+      "dt": "2026-02-13",
+      "order_cnt": "51",
+      "user_cnt": "36",
+      "avg_pay": "12.31",
+      "total_pay": "1218.44"
+    },
+    {
+      "dt": "2026-02-14",
+      "order_cnt": "23",
+      "user_cnt": "17",
+      "avg_pay": "13.27",
+      "total_pay": "623.78"
+    },
+    {
+      "dt": "2026-02-15",
+      "order_cnt": "31",
+      "user_cnt": "14",
+      "avg_pay": "11.95",
+      "total_pay": "705.26"
+    },
+    {
+      "dt": "2026-02-16",
+      "order_cnt": "17",
+      "user_cnt": "15",
+      "avg_pay": "1.34",
+      "total_pay": "22.80"
+    },
+    {
+      "dt": "2026-02-17",
+      "order_cnt": "30",
+      "user_cnt": "29",
+      "avg_pay": "0.70",
+      "total_pay": "20.93"
+    },
+    {
+      "dt": "2026-02-18",
+      "order_cnt": "16",
+      "user_cnt": "16",
+      "avg_pay": "0.54",
+      "total_pay": "8.65"
+    },
+    {
+      "dt": "2026-02-19",
+      "order_cnt": "24",
+      "user_cnt": "20",
+      "avg_pay": "4.01",
+      "total_pay": "112.37"
+    },
+    {
+      "dt": "2026-02-20",
+      "order_cnt": "8",
+      "user_cnt": "8",
+      "avg_pay": "0.27",
+      "total_pay": "2.16"
+    },
+    {
+      "dt": "2026-02-21",
+      "order_cnt": "11",
+      "user_cnt": "10",
+      "avg_pay": "1.45",
+      "total_pay": "15.98"
+    },
+    {
+      "dt": "2026-02-22",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.00",
+      "total_pay": "0.00"
+    },
+    {
+      "dt": "2026-02-24",
+      "order_cnt": "4",
+      "user_cnt": "4",
+      "avg_pay": "0.14",
+      "total_pay": "0.54"
+    },
+    {
+      "dt": "2026-02-25",
+      "order_cnt": "9",
+      "user_cnt": "9",
+      "avg_pay": "1.63",
+      "total_pay": "14.64"
+    },
+    {
+      "dt": "2026-02-26",
+      "order_cnt": "19",
+      "user_cnt": "17",
+      "avg_pay": "1.17",
+      "total_pay": "22.28"
+    },
+    {
+      "dt": "2026-02-27",
+      "order_cnt": "10",
+      "user_cnt": "8",
+      "avg_pay": "0.82",
+      "total_pay": "8.17"
+    },
+    {
+      "dt": "2026-02-28",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "0.54",
+      "total_pay": "0.54"
+    },
+    {
+      "dt": "2026-03-01",
+      "order_cnt": "3",
+      "user_cnt": "3",
+      "avg_pay": "3.53",
+      "total_pay": "10.58"
+    },
+    {
+      "dt": "2026-03-02",
+      "order_cnt": "7",
+      "user_cnt": "5",
+      "avg_pay": "0.31",
+      "total_pay": "2.16"
+    },
+    {
+      "dt": "2026-03-03",
+      "order_cnt": "4",
+      "user_cnt": "3",
+      "avg_pay": "1.35",
+      "total_pay": "5.39"
+    },
+    {
+      "dt": "2026-03-04",
+      "order_cnt": "7",
+      "user_cnt": "7",
+      "avg_pay": "0.15",
+      "total_pay": "1.08"
+    },
+    {
+      "dt": "2026-03-05",
+      "order_cnt": "3",
+      "user_cnt": "3",
+      "avg_pay": "3.03",
+      "total_pay": "9.09"
+    },
+    {
+      "dt": "2026-03-06",
+      "order_cnt": "7",
+      "user_cnt": "5",
+      "avg_pay": "0.08",
+      "total_pay": "0.54"
+    },
+    {
+      "dt": "2026-03-07",
+      "order_cnt": "2",
+      "user_cnt": "1",
+      "avg_pay": "2.65",
+      "total_pay": "5.30"
+    },
+    {
+      "dt": "2026-03-08",
+      "order_cnt": "1",
+      "user_cnt": "1",
+      "avg_pay": "5.01",
+      "total_pay": "5.01"
+    }
+  ],
+  "Q5_shop_top10": [
+    {
+      "shop_name": "",
+      "order_cnt": "269",
+      "user_cnt": "246",
+      "total_pay": "17340.50"
+    },
+    {
+      "shop_name": "8th & Broadway",
+      "order_cnt": "177",
+      "user_cnt": "57",
+      "total_pay": "78.50"
+    },
+    {
+      "shop_name": "54th & 8th",
+      "order_cnt": "159",
+      "user_cnt": "46",
+      "total_pay": "85.92"
+    },
+    {
+      "shop_name": "102 Fulton",
+      "order_cnt": "135",
+      "user_cnt": "40",
+      "total_pay": "112.57"
+    },
+    {
+      "shop_name": "221 Grand",
+      "order_cnt": "119",
+      "user_cnt": "25",
+      "total_pay": "68.14"
+    },
+    {
+      "shop_name": "28th & 6th",
+      "order_cnt": "107",
+      "user_cnt": "42",
+      "total_pay": "99.88"
+    },
+    {
+      "shop_name": "37th & Broadway",
+      "order_cnt": "105",
+      "user_cnt": "22",
+      "total_pay": "55.13"
+    },
+    {
+      "shop_name": "100 Maiden Ln",
+      "order_cnt": "64",
+      "user_cnt": "20",
+      "total_pay": "58.48"
+    },
+    {
+      "shop_name": "33rd & 10th",
+      "order_cnt": "43",
+      "user_cnt": "9",
+      "total_pay": "4.32"
+    },
+    {
+      "shop_name": "15th & 3rd",
+      "order_cnt": "26",
+      "user_cnt": "8",
+      "total_pay": "8.71"
+    }
+  ],
+  "Q6_user_profile": [
+    {
+      "user_type": "30天+老客",
+      "user_cnt": "90",
+      "avg_prior_orders": "8.1"
+    },
+    {
+      "user_type": "近16-30天活跃",
+      "user_cnt": "15",
+      "avg_prior_orders": "7.9"
+    },
+    {
+      "user_type": "新客",
+      "user_cnt": "8",
+      "avg_prior_orders": "0.0"
+    },
+    {
+      "user_type": "近15天活跃",
+      "user_cnt": "8",
+      "avg_prior_orders": "3.6"
+    }
+  ],
+  "Q6b_freq_dist": [
+    {
+      "freq_bucket": "0单",
+      "user_cnt": "14"
+    },
+    {
+      "freq_bucket": "1-2单",
+      "user_cnt": "20"
+    },
+    {
+      "freq_bucket": "3-5单",
+      "user_cnt": "25"
+    },
+    {
+      "freq_bucket": "6-10单",
+      "user_cnt": "32"
+    },
+    {
+      "freq_bucket": "10单+",
+      "user_cnt": "30"
+    }
+  ],
+  "Q7_before_after": [
+    {
+      "period": "购买前14天",
+      "total_buyers": "121",
+      "active_users": "96",
+      "total_orders": "364",
+      "avg_orders": "3.8",
+      "total_pay": "2217.05"
+    },
+    {
+      "period": "购买后至今",
+      "total_buyers": "121",
+      "active_users": "118",
+      "total_orders": "893",
+      "avg_orders": "7.6",
+      "total_pay": "3351.26"
+    }
+  ],
+  "Q8_expire": [
+    {
+      "coupon_state": "已核销",
+      "cnt": "582",
+      "user_cnt": "115"
+    },
+    {
+      "coupon_state": "未使用(有效期内)",
+      "cnt": "113",
+      "user_cnt": "43"
+    }
+  ],
+  "Q8b_unused_dist": [
+    {
+      "unused_cnt": "0",
+      "user_cnt": "78"
+    },
+    {
+      "unused_cnt": "1",
+      "user_cnt": "18"
+    },
+    {
+      "unused_cnt": "2",
+      "user_cnt": "9"
+    },
+    {
+      "unused_cnt": "3",
+      "user_cnt": "4"
+    },
+    {
+      "unused_cnt": "4",
+      "user_cnt": "4"
+    },
+    {
+      "unused_cnt": "5",
+      "user_cnt": "6"
+    },
+    {
+      "unused_cnt": "9",
+      "user_cnt": "1"
+    },
+    {
+      "unused_cnt": "10",
+      "user_cnt": "1"
+    }
+  ],
+  "Q9_repurchase": [
+    {
+      "buyer_group": "全部用完",
+      "total_users": "78",
+      "active_users": "75",
+      "return_rate": "96.2",
+      "total_orders": "430",
+      "avg_orders": "5.7",
+      "total_pay": "2096.40"
+    },
+    {
+      "buyer_group": "未用完",
+      "total_users": "43",
+      "active_users": "37",
+      "return_rate": "86.0",
+      "total_orders": "85",
+      "avg_orders": "2.3",
+      "total_pay": "252.18"
+    }
+  ]
+}

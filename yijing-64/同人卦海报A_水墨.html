@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>同人卦海报A · 水墨</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#2a2a2a;display:flex;justify-content:center;padding:20px;font-family:'Noto Serif SC',serif}
+
+.poster{
+  width:375px;background:#f5f0e8;position:relative;overflow:hidden;color:#1a1a1a;
+}
+/* 宣纸纹理 */
+.poster::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  z-index:0;
+}
+.poster>*{position:relative;z-index:1}
+
+/* 顶部留白+红印 */
+.top-space{height:40px}
+.seal{
+  position:absolute;top:24px;right:20px;
+  width:44px;height:44px;
+  border:2px solid #c23a2b;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  color:#c23a2b;font-size:11px;font-weight:900;
+  letter-spacing:1px;line-height:1.2;text-align:center;
+  transform:rotate(-8deg);
+  opacity:0.85;
+}
+
+/* 水墨山水 */
+.ink-landscape{
+  width:100%;height:180px;position:relative;overflow:hidden;
+  display:flex;align-items:flex-end;justify-content:center;
+}
+.ink-landscape svg{width:100%;height:100%}
+
+/* 大字标题 */
+.title-area{text-align:center;padding:8px 30px 16px}
+.title-big{
+  font-size:56px;font-weight:900;letter-spacing:16px;
+  color:#1a1a1a;line-height:1.2;
+}
+.title-sub{
+  font-size:13px;color:#666;letter-spacing:4px;margin-top:4px;
+}
+
+/* 卦象 */
+.gua-row{
+  display:flex;justify-content:center;gap:24px;align-items:center;
+  padding:12px 0;
+}
+.gua-svg-wrap{display:flex;align-items:center;gap:8px}
+.gua-label{font-size:11px;color:#888;letter-spacing:1px}
+
+/* 竖排卦辞 */
+.guaci-vertical{
+  display:flex;justify-content:center;
+  padding:20px 0;
+  border-top:1px solid rgba(0,0,0,0.08);
+  border-bottom:1px solid rgba(0,0,0,0.08);
+  margin:0 30px;
+}
+.guaci-col{
+  writing-mode:vertical-rl;
+  font-size:22px;font-weight:700;
+  letter-spacing:8px;line-height:2;
+  color:#1a1a1a;
+}
+.guaci-small{
+  writing-mode:vertical-rl;
+  font-size:11px;color:#999;
+  letter-spacing:4px;line-height:2;
+  margin-left:4px;
+}
+
+/* 精华区 */
+.essence{padding:20px 30px}
+.essence-item{
+  margin-bottom:14px;
+  padding:12px 16px;
+  background:rgba(0,0,0,0.03);
+  border-radius:4px;
+  border-left:3px solid #c23a2b;
+}
+.essence-item:nth-child(2){border-color:#1a1a1a}
+.essence-item:nth-child(3){border-color:#b8860b}
+.essence-label{font-size:10px;color:#999;letter-spacing:2px;margin-bottom:4px}
+.essence-text{font-size:14px;line-height:1.8;color:#333}
+.essence-text em{font-style:normal;color:#c23a2b;font-weight:700}
+
+/* 六爻一行 */
+.yao-flow{
+  display:flex;justify-content:space-between;
+  padding:14px 20px;
+  background:rgba(0,0,0,0.03);
+  margin:0 30px;border-radius:4px;
+}
+.yao-dot{text-align:center;flex:1}
+.yao-dot-name{font-size:9px;color:#999;margin-bottom:2px}
+.yao-dot-icon{font-size:16px;margin-bottom:2px}
+.yao-dot-word{font-size:10px;color:#333;font-weight:600}
+
+/* 结语 */
+.ending{
+  text-align:center;padding:20px 36px;
+}
+.ending-text{
+  font-size:15px;line-height:2;color:#333;
+}
+.ending-text strong{color:#c23a2b}
+
+/* 底部 */
+.footer{
+  display:flex;align-items:center;
+  padding:16px 30px 24px;gap:14px;
+  border-top:1px solid rgba(0,0,0,0.08);
+  margin-top:8px;
+}
+.qr-wrap{
+  flex-shrink:0;width:76px;height:76px;
+  border:1px solid rgba(0,0,0,0.1);border-radius:6px;
+  padding:4px;display:flex;align-items:center;justify-content:center;
+  background:#fff;
+}
+.qr-wrap canvas,.qr-wrap img{width:68px!important;height:68px!important}
+.footer-right{flex:1}
+.footer-cta{font-size:13px;color:#1a1a1a;font-weight:700;margin-bottom:3px}
+.footer-note{font-size:10px;color:#999;line-height:1.6}
+.footer-brand{font-size:9px;color:#bbb;margin-top:6px;letter-spacing:1px}
+
+.save-hint{text-align:center;color:#666;font-size:12px;margin-top:14px}
+</style>
+</head>
+<body>
+<div>
+<div class="poster">
+  <div class="top-space"></div>
+  <div class="seal">丙午<br>年卦</div>
+
+  <!-- 水墨山水 -->
+  <div class="ink-landscape">
+    <svg viewBox="0 0 375 180" xmlns="http://www.w3.org/2000/svg">
+      <!-- 远山 -->
+      <path d="M0,140 Q40,80 80,110 Q120,60 160,95 Q200,50 240,85 Q280,40 320,75 Q350,55 375,90 L375,180 L0,180Z" fill="rgba(0,0,0,0.06)"/>
+      <path d="M0,155 Q50,100 100,125 Q150,85 200,115 Q250,75 300,105 Q340,80 375,100 L375,180 L0,180Z" fill="rgba(0,0,0,0.08)"/>
+      <path d="M0,165 Q60,130 120,145 Q180,120 240,140 Q300,115 375,135 L375,180 L0,180Z" fill="rgba(0,0,0,0.04)"/>
+      <!-- 篝火 -->
+      <circle cx="188" cy="152" r="12" fill="rgba(194,58,43,0.12)"/>
+      <circle cx="188" cy="152" r="6" fill="rgba(194,58,43,0.2)"/>
+      <path d="M185,155 Q188,138 191,155" stroke="rgba(194,58,43,0.35)" fill="none" stroke-width="2"/>
+      <!-- 人群剪影 -->
+      <circle cx="155" cy="157" r="3" fill="rgba(0,0,0,0.15)"/>
+      <rect x="153" y="160" width="4" height="8" rx="1" fill="rgba(0,0,0,0.12)"/>
+      <circle cx="170" cy="155" r="3" fill="rgba(0,0,0,0.15)"/>
+      <rect x="168" y="158" width="4" height="9" rx="1" fill="rgba(0,0,0,0.12)"/>
+      <circle cx="206" cy="156" r="3" fill="rgba(0,0,0,0.15)"/>
+      <rect x="204" y="159" width="4" height="8" rx="1" fill="rgba(0,0,0,0.12)"/>
+      <circle cx="220" cy="158" r="3" fill="rgba(0,0,0,0.15)"/>
+      <rect x="218" y="161" width="4" height="7" rx="1" fill="rgba(0,0,0,0.12)"/>
+      <!-- 火光向天 -->
+      <line x1="188" y1="140" x2="188" y2="30" stroke="rgba(194,58,43,0.06)" stroke-width="40"/>
+      <line x1="188" y1="130" x2="188" y2="10" stroke="rgba(194,58,43,0.03)" stroke-width="20"/>
+      <!-- 文字 -->
+      <text x="188" y="26" text-anchor="middle" font-size="10" fill="rgba(0,0,0,0.2)" font-family="Noto Serif SC" letter-spacing="6">火 焰 通 天 · 循 光 而 聚</text>
+    </svg>
+  </div>
+
+  <div class="title-area">
+    <div class="title-big">同人</div>
+    <div class="title-sub">天 火 同 人 · 第 十 三 卦</div>
+  </div>
+
+  <!-- 卦象 -->
+  <div class="gua-row">
+    <div class="gua-svg-wrap">
+      <svg width="48" height="48" viewBox="0 0 48 48">
+        <rect x="4" y="2" width="16" height="3" fill="#1a1a1a"/>
+        <rect x="28" y="2" width="16" height="3" fill="#1a1a1a"/>
+        <rect x="4" y="9" width="16" height="3" fill="#1a1a1a"/>
+        <rect x="28" y="9" width="16" height="3" fill="#1a1a1a"/>
+        <rect x="4" y="16" width="16" height="3" fill="#1a1a1a"/>
+        <rect x="28" y="16" width="16" height="3" fill="#1a1a1a"/>
+        <rect x="4" y="26" width="16" height="3" fill="#1a1a1a"/>
+        <rect x="28" y="26" width="16" height="3" fill="#1a1a1a"/>
+        <rect x="4" y="33" width="15" height="3" fill="#c23a2b"/>
+        <rect x="29" y="33" width="15" height="3" fill="#c23a2b"/>
+        <rect x="4" y="40" width="16" height="3" fill="#1a1a1a"/>
+        <rect x="28" y="40" width="16" height="3" fill="#1a1a1a"/>
+      </svg>
+      <div>
+        <div class="gua-label">上乾 ☰ 天</div>
+        <div class="gua-label">下离 ☲ 火</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 竖排卦辞 -->
+  <div class="guaci-vertical">
+    <div class="guaci-small">周易卦辞</div>
+    <div class="guaci-col">同人于野亨</div>
+    <div class="guaci-col">利涉大川</div>
+    <div class="guaci-col">利君子贞</div>
+  </div>
+
+  <!-- 精华 -->
+  <div class="essence">
+    <div class="essence-item">
+      <div class="essence-label">彖 传</div>
+      <div class="essence-text"><em>唯君子为能通天下之志</em><br>文明以健，中正而应</div>
+    </div>
+    <div class="essence-item">
+      <div class="essence-label">系 辞 传</div>
+      <div class="essence-text">二人同心，其利断金<br><em>同心之言，其臭如兰</em></div>
+    </div>
+    <div class="essence-item">
+      <div class="essence-label">序 卦</div>
+      <div class="essence-text">物不可以终否，故受之以<em>同人</em><br>→ 与人同者物必归焉 → <em>大有</em></div>
+    </div>
+  </div>
+
+  <!-- 六爻 -->
+  <div class="yao-flow">
+    <div class="yao-dot"><div class="yao-dot-name">初九</div><div class="yao-dot-icon">🚪</div><div class="yao-dot-word">合作</div></div>
+    <div class="yao-dot"><div class="yao-dot-name" style="color:#c23a2b">六二</div><div class="yao-dot-icon">⚠️</div><div class="yao-dot-word">警惕</div></div>
+    <div class="yao-dot"><div class="yao-dot-name">九三</div><div class="yao-dot-icon">⚔️</div><div class="yao-dot-word">暗流</div></div>
+    <div class="yao-dot"><div class="yao-dot-name" style="color:#4a7c59">九四</div><div class="yao-dot-icon">🕊️</div><div class="yao-dot-word">止戈</div></div>
+    <div class="yao-dot"><div class="yao-dot-name" style="color:#b8860b">九五</div><div class="yao-dot-icon">🌅</div><div class="yao-dot-word">和解</div></div>
+    <div class="yao-dot"><div class="yao-dot-name">上九</div><div class="yao-dot-icon">🛤️</div><div class="yao-dot-word">未竟</div></div>
+  </div>
+
+  <!-- 结语 -->
+  <div class="ending">
+    <div class="ending-text">
+      这个"同"不是廉价的和谐<br>
+      而是经历<strong>号啕之痛</strong>后的<strong>真实和解</strong>
+    </div>
+  </div>
+
+  <!-- 底部 -->
+  <div class="footer">
+    <div class="qr-wrap" id="qrcode"></div>
+    <div class="footer-right">
+      <div class="footer-cta">扫码阅读完整九步解读</div>
+      <div class="footer-note">观象·读彖·训字·析位·玩辞·察变·归德·征引·映射</div>
+      <div class="footer-brand">易经解读 · 融合易传与佑安释易方法论</div>
+    </div>
+  </div>
+</div>
+<div class="save-hint">长按保存图片 · 分享朋友圈</div>
+</div>
+
+<script>
+new QRCode(document.getElementById("qrcode"),{
+  text:"http://134.175.228.73:8082",
+  width:68,height:68,
+  colorDark:"#1a1a1a",colorLight:"#ffffff",
+  correctLevel:QRCode.CorrectLevel.M
+});
+</script>
+</body>
+</html>

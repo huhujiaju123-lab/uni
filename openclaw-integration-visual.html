@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>递归大师 — Claude Code × OpenClaw 优势整合</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0B0E17;
+    --bg-card: rgba(255,255,255,0.04);
+    --bg-card-hover: rgba(255,255,255,0.07);
+    --blue: #60A5FA;
+    --blue-dim: rgba(96,165,250,0.15);
+    --blue-glow: rgba(96,165,250,0.3);
+    --teal: #4ECDC4;
+    --teal-dim: rgba(78,205,196,0.15);
+    --teal-glow: rgba(78,205,196,0.3);
+    --orange: #FF6B4A;
+    --orange-dim: rgba(255,107,74,0.12);
+    --orange-glow: rgba(255,107,74,0.35);
+    --text: #E2E8F0;
+    --text-dim: #94A3B8;
+    --radius: 14px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(96,165,250,0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 50% at 80% 50%, rgba(78,205,196,0.03) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 20% 50%, rgba(96,165,250,0.03) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; z-index: 0;
+  }
+
+  .page {
+    position: relative; z-index: 1;
+    max-width: 1280px; margin: 0 auto;
+    padding: 48px 24px 60px;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+  }
+
+  /* ===== 标题 ===== */
+  .header { text-align: center; margin-bottom: 56px; }
+
+  .header h1 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 700; letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--blue), var(--orange) 50%, var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  .header .subtitle {
+    margin-top: 10px; color: var(--text-dim); font-size: 0.95rem;
+  }
+
+  /* ===== 三列布局 ===== */
+  .integration-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0; align-items: start; flex: 1;
+  }
+
+  /* ===== 侧列 ===== */
+  .side-column { display: flex; flex-direction: column; gap: 16px; }
+
+  .side-column .col-title {
+    font-size: 1.1rem; font-weight: 600; margin-bottom: 4px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .side-column .col-title .dot {
+    width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+  }
+
+  .left-col .col-title { color: var(--blue); }
+  .left-col .col-title .dot { background: var(--blue); box-shadow: 0 0 8px var(--blue-glow); }
+  .right-col .col-title { color: var(--teal); }
+  .right-col .col-title .dot { background: var(--teal); box-shadow: 0 0 8px var(--teal-glow); }
+
+  /* ===== 卡片 ===== */
+  .advantage-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    padding: 20px; transition: all 0.3s ease;
+    position: relative; overflow: hidden;
+  }
+
+  .advantage-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%; border-radius: 3px 0 0 3px;
+  }
+
+  .advantage-card:hover {
+    background: var(--bg-card-hover); transform: translateY(-2px);
+  }
+
+  .left-col .advantage-card::before { background: var(--blue); }
+  .left-col .advantage-card:hover { border-color: rgba(96,165,250,0.2); box-shadow: 0 4px 24px rgba(96,165,250,0.08); }
+  .right-col .advantage-card::before { background: var(--teal); }
+  .right-col .advantage-card:hover { border-color: rgba(78,205,196,0.2); box-shadow: 0 4px 24px rgba(78,205,196,0.08); }
+
+  .advantage-card .card-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 6px; }
+  .left-col .card-name { color: var(--blue); }
+  .right-col .card-name { color: var(--teal); }
+  .advantage-card .card-desc { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; }
+
+  /* ===== 中间：递归核心 ===== */
+  .center-column {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 0 24px; position: relative; min-width: 300px;
+  }
+
+  /* 流动连线 */
+  .flow-lines { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+
+  .flow-line-left, .flow-line-right {
+    position: absolute; top: 50%; width: 48px; height: 2px;
+  }
+  .flow-line-left { left: -24px; }
+  .flow-line-right { right: -24px; }
+
+  .flow-line-left::before, .flow-line-right::before {
+    content: ''; position: absolute; top: 0; height: 2px; border-radius: 2px;
+  }
+
+  .flow-line-left::before {
+    right: 0; width: 48px;
+    background: linear-gradient(90deg, transparent, var(--blue));
+    animation: flowLeft 2.4s ease-in-out infinite;
+  }
+  .flow-line-right::before {
+    left: 0; width: 48px;
+    background: linear-gradient(270deg, transparent, var(--teal));
+    animation: flowRight 2.4s ease-in-out infinite;
+  }
+
+  @keyframes flowLeft {
+    0%, 100% { opacity: 0.2; width: 20px; }
+    50% { opacity: 1; width: 48px; }
+  }
+  @keyframes flowRight {
+    0%, 100% { opacity: 0.2; width: 20px; }
+    50% { opacity: 1; width: 48px; }
+  }
+
+  .flow-line-left.l1, .flow-line-right.r1 { top: 30%; }
+  .flow-line-left.l2, .flow-line-right.r2 { top: 44%; }
+  .flow-line-left.l3, .flow-line-right.r3 { top: 58%; }
+  .flow-line-left.l4, .flow-line-right.r4 { top: 72%; }
+  .flow-line-left.l1::before { animation-delay: 0s; }
+  .flow-line-left.l2::before { animation-delay: 0.6s; }
+  .flow-line-left.l3::before { animation-delay: 1.2s; }
+  .flow-line-left.l4::before { animation-delay: 1.8s; }
+  .flow-line-right.r1::before { animation-delay: 0.3s; }
+  .flow-line-right.r2::before { animation-delay: 0.9s; }
+  .flow-line-right.r3::before { animation-delay: 1.5s; }
+  .flow-line-right.r4::before { animation-delay: 2.1s; }
+
+  /* ===== 递归环核心 ===== */
+  .recursion-core {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 40px 20px;
+  }
+
+  .recursion-rings {
+    position: relative;
+    width: 200px; height: 200px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* 三层递归环 — 每层代表一次递归深度 */
+  .ring {
+    position: absolute; border-radius: 50%;
+    border: 2px solid transparent;
+  }
+
+  .ring-outer {
+    width: 200px; height: 200px;
+    background: conic-gradient(from 0deg, rgba(96,165,250,0.4), rgba(255,107,74,0.4), rgba(78,205,196,0.4), rgba(96,165,250,0.4)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: ringRotate 12s linear infinite;
+  }
+
+  .ring-mid {
+    width: 156px; height: 156px;
+    background: conic-gradient(from 120deg, rgba(255,107,74,0.5), rgba(78,205,196,0.3), rgba(96,165,250,0.3), rgba(255,107,74,0.5)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: ringRotate 8s linear infinite reverse;
+  }
+
+  .ring-inner {
+    width: 112px; height: 112px;
+    background: conic-gradient(from 240deg, rgba(78,205,196,0.5), rgba(96,165,250,0.3), rgba(255,107,74,0.4), rgba(78,205,196,0.5)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: ringRotate 5s linear infinite;
+  }
+
+  @keyframes ringRotate { to { transform: rotate(360deg); } }
+
+  /* 递归深度标签 */
+  .depth-label {
+    position: absolute;
+    font-size: 0.6rem; font-weight: 600;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 2px 6px; border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .depth-1 {
+    top: -8px; right: -12px;
+    color: var(--blue); background: rgba(96,165,250,0.12);
+  }
+  .depth-2 {
+    bottom: 20px; left: -20px;
+    color: var(--orange); background: rgba(255,107,74,0.12);
+  }
+  .depth-3 {
+    top: 36px; left: -16px;
+    color: var(--teal); background: rgba(78,205,196,0.12);
+  }
+
+  /* 发光底层 */
+  .recursion-rings::after {
+    content: ''; position: absolute;
+    inset: -30px; border-radius: 50%;
+    background: radial-gradient(circle, var(--orange-glow) 0%, transparent 70%);
+    animation: glowPulse 3s ease-in-out infinite;
+    z-index: -1;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.25; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.08); }
+  }
+
+  .lobster-emoji {
+    font-size: 56px; line-height: 1;
+    filter: drop-shadow(0 0 20px rgba(255,107,74,0.4));
+    animation: lobsterFloat 4s ease-in-out infinite;
+    position: relative; z-index: 3;
+  }
+
+  @keyframes lobsterFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .core-label {
+    margin-top: 16px;
+    font-size: 1.2rem; font-weight: 800;
+    color: var(--orange);
+    text-shadow: 0 0 20px rgba(255,107,74,0.3);
+    letter-spacing: 0.05em;
+  }
+
+  .core-sublabel {
+    margin-top: 4px;
+    font-size: 0.78rem; color: var(--text-dim);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  /* ===== 递归循环步骤 ===== */
+  .recursion-steps {
+    display: flex; flex-direction: column; gap: 0;
+    margin-top: 28px; width: 100%; max-width: 260px;
+    position: relative;
+  }
+
+  .recursion-steps::before {
+    content: '';
+    position: absolute; left: 15px;
+    top: 20px; bottom: 20px;
+    width: 2px;
+    background: linear-gradient(to bottom,
+      var(--blue), var(--orange), var(--teal), var(--blue));
+    background-size: 100% 200%;
+    animation: flowDown 3s linear infinite;
+    border-radius: 2px;
+  }
+
+  @keyframes flowDown {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 200%; }
+  }
+
+  .step {
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 0; position: relative;
+  }
+
+  .step-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    flex-shrink: 0; position: relative; z-index: 1;
+    margin-left: 10px;
+  }
+
+  .step:nth-child(1) .step-dot { background: var(--blue); box-shadow: 0 0 8px var(--blue-glow); }
+  .step:nth-child(2) .step-dot { background: var(--orange); box-shadow: 0 0 8px var(--orange-glow); }
+  .step:nth-child(3) .step-dot { background: var(--teal); box-shadow: 0 0 8px var(--teal-glow); }
+  .step:nth-child(4) .step-dot { background: var(--blue); box-shadow: 0 0 8px var(--blue-glow); }
+
+  .step-text {
+    font-size: 0.82rem; font-weight: 500; color: var(--text);
+  }
+
+  .step-text span {
+    font-size: 0.72rem; color: var(--text-dim); display: block;
+  }
+
+  /* 循环箭头 */
+  .recurse-arrow {
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 6px;
+    font-size: 0.75rem; color: var(--orange); font-weight: 700;
+    letter-spacing: 0.08em;
+    animation: arrowPulse 2s ease-in-out infinite;
+  }
+
+  .recurse-arrow svg {
+    width: 16px; height: 16px; margin-right: 6px;
+    fill: var(--orange);
+  }
+
+  @keyframes arrowPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  /* ===== 底部引言 ===== */
+  .footer-quote {
+    text-align: center; margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .footer-quote p {
+    color: var(--text-dim); font-size: 0.9rem;
+    font-style: italic; letter-spacing: 0.03em;
+  }
+
+  .footer-quote .highlight {
+    color: var(--orange); font-style: normal; font-weight: 600;
+  }
+
+  .footer-quote .mono {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    color: var(--text-dim); font-size: 0.78rem;
+    display: block; margin-top: 8px; font-style: normal;
+  }
+
+  /* ===== 入场动画 ===== */
+  .fade-up { opacity: 0; transform: translateY(20px); animation: fadeUp 0.6s ease forwards; }
+  .fade-left { opacity: 0; transform: translateX(-30px); animation: fadeLeft 0.6s ease forwards; }
+  .fade-right { opacity: 0; transform: translateX(30px); animation: fadeRight 0.6s ease forwards; }
+
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeLeft { to { opacity: 1; transform: translateX(0); } }
+  @keyframes fadeRight { to { opacity: 1; transform: translateX(0); } }
+
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+  .delay-4 { animation-delay: 0.4s; }
+  .delay-5 { animation-delay: 0.5s; }
+  .delay-6 { animation-delay: 0.6s; }
+  .delay-7 { animation-delay: 0.7s; }
+  .delay-8 { animation-delay: 0.8s; }
+
+  /* ===== 响应式 ===== */
+  @media (max-width: 900px) {
+    .integration-grid { grid-template-columns: 1fr; gap: 40px; }
+    .center-column { order: -1; padding: 0; min-width: auto; }
+    .flow-lines { display: none; }
+    .side-column { max-width: 480px; margin: 0 auto; width: 100%; }
+    .recursion-core { padding: 20px; }
+    .page { padding: 32px 16px 48px; }
+    .header { margin-bottom: 32px; }
+    .footer-quote { margin-top: 40px; }
+  }
+
+  @media (max-width: 480px) {
+    .recursion-rings { width: 160px; height: 160px; }
+    .ring-outer { width: 160px; height: 160px; }
+    .ring-mid { width: 124px; height: 124px; }
+    .ring-inner { width: 88px; height: 88px; }
+    .lobster-emoji { font-size: 42px; }
+    .depth-label { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="header fade-up">
+    <h1>递归大师 — Claude Code × OpenClaw 优势整合</h1>
+    <p class="subtitle">两套系统的能力互补，经过递归式学习，形成不断进化的团队运营大脑</p>
+  </header>
+
+  <div class="integration-grid">
+
+    <!-- 左：Claude Code -->
+    <div class="side-column left-col">
+      <div class="col-title fade-left delay-1">
+        <span class="dot"></span>
+        Claude Code 的优势
+      </div>
+
+      <div class="advantage-card fade-left delay-2">
+        <div class="card-name">深度代码理解</div>
+        <div class="card-desc">读懂项目架构、文件依赖、git 历史，对整个代码库有全局认知</div>
+      </div>
+
+      <div class="advantage-card fade-left delay-3">
+        <div class="card-name">精准上下文</div>
+        <div class="card-desc">跨文件重构，上下文不丢，能同时理解多个文件的关联关系</div>
+      </div>
+
+      <div class="advantage-card fade-left delay-4">
+        <div class="card-name">结构化记忆</div>
+        <div class="card-desc">.learnings/ 错题本、知识晋升通道，越用越懂你的项目</div>
+      </div>
+
+      <div class="advantage-card fade-left delay-5">
+        <div class="card-name">严谨性规则</div>
+        <div class="card-desc">数字必须有来源，不确定就说不确定，杜绝幻觉</div>
+      </div>
+    </div>
+
+    <!-- 中：递归大师 -->
+    <div class="center-column fade-up delay-3">
+      <div class="flow-lines">
+        <div class="flow-line-left l1"></div>
+        <div class="flow-line-left l2"></div>
+        <div class="flow-line-left l3"></div>
+        <div class="flow-line-left l4"></div>
+        <div class="flow-line-right r1"></div>
+        <div class="flow-line-right r2"></div>
+        <div class="flow-line-right r3"></div>
+        <div class="flow-line-right r4"></div>
+      </div>
+
+      <div class="recursion-core">
+        <!-- 三层递归环 -->
+        <div class="recursion-rings">
+          <div class="ring ring-outer"></div>
+          <div class="ring ring-mid"></div>
+          <div class="ring ring-inner"></div>
+          <span class="lobster-emoji">🦞</span>
+          <!-- 递归深度标签 -->
+          <span class="depth-label depth-1">depth 1: 记录</span>
+          <span class="depth-label depth-2">depth 2: 内化</span>
+          <span class="depth-label depth-3">depth 3: 传播</span>
+        </div>
+
+        <div class="core-label">递归大师</div>
+        <div class="core-sublabel">recurse(learn, apply, evolve)</div>
+
+        <!-- 递归循环步骤 -->
+        <div class="recursion-steps fade-up delay-5">
+          <div class="step">
+            <div class="step-dot"></div>
+            <div class="step-text">使用 & 犯错<span>输入：团队日常操作</span></div>
+          </div>
+          <div class="step">
+            <div class="step-dot"></div>
+            <div class="step-text">自动记录 & 晋升<span>.learnings/ → MEMORY → SOUL</span></div>
+          </div>
+          <div class="step">
+            <div class="step-dot"></div>
+            <div class="step-text">团队同步 & 传播<span>git push → 全员继承</span></div>
+          </div>
+          <div class="step">
+            <div class="step-dot"></div>
+            <div class="step-text">更可靠 & 再递归<span>每一轮都比上一轮更强</span></div>
+          </div>
+          <div class="recurse-arrow">
+            <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+            return recurse( )
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右：OpenClaw -->
+    <div class="side-column right-col">
+      <div class="col-title fade-right delay-1">
+        <span class="dot"></span>
+        OpenClaw 的优势
+      </div>
+
+      <div class="advantage-card fade-right delay-2">
+        <div class="card-name">后台常驻 + 定时任务</div>
+        <div class="card-desc">凌晨也能跑数据，cron 驱动的自动化，7 × 24 不间断</div>
+      </div>
+
+      <div class="advantage-card fade-right delay-3">
+        <div class="card-name">消息平台原生</div>
+        <div class="card-desc">微信 / Telegram / Slack 群聊交互，在用户所在的地方服务</div>
+      </div>
+
+      <div class="advantage-card fade-right delay-4">
+        <div class="card-name">主动执行工作流</div>
+        <div class="card-desc">不等指令，自动触发，事件驱动的主动式执行</div>
+      </div>
+
+      <div class="advantage-card fade-right delay-5">
+        <div class="card-name">模型无关</div>
+        <div class="card-desc">可接 Claude / DeepSeek / GPT 等任意大模型，灵活切换</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-quote fade-up delay-8">
+    <p>不是二选一，而是让两者的优势在<span class="highlight">递归循环</span>中不断增强</p>
+    <span class="mono">// 每一轮循环，团队知识密度 +1，错误概率 -1</span>
+  </div>
+
+</div>
+
+<script>
+  /* 浮动粒子 */
+  (function() {
+    var center = document.querySelector('.center-column');
+    if (!center || window.innerWidth < 900) return;
+    var colors = ['blue', 'teal', 'orange'];
+    function create() {
+      var p = document.createElement('div');
+      p.className = 'particle ' + colors[Math.floor(Math.random() * colors.length)];
+      p.style.cssText = 'position:absolute;width:3px;height:3px;border-radius:50%;pointer-events:none;opacity:0;';
+      var c = colors[Math.floor(Math.random() * colors.length)];
+      if (c === 'blue') p.style.background = p.style.boxShadow = '#60A5FA';
+      else if (c === 'teal') p.style.background = p.style.boxShadow = '#4ECDC4';
+      else p.style.background = p.style.boxShadow = '#FF6B4A';
+      p.style.boxShadow = '0 0 6px ' + p.style.background;
+      var rect = center.getBoundingClientRect();
+      p.style.left = Math.random() * rect.width + 'px';
+      p.style.top = Math.random() * rect.height + 'px';
+      center.appendChild(p);
+      var dur = 3000 + Math.random() * 3000;
+      var drift = (Math.random() - 0.5) * 40;
+      p.animate([
+        { opacity: 0, transform: 'translateY(0) scale(0.5)' },
+        { opacity: 0.7, transform: 'translateY(-20px) translateX(' + drift * 0.3 + 'px) scale(1)', offset: 0.3 },
+        { opacity: 0, transform: 'translateY(-60px) translateX(' + drift + 'px) scale(0.3)' }
+      ], { duration: dur, easing: 'ease-out', fill: 'forwards' }).onfinish = function() { p.remove(); };
+    }
+    setInterval(create, 600);
+  })();
+</script>
+
+</body>
+</html>

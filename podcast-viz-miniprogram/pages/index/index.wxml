@@ -1,0 +1,55 @@
+<view class="container">
+  <!-- Logo + 标题 -->
+  <view class="header">
+    <text class="logo">🎙️</text>
+    <text class="title">播客可视化</text>
+    <text class="subtitle">粘贴小宇宙链接，一键生成可视化笔记</text>
+  </view>
+
+  <!-- 输入区 -->
+  <view class="input-area">
+    <view class="input-row">
+      <input
+        class="url-input"
+        placeholder="粘贴小宇宙单集链接..."
+        placeholder-class="placeholder"
+        value="{{url}}"
+        bindinput="onInputChange"
+        confirm-type="done"
+        bindconfirm="onSubmit"
+      />
+      <view class="paste-btn" bindtap="onPaste">粘贴</view>
+    </view>
+    <view class="error" wx:if="{{error}}">{{error}}</view>
+    <button class="submit-btn {{loading ? 'disabled' : ''}}" bindtap="onSubmit" disabled="{{loading}}">
+      <text wx:if="{{!loading}}">开始解析</text>
+      <text wx:else>处理中...</text>
+    </button>
+  </view>
+
+  <!-- 历史记录 -->
+  <view class="section-title" wx:if="{{history.length > 0}}">
+    <text class="gold-text">历史记录</text>
+  </view>
+  <view
+    class="history-card"
+    wx:for="{{history}}"
+    wx:key="episode_id"
+    bindtap="onTapHistory"
+    data-id="{{item.episode_id}}"
+  >
+    <image
+      class="cover"
+      src="{{item.cover_url}}"
+      mode="aspectFill"
+      wx:if="{{item.cover_url}}"
+      lazy-load
+    />
+    <view class="cover-placeholder" wx:else>🎙️</view>
+    <view class="info">
+      <text class="history-title">{{item.title}}</text>
+      <text class="history-podcast dim-text">{{item.podcast_name}}</text>
+    </view>
+    <text class="arrow">›</text>
+  </view>
+</view>

@@ -1,0 +1,63 @@
+<view class="page-profile">
+  <!-- Tab Bar -->
+  <view class="tabs">
+    <view
+      class="tab {{activeTab === 'history' ? 'active' : ''}}"
+      data-tab="history"
+      bindtap="switchTab"
+    >
+      浏览记录
+    </view>
+    <view
+      class="tab {{activeTab === 'favorites' ? 'active' : ''}}"
+      data-tab="favorites"
+      bindtap="switchTab"
+    >
+      收藏金句
+    </view>
+  </view>
+
+  <!-- History -->
+  <view wx:if="{{activeTab === 'history'}}">
+    <view
+      class="history-item"
+      wx:for="{{history}}"
+      wx:key="_id"
+      data-id="{{item.episode_id}}"
+      bindtap="onTapEpisode"
+    >
+      <image class="history-cover" src="{{item.cover_url}}" mode="aspectFill" wx:if="{{item.cover_url}}" />
+      <view class="history-info">
+        <view class="history-podcast">{{item.podcast_name}}</view>
+        <view class="history-title">{{item.title}}</view>
+        <view class="history-time text-dim">{{item.last_read}}</view>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{!loading && history.length === 0}}">
+      <text class="text-dim">还没有浏览记录</text>
+    </view>
+  </view>
+
+  <!-- Favorites -->
+  <view wx:if="{{activeTab === 'favorites'}}">
+    <view class="export-row" wx:if="{{favorites.length > 0}}">
+      <view class="export-btn" bindtap="exportFavorites">复制全部 (Markdown)</view>
+    </view>
+
+    <view
+      class="fav-item"
+      wx:for="{{favorites}}"
+      wx:key="index"
+    >
+      <view class="fav-quote">「{{item.quote}}」</view>
+      <view class="fav-source text-dim" wx:if="{{item.episodeTitle}}">
+        — {{item.episodeTitle}}
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{!loading && favorites.length === 0}}">
+      <text class="text-dim">还没有收藏金句</text>
+    </view>
+  </view>
+</view>

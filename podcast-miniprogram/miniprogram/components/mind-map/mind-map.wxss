@@ -1,0 +1,45 @@
+.mind-map {
+  margin: 24rpx 32rpx;
+}
+
+.map-container {
+  padding: 8rpx 0;
+}
+
+.map-node {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 10rpx 16rpx;
+  position: relative;
+}
+
+.node-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.node-dot.root {
+  width: 16rpx;
+  height: 16rpx;
+  background: var(--gold);
+}
+
+.node-label {
+  font-size: 26rpx;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.root-label {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.depth-1 .node-dot { background: var(--gold); opacity: 0.7; }
+.depth-2 .node-dot { background: var(--amber); opacity: 0.5; }
+.depth-3 .node-dot { background: var(--text-dim); }

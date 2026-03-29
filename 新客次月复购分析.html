@@ -1,0 +1,2156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新客次月复购分析 — Lucky US</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ===== CSS Variables ===== */
+:root {
+  --bg-body: #0c1222;
+  --bg-card: #1a2540;
+  --bg-card-hover: #1f2d4d;
+  --bg-hero: linear-gradient(135deg, #1a1040 0%, #0c1222 40%, #0a1a2e 100%);
+  --border: #2a3a5c;
+  --border-light: #3a4a6c;
+  --text-primary: #f0f4f8;
+  --text-secondary: #8899b0;
+  --text-muted: #5a6a80;
+  --orange: #f97316;
+  --orange-dim: rgba(249, 115, 22, 0.15);
+  --teal: #06b6d4;
+  --teal-dim: rgba(6, 182, 212, 0.15);
+  --purple: #8b5cf6;
+  --purple-dim: rgba(139, 92, 246, 0.15);
+  --green: #22c55e;
+  --green-dim: rgba(34, 197, 94, 0.15);
+  --red: #ef4444;
+  --red-dim: rgba(239, 68, 68, 0.15);
+  --indigo: #6366f1;
+  --indigo-dim: rgba(99, 102, 241, 0.15);
+  --yellow: #eab308;
+  --yellow-dim: rgba(234, 179, 8, 0.15);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --font: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body {
+  font-family: var(--font);
+  background: var(--bg-body);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ===== Sidebar Navigation ===== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 100vh;
+  background: rgba(12, 18, 34, 0.95);
+  backdrop-filter: blur(12px);
+  border-right: 1px solid var(--border);
+  z-index: 1000;
+  padding: 24px 0;
+  overflow-y: auto;
+  transition: transform 0.3s ease;
+}
+.sidebar-logo {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+.sidebar-logo h2 {
+  font-size: 15px;
+  color: var(--indigo);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.sidebar-logo span {
+  font-size: 11px;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 2px;
+}
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 13px;
+  transition: var(--transition);
+  border-left: 3px solid transparent;
+}
+.sidebar nav a:hover {
+  color: var(--text-primary);
+  background: rgba(99, 102, 241, 0.08);
+}
+.sidebar nav a.active {
+  color: var(--indigo);
+  background: rgba(99, 102, 241, 0.12);
+  border-left-color: var(--indigo);
+}
+.sidebar nav a i {
+  width: 16px;
+  text-align: center;
+  font-size: 12px;
+}
+
+/* ===== Mobile sidebar toggle ===== */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1100;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* ===== Main Content ===== */
+.main-content {
+  margin-left: 220px;
+  max-width: 1280px;
+  padding: 0 40px 60px;
+}
+
+/* ===== Section base ===== */
+.section {
+  padding-top: 60px;
+  margin-bottom: 40px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-title i {
+  font-size: 18px;
+  color: var(--indigo);
+}
+.section-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+/* ===== Header / Hero ===== */
+.hero {
+  padding: 80px 0 40px;
+  text-align: center;
+  position: relative;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: -200px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero h1 {
+  font-size: 38px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #818cf8, #c084fc, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+.hero .subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+.hero .core-finding {
+  display: inline-block;
+  max-width: 800px;
+  background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(99,102,241,0.08));
+  border: 1px solid rgba(139,92,246,0.25);
+  border-radius: var(--radius);
+  padding: 16px 28px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.hero .core-finding strong {
+  color: var(--purple);
+}
+
+/* ===== KPI Cards ===== */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 16px;
+  text-align: center;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+.kpi-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+  border-color: var(--border-light);
+}
+.kpi-card .kpi-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.kpi-card .kpi-value {
+  font-size: 28px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  margin-bottom: 4px;
+}
+.kpi-card .kpi-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.kpi-card.grey::before { background: var(--text-muted); }
+.kpi-card.grey .kpi-value { color: var(--text-secondary); }
+.kpi-card.green::before { background: var(--green); }
+.kpi-card.green .kpi-value { color: var(--green); }
+.kpi-card.red::before { background: var(--red); }
+.kpi-card.red .kpi-value { color: var(--red); }
+.kpi-card.orange::before { background: var(--orange); }
+.kpi-card.orange .kpi-value { color: var(--orange); }
+.kpi-card.teal::before { background: var(--teal); }
+.kpi-card.teal .kpi-value { color: var(--teal); }
+.kpi-card.blue::before { background: var(--indigo); }
+.kpi-card.blue .kpi-value { color: var(--indigo); }
+.kpi-card.purple::before { background: var(--purple); }
+.kpi-card.purple .kpi-value { color: var(--purple); }
+
+/* ===== Cards ===== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: var(--transition);
+}
+.card:hover {
+  border-color: var(--border-light);
+}
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+.card-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.card-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+/* ===== Timeline (Section 3) ===== */
+.timeline-section {
+  position: relative;
+}
+.timeline-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px 28px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.timeline-track {
+  position: relative;
+  height: 200px;
+  margin: 20px 0 10px;
+}
+.timeline-line {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--border);
+}
+.timeline-marker {
+  position: absolute;
+  top: 40px;
+  transform: translateX(-50%);
+  cursor: pointer;
+  transition: var(--transition);
+  z-index: 2;
+}
+.timeline-marker:hover {
+  transform: translateX(-50%) scale(1.15);
+}
+.timeline-marker .dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 3px solid var(--bg-card);
+  margin: 0 auto 6px;
+  position: relative;
+}
+.timeline-marker .dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  opacity: 0.2;
+  z-index: -1;
+}
+.timeline-marker .store-name {
+  font-size: 10px;
+  color: var(--text-secondary);
+  text-align: center;
+  white-space: nowrap;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform: rotate(-35deg);
+  transform-origin: top center;
+  margin-top: 4px;
+}
+.timeline-marker .store-date {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-align: center;
+  white-space: nowrap;
+}
+.timeline-marker.founding .dot { background: var(--indigo); }
+.timeline-marker.founding .dot::after { background: var(--indigo); }
+.timeline-marker.wave1 .dot { background: var(--teal); }
+.timeline-marker.wave1 .dot::after { background: var(--teal); }
+.timeline-marker.wave2 .dot { background: var(--purple); }
+.timeline-marker.wave2 .dot::after { background: var(--purple); }
+.timeline-marker.wave3 .dot { background: var(--orange); }
+.timeline-marker.wave3 .dot::after { background: var(--orange); }
+.timeline-marker.wave4 .dot { background: var(--green); }
+.timeline-marker.wave4 .dot::after { background: var(--green); }
+.timeline-marker.wave5 .dot { background: var(--yellow); }
+.timeline-marker.wave5 .dot::after { background: var(--yellow); }
+
+.timeline-months {
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  margin-top: 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.timeline-months span {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+.timeline-tooltip {
+  display: none;
+  position: absolute;
+  background: rgba(26, 37, 64, 0.97);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 10px 14px;
+  z-index: 10;
+  font-size: 12px;
+  min-width: 160px;
+  box-shadow: var(--shadow);
+  pointer-events: none;
+}
+.timeline-tooltip.show { display: block; }
+.timeline-tooltip .tt-name { font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+.timeline-tooltip .tt-date { color: var(--text-muted); font-size: 11px; }
+.timeline-tooltip .tt-stat { color: var(--teal); font-size: 11px; margin-top: 4px; }
+
+.timeline-repurchase-chart {
+  height: 180px;
+  margin-top: 16px;
+}
+
+/* ===== Honeymoon Hero Section (Section 4) ===== */
+.honeymoon-section {
+  background: linear-gradient(135deg, rgba(139,92,246,0.06) 0%, rgba(12,18,34,0) 60%);
+  border: 1px solid rgba(139,92,246,0.15);
+  border-radius: 16px;
+  padding: 36px 32px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.honeymoon-section::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.honeymoon-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(139,92,246,0.15);
+  color: var(--purple);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.anomaly-card {
+  background: rgba(239, 68, 68, 0.06);
+  border: 2px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-top: 20px;
+  position: relative;
+}
+.anomaly-card::before {
+  content: '!';
+  position: absolute;
+  top: -10px;
+  right: 16px;
+  width: 24px;
+  height: 24px;
+  background: var(--red);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  color: #fff;
+}
+.anomaly-card h4 {
+  color: var(--red);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.anomaly-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.decomp-card {
+  background: rgba(6, 182, 212, 0.06);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-top: 20px;
+}
+.decomp-card h4 {
+  color: var(--teal);
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.decomp-card ul {
+  list-style: none;
+  padding: 0;
+}
+.decomp-card li {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  padding-left: 18px;
+  position: relative;
+}
+.decomp-card li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--teal);
+  opacity: 0.5;
+}
+.decomp-card .conclusion {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(6, 182, 212, 0.15);
+  font-size: 13px;
+  color: var(--teal);
+  font-weight: 600;
+}
+
+/* ===== Tables ===== */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.data-table th {
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(42, 58, 92, 0.4);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+.data-table tr:hover td {
+  background: rgba(99, 102, 241, 0.04);
+}
+.data-table .highlight-row td {
+  background: rgba(139, 92, 246, 0.08);
+  color: var(--text-primary);
+}
+.data-table .warning-row td {
+  background: rgba(239, 68, 68, 0.06);
+}
+.rate-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+.rate-high { background: var(--green-dim); color: var(--green); }
+.rate-mid { background: var(--teal-dim); color: var(--teal); }
+.rate-low { background: var(--orange-dim); color: var(--orange); }
+.rate-alert { background: var(--red-dim); color: var(--red); }
+
+/* ===== Insight Cards ===== */
+.insight-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--indigo);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  transition: var(--transition);
+}
+.insight-card:hover {
+  border-color: var(--border-light);
+  transform: translateX(4px);
+}
+.insight-card h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+.insight-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.insight-card .implication {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.insight-card .implication strong {
+  color: var(--text-secondary);
+}
+
+/* ===== Action Items ===== */
+.action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+.action-column {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.action-column h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.action-column ul {
+  list-style: none;
+  padding: 0;
+}
+.action-column li {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 8px 0;
+  padding-left: 20px;
+  position: relative;
+  border-bottom: 1px solid rgba(42, 58, 92, 0.3);
+  line-height: 1.6;
+}
+.action-column li:last-child { border-bottom: none; }
+.action-column li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  border: 2px solid;
+}
+.action-column.short li::before { border-color: var(--orange); }
+.action-column.mid li::before { border-color: var(--teal); }
+.action-column.long li::before { border-color: var(--purple); }
+
+/* ===== Chart Containers ===== */
+.chart-container {
+  position: relative;
+  height: 320px;
+}
+.chart-container-sm {
+  position: relative;
+  height: 260px;
+}
+.chart-container-lg {
+  position: relative;
+  height: 380px;
+}
+
+/* ===== Donut wrapper ===== */
+.donut-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.donut-chart {
+  width: 180px;
+  height: 180px;
+  flex-shrink: 0;
+}
+.donut-legend {
+  flex: 1;
+}
+.donut-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.donut-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ===== Horizontal Bar Chart labels ===== */
+.hbar-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hbar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hbar-label {
+  width: 130px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: right;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hbar-track {
+  flex: 1;
+  height: 26px;
+  background: rgba(42, 58, 92, 0.3);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+.hbar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  min-width: 40px;
+}
+.hbar-badge {
+  display: inline-block;
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 6px;
+  font-weight: 600;
+}
+
+/* ===== Footer ===== */
+.footer {
+  text-align: center;
+  padding: 40px 0 30px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-toggle { display: flex; align-items: center; justify-content: center; }
+  .main-content { margin-left: 0; padding: 0 20px 40px; }
+  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+  .card-grid-2, .card-grid-3 { grid-template-columns: 1fr; }
+  .action-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero h1 { font-size: 26px; }
+  .kpi-card .kpi-value { font-size: 22px; }
+}
+
+/* ===== Animations ===== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes countUp {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-bar .hbar-fill {
+  width: 0 !important;
+}
+
+/* ===== Store new badge ===== */
+.badge-new {
+  display: inline-block;
+  font-size: 9px;
+  background: var(--purple-dim);
+  color: var(--purple);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+.badge-warning {
+  display: inline-block;
+  font-size: 9px;
+  background: var(--red-dim);
+  color: var(--red);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+/* ===== Scroll progress ===== */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 220px;
+  right: 0;
+  height: 3px;
+  z-index: 999;
+  background: transparent;
+}
+.scroll-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--indigo), var(--purple));
+  transition: width 0.1s linear;
+}
+
+/* ===== Number highlight ===== */
+.num { font-family: var(--font-mono); font-weight: 600; }
+.num-green { color: var(--green); }
+.num-red { color: var(--red); }
+.num-teal { color: var(--teal); }
+.num-orange { color: var(--orange); }
+.num-purple { color: var(--purple); }
+</style>
+</head>
+<body>
+
+<!-- Scroll Progress -->
+<div class="scroll-progress"><div class="scroll-progress-bar" id="scrollBar"></div></div>
+
+<!-- Mobile Toggle -->
+<button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+
+<!-- Sidebar Navigation -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <h2>Lucky US</h2>
+    <span>新客次月复购分析</span>
+  </div>
+  <nav>
+    <a href="#hero" class="active"><i class="fas fa-home"></i>概览</a>
+    <a href="#kpi"><i class="fas fa-th-large"></i>核心指标</a>
+    <a href="#timeline"><i class="fas fa-stream"></i>开店节奏</a>
+    <a href="#honeymoon"><i class="fas fa-star"></i>新店蜜月效应</a>
+    <a href="#monthly"><i class="fas fa-calendar-alt"></i>月度趋势</a>
+    <a href="#tier"><i class="fas fa-layer-group"></i>分层分析</a>
+    <a href="#store"><i class="fas fa-store"></i>门店维度</a>
+    <a href="#category"><i class="fas fa-mug-hot"></i>品类维度</a>
+    <a href="#time-reach"><i class="fas fa-clock"></i>时段 &amp; 触达</a>
+    <a href="#insights"><i class="fas fa-lightbulb"></i>洞察与建议</a>
+  </nav>
+</aside>
+
+<!-- Main Content -->
+<div class="main-content">
+
+  <!-- ==================== Section 1: Hero ==================== -->
+  <section class="section visible" id="hero">
+    <div class="hero">
+      <h1>新客次月复购分析</h1>
+      <div class="subtitle">Lucky US &middot; 2025.08 &ndash; 2026.02 &middot; 7个月 &times; 5维度 &times; 13家门店</div>
+      <div class="core-finding">
+        核心发现：<strong>新店蜜月效应</strong>是复购率波动的最大解释变量 &mdash;&mdash; 开业当月复购率 <strong>29.2%</strong>，衰减至成熟期 <strong>16.5%</strong>。排除蜜月效应后，成熟门店的"真实复购率基线"约为 <strong>16&ndash;17%</strong>。
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== Section 2: KPI Cards ==================== -->
+  <section class="section" id="kpi">
+    <div class="kpi-grid">
+      <div class="kpi-card grey">
+        <div class="kpi-label">成熟门店基线</div>
+        <div class="kpi-value">16.5%</div>
+        <div class="kpi-desc">开业3&ndash;5月</div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-label">新店蜜月复购</div>
+        <div class="kpi-value">29.2%</div>
+        <div class="kpi-desc">开业当月</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">蜜月&rarr;成熟衰减</div>
+        <div class="kpi-value">-12.7pp</div>
+        <div class="kpi-desc">29.2% &rarr; 16.5%</div>
+      </div>
+      <div class="kpi-card orange">
+        <div class="kpi-label">不可触达占比</div>
+        <div class="kpi-value">37.1%</div>
+        <div class="kpi-desc">49,184人 / 132,473人</div>
+      </div>
+      <div class="kpi-card teal">
+        <div class="kpi-label">可触达复购提升</div>
+        <div class="kpi-value">+12.5pp</div>
+        <div class="kpi-desc">26.4% vs 13.9%</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-label">午间首单复购</div>
+        <div class="kpi-value">30.8%</div>
+        <div class="kpi-desc">12pm 峰值</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== Section 3: Timeline ==================== -->
+  <section class="section" id="timeline">
+    <div class="section-title"><i class="fas fa-stream"></i> 开店节奏与复购率对照</div>
+    <div class="section-subtitle">门店开业时间线叠加月度复购率趋势 &mdash;&mdash; 新店密集开业月份（Sep、Dec）对应复购率高峰</div>
+
+    <div class="timeline-container">
+      <div class="timeline-track" id="timelineTrack">
+        <div class="timeline-line"></div>
+        <!-- Markers injected by JS -->
+        <div class="timeline-tooltip" id="timelineTooltip">
+          <div class="tt-name"></div>
+          <div class="tt-date"></div>
+          <div class="tt-stat"></div>
+        </div>
+      </div>
+      <div style="margin-top: 20px;">
+        <div class="card-title" style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">月度新客复购率趋势 &times; 新店数量</div>
+        <div class="chart-container-sm">
+          <canvas id="timelineChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== Section 4: Honeymoon Effect ==================== -->
+  <section class="section" id="honeymoon">
+    <div class="honeymoon-section">
+      <div class="honeymoon-badge"><i class="fas fa-star"></i> 核心发现</div>
+      <div class="section-title" style="font-size:24px;"><i class="fas fa-chart-line"></i> 新店蜜月效应</div>
+      <div class="section-subtitle">开业当月复购率显著高于成熟期，这是驱动整体复购率波动的最大因素</div>
+
+      <!-- 4a: Aggregated Decay -->
+      <div class="card-grid-2" style="margin-bottom:24px;">
+        <div class="card">
+          <div class="card-title">门店年龄 &rarr; 复购率衰减曲线（汇总）</div>
+          <div class="chart-container">
+            <canvas id="honeymoonBarChart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">单店衰减曲线对比（按开业后月数）</div>
+          <div class="chart-container">
+            <canvas id="storeDecayChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4c: 28th & 6th Anomaly -->
+      <div class="anomaly-card">
+        <h4><i class="fas fa-exclamation-triangle"></i> 异常门店：28th &amp; 6th &mdash;&mdash; 无蜜月效应</h4>
+        <p>
+          唯一一家没有蜜月效应的门店。从开店第1个月（<span class="num num-red">14.9%</span>）就低，7个月一直在 <span class="num">10&ndash;17%</span> 区间震荡。
+          同期 8th &amp; Broadway（同批开业）有正常的 18&ndash;29% 波动。需排查：获客渠道构成、周边竞品、门店体验、触达率。
+        </p>
+      </div>
+
+      <!-- 4d: Sep Decomposition -->
+      <div class="decomp-card">
+        <h4><i class="fas fa-search"></i> Sep 2025 高峰分解（27.7%）</h4>
+        <ul>
+          <li>47.6% 新客来自蜜月期新店（复购率 31.0%）</li>
+          <li>52.4% 来自 2 月龄门店（复购率 24.7%）</li>
+          <li>8th &amp; Broadway（2月龄）在 Sep 达到 29.5%，远超其 ~18% 基线</li>
+        </ul>
+        <div class="conclusion">结论：Sep = 新店蜜月拉动 + 未知外部因素（可能是促销或开学季效应）</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== Section 5: Monthly Trend Table ==================== -->
+  <section class="section" id="monthly">
+    <div class="section-title"><i class="fas fa-calendar-alt"></i> 月度趋势总览</div>
+    <div class="section-subtitle">含新店新客占比，揭示蜜月效应对各月数据的拉动程度</div>
+
+    <div class="card">
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>新客月</th>
+              <th>新客总数</th>
+              <th>已复购</th>
+              <th>复购率</th>
+              <th>新店新客占比</th>
+              <th>新店复购率</th>
+              <th>老店复购率</th>
+              <th style="text-align:center;">蜜月拉动</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2025-08</td>
+              <td class="num">21,525</td>
+              <td class="num">4,281</td>
+              <td><span class="rate-badge rate-mid">19.9%</span></td>
+              <td class="num">14.1%</td>
+              <td class="num num-purple">39.9%</td>
+              <td class="num">16.6%</td>
+              <td style="text-align:center;"><i class="fas fa-arrow-up" style="color:var(--purple);font-size:11px;"></i></td>
+            </tr>
+            <tr class="highlight-row">
+              <td>2025-09</td>
+              <td class="num">24,371</td>
+              <td class="num">6,750</td>
+              <td><span class="rate-badge rate-high">27.7%</span></td>
+              <td class="num num-purple">47.6%</td>
+              <td class="num num-purple">31.0%</td>
+              <td class="num">24.7%</td>
+              <td style="text-align:center;"><i class="fas fa-arrow-up" style="color:var(--purple);font-size:14px;"></i><i class="fas fa-arrow-up" style="color:var(--purple);font-size:14px;"></i></td>
+            </tr>
+            <tr>
+              <td>2025-10</td>
+              <td class="num">19,031</td>
+              <td class="num">4,064</td>
+              <td><span class="rate-badge rate-mid">21.4%</span></td>
+              <td class="num">12.3%</td>
+              <td class="num num-purple">22.1%</td>
+              <td class="num">~21.0%</td>
+              <td style="text-align:center;"><i class="fas fa-minus" style="color:var(--text-muted);font-size:11px;"></i></td>
+            </tr>
+            <tr>
+              <td>2025-11</td>
+              <td class="num">14,898</td>
+              <td class="num">2,775</td>
+              <td><span class="rate-badge rate-low">18.6%</span></td>
+              <td class="num">12.0%</td>
+              <td class="num num-purple">31.7%</td>
+              <td class="num">~16.6%</td>
+              <td style="text-align:center;"><i class="fas fa-arrow-up" style="color:var(--purple);font-size:11px;"></i></td>
+            </tr>
+            <tr class="highlight-row">
+              <td>2025-12</td>
+              <td class="num">19,963</td>
+              <td class="num">4,233</td>
+              <td><span class="rate-badge rate-mid">21.2%</span></td>
+              <td class="num num-purple">53.5%</td>
+              <td class="num num-purple">28.3%</td>
+              <td class="num">~13.1%</td>
+              <td style="text-align:center;"><i class="fas fa-arrow-up" style="color:var(--purple);font-size:14px;"></i><i class="fas fa-arrow-up" style="color:var(--purple);font-size:14px;"></i></td>
+            </tr>
+            <tr>
+              <td>2026-01</td>
+              <td class="num">16,749</td>
+              <td class="num">3,353</td>
+              <td><span class="rate-badge rate-mid">20.0%</span></td>
+              <td class="num num-purple">40.6%</td>
+              <td class="num num-purple">22.5%</td>
+              <td class="num">~18.4%</td>
+              <td style="text-align:center;"><i class="fas fa-arrow-up" style="color:var(--purple);font-size:11px;"></i></td>
+            </tr>
+            <tr>
+              <td>2026-02</td>
+              <td class="num">15,936</td>
+              <td class="num">3,237</td>
+              <td><span class="rate-badge rate-mid">20.3%*</span></td>
+              <td class="num">15.5%</td>
+              <td class="num num-purple">35.2%</td>
+              <td class="num">~17.6%</td>
+              <td style="text-align:center;"><i class="fas fa-arrow-up" style="color:var(--purple);font-size:11px;"></i></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:8px;">* 2月观察期截至 3/23。 蜜月拉动箭头：双箭头 = 新店占比 &gt;40% 且复购率被显著拉高</div>
+    </div>
+  </section>
+
+  <!-- ==================== Section 6: Tier Analysis ==================== -->
+  <section class="section" id="tier">
+    <div class="section-title"><i class="fas fa-layer-group"></i> 复购率分层趋势</div>
+    <div class="section-subtitle">按首月下单次数分层 &amp; 按门店年龄分层，两个视角解读复购率驱动因素</div>
+
+    <div class="card-grid-2">
+      <div class="card">
+        <div class="card-title">按首月下单次数分层</div>
+        <div class="chart-container">
+          <canvas id="tierLineChart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">按门店年龄分层（月度明细）</div>
+        <div class="chart-container">
+          <canvas id="shopAgeLineChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tier Table -->
+    <div class="card" style="margin-top:20px;">
+      <div class="card-title">分层复购率明细</div>
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>月份</th>
+              <th>整体</th>
+              <th>仅1单</th>
+              <th>2单</th>
+              <th>3+单</th>
+            </tr>
+          </thead>
+          <tbody id="tierTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== Section 7: Store Dimension ==================== -->
+  <section class="section" id="store">
+    <div class="section-title"><i class="fas fa-store"></i> 门店维度</div>
+    <div class="section-subtitle">13家门店汇总复购率排名 &mdash;&mdash; 新店蜜月膨胀 &amp; 28th &amp; 6th 结构性低迷</div>
+
+    <div class="card">
+      <div class="hbar-wrapper" id="storeBarWrapper">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== Section 8: Category ==================== -->
+  <section class="section" id="category">
+    <div class="section-title"><i class="fas fa-mug-hot"></i> 品类维度</div>
+    <div class="section-subtitle">首单品类对次月复购的影响 &mdash;&mdash; Matcha、Super Drink、Exfreezo 复购率领先</div>
+
+    <div class="card-grid-2">
+      <div class="card">
+        <div class="card-title">品类复购率 &amp; 新客占比</div>
+        <div class="chart-container">
+          <canvas id="categoryChart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">品类明细</div>
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>品类</th>
+                <th>新客数</th>
+                <th>已复购</th>
+                <th>复购率</th>
+                <th>占比</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Fresh Ground Coffee</td>
+                <td class="num">69,410</td>
+                <td class="num">15,675</td>
+                <td><span class="rate-badge rate-mid">22.6%</span></td>
+                <td class="num">52.4%</td>
+              </tr>
+              <tr>
+                <td>Matcha</td>
+                <td class="num">16,108</td>
+                <td class="num">3,864</td>
+                <td><span class="rate-badge rate-high">24.0%</span></td>
+                <td class="num">12.2%</td>
+              </tr>
+              <tr>
+                <td>Exfreezo</td>
+                <td class="num">5,669</td>
+                <td class="num">1,386</td>
+                <td><span class="rate-badge rate-high">24.4%</span></td>
+                <td class="num">4.3%</td>
+              </tr>
+              <tr>
+                <td>Super Drink</td>
+                <td class="num">2,544</td>
+                <td class="num">627</td>
+                <td><span class="rate-badge rate-high">24.6%</span></td>
+                <td class="num">1.9%</td>
+              </tr>
+              <tr>
+                <td>Cold Brew</td>
+                <td class="num">9,495</td>
+                <td class="num">2,031</td>
+                <td><span class="rate-badge rate-mid">21.4%</span></td>
+                <td class="num">7.2%</td>
+              </tr>
+              <tr>
+                <td>Classic Drinks</td>
+                <td class="num">24,939</td>
+                <td class="num">4,427</td>
+                <td><span class="rate-badge rate-low">17.8%</span></td>
+                <td class="num">18.8%</td>
+              </tr>
+              <tr>
+                <td>Refreshers</td>
+                <td class="num">4,308</td>
+                <td class="num">683</td>
+                <td><span class="rate-badge rate-alert">15.9%</span></td>
+                <td class="num">3.3%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== Section 9: Time & Reach ==================== -->
+  <section class="section" id="time-reach">
+    <div class="section-title"><i class="fas fa-clock"></i> 时段 &amp; 触达维度</div>
+    <div class="section-subtitle">首单时段影响复购粘性，触达能力是成熟门店最大杠杆</div>
+
+    <div class="card-grid-2">
+      <!-- Time Slot -->
+      <div class="card">
+        <div class="card-title">首单时段 &rarr; 复购率</div>
+        <div class="chart-container">
+          <canvas id="timeChart"></canvas>
+        </div>
+      </div>
+      <!-- Reach -->
+      <div class="card">
+        <div class="card-title">触达能力 &rarr; 复购率</div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;">
+          <div class="donut-chart">
+            <canvas id="reachDonut"></canvas>
+          </div>
+          <div class="donut-legend" style="padding-top:20px;">
+            <div class="donut-legend-item">
+              <div class="donut-legend-dot" style="background:var(--teal);"></div>
+              <span>Push可触达 &mdash; <strong class="num num-teal">26.4%</strong>（59,958人）</span>
+            </div>
+            <div class="donut-legend-item">
+              <div class="donut-legend-dot" style="background:var(--indigo);"></div>
+              <span>仅SMS可触达 &mdash; <strong class="num" style="color:var(--indigo);">25.9%</strong>（23,331人）</span>
+            </div>
+            <div class="donut-legend-item">
+              <div class="donut-legend-dot" style="background:var(--red);"></div>
+              <span>不可触达 &mdash; <strong class="num num-red">13.9%</strong>（49,184人）</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:20px;">
+          <div class="card-title" style="font-size:12px;">月度触达率趋势</div>
+          <div class="chart-container-sm">
+            <canvas id="reachTrendChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== Section 10: Insights ==================== -->
+  <section class="section" id="insights">
+    <div class="section-title"><i class="fas fa-lightbulb"></i> 综合洞察与行动建议</div>
+    <div class="section-subtitle">5大核心洞察 + 短/中/长期行动计划</div>
+
+    <!-- 5 Insight Cards -->
+    <div class="insight-card" style="border-left-color:var(--purple);">
+      <h4>1. 新店蜜月效应是复购率波动的主因</h4>
+      <p>
+        开业当月 <span class="num num-purple">29.2%</span> &rarr; 3个月后衰减至 <span class="num">16.5%</span>（-12.7pp）。Sep 2025 高峰（27.7%）中，47.6% 新客来自蜜月期新店。排除蜜月效应后，成熟门店的"真实复购率基线"约为 <span class="num">16&ndash;17%</span>。
+      </p>
+      <div class="implication"><strong>启示：</strong>每次新开店都会拉高当月整体复购率，但这是一次性红利。要提升长期复购率，必须关注成熟门店的 16&ndash;17% 基线如何提升。</div>
+    </div>
+
+    <div class="insight-card" style="border-left-color:var(--red);">
+      <h4>2. 28th &amp; 6th 是结构性异常</h4>
+      <p>
+        唯一一家没有蜜月效应的门店。从开店第1个月（<span class="num num-red">14.9%</span>）就低，7个月一直在 10&ndash;17% 震荡。同期 8th &amp; Broadway（同批开业）有正常的 18&ndash;29% 波动。需要排查：获客渠道构成、周边竞品、门店体验、触达率。
+      </p>
+    </div>
+
+    <div class="insight-card" style="border-left-color:var(--teal);">
+      <h4>3. 触达能力是成熟门店最大杠杆</h4>
+      <p>
+        37% 新客不可触达（<span class="num num-red">13.9%</span> 复购） vs 可触达（<span class="num num-teal">26.4%</span> 复购），差距 <span class="num num-teal">12.5pp</span>。在新店蜜月消退后，能否触达用户决定了能否守住复购率。
+      </p>
+    </div>
+
+    <div class="insight-card" style="border-left-color:var(--indigo);">
+      <h4>4. 午间首单 = 高粘性用户信号</h4>
+      <p>
+        12pm 首单 <span class="num" style="color:var(--indigo);">30.8%</span> 复购率，是 23pm（16.1%）的近 2 倍。午间场景（白领/通勤）天然高频，可作为用户质量的早期标签。
+      </p>
+    </div>
+
+    <div class="insight-card" style="border-left-color:var(--orange);">
+      <h4>5. 券包深度使用仍是关键杠杆</h4>
+      <p>
+        仅1单用户（占未复购 65%）复购率 12&ndash;14%，3+单用户达 43&ndash;59%。用到第3张券的用户留存显著提升。
+      </p>
+    </div>
+
+    <!-- Action Items -->
+    <div style="margin-top:32px;">
+      <h3 style="font-size:18px;font-weight:700;margin-bottom:20px;"><i class="fas fa-tasks" style="color:var(--indigo);margin-right:8px;"></i>行动计划</h3>
+      <div class="action-grid">
+        <div class="action-column short">
+          <h4><span style="color:var(--orange);">&#9679;</span> 短期（1&ndash;2周）</h4>
+          <ul>
+            <li>新客首单后强制 Push 授权引导弹窗（目标：不可触达从 37% 降至 25%）</li>
+            <li>28th &amp; 6th 门店排查（触达率、渠道构成、品类结构对比其他门店）</li>
+            <li>仅1单 + 可触达用户 D3 推送券提醒</li>
+          </ul>
+        </div>
+        <div class="action-column mid">
+          <h4><span style="color:var(--teal);">&#9679;</span> 中期（1&ndash;2月）</h4>
+          <ul>
+            <li>新店开业期专项留存策略：蜜月期（0&ndash;2月）重点投入 Push 授权 + 二次券激励，在用户粘性最高时锁定触达渠道</li>
+            <li>午间首单用户标记"高潜力"，配差异化复购链路</li>
+            <li>晚间首单用户增加即时激励机制</li>
+          </ul>
+        </div>
+        <div class="action-column long">
+          <h4><span style="color:var(--purple);">&#9679;</span> 长期（1&ndash;3月）</h4>
+          <ul>
+            <li>建立"门店生命周期复购率看板"，分开追踪蜜月期和成熟期复购率</li>
+            <li>成熟门店复购率提升专项（当前基线 16.5%，目标 20%）</li>
+            <li>新店选址时纳入复购率预测模型（28th &amp; 6th 类型门店预警机制）</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    数据来源：CyberData DWD层 &nbsp;|&nbsp; 统计日期：2026-03-24 &nbsp;|&nbsp; 2月次月观察期截至 3/23
+  </footer>
+
+</div><!-- /main-content -->
+
+<script>
+/* ===================================================================
+   Lucky US 新客次月复购分析 — JavaScript
+   =================================================================== */
+
+// ===== Chart.js 全局配置 =====
+Chart.defaults.color = '#8899b0';
+Chart.defaults.borderColor = 'rgba(42, 58, 92, 0.5)';
+Chart.defaults.font.family = "-apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.plugins.legend.labels.boxWidth = 12;
+Chart.defaults.plugins.legend.labels.padding = 14;
+Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(26, 37, 64, 0.95)';
+Chart.defaults.plugins.tooltip.borderColor = 'rgba(58, 74, 108, 0.6)';
+Chart.defaults.plugins.tooltip.borderWidth = 1;
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.tooltip.cornerRadius = 8;
+Chart.defaults.plugins.tooltip.titleFont = { weight: '600', size: 12 };
+
+const COLORS = {
+  orange: '#f97316', teal: '#06b6d4', purple: '#8b5cf6', green: '#22c55e',
+  red: '#ef4444', indigo: '#6366f1', yellow: '#eab308', grey: '#64748b',
+  orangeDim: 'rgba(249,115,22,0.15)', tealDim: 'rgba(6,182,212,0.15)',
+  purpleDim: 'rgba(139,92,246,0.15)', greenDim: 'rgba(34,197,94,0.15)',
+  redDim: 'rgba(239,68,68,0.15)', indigoDim: 'rgba(99,102,241,0.15)',
+};
+
+const MONTHS = ['2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02'];
+const MONTH_SHORT = ['Aug','Sep','Oct','Nov','Dec','Jan','Feb'];
+
+// ===== 数据 =====
+const monthlyData = {
+  total:  [21525, 24371, 19031, 14898, 19963, 16749, 15936],
+  repurchased: [4281, 6750, 4064, 2775, 4233, 3353, 3237],
+  rate: [19.9, 27.7, 21.4, 18.6, 21.2, 20.0, 20.3],
+};
+
+const tierRates = {
+  '仅1单': [14.4, 16.1, 13.0, 12.9, 12.2, 12.1, 13.5],
+  '2单': [20.5, 25.6, 21.0, 18.1, 20.8, 20.3, 21.1],
+  '3+单': [39.5, 59.5, 50.6, 43.3, 49.4, 47.2, 48.4],
+};
+
+const shopAgeAgg = {
+  labels: ['开业当月','开业1月','开业2月','开业3-5月','开业6月+'],
+  newCust: [38719, 34148, 20835, 31489, 7282],
+  repurchased: [11302, 6335, 4637, 5205, 1272],
+  rate: [29.2, 18.6, 22.3, 16.5, 17.5],
+};
+
+// 门店年龄月度
+const shopAgeMonthly = {
+  '开业当月': { months: ['Aug','Sep','Oct','Nov','Dec','Jan','Feb'], rates: [39.9,31.0,22.1,31.7,28.3,22.5,35.2] },
+  '开业1月': { months: ['Aug','Sep','Oct','Nov','Dec','Jan','Feb'], rates: [16.6,null,22.9,15.6,null,24.3,17.8] },
+  '开业2月': { months: ['Aug','Sep','Oct','Nov','Dec','Jan','Feb'], rates: [null,24.7,null,17.9,13.7,null,21.6] },
+  '开业3-5月': { months: ['Aug','Sep','Oct','Nov','Dec','Jan','Feb'], rates: [null,null,20.0,16.3,13.0,16.0,16.6] },
+  '开业6月+': { months: ['Aug','Sep','Oct','Nov','Dec','Jan','Feb'], rates: [null,null,null,null,null,17.5,17.5] },
+};
+
+// 单店衰减曲线
+const storeDecay = {
+  '102 Fulton': { ages: [0,0,1,2,3,4,5], rates: [41.3,31.6,23.5,18.2,15.0,14.9,17.9] },
+  '54th & 8th': { ages: [0,0,1,2,3,4,5], rates: [38.9,27.6,22.1,17.5,12.8,16.3,15.6] },
+  '100 Maiden Ln': { ages: [0,0,1,2,3,4], rates: [34.3,22.1,15.6,13.7,17.3,15.9] },
+  '221 Grand': { ages: [0,0,1], rates: [33.8,19.9,14.8] },
+  '37th & Broadway': { ages: [0,0,1,2], rates: [31.7,20.7,24.3,21.6] },
+  '28th & 6th': { ages: [1,2,3,4,5,6,7], rates: [14.9,17.2,16.3,14.0,10.4,13.6,15.5] },
+};
+
+const storeOverall = [
+  { name: 'JFK 24', total: 214, repurchased: 106, rate: 49.5, badge: 'new' },
+  { name: '52nd & Madison', total: 489, repurchased: 236, rate: 48.3, badge: 'new' },
+  { name: '21st & 3rd', total: 1977, repurchased: 616, rate: 31.2, badge: 'new' },
+  { name: '15th & 3rd', total: 3760, repurchased: 1083, rate: 28.8, badge: 'new' },
+  { name: '102 Fulton', total: 17847, repurchased: 4317, rate: 24.2 },
+  { name: '37th & Broadway', total: 9515, repurchased: 2254, rate: 23.7 },
+  { name: '33rd & 10th', total: 5505, repurchased: 1304, rate: 23.7 },
+  { name: '221 Grand', total: 9305, repurchased: 2172, rate: 23.3 },
+  { name: '100 Maiden Ln', total: 9117, repurchased: 2091, rate: 22.9 },
+  { name: '54th & 8th', total: 15503, repurchased: 3493, rate: 22.5 },
+  { name: '8th & Broadway', total: 33322, repurchased: 7122, rate: 21.4 },
+  { name: '28th & 6th', total: 25919, repurchased: 3899, rate: 15.0, badge: 'warning' },
+];
+
+const categoryData = {
+  labels: ['Fresh Ground', 'Classic', 'Matcha', 'Cold Brew', 'Exfreezo', 'Refreshers', 'Super Drink'],
+  newCust: [69410, 24939, 16108, 9495, 5669, 4308, 2544],
+  rate: [22.6, 17.8, 24.0, 21.4, 24.4, 15.9, 24.6],
+  pct: [52.4, 18.8, 12.2, 7.2, 4.3, 3.3, 1.9],
+};
+
+const timeData = {
+  hours: [0,1,11,12,13,14,15,16,17,18,19,20,21,22,23],
+  labels: ['0','1','11','12','13','14','15','16','17','18','19','20','21','22','23'],
+  slots: ['凌晨','凌晨','上午','午间','午间','午间','下午','下午','下午','傍晚','傍晚','傍晚','晚间','晚间','晚间'],
+  newCust: [3151,687,1469,4835,8226,10560,11294,13021,14716,15432,14472,12818,9927,7041,4822],
+  rate: [14.7,13.2,29.3,30.8,29.4,26.5,21.9,22.8,23.2,21.0,20.0,18.3,17.0,17.4,16.1],
+};
+
+const reachData = {
+  labels: ['Push可触达','仅SMS可触达','不可触达'],
+  total: [59958, 23331, 49184],
+  repurchased: [15802, 6048, 6843],
+  rate: [26.4, 25.9, 13.9],
+};
+
+const reachMonthly = {
+  months: MONTH_SHORT,
+  push: [22.7, 33.1, 26.9, 23.1, 25.4, 25.0, 25.6],
+  sms: [21.8, 31.3, 24.7, 22.8, 28.6, 27.3, 23.3],
+  unreachable: [14.9, 18.6, 13.0, 11.5, 13.0, 11.8, 12.8],
+};
+
+// ===== 开店时间线 =====
+const storeTimeline = [
+  { name: '8th & Broadway', date: '2025-06-30', cls: 'founding', rate: '21.4%' },
+  { name: '28th & 6th', date: '2025-06-30', cls: 'founding', rate: '15.0%' },
+  { name: '54th & 8th', date: '2025-08-24', cls: 'wave1', rate: '22.5%' },
+  { name: '102 Fulton', date: '2025-08-28', cls: 'wave1', rate: '24.2%' },
+  { name: '100 Maiden Ln', date: '2025-09-09', cls: 'wave2', rate: '22.9%' },
+  { name: '37th & Broadway', date: '2025-11-20', cls: 'wave3', rate: '23.7%' },
+  { name: 'JFK 24', date: '2025-12-01', cls: 'wave3', rate: '49.5%' },
+  { name: '33rd & 10th', date: '2025-12-01', cls: 'wave3', rate: '23.7%' },
+  { name: '15th & 3rd', date: '2025-12-14', cls: 'wave3', rate: '28.8%' },
+  { name: '221 Grand', date: '2025-12-15', cls: 'wave3', rate: '23.3%' },
+  { name: '21st & 3rd', date: '2026-02-06', cls: 'wave4', rate: '31.2%' },
+  { name: '52nd & Madison', date: '2026-02-26', cls: 'wave4', rate: '48.3%' },
+  { name: '16th & 6th', date: '2026-03-23', cls: 'wave5', rate: '待定' },
+];
+
+// 新店每月数量
+const newStoresPerMonth = [0, 0, 2, 1, 0, 1, 4, 0, 0, 2, 0]; // Jun-Mar (不用)
+
+// ===== 1. 时间线渲染 =====
+(function renderTimeline() {
+  const track = document.getElementById('timelineTrack');
+  const tooltip = document.getElementById('timelineTooltip');
+  // 时间范围：2025-06-01 到 2026-04-01
+  const startDate = new Date('2025-06-01');
+  const endDate = new Date('2026-04-01');
+  const totalDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
+
+  // 添加月份标签
+  const monthsDiv = document.createElement('div');
+  monthsDiv.className = 'timeline-months';
+  const mlabels = ['Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+  const mdates = ['2025-06-01','2025-07-01','2025-08-01','2025-09-01','2025-10-01','2025-11-01','2025-12-01','2026-01-01','2026-02-01','2026-03-01'];
+  mdates.forEach((d, i) => {
+    const pct = ((new Date(d) - startDate) / (1000*60*60*24)) / totalDays * 100;
+    const sp = document.createElement('span');
+    sp.textContent = mlabels[i];
+    sp.style.position = 'absolute';
+    sp.style.left = pct + '%';
+    sp.style.transform = 'translateX(-50%)';
+    monthsDiv.appendChild(sp);
+  });
+  monthsDiv.style.position = 'absolute';
+  monthsDiv.style.bottom = '0';
+  monthsDiv.style.left = '0';
+  monthsDiv.style.right = '0';
+  monthsDiv.style.height = '20px';
+  track.appendChild(monthsDiv);
+
+  // 渲染标记
+  const usedPositions = [];
+  storeTimeline.forEach((store, idx) => {
+    const d = new Date(store.date);
+    let pct = ((d - startDate) / (1000*60*60*24)) / totalDays * 100;
+    pct = Math.max(2, Math.min(98, pct));
+
+    // 避免重叠
+    let offset = 0;
+    usedPositions.forEach(p => {
+      if (Math.abs(p.pct - pct) < 3) offset = p.offset === 0 ? -25 : (p.offset === -25 ? 25 : 0);
+    });
+    usedPositions.push({ pct, offset });
+
+    const marker = document.createElement('div');
+    marker.className = 'timeline-marker ' + store.cls;
+    marker.style.left = pct + '%';
+    if (offset !== 0) marker.style.top = (40 + offset) + 'px';
+
+    marker.innerHTML = `
+      <div class="dot"></div>
+      <div class="store-name">${store.name}</div>
+    `;
+
+    marker.addEventListener('mouseenter', (e) => {
+      const rect = marker.getBoundingClientRect();
+      const trackRect = track.getBoundingClientRect();
+      tooltip.querySelector('.tt-name').textContent = store.name;
+      tooltip.querySelector('.tt-date').textContent = '开业：' + store.date;
+      tooltip.querySelector('.tt-stat').textContent = '汇总复购率：' + store.rate;
+      tooltip.style.left = (rect.left - trackRect.left - 60) + 'px';
+      tooltip.style.top = (rect.top - trackRect.top - 70) + 'px';
+      tooltip.classList.add('show');
+    });
+    marker.addEventListener('mouseleave', () => {
+      tooltip.classList.remove('show');
+    });
+
+    track.appendChild(marker);
+  });
+})();
+
+// ===== 2. 时间线图表（复购率+新店数） =====
+new Chart(document.getElementById('timelineChart'), {
+  type: 'bar',
+  data: {
+    labels: MONTH_SHORT,
+    datasets: [
+      {
+        label: '当月新开店数',
+        data: [2, 1, 0, 1, 4, 0, 2],
+        backgroundColor: COLORS.purpleDim,
+        borderColor: COLORS.purple,
+        borderWidth: 1,
+        yAxisID: 'y1',
+        order: 2,
+        borderRadius: 4,
+      },
+      {
+        label: '整体复购率',
+        data: monthlyData.rate,
+        type: 'line',
+        borderColor: COLORS.teal,
+        backgroundColor: 'rgba(6, 182, 212, 0.1)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 5,
+        pointBackgroundColor: COLORS.teal,
+        pointBorderColor: '#1a2540',
+        pointBorderWidth: 2,
+        yAxisID: 'y',
+        order: 1,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    scales: {
+      y: { min: 10, max: 35, ticks: { callback: v => v + '%' }, grid: { color: 'rgba(42,58,92,0.3)' } },
+      y1: { position: 'right', min: 0, max: 6, ticks: { stepSize: 1 }, grid: { display: false } },
+      x: { grid: { display: false } }
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: ctx => {
+            if (ctx.dataset.yAxisID === 'y') return '复购率: ' + ctx.parsed.y + '%';
+            return '新开店: ' + ctx.parsed.y + ' 家';
+          }
+        }
+      }
+    }
+  }
+});
+
+// ===== 3. 蜜月效应柱状图 =====
+new Chart(document.getElementById('honeymoonBarChart'), {
+  type: 'bar',
+  data: {
+    labels: shopAgeAgg.labels,
+    datasets: [{
+      label: '复购率',
+      data: shopAgeAgg.rate,
+      backgroundColor: [
+        COLORS.purple, 'rgba(139,92,246,0.5)', 'rgba(139,92,246,0.35)',
+        'rgba(100,116,139,0.5)', 'rgba(100,116,139,0.35)'
+      ],
+      borderColor: [
+        COLORS.purple, COLORS.purple, COLORS.purple,
+        COLORS.grey, COLORS.grey
+      ],
+      borderWidth: 1,
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          afterLabel: (ctx) => {
+            const i = ctx.dataIndex;
+            return '新客数: ' + shopAgeAgg.newCust[i].toLocaleString() + '\n已复购: ' + shopAgeAgg.repurchased[i].toLocaleString();
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        min: 0, max: 40,
+        ticks: { callback: v => v + '%' },
+        grid: { color: 'rgba(42,58,92,0.3)' }
+      },
+      x: { grid: { display: false } }
+    }
+  },
+  plugins: [{
+    afterDatasetsDraw: (chart) => {
+      const ctx = chart.ctx;
+      chart.data.datasets[0].data.forEach((v, i) => {
+        const meta = chart.getDatasetMeta(0);
+        const bar = meta.data[i];
+        ctx.save();
+        ctx.fillStyle = '#f0f4f8';
+        ctx.font = 'bold 12px ' + Chart.defaults.font.family;
+        ctx.textAlign = 'center';
+        ctx.fillText(v + '%', bar.x, bar.y - 8);
+        // 新客数
+        ctx.fillStyle = '#8899b0';
+        ctx.font = '10px ' + Chart.defaults.font.family;
+        ctx.fillText(shopAgeAgg.newCust[i].toLocaleString() + '人', bar.x, bar.y - 22);
+        ctx.restore();
+      });
+    }
+  }]
+});
+
+// ===== 4. 单店衰减曲线 =====
+(function() {
+  const storeColors = {
+    '102 Fulton': COLORS.teal,
+    '54th & 8th': COLORS.indigo,
+    '100 Maiden Ln': COLORS.green,
+    '221 Grand': COLORS.orange,
+    '37th & Broadway': COLORS.purple,
+    '28th & 6th': COLORS.red,
+  };
+  const maxAge = 8;
+  const labels = Array.from({length: maxAge}, (_, i) => i + '月');
+
+  const datasets = Object.entries(storeDecay).map(([name, data]) => {
+    const points = new Array(maxAge).fill(null);
+    data.ages.forEach((age, i) => {
+      if (age < maxAge) {
+        // 如果同一age有多个值，取第一个（开业当月可能跨两个自然月）
+        if (points[age] === null) points[age] = data.rates[i];
+      }
+    });
+    return {
+      label: name,
+      data: points,
+      borderColor: storeColors[name],
+      backgroundColor: storeColors[name],
+      tension: 0.3,
+      pointRadius: 4,
+      pointBorderWidth: 2,
+      pointBorderColor: '#1a2540',
+      borderWidth: name === '28th & 6th' ? 3 : 2,
+      borderDash: name === '28th & 6th' ? [5, 5] : [],
+      spanGaps: true,
+    };
+  });
+
+  new Chart(document.getElementById('storeDecayChart'), {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: {
+        y: {
+          min: 5, max: 50,
+          ticks: { callback: v => v + '%' },
+          grid: { color: 'rgba(42,58,92,0.3)' }
+        },
+        x: { grid: { display: false }, title: { display: true, text: '开业后月数', color: '#5a6a80' } }
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataset.label + ': ' + (ctx.parsed.y !== null ? ctx.parsed.y + '%' : 'N/A')
+          }
+        }
+      }
+    }
+  });
+})();
+
+// ===== 5. 分层趋势折线图 =====
+new Chart(document.getElementById('tierLineChart'), {
+  type: 'line',
+  data: {
+    labels: MONTH_SHORT,
+    datasets: [
+      {
+        label: '整体',
+        data: monthlyData.rate,
+        borderColor: '#94a3b8',
+        backgroundColor: '#94a3b8',
+        borderWidth: 2,
+        borderDash: [5, 5],
+        tension: 0.3,
+        pointRadius: 4,
+        pointBorderColor: '#1a2540',
+        pointBorderWidth: 2,
+      },
+      {
+        label: '仅1单',
+        data: tierRates['仅1单'],
+        borderColor: COLORS.orange,
+        backgroundColor: COLORS.orange,
+        tension: 0.3,
+        pointRadius: 4,
+        pointBorderColor: '#1a2540',
+        pointBorderWidth: 2,
+      },
+      {
+        label: '2单',
+        data: tierRates['2单'],
+        borderColor: COLORS.teal,
+        backgroundColor: COLORS.teal,
+        tension: 0.3,
+        pointRadius: 4,
+        pointBorderColor: '#1a2540',
+        pointBorderWidth: 2,
+      },
+      {
+        label: '3+单',
+        data: tierRates['3+单'],
+        borderColor: COLORS.green,
+        backgroundColor: COLORS.green,
+        tension: 0.3,
+        pointRadius: 4,
+        pointBorderColor: '#1a2540',
+        pointBorderWidth: 2,
+      },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    scales: {
+      y: { min: 0, max: 65, ticks: { callback: v => v + '%' }, grid: { color: 'rgba(42,58,92,0.3)' } },
+      x: { grid: { display: false } }
+    },
+    plugins: {
+      tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+    }
+  }
+});
+
+// ===== 6. 门店年龄月度折线图 =====
+(function() {
+  const ageColors = {
+    '开业当月': COLORS.purple,
+    '开业1月': COLORS.teal,
+    '开业2月': COLORS.indigo,
+    '开业3-5月': COLORS.orange,
+    '开业6月+': COLORS.grey,
+  };
+  const datasets = Object.entries(shopAgeMonthly).map(([name, d]) => ({
+    label: name,
+    data: d.rates,
+    borderColor: ageColors[name],
+    backgroundColor: ageColors[name],
+    tension: 0.3,
+    pointRadius: 4,
+    pointBorderColor: '#1a2540',
+    pointBorderWidth: 2,
+    borderWidth: name === '开业当月' ? 3 : 2,
+    spanGaps: false,
+  }));
+
+  new Chart(document.getElementById('shopAgeLineChart'), {
+    type: 'line',
+    data: { labels: MONTH_SHORT, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: {
+        y: { min: 10, max: 45, ticks: { callback: v => v + '%' }, grid: { color: 'rgba(42,58,92,0.3)' } },
+        x: { grid: { display: false } }
+      },
+      plugins: {
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + (ctx.parsed.y !== null ? ctx.parsed.y + '%' : 'N/A') } }
+      }
+    }
+  });
+})();
+
+// ===== 7. 分层表格 =====
+(function() {
+  const tbody = document.getElementById('tierTableBody');
+  const overall = monthlyData.rate;
+  const t1 = tierRates['仅1单'];
+  const t2 = tierRates['2单'];
+  const t3 = tierRates['3+单'];
+
+  MONTHS.forEach((m, i) => {
+    const tr = document.createElement('tr');
+    const rateBadge = (v) => {
+      let cls = 'rate-mid';
+      if (v >= 25) cls = 'rate-high';
+      else if (v < 15) cls = 'rate-low';
+      return `<span class="rate-badge ${cls}">${v}%</span>`;
+    };
+    tr.innerHTML = `
+      <td>${m}</td>
+      <td>${rateBadge(overall[i])}</td>
+      <td>${rateBadge(t1[i])}</td>
+      <td>${rateBadge(t2[i])}</td>
+      <td>${rateBadge(t3[i])}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+})();
+
+// ===== 8. 门店横向柱状图 =====
+(function() {
+  const wrapper = document.getElementById('storeBarWrapper');
+  const maxRate = 52;
+
+  storeOverall.forEach(store => {
+    const item = document.createElement('div');
+    item.className = 'hbar-item';
+
+    let labelHtml = store.name;
+    if (store.badge === 'new') labelHtml += '<span class="badge-new">蜜月</span>';
+    if (store.badge === 'warning') labelHtml += '<span class="badge-warning">异常</span>';
+
+    let fillColor;
+    if (store.badge === 'warning') fillColor = COLORS.red;
+    else if (store.rate >= 30) fillColor = COLORS.purple;
+    else if (store.rate >= 22) fillColor = COLORS.teal;
+    else fillColor = COLORS.grey;
+
+    const width = (store.rate / maxRate * 100);
+
+    item.innerHTML = `
+      <div class="hbar-label">${labelHtml}</div>
+      <div class="hbar-track">
+        <div class="hbar-fill" style="width:${width}%;background:${fillColor};" data-width="${width}">
+          ${store.rate}%
+        </div>
+      </div>
+      <div style="width:80px;font-size:11px;color:var(--text-muted);text-align:right;">${store.total.toLocaleString()}人</div>
+    `;
+    wrapper.appendChild(item);
+  });
+})();
+
+// ===== 9. 品类图表 =====
+new Chart(document.getElementById('categoryChart'), {
+  type: 'bar',
+  data: {
+    labels: categoryData.labels,
+    datasets: [
+      {
+        label: '新客占比',
+        data: categoryData.pct,
+        backgroundColor: COLORS.indigoDim,
+        borderColor: COLORS.indigo,
+        borderWidth: 1,
+        borderRadius: 4,
+        yAxisID: 'y1',
+        order: 2,
+      },
+      {
+        label: '复购率',
+        data: categoryData.rate,
+        type: 'line',
+        borderColor: COLORS.teal,
+        backgroundColor: COLORS.teal,
+        pointRadius: 5,
+        pointBorderWidth: 2,
+        pointBorderColor: '#1a2540',
+        tension: 0.3,
+        yAxisID: 'y',
+        order: 1,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    scales: {
+      y: { min: 10, max: 30, ticks: { callback: v => v + '%' }, grid: { color: 'rgba(42,58,92,0.3)' }, title: { display: true, text: '复购率', color: '#5a6a80' } },
+      y1: { position: 'right', min: 0, max: 60, ticks: { callback: v => v + '%' }, grid: { display: false }, title: { display: true, text: '新客占比', color: '#5a6a80' } },
+      x: { grid: { display: false } }
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: ctx => {
+            if (ctx.dataset.yAxisID === 'y') return '复购率: ' + ctx.parsed.y + '%';
+            return '新客占比: ' + ctx.parsed.y + '%';
+          }
+        }
+      }
+    }
+  }
+});
+
+// ===== 10. 时段图表 =====
+new Chart(document.getElementById('timeChart'), {
+  type: 'bar',
+  data: {
+    labels: timeData.labels.map(h => h + ':00'),
+    datasets: [{
+      label: '复购率',
+      data: timeData.rate,
+      backgroundColor: timeData.rate.map(r => {
+        if (r >= 28) return COLORS.greenDim;
+        if (r >= 22) return COLORS.tealDim;
+        if (r >= 17) return COLORS.indigoDim;
+        return COLORS.orangeDim;
+      }),
+      borderColor: timeData.rate.map(r => {
+        if (r >= 28) return COLORS.green;
+        if (r >= 22) return COLORS.teal;
+        if (r >= 17) return COLORS.indigo;
+        return COLORS.orange;
+      }),
+      borderWidth: 1,
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          afterLabel: (ctx) => {
+            const i = ctx.dataIndex;
+            return '时段: ' + timeData.slots[i] + '\n新客数: ' + timeData.newCust[i].toLocaleString();
+          }
+        }
+      }
+    },
+    scales: {
+      y: { min: 10, max: 35, ticks: { callback: v => v + '%' }, grid: { color: 'rgba(42,58,92,0.3)' } },
+      x: { grid: { display: false }, ticks: { maxRotation: 45 } }
+    }
+  },
+  plugins: [{
+    afterDatasetsDraw: (chart) => {
+      const ctx2 = chart.ctx;
+      chart.data.datasets[0].data.forEach((v, i) => {
+        const meta = chart.getDatasetMeta(0);
+        const bar = meta.data[i];
+        ctx2.save();
+        ctx2.fillStyle = '#f0f4f8';
+        ctx2.font = 'bold 10px ' + Chart.defaults.font.family;
+        ctx2.textAlign = 'center';
+        ctx2.fillText(v + '%', bar.x, bar.y - 6);
+        ctx2.restore();
+      });
+    }
+  }]
+});
+
+// ===== 11. 触达甜甜圈 =====
+new Chart(document.getElementById('reachDonut'), {
+  type: 'doughnut',
+  data: {
+    labels: reachData.labels,
+    datasets: [{
+      data: reachData.total,
+      backgroundColor: [COLORS.teal, COLORS.indigo, COLORS.red],
+      borderColor: '#1a2540',
+      borderWidth: 3,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    cutout: '65%',
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => {
+            const i = ctx.dataIndex;
+            return ctx.label + ': ' + reachData.total[i].toLocaleString() + '人 (' + reachData.rate[i] + '%复购)';
+          }
+        }
+      }
+    }
+  }
+});
+
+// ===== 12. 触达月度趋势 =====
+new Chart(document.getElementById('reachTrendChart'), {
+  type: 'line',
+  data: {
+    labels: MONTH_SHORT,
+    datasets: [
+      {
+        label: 'Push可触达',
+        data: reachMonthly.push,
+        borderColor: COLORS.teal,
+        backgroundColor: COLORS.teal,
+        tension: 0.3,
+        pointRadius: 4,
+        pointBorderColor: '#1a2540',
+        pointBorderWidth: 2,
+      },
+      {
+        label: '仅SMS可触达',
+        data: reachMonthly.sms,
+        borderColor: COLORS.indigo,
+        backgroundColor: COLORS.indigo,
+        tension: 0.3,
+        pointRadius: 4,
+        pointBorderColor: '#1a2540',
+        pointBorderWidth: 2,
+      },
+      {
+        label: '不可触达',
+        data: reachMonthly.unreachable,
+        borderColor: COLORS.red,
+        backgroundColor: COLORS.red,
+        tension: 0.3,
+        pointRadius: 4,
+        pointBorderColor: '#1a2540',
+        pointBorderWidth: 2,
+        borderDash: [5, 5],
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    scales: {
+      y: { min: 5, max: 40, ticks: { callback: v => v + '%' }, grid: { color: 'rgba(42,58,92,0.3)' } },
+      x: { grid: { display: false } }
+    },
+    plugins: {
+      tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+    }
+  }
+});
+
+// ===== Scroll Animations =====
+const sections = document.querySelectorAll('.section');
+const navLinks = document.querySelectorAll('.sidebar nav a');
+
+function onScroll() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const scrollPct = (scrollTop / docHeight) * 100;
+  document.getElementById('scrollBar').style.width = scrollPct + '%';
+
+  // Fade-in sections
+  sections.forEach(sec => {
+    const rect = sec.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.85) {
+      sec.classList.add('visible');
+    }
+  });
+
+  // Scrollspy
+  let currentId = '';
+  sections.forEach(sec => {
+    if (sec.getBoundingClientRect().top <= 120) {
+      currentId = sec.id;
+    }
+  });
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + currentId) {
+      link.classList.add('active');
+    }
+  });
+}
+
+window.addEventListener('scroll', onScroll, { passive: true });
+window.addEventListener('load', onScroll);
+
+// Mobile sidebar toggle
+document.getElementById('sidebarToggle').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+});
+
+// Close sidebar on link click (mobile)
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 1024) {
+      document.getElementById('sidebar').classList.remove('open');
+    }
+  });
+});
+</script>
+</body>
+</html>

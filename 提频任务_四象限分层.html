@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>提频任务 — 四象限用户分层分析</title>
+<style>
+  :root {
+    --green: #22c55e;
+    --green-bg: rgba(34,197,94,0.12);
+    --green-border: rgba(34,197,94,0.35);
+    --blue: #38bdf8;
+    --blue-bg: rgba(56,189,248,0.12);
+    --blue-border: rgba(56,189,248,0.35);
+    --gray: #94a3b8;
+    --gray-bg: rgba(148,163,184,0.10);
+    --gray-border: rgba(148,163,184,0.30);
+    --red: #f97316;
+    --red-bg: rgba(249,115,22,0.12);
+    --red-border: rgba(249,115,22,0.35);
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-card: #1e293b;
+    --bg-card-hover: #263348;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --border: #334155;
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+  }
+
+  /* --- Header --- */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #818cf8, #38bdf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .header .subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+  }
+
+  /* --- Summary Cards --- */
+  .summary-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .summary-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    text-align: center;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .summary-card:hover {
+    transform: translateY(-2px);
+    border-color: #475569;
+  }
+  .summary-card .label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .summary-card .value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .summary-card .unit {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-left: 2px;
+  }
+
+  /* --- Section Title --- */
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-left: 12px;
+    border-left: 3px solid #818cf8;
+    color: var(--text-primary);
+  }
+
+  /* --- Quadrant Chart --- */
+  .quadrant-wrapper {
+    margin-bottom: 48px;
+  }
+  .quadrant-chart {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  /* Axis labels */
+  .axis-label-y {
+    position: absolute;
+    left: -24px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+  }
+  .axis-label-x {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 12px;
+    letter-spacing: 0.5px;
+  }
+  .axis-divider-text-top {
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* Grid */
+  .quadrant-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 3px;
+    background: var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    aspect-ratio: 1.6 / 1;
+    position: relative;
+  }
+
+  /* Threshold labels on axes */
+  .threshold-x {
+    position: absolute;
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--bg-primary);
+    padding: 0 8px;
+    z-index: 5;
+  }
+  .threshold-y {
+    position: absolute;
+    left: -76px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--bg-primary);
+    padding: 2px 6px;
+    z-index: 5;
+    white-space: nowrap;
+  }
+
+  /* Side annotations */
+  .side-anno-left {
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    z-index: 5;
+  }
+  .side-anno-right {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    z-index: 5;
+  }
+  .side-anno-top {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: var(--text-muted);
+    z-index: 5;
+  }
+  .side-anno-bottom {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: var(--text-muted);
+    z-index: 5;
+  }
+
+  .q-cell {
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    transition: background 0.2s;
+    cursor: default;
+  }
+  .q-cell:hover { filter: brightness(1.15); }
+
+  /* Colors */
+  .q-cell.q2 { background: var(--blue-bg); }
+  .q-cell.q1 { background: var(--green-bg); }
+  .q-cell.q3 { background: var(--gray-bg); }
+  .q-cell.q4 { background: var(--red-bg); }
+
+  .q-cell .q-number {
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0.5;
+    position: absolute;
+    top: 10px;
+    left: 14px;
+  }
+  .q-cell.q1 .q-number { color: var(--green); }
+  .q-cell.q2 .q-number { color: var(--blue); }
+  .q-cell.q3 .q-number { color: var(--gray); }
+  .q-cell.q4 .q-number { color: var(--red); }
+
+  .q-cell .q-name {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .q-cell.q1 .q-name { color: var(--green); }
+  .q-cell.q2 .q-name { color: var(--blue); }
+  .q-cell.q3 .q-name { color: var(--gray); }
+  .q-cell.q4 .q-name { color: var(--red); }
+
+  .q-cell .q-users {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 2px;
+  }
+  .q-cell .q-pct {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+  }
+  .q-cell .q-metric {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .q-cell .q-metric strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .q-cell .q-strategy {
+    margin-top: 10px;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .q-cell.q1 .q-strategy { background: var(--green-border); color: var(--green); }
+  .q-cell.q2 .q-strategy { background: var(--blue-border); color: var(--blue); }
+  .q-cell.q3 .q-strategy { background: var(--gray-border); color: var(--gray); }
+  .q-cell.q4 .q-strategy { background: var(--red-border); color: var(--red); }
+
+  /* Axis line overlay */
+  .quadrant-grid::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: var(--border);
+    z-index: 2;
+  }
+  .quadrant-grid::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    top: 50%;
+    height: 1px;
+    background: var(--border);
+    z-index: 2;
+  }
+
+  /* Axis range annotations outside chart */
+  .axis-range-row {
+    display: flex;
+    justify-content: space-between;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 4px;
+  }
+  .axis-range-row .range-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 4px 0;
+  }
+  .axis-range-row .range-label.center {
+    text-align: center;
+  }
+
+  /* --- Two Column Layout for charts --- */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+
+  .chart-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+  .chart-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+  }
+
+  /* --- Pie Chart (pure CSS + JS canvas) --- */
+  .pie-container {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .pie-canvas-wrap {
+    flex-shrink: 0;
+  }
+  .pie-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .pie-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .pie-legend-item .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .pie-legend-item .pct {
+    color: var(--text-secondary);
+    margin-left: auto;
+    font-weight: 600;
+    min-width: 44px;
+    text-align: right;
+  }
+
+  /* --- Bar comparison --- */
+  .bar-group {
+    margin-bottom: 16px;
+  }
+  .bar-group:last-child { margin-bottom: 0; }
+  .bar-label-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  .bar-label-row .bar-name { color: var(--text-secondary); }
+  .bar-label-row .bar-val { color: var(--text-primary); font-weight: 600; }
+  .bar-track {
+    height: 22px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 1s ease;
+    width: 0;
+  }
+
+  /* --- Detail Table --- */
+  .table-wrapper {
+    margin-bottom: 48px;
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  thead th {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    font-weight: 600;
+    padding: 12px 16px;
+    text-align: right;
+    white-space: nowrap;
+    border-bottom: 2px solid var(--border);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  thead th:first-child { text-align: left; border-radius: var(--radius) 0 0 0; }
+  thead th:last-child { border-radius: 0 var(--radius) 0 0; }
+  tbody td {
+    padding: 14px 16px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-primary);
+  }
+  tbody td:first-child { text-align: left; }
+  tbody tr:hover { background: var(--bg-card-hover); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  .q-tag {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 20px;
+    margin-right: 6px;
+  }
+  .q-tag.t1 { background: var(--green-border); color: var(--green); }
+  .q-tag.t2 { background: var(--blue-border); color: var(--blue); }
+  .q-tag.t3 { background: var(--gray-border); color: var(--gray); }
+  .q-tag.t4 { background: var(--red-border); color: var(--red); }
+
+  /* --- Insights --- */
+  .insights-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .insight-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    border-left: 3px solid;
+    transition: transform 0.2s;
+  }
+  .insight-card:hover { transform: translateY(-2px); }
+  .insight-card.c1 { border-color: var(--green); }
+  .insight-card.c2 { border-color: var(--blue); }
+  .insight-card.c3 { border-color: var(--gray); }
+  .insight-card.c4 { border-color: var(--red); }
+  .insight-card .insight-header {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .insight-card.c1 .insight-header { color: var(--green); }
+  .insight-card.c2 .insight-header { color: var(--blue); }
+  .insight-card.c3 .insight-header { color: var(--gray); }
+  .insight-card.c4 .insight-header { color: var(--red); }
+  .insight-card .insight-body {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .insight-card .insight-body strong {
+    color: var(--text-primary);
+  }
+
+  /* --- Footer --- */
+  .footer {
+    text-align: center;
+    padding: 24px 0;
+    color: var(--text-muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* --- Animations --- */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* --- Responsive --- */
+  @media (max-width: 768px) {
+    .container { padding: 24px 16px 40px; }
+    .header h1 { font-size: 24px; }
+    .summary-row { grid-template-columns: 1fr 1fr; }
+    .summary-card .value { font-size: 22px; }
+    .two-col { grid-template-columns: 1fr; }
+    .insights-grid { grid-template-columns: 1fr; }
+    .quadrant-grid { aspect-ratio: auto; }
+    .q-cell { padding: 16px 12px; }
+    .q-cell .q-users { font-size: 20px; }
+    .q-cell .q-name { font-size: 15px; }
+    .pie-container { flex-direction: column; }
+    .axis-label-y { display: none; }
+    .threshold-y { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header class="header fade-in">
+    <h1>提频任务 — 四象限用户分层分析</h1>
+    <p class="subtitle">数据窗口：2026年 W08-W11（2月16日 - 3月15日）</p>
+  </header>
+
+  <!-- Summary Cards -->
+  <div class="summary-row fade-in">
+    <div class="summary-card">
+      <div class="label">总用户数</div>
+      <div class="value"><span id="anim-users">0</span></div>
+    </div>
+    <div class="summary-card">
+      <div class="label">总杯量</div>
+      <div class="value"><span id="anim-cups">0</span><span class="unit">杯</span></div>
+    </div>
+    <div class="summary-card">
+      <div class="label">综合 AOV</div>
+      <div class="value">$<span id="anim-aov">0</span></div>
+    </div>
+    <div class="summary-card">
+      <div class="label">综合单杯实收</div>
+      <div class="value">$<span id="anim-percup">0</span></div>
+    </div>
+  </div>
+
+  <!-- Quadrant Chart -->
+  <div class="quadrant-wrapper fade-in">
+    <div class="section-title">四象限分布</div>
+
+    <!-- X-axis range labels above chart -->
+    <div class="axis-range-row" style="margin-bottom: 6px;">
+      <span class="range-label" style="flex:1; text-align:center; color:var(--text-muted);">&#9664; 低频 &lt;1杯/周 &mdash; 偶尔喝</span>
+      <span class="range-label" style="flex:1; text-align:center; color:var(--text-muted);">中高频 &ge;1杯/周 &mdash; 已有习惯 &#9654;</span>
+    </div>
+
+    <div class="quadrant-chart">
+      <!-- Y-axis label -->
+      <div class="axis-label-y">最近1周频次 &uarr;</div>
+
+      <div class="quadrant-grid">
+        <!-- Top-Left: Q2 新激活/回流 -->
+        <div class="q-cell q2">
+          <span class="q-number">&num;2</span>
+          <div class="q-name">新激活/回流</div>
+          <div class="q-users" data-target="12149">0</div>
+          <div class="q-pct">30.05%</div>
+          <div class="q-metric">人均 <strong>1.62</strong> 杯 &middot; 周频 <strong>0.40</strong></div>
+          <div class="q-strategy">趁热打铁推 Tier 1 任务</div>
+        </div>
+
+        <!-- Top-Right: Q1 稳定活跃 -->
+        <div class="q-cell q1">
+          <span class="q-number">&num;1</span>
+          <div class="q-name">稳定活跃</div>
+          <div class="q-users" data-target="4833">0</div>
+          <div class="q-pct">11.96%</div>
+          <div class="q-metric">人均 <strong>7.92</strong> 杯 &middot; 周频 <strong>1.98</strong></div>
+          <div class="q-strategy">维持 &rarr; 提频到3杯 (Tier 2)</div>
+        </div>
+
+        <!-- Bottom-Left: Q3 沉默 -->
+        <div class="q-cell q3">
+          <span class="q-number">&num;3</span>
+          <div class="q-name">沉默</div>
+          <div class="q-users" data-target="21623">0</div>
+          <div class="q-pct">53.49%</div>
+          <div class="q-metric">人均 <strong>1.40</strong> 杯 &middot; 周频 <strong>0.35</strong></div>
+          <div class="q-strategy">唤醒 / 首杯优惠</div>
+        </div>
+
+        <!-- Bottom-Right: Q4 流失预警 -->
+        <div class="q-cell q4">
+          <span class="q-number">&num;4</span>
+          <div class="q-name">流失预警</div>
+          <div class="q-users" data-target="1818">0</div>
+          <div class="q-pct">4.50%</div>
+          <div class="q-metric">人均 <strong>5.40</strong> 杯 &middot; 周频 <strong>1.35</strong></div>
+          <div class="q-strategy">紧急召回 / 强激励</div>
+        </div>
+      </div>
+
+      <!-- Axis annotations below chart -->
+      <div class="axis-label-x">近4周平均周频次 &rarr;</div>
+    </div>
+
+    <!-- Y-axis range labels -->
+    <div class="axis-range-row" style="margin-top: 4px;">
+      <span class="range-label" style="flex:1; text-align:left; font-size:11px; color:var(--text-muted);">&#9650; 本周来了（&ge;1杯）&nbsp;&nbsp;|&nbsp;&nbsp;&#9660; 本周没来（0杯）</span>
+      <span class="range-label" style="flex:1; text-align:right; font-size:11px; color:var(--text-muted);">阈值：周频=1杯/周</span>
+    </div>
+  </div>
+
+  <!-- Pie + Bar Charts -->
+  <div class="two-col fade-in">
+    <!-- Pie Chart: Cup Contribution -->
+    <div class="chart-card">
+      <h3>杯量贡献占比</h3>
+      <div class="pie-container">
+        <div class="pie-canvas-wrap">
+          <canvas id="pieChart" width="180" height="180"></canvas>
+        </div>
+        <div class="pie-legend" id="pieLegend"></div>
+      </div>
+    </div>
+
+    <!-- Bar: AOV comparison -->
+    <div class="chart-card">
+      <h3>客单价 (AOV) 对比</h3>
+      <div id="aovBars"></div>
+      <div style="margin-top:24px;">
+        <h3 style="margin-bottom:16px;">单杯实收对比</h3>
+        <div id="perCupBars"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Table -->
+  <div class="table-wrapper fade-in">
+    <div class="section-title">详细数据</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:left">象限</th>
+          <th>用户数</th>
+          <th>占比</th>
+          <th>人均杯量</th>
+          <th>周频次</th>
+          <th>AOV ($)</th>
+          <th>单杯实收 ($)</th>
+          <th>总杯量</th>
+          <th>杯量占比</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="q-tag t1">1</span>稳定活跃</td>
+          <td>4,833</td>
+          <td>11.96%</td>
+          <td>7.92</td>
+          <td>1.98</td>
+          <td>4.67</td>
+          <td>3.79</td>
+          <td>38,261</td>
+          <td>39.07%</td>
+        </tr>
+        <tr>
+          <td><span class="q-tag t2">2</span>新激活/回流</td>
+          <td>12,149</td>
+          <td>30.05%</td>
+          <td>1.62</td>
+          <td>0.40</td>
+          <td>3.36</td>
+          <td>3.01</td>
+          <td>19,626</td>
+          <td>20.04%</td>
+        </tr>
+        <tr>
+          <td><span class="q-tag t3">3</span>沉默</td>
+          <td>21,623</td>
+          <td>53.49%</td>
+          <td>1.40</td>
+          <td>0.35</td>
+          <td>3.55</td>
+          <td>3.07</td>
+          <td>30,214</td>
+          <td>30.86%</td>
+        </tr>
+        <tr>
+          <td><span class="q-tag t4">4</span>流失预警</td>
+          <td>1,818</td>
+          <td>4.50%</td>
+          <td>5.40</td>
+          <td>1.35</td>
+          <td>5.31</td>
+          <td>3.55</td>
+          <td>9,821</td>
+          <td>10.03%</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr style="font-weight:700; background:var(--bg-secondary);">
+          <td style="text-align:left">合计</td>
+          <td>40,423</td>
+          <td>100%</td>
+          <td>2.42</td>
+          <td>0.61</td>
+          <td>3.88</td>
+          <td>3.24</td>
+          <td>97,922</td>
+          <td>100%</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- Key Insights -->
+  <div class="fade-in">
+    <div class="section-title">核心洞察与策略建议</div>
+    <div class="insights-grid">
+      <div class="insight-card c1">
+        <div class="insight-header">① 稳定活跃 — 高价值核心</div>
+        <div class="insight-body">
+          仅占 <strong>12%</strong> 的用户贡献了 <strong>39%</strong> 的杯量，人均周频 <strong>1.98</strong> 杯，是当前最有价值的群体。策略重心在于<strong>维持黏性并提频到3杯/周</strong>（Tier 2 任务），通过会员权益、品类拓展（如搭配食品）进一步提升消费频次。
+        </div>
+      </div>
+      <div class="insight-card c2">
+        <div class="insight-header">② 新激活/回流 — 最大提频机会</div>
+        <div class="insight-body">
+          <strong>30%</strong> 用户本周有到店但历史频次低（周频仅 0.40），说明正处于<strong>尝试阶段</strong>。这是推 <strong>Tier 1 任务</strong> 的最佳窗口：趁热打铁用限时优惠、连续签到奖励等方式，在接下来 1-2 周内将其转化为周频 &ge;1 的稳定用户。
+        </div>
+      </div>
+      <div class="insight-card c3">
+        <div class="insight-header">③ 沉默 — 最大体量待唤醒</div>
+        <div class="insight-body">
+          <strong>53%</strong> 用户（21,623人）处于沉默状态 — 历史低频且本周未到店。虽然体量最大，但唤醒成本高、转化率低。建议<strong>分批次精准推送首杯优惠 / 唤醒券</strong>，以人均 1.40 杯为基线，目标先唤醒至「本周至少1杯」，推入 Q2 象限。
+        </div>
+      </div>
+      <div class="insight-card c4">
+        <div class="insight-header">④ 流失预警 — 紧急高价值召回</div>
+        <div class="insight-body">
+          虽然仅占 <strong>4.5%</strong>，但这批用户历史 AOV 高达 <strong>$5.31</strong>（全场最高），人均杯量 5.40。他们曾是高频用户，本周突然沉默 — 流失信号明确。需要<strong>紧急召回</strong>：专属折扣、个性化推送、甚至 1 对 1 触达，避免永久流失。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    Lucky US 数据分析 &middot; 提频任务四象限分层 &middot; 2026-03-19
+  </footer>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ===== 数据 ===== */
+  var DATA = [
+    { id: 1, name: '稳定活跃', users: 4833, pct: 11.96, cups: 38261, avgCups: 7.92, weekFreq: 1.98, aov: 4.67, perCup: 3.79, color: '#22c55e' },
+    { id: 2, name: '新激活/回流', users: 12149, pct: 30.05, cups: 19626, avgCups: 1.62, weekFreq: 0.40, aov: 3.36, perCup: 3.01, color: '#38bdf8' },
+    { id: 3, name: '沉默', users: 21623, pct: 53.49, cups: 30214, avgCups: 1.40, weekFreq: 0.35, aov: 3.55, perCup: 3.07, color: '#94a3b8' },
+    { id: 4, name: '流失预警', users: 1818, pct: 4.50, cups: 9821, avgCups: 5.40, weekFreq: 1.35, aov: 5.31, perCup: 3.55, color: '#f97316' }
+  ];
+  var TOTAL_CUPS = 97922;
+  var TOTAL_USERS = 40423;
+
+  /* ===== 数字动画 ===== */
+  function animateNumber(el, target, duration, decimals, prefix) {
+    prefix = prefix || '';
+    decimals = decimals || 0;
+    var start = 0;
+    var startTime = null;
+    function step(ts) {
+      if (!startTime) startTime = ts;
+      var progress = Math.min((ts - startTime) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = start + (target - start) * eased;
+      el.textContent = prefix + (decimals > 0 ? current.toFixed(decimals) : Math.round(current).toLocaleString());
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* ===== 汇总卡片动画 ===== */
+  function initSummaryAnimations() {
+    animateNumber(document.getElementById('anim-users'), TOTAL_USERS, 1200, 0);
+    animateNumber(document.getElementById('anim-cups'), TOTAL_CUPS, 1200, 0);
+    animateNumber(document.getElementById('anim-aov'), 3.88, 1200, 2);
+    animateNumber(document.getElementById('anim-percup'), 3.24, 1200, 2);
+  }
+
+  /* ===== 四象限用户数动画 ===== */
+  function initQuadrantAnimations() {
+    var cells = document.querySelectorAll('.q-users');
+    cells.forEach(function(el) {
+      var target = parseInt(el.getAttribute('data-target'), 10);
+      animateNumber(el, target, 1400, 0);
+    });
+  }
+
+  /* ===== 饼图 ===== */
+  function drawPie() {
+    var canvas = document.getElementById('pieChart');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    var size = 180;
+    canvas.width = size * dpr;
+    canvas.height = size * dpr;
+    canvas.style.width = size + 'px';
+    canvas.style.height = size + 'px';
+    ctx.scale(dpr, dpr);
+
+    var cx = size / 2, cy = size / 2, r = 72, inner = 40;
+    var startAngle = -Math.PI / 2;
+
+    DATA.forEach(function(d) {
+      var sliceAngle = (d.cups / TOTAL_CUPS) * 2 * Math.PI;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(startAngle) * inner, cy + Math.sin(startAngle) * inner);
+      ctx.arc(cx, cy, r, startAngle, startAngle + sliceAngle);
+      ctx.arc(cx, cy, inner, startAngle + sliceAngle, startAngle, true);
+      ctx.closePath();
+      ctx.fillStyle = d.color;
+      ctx.fill();
+      startAngle += sliceAngle;
+    });
+
+    // 中心文字
+    ctx.fillStyle = '#f1f5f9';
+    ctx.font = 'bold 18px -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('97,922', cx, cy - 8);
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '11px -apple-system, sans-serif';
+    ctx.fillText('总杯量', cx, cy + 12);
+
+    // 图例
+    var legend = document.getElementById('pieLegend');
+    legend.innerHTML = '';
+    DATA.forEach(function(d) {
+      var cupPct = (d.cups / TOTAL_CUPS * 100).toFixed(1);
+      var item = document.createElement('div');
+      item.className = 'pie-legend-item';
+      item.innerHTML = '<span class="dot" style="background:' + d.color + '"></span>' +
+        '<span>' + d.name + ' (' + d.cups.toLocaleString() + '杯)</span>' +
+        '<span class="pct">' + cupPct + '%</span>';
+      legend.appendChild(item);
+    });
+  }
+
+  /* ===== 柱状条 ===== */
+  function createBars(containerId, dataKey, maxVal, unit, colorKey) {
+    var container = document.getElementById(containerId);
+    container.innerHTML = '';
+    DATA.forEach(function(d) {
+      var val = d[dataKey];
+      var pctWidth = (val / maxVal * 100).toFixed(1);
+      var group = document.createElement('div');
+      group.className = 'bar-group';
+      group.innerHTML =
+        '<div class="bar-label-row"><span class="bar-name">' + d.name + '</span><span class="bar-val">' + unit + val.toFixed(2) + '</span></div>' +
+        '<div class="bar-track"><div class="bar-fill" style="background:' + d[colorKey || 'color'] + ';" data-width="' + pctWidth + '"></div></div>';
+      container.appendChild(group);
+    });
+  }
+
+  function animateBars() {
+    setTimeout(function() {
+      document.querySelectorAll('.bar-fill').forEach(function(bar) {
+        bar.style.width = bar.getAttribute('data-width') + '%';
+      });
+    }, 300);
+  }
+
+  /* ===== Fade-in on scroll ===== */
+  function initScrollAnimations() {
+    var els = document.querySelectorAll('.fade-in');
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    els.forEach(function(el) { observer.observe(el); });
+  }
+
+  /* ===== Init ===== */
+  function init() {
+    initScrollAnimations();
+    initSummaryAnimations();
+    initQuadrantAnimations();
+    drawPie();
+    createBars('aovBars', 'aov', 6.0, '$', 'color');
+    createBars('perCupBars', 'perCup', 4.5, '$', 'color');
+    animateBars();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>

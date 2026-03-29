@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>达美乐的中国业绩为何能反转？ | 播客可视化</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --bg2: #0f0f18;
+  --bg3: #13131f;
+  --gold: #d4a017;
+  --gold-light: #f0c040;
+  --amber: #c07830;
+  --text: #e8e0d0;
+  --text-dim: #8a8070;
+  --text-muted: #5a5248;
+  --accent: #e8b830;
+  --danger: #c04040;
+  --radius: 12px;
+  --font: 'Hiragino Mincho ProN', 'Source Han Serif CN', 'Noto Serif CJK SC', Georgia, serif;
+  --sans: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  line-height: 1.9;
+  overflow-x: hidden;
+}
+
+/* Progress bar */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  width: 0%;
+  z-index: 1000;
+  transition: width 0.1s ease;
+}
+
+/* Dot nav */
+#dot-nav {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.dot-nav-item {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+.dot-nav-item:hover, .dot-nav-item.active {
+  background: var(--gold);
+  transform: scale(1.5);
+}
+.dot-nav-item::before {
+  content: attr(data-label);
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.dot-nav-item:hover::before { opacity: 1; }
+
+/* Sections */
+section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 5vw;
+  position: relative;
+}
+
+/* Fade-in animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  will-change: transform, opacity;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); will-change: auto; }
+.reveal-delay-1 { transition-delay: 0.15s; }
+.reveal-delay-2 { transition-delay: 0.3s; }
+.reveal-delay-3 { transition-delay: 0.45s; }
+.reveal-delay-4 { transition-delay: 0.6s; }
+
+/* ===== HERO ===== */
+#hero {
+  align-items: center;
+  text-align: center;
+  background: radial-gradient(ellipse at center, #1a1020 0%, var(--bg) 70%);
+  overflow: hidden;
+}
+#hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(212,160,23,0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(192,120,48,0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+.hero-ep {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+.hero-title {
+  font-size: clamp(56px, 12vw, 120px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #f0d060, #d4a017, #c07830);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+.hero-subtitle {
+  font-family: var(--sans);
+  font-size: clamp(13px, 2vw, 17px);
+  color: var(--text-dim);
+  max-width: 600px;
+  line-height: 1.7;
+  margin-bottom: 56px;
+}
+.hero-quote {
+  max-width: 680px;
+  font-size: clamp(16px, 2.5vw, 22px);
+  color: var(--text);
+  line-height: 1.9;
+  position: relative;
+  padding: 32px 40px;
+  border-left: 3px solid var(--gold);
+  text-align: left;
+  background: rgba(212,160,23,0.04);
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.hero-quote:hover { background: rgba(212,160,23,0.08); }
+.hero-quote.highlighted { background: rgba(212,160,23,0.15); }
+.hero-quote::before {
+  content: '"';
+  position: absolute;
+  top: -10px; left: 20px;
+  font-size: 80px;
+  color: var(--gold);
+  opacity: 0.3;
+  line-height: 1;
+}
+.scroll-hint {
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 2px;
+  animation: bounce 2s infinite;
+}
+.scroll-arrow {
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+/* ===== SECTION COMMON ===== */
+.section-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.section-title {
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+.section-sub {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--text-dim);
+  margin-bottom: 48px;
+}
+.section-divider {
+  width: 60px; height: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin: 24px 0 48px;
+}
+
+/* ===== PARTICIPANTS ===== */
+.author-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 40px;
+  max-width: 900px;
+}
+.author-card {
+  background: var(--bg3);
+  border: 1px solid rgba(212,160,23,0.15);
+  border-radius: var(--radius);
+  padding: 32px;
+}
+.author-card h3 {
+  font-size: 20px;
+  color: var(--gold);
+  margin-bottom: 12px;
+  font-family: var(--sans);
+}
+.author-card p {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+
+/* ===== BIG QUOTE ===== */
+.big-quote {
+  font-size: clamp(20px, 3.5vw, 36px);
+  line-height: 1.8;
+  max-width: 800px;
+  position: relative;
+  padding: 40px;
+  background: linear-gradient(135deg, rgba(212,160,23,0.06), rgba(192,120,48,0.02));
+  border-radius: var(--radius);
+  border: 1px solid rgba(212,160,23,0.12);
+  margin-bottom: 48px;
+  cursor: pointer;
+  transition: border-color 0.3s, background 0.3s;
+}
+.big-quote:hover { border-color: rgba(212,160,23,0.3); background: rgba(212,160,23,0.08); }
+.big-quote.highlighted { border-color: var(--gold); background: rgba(212,160,23,0.12); }
+.highlight-text { color: var(--gold-light); font-style: italic; }
+
+/* ===== FEATURE CARDS ===== */
+.feature-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  max-width: 960px;
+  margin-top: 40px;
+}
+.feature-card {
+  background: var(--bg3);
+  border: 1px solid rgba(212,160,23,0.1);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.feature-card:hover {
+  border-color: rgba(212,160,23,0.35);
+  transform: translateY(-4px);
+}
+.feature-icon { font-size: 32px; margin-bottom: 16px; display: block; }
+.feature-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 8px;
+  font-family: var(--sans);
+}
+.feature-desc {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+/* ===== STORY CARDS ===== */
+.story-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 900px;
+}
+.story-card {
+  background: var(--bg3);
+  border-radius: var(--radius);
+  padding: 28px;
+  border-left: 3px solid var(--amber);
+}
+.story-card .narrator {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--amber);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.story-card p {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+
+/* ===== ACTION ITEMS ===== */
+.action-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 750px;
+  margin-bottom: 48px;
+}
+.action-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 16px 20px;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.6;
+}
+.action-num {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--bg);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ===== MEGA QUOTE ===== */
+.mega-quote {
+  font-size: clamp(20px, 3.5vw, 36px);
+  line-height: 1.7;
+  max-width: 800px;
+  font-weight: 700;
+  color: var(--text);
+  padding: 48px 0;
+  border-top: 1px solid rgba(212,160,23,0.2);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.mega-quote span { color: var(--gold); }
+.mega-quote:hover { color: var(--gold-light); }
+.mega-quote.highlighted span { color: var(--gold-light); }
+
+/* ===== QUIZ ===== */
+.quiz-container { max-width: 700px; width: 100%; }
+.quiz-intro {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--text-dim);
+  margin-bottom: 40px;
+  line-height: 1.8;
+}
+.quiz-question { margin-bottom: 32px; }
+.quiz-q-text {
+  font-size: 16px;
+  margin-bottom: 16px;
+  line-height: 1.7;
+  font-family: var(--sans);
+}
+.quiz-options { display: flex; gap: 8px; flex-wrap: wrap; }
+.quiz-opt {
+  padding: 8px 18px;
+  border: 1px solid rgba(212,160,23,0.25);
+  border-radius: 100px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  user-select: none;
+}
+.quiz-opt:hover { border-color: var(--gold); color: var(--gold); }
+.quiz-opt.selected { background: var(--gold); border-color: var(--gold); color: var(--bg); font-weight: 600; }
+
+.quiz-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 4px;
+  background: linear-gradient(to right, #d4a017 0%, #d4a017 33%, #5a5248 33%, #5a5248 100%);
+  border-radius: 2px;
+  outline: none;
+}
+.quiz-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+  box-shadow: 0 0 0 4px rgba(212,160,23,0.2);
+}
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+.quiz-btn {
+  margin-top: 32px;
+  padding: 14px 40px;
+  background: var(--gold);
+  color: var(--bg);
+  border: none;
+  border-radius: 100px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.quiz-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,160,23,0.3); }
+
+.quiz-result {
+  display: none;
+  margin-top: 40px;
+  padding: 32px;
+  background: linear-gradient(135deg, rgba(212,160,23,0.08), rgba(192,120,48,0.04));
+  border: 1px solid rgba(212,160,23,0.25);
+  border-radius: var(--radius);
+}
+.quiz-result-level {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--gold);
+  margin-bottom: 8px;
+  font-family: var(--sans);
+}
+.quiz-result-desc {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.8;
+}
+
+/* ===== ENDING ===== */
+.book-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  margin-bottom: 64px;
+}
+.book-card {
+  background: var(--bg3);
+  border-radius: var(--radius);
+  padding: 28px;
+  border: 1px solid rgba(212,160,23,0.12);
+  transition: border-color 0.3s;
+}
+.book-card:hover { border-color: rgba(212,160,23,0.35); }
+.book-tag {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.book-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.book-author {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+.book-quote {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  border-left: 2px solid var(--amber);
+  padding-left: 12px;
+  font-style: italic;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.book-quote:hover { color: var(--text); }
+.book-quote.highlighted { color: var(--gold); }
+
+.podcast-card {
+  max-width: 600px;
+  background: linear-gradient(135deg, rgba(212,160,23,0.08), rgba(192,120,48,0.04));
+  border: 1px solid rgba(212,160,23,0.2);
+  border-radius: var(--radius);
+  padding: 36px;
+  margin-bottom: 64px;
+  text-align: center;
+}
+.podcast-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.podcast-hosts {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+.podcast-ep {
+  font-size: 16px;
+  color: var(--text);
+  font-style: italic;
+}
+
+.final-slogan {
+  font-size: clamp(32px, 7vw, 72px);
+  font-weight: 900;
+  text-align: center;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.3;
+  max-width: 700px;
+}
+
+/* ===== CLICKABLE QUOTES ===== */
+.clickable-quote {
+  cursor: pointer;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+.clickable-quote::after {
+  content: ' 点击收藏';
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-muted);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.clickable-quote:hover::after { opacity: 1; }
+.clickable-quote.highlighted::after {
+  content: ' ✓ 已收藏';
+  color: var(--gold);
+  opacity: 1;
+}
+
+/* ===== SAVED QUOTES PANEL ===== */
+#saved-panel {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  background: var(--bg3);
+  border: 1px solid rgba(212,160,23,0.3);
+  border-radius: var(--radius);
+  padding: 20px;
+  max-width: 320px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 900;
+  display: none;
+  font-family: var(--sans);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+}
+#saved-panel h4 { color: var(--gold); font-size: 13px; margin-bottom: 12px; letter-spacing: 2px; }
+.saved-quote-item { font-size: 12px; color: var(--text-dim); line-height: 1.7; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+#saved-toggle {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--bg);
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 901;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(212,160,23,0.4);
+  transition: transform 0.2s;
+}
+#saved-toggle:hover { transform: scale(1.1); }
+#saved-count {
+  position: absolute;
+  top: -4px; right: -4px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--danger);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  section { padding: 60px 5vw; }
+  .feature-cards, .story-cards, .book-cards { grid-template-columns: 1fr; }
+  .author-grid { grid-template-columns: 1fr; }
+  #dot-nav { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<nav id="dot-nav">
+  <div class="dot-nav-item active" data-section="hero" data-label="开场"></div>
+  <div class="dot-nav-item" data-section="participants" data-label="肖文"></div>
+  
+  <div class="dot-nav-item" data-section="dominos-china-surprise" data-label="达美乐中"></div>
+  
+  <div class="dot-nav-item" data-section="dominos-us-origin" data-label="达美乐在"></div>
+  
+  <div class="dot-nav-item" data-section="delivery-system" data-label="极致的外"></div>
+  
+  <div class="dot-nav-item" data-section="franchise-model" data-label="加盟体系"></div>
+  
+  <div class="dot-nav-item" data-section="taste-crisis" data-label="口味危机"></div>
+  
+  <div class="dot-nav-item" data-section="china-early-days" data-label="达美乐中"></div>
+  
+  <div class="dot-nav-item" data-section="new-team-expansion" data-label="新管理团"></div>
+  
+  <div class="dot-nav-item" data-section="store-strategy" data-label="开店策略"></div>
+  
+  <div class="dot-nav-item" data-section="sinking-market" data-label="下沉市场"></div>
+  
+  <div class="dot-nav-item" data-section="financial-logic" data-label="财务逻辑"></div>
+  
+  <div class="dot-nav-item" data-section="product-localization" data-label="产品本土"></div>
+  
+  <div class="dot-nav-item" data-section="conclusion" data-label="总结：达"></div>
+  
+  <div class="dot-nav-item" data-section="quiz" data-label="自测"></div>
+  <div class="dot-nav-item" data-section="ending" data-label="结尾"></div>
+</nav>
+
+<button id="saved-toggle" title="查看已收藏">★<span id="saved-count">0</span></button>
+<div id="saved-panel">
+  <h4>⭐ 我的金句收藏</h4>
+  <div id="saved-list"></div>
+</div>
+
+<!-- ===== 1. HERO ===== -->
+<section id="hero">
+  <div class="hero-ep reveal">EP.232 · 商业就是这样
+  </div>
+  <h1 class="hero-title reveal reveal-delay-1">达美乐的中国业绩为何能反转？</h1>
+  <p class="hero-subtitle reveal reveal-delay-2">
+    一个外企披萨品牌如何靠下沉市场在中国逆袭<br>
+    <span style="color:var(--text-muted);font-size:12px;">肖文杰 × 小杨 · 商业就是这样
+    </span>
+  </p>
+  
+  <blockquote class="hero-quote reveal reveal-delay-3 clickable-quote" data-quote="达美乐的胜利在于先绕开了口味问题，找到了其他紧急又重要的改善方向">
+    达美乐的胜利在于先绕开了口味问题，找到了其他紧急又重要的改善方向
+  </blockquote>
+  
+  <div class="scroll-hint reveal reveal-delay-4">
+    <span>向下探索</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ===== 2. PARTICIPANTS ===== -->
+<section id="participants" style="background:var(--bg2);">
+  <div class="section-label reveal">节目嘉宾</div>
+  <h2 class="section-title reveal">肖文杰 × 小杨
+  </h2>
+  <div class="section-divider reveal"></div>
+
+  <div class="author-grid reveal">
+    
+    <div class="author-card">
+      <h3>肖文杰</h3>
+      <p>商业就是这样主播，擅长商业现象解读</p>
+    </div>
+    
+    <div class="author-card">
+      <h3>小杨</h3>
+      <p>商业就是这样主播，擅长数据分析与行业研究</p>
+    </div>
+    
+    
+  </div>
+</section>
+
+<!-- ===== 3+. CONTENT SECTIONS ===== -->
+
+<section id="dominos-china-surprise" style="background:var(--bg);">
+
+
+  
+  <div class="section-label reveal">从水土不服到门店遍地开花</div>
+  <h2 class="section-title reveal" style="font-size:clamp(28px,5vw,56px);">达美乐中国的意外复苏</h2>
+  <div class="section-divider reveal"></div>
+
+  
+  <blockquote class="hero-quote reveal reveal-delay-1 clickable-quote" style="margin-bottom:40px;" data-quote="达美乐在中国市场意外复苏，这是一个在整个餐饮业大背景上面非常亮眼的表现">
+    达美乐在中国市场意外复苏，这是一个在整个餐饮业大背景上面非常亮眼的表现
+  </blockquote>
+  
+
+  
+  <div class="action-items reveal reveal-delay-2">
+    
+    <div class="action-item">
+      <div class="action-num">1</div>
+      <span>达美乐过去的门店和消费者高度集中在北上广深，是典型的外企入华水土不服</span>
+    </div>
+    
+    <div class="action-item">
+      <div class="action-num">2</div>
+      <span>到2025年第三季度，达美乐中国已有1283家门店，进入49个城市</span>
+    </div>
+    
+    <div class="action-item">
+      <div class="action-num">3</div>
+      <span>达美乐6成以上财年营收来自新增市场</span>
+    </div>
+    
+    <div class="action-item">
+      <div class="action-num">4</div>
+      <span>沈阳达美乐首店开业首月营收达1110万人民币</span>
+    </div>
+    
+    <div class="action-item">
+      <div class="action-num">5</div>
+      <span>达美乐全球开业首月销售额前50名中，49家是中国门店</span>
+    </div>
+    
+  </div>
+  
+
+  
+  <div class="story-cards reveal reveal-delay-3" style="margin-top:40px;">
+    
+    <div class="story-card">
+      
+      <div class="narrator">xiaoyang</div>
+      <p>达美乐非一线城市门店状态好到什么程度？全球开业首月销售额前50名中，49家都是中国的门店。沈阳首店一个月就做了1110万人民币。</p>
+      
+    </div>
+    
+  </div>
+  
+
+
+</section>
+
+<section id="dominos-us-origin" style="background:var(--bg2);">
+
+
+  
+  <div class="section-label reveal">从沙发男青年的外卖订单起家</div>
+  <h2 class="section-title reveal">达美乐在美国是怎么做起来的</h2>
+  <div class="section-divider reveal"></div>
+
+  
+  <blockquote class="big-quote reveal clickable-quote" data-quote="披萨这个生意在美国有个天然矛盾：做堂食利润就会很薄，做口味多样化成本就控制不住">
+    披萨这个生意在美国有个天然矛盾：做堂食利润就会很薄，做口味多样化成本就控制不住
+  </blockquote>
+  
+
+  
+  <div class="action-items reveal">
+    
+    <div class="action-item reveal">
+      <div class="action-num">1</div>
+      <span>披萨在美国的普及度仅次于汉堡，但堂食利润薄、口味多样化成本高</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-1">
+      <div class="action-num">2</div>
+      <span>达美乐1960年开出第一家店，发现大部分营业额来自窝在沙发上看比赛的男青年的外卖订单</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-2">
+      <div class="action-num">3</div>
+      <span>达美乐战略方向明确：不做堂食，专攻外卖配送</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-3">
+      <div class="action-num">4</div>
+      <span>门店内部不像披萨店，更像专业外送服务公司</span>
+    </div>
+    
+  </div>
+  
+
+  
+  <div class="story-cards reveal" style="margin-top:40px;">
+    
+    <div class="story-card">
+      
+      <div class="narrator">xiaoyang</div>
+      <p>达美乐从1960年开出第一家披萨店就发现，最赚钱的不是堂食客人，而是那些窝在沙发上看比赛、懒得出门的男青年下的外卖订单，这直接决定了达美乐&#34;专攻外卖&#34;的战略方向。</p>
+      
+    </div>
+    
+  </div>
+  
+
+  
+  <div class="mega-quote reveal clickable-quote" data-quote="达美乐的大部分营业额来自那些窝在沙发上看比赛、懒得出门的男青年的外卖订单">
+    <span>达美乐的大部分营业额来自那些窝在沙发上看比赛、懒得出门的男青年的外卖订单</span>
+  </div>
+  
+
+
+</section>
+
+<section id="delivery-system" style="background:var(--bg);">
+
+
+  
+  <div class="section-label reveal">精简SKU、密度选址、数字化配送</div>
+  <h2 class="section-title reveal">极致的外卖配送体系</h2>
+  <div class="section-divider reveal"></div>
+
+  
+  <blockquote class="big-quote reveal clickable-quote" data-quote="达美乐的门店里面都不像一个披萨店，而像是一个专业的外送服务公司">
+    达美乐的门店里面都不像一个披萨店，而像是一个专业的外送服务公司
+  </blockquote>
+  
+
+  
+  <div class="action-items reveal">
+    
+    <div class="action-item reveal">
+      <div class="action-num">1</div>
+      <span>精简SKU：长时间里一单最多四个披萨，面团和辅料由中央工厂配送</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-1">
+      <div class="action-num">2</div>
+      <span>密度选址：每个门店必须能在10分钟内抵达周围社区</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-2">
+      <div class="action-num">3</div>
+      <span>配送创新：保温包、车载燃气烤箱，可以一边送货一边继续烤</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-3">
+      <div class="action-num">4</div>
+      <span>数字化系统：所有订单数据实时回传总部，优化配送路线和人员安排</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-4">
+      <div class="action-num">5</div>
+      <span>这一切都是四五十年前就在做的事情</span>
+    </div>
+    
+  </div>
+  
+
+  
+  <div class="story-cards reveal" style="margin-top:40px;">
+    
+    <div class="story-card">
+      
+      <div class="narrator">xiaoyang</div>
+      <p>达美乐的披萨包装纸盒都经过特别调整，能用最快速度折叠成型；配送车据说还加装了燃气烤箱，可以一边送货一边继续烤，为了提速可谓做到了极致。</p>
+      
+    </div>
+    
+  </div>
+  
+
+  
+  <div class="mega-quote reveal clickable-quote" data-quote="所有订单数据实时回传到总部，总部的IT部门帮助优化配送路线和人员安排——这可是四五十年前的事">
+    <span>所有订单数据实时回传到总部，总部的IT部门帮助优化配送路线和人员安排——这可是四五十年前的事</span>
+  </div>
+  
+
+
+</section>
+
+<section id="franchise-model" style="background:var(--bg2);">
+
+
+  
+  <div class="section-label reveal">员工加盟、利润返点、严格筛选</div>
+  <h2 class="section-title reveal">加盟体系与扩张</h2>
+  <div class="section-divider reveal"></div>
+
+  
+  <blockquote class="big-quote reveal clickable-quote" data-quote="加盟商筛选也很严格，至少你当过一年的总经理或者主管，你才能成为加盟商">
+    加盟商筛选也很严格，至少你当过一年的总经理或者主管，你才能成为加盟商
+  </blockquote>
+  
+
+  
+  <div class="action-items reveal">
+    
+    <div class="action-item reveal">
+      <div class="action-num">1</div>
+      <span>达美乐会将赚到的钱返一部分给加盟商，这在当时是比较先进的操作</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-1">
+      <div class="action-num">2</div>
+      <span>加盟商筛选严格：必须是原来的员工或至少当过一年的总经理/主管</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-2">
+      <div class="action-num">3</div>
+      <span>支持员工加盟，类似国内一些饮品品牌与加盟商的绑定关系</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-3">
+      <div class="action-num">4</div>
+      <span>新店拓展很快但关店率一直保持在很低水平</span>
+    </div>
+    
+  </div>
+  
+
+  
+
+  
+  <div class="mega-quote reveal clickable-quote" data-quote="新店拓展很快，但关店率一直保持在很低的水平，每个新开的门店运营得都很好">
+    <span>新店拓展很快，但关店率一直保持在很低的水平，每个新开的门店运营得都很好</span>
+  </div>
+  
+
+
+</section>
+
+<section id="taste-crisis" style="background:var(--bg);">
+
+
+  
+  <div class="section-label reveal">CEO公开承认&#34;我们很烂&#34;</div>
+  <h2 class="section-title reveal">口味危机与自救</h2>
+  <div class="section-divider reveal"></div>
+
+  
+  <blockquote class="big-quote reveal clickable-quote" data-quote="咱们的披萨吃起来就是像一个涂了番茄酱的硬纸板">
+    咱们的披萨吃起来就是像一个涂了番茄酱的硬纸板
+  </blockquote>
+  
+
+  
+  <div class="action-items reveal">
+    
+    <div class="action-item reveal">
+      <div class="action-num">1</div>
+      <span>口味从来不是达美乐的主要卖点，重心都放在快速配送上</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-1">
+      <div class="action-num">2</div>
+      <span>2009年有人说达美乐的披萨吃起来像涂了番茄酱的硬纸板</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-2">
+      <div class="action-num">3</div>
+      <span>CEO公开回应但没有否认，承认&#34;确实我们很烂&#34;</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-3">
+      <div class="action-num">4</div>
+      <span>随后推出营销活动邀请消费者试吃改良后的披萨，危机化解</span>
+    </div>
+    
+  </div>
+  
+
+  
+  <div class="story-cards reveal" style="margin-top:40px;">
+    
+    <div class="story-card">
+      
+      <div class="narrator">xiaoyang</div>
+      <p>2009年达美乐终于重视口味问题，CEO公开回应了&#34;披萨像涂了番茄酱的硬纸板&#34;这个说法，但他并没有否认，反而承认确实很烂。然后做了营销活动让消费者试吃改良披萨，结果消费者觉得好吃了，危机就过去了。</p>
+      
+    </div>
+    
+  </div>
+  
+
+  
+  <div class="mega-quote reveal clickable-quote" data-quote="CEO公开承认他们烂透了以后，还是做了一些补救措施">
+    <span>CEO公开承认他们烂透了以后，还是做了一些补救措施</span>
+  </div>
+  
+
+
+</section>
+
+<section id="china-early-days" style="background:var(--bg2);">
+
+
+  
+  <div class="section-label reveal">十年只开了一百多家店</div>
+  <h2 class="section-title reveal">达美乐中国的早期困境</h2>
+  <div class="section-divider reveal"></div>
+
+  
+  <blockquote class="big-quote reveal clickable-quote" data-quote="在中国市场做了10年以后，达美乐也就开了100多家店，进度远远低于市场预期">
+    在中国市场做了10年以后，达美乐也就开了100多家店，进度远远低于市场预期
+  </blockquote>
+  
+
+  
+  <div class="action-items reveal">
+    
+    <div class="action-item reveal">
+      <div class="action-num">1</div>
+      <span>达美乐1997年进入中国市场，比肯德基麦当劳稍晚</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-1">
+      <div class="action-num">2</div>
+      <span>2009年转为独家特许经营商管理整个中国市场</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-2">
+      <div class="action-num">3</div>
+      <span>在中国做了10年后只开了100多家店，远低于市场预期</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-3">
+      <div class="action-num">4</div>
+      <span>外国品牌在中国常陷入&#34;只在高线城市存在&#34;的困局</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-4">
+      <div class="action-num">5</div>
+      <span>肯德基和必胜客成功在于很早就打破了高线城市壁垒</span>
+    </div>
+    
+  </div>
+  
+
+  
+
+  
+  <div class="mega-quote reveal clickable-quote" data-quote="很多外国品牌只出现在高线城市，影响力非常狭窄">
+    <span>很多外国品牌只出现在高线城市，影响力非常狭窄</span>
+  </div>
+  
+
+
+</section>
+
+<section id="new-team-expansion" style="background:var(--bg);">
+
+
+  
+  <div class="section-label reveal">从麦当劳挖人，IPO融资90%用来开店</div>
+  <h2 class="section-title reveal">新管理团队与激进扩张</h2>
+  <div class="section-divider reveal"></div>
+
+  
+  <blockquote class="big-quote reveal clickable-quote" data-quote="上市融资所得当中有90%都要用来开店">
+    上市融资所得当中有90%都要用来开店
+  </blockquote>
+  
+
+  
+  <div class="action-items reveal">
+    
+    <div class="action-item reveal">
+      <div class="action-num">1</div>
+      <span>引入新高管团队：王姨曾在麦当劳中国工作八年，主管特许经营业务</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-1">
+      <div class="action-num">2</div>
+      <span>首席绩效官此前在肯德基工作，带来丰富的快餐连锁经验</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-2">
+      <div class="action-num">3</div>
+      <span>团队获得更大自主权，迅速将门店拓展到华南、深圳和广州</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-3">
+      <div class="action-num">4</div>
+      <span>2022年申请上市，IPO融资90%用于开店</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-4">
+      <div class="action-num">5</div>
+      <span>计划2025-2026年每年再开200-300家门店，实际开店步伐已提前达标</span>
+    </div>
+    
+  </div>
+  
+
+  
+  <div class="story-cards reveal" style="margin-top:40px;">
+    
+    <div class="story-card">
+      
+      <div class="narrator">xiaoyang</div>
+      <p>达美乐中国引入了来自麦当劳的王姨，他在麦当劳中国工作过八年且主管特许经营业务，还有之前在肯德基工作过的首席绩效官。这些经验对起点更低的达美乐中国来说非常有价值。</p>
+      
+    </div>
+    
+  </div>
+  
+
+  
+  <div class="mega-quote reveal clickable-quote" data-quote="当时达美乐中国最大的问题不是开店的愿景，主要还是财务比较差，一年亏了4.7亿">
+    <span>当时达美乐中国最大的问题不是开店的愿景，主要还是财务比较差，一年亏了4.7亿</span>
+  </div>
+  
+
+
+</section>
+
+<section id="store-strategy" style="background:var(--bg2);">
+
+
+  
+  <div class="section-label reveal">中央厨房覆盖半径决定开店版图</div>
+  <h2 class="section-title reveal">开店策略：去哪里、开在哪</h2>
+  <div class="section-divider reveal"></div>
+
+  
+  <blockquote class="big-quote reveal clickable-quote" data-quote="每个中央厨房最大覆盖外径是350公里，这是它比较合理的配送范围">
+    每个中央厨房最大覆盖外径是350公里，这是它比较合理的配送范围
+  </blockquote>
+  
+
+  
+  <div class="action-items reveal">
+    
+    <div class="action-item reveal">
+      <div class="action-num">1</div>
+      <span>2020-2021年主要围绕长三角，2022年主攻华南市场</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-1">
+      <div class="action-num">2</div>
+      <span>2023年开始进入三线城市，如湛江和邯郸</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-2">
+      <div class="action-num">3</div>
+      <span>三个中央厨房分别位于上海、东莞和廊坊三河市</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-3">
+      <div class="action-num">4</div>
+      <span>每个中央厨房最大覆盖外径350公里</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-4">
+      <div class="action-num">5</div>
+      <span>武汉计划新增中央厨房，覆盖华中和西南西北部分地区</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-4">
+      <div class="action-num">6</div>
+      <span>在新城市优先选择万达、万象城、吾悦广场等连锁商业地产</span>
+    </div>
+    
+  </div>
+  
+
+  
+  <div class="story-cards reveal" style="margin-top:40px;">
+    
+    <div class="story-card">
+      
+      <div class="narrator">xiaoyang</div>
+      <p>达美乐的开店版图受中央厨房制约。三个厨房分别在上海、东莞和廊坊下属的三河市，每个覆盖半径350公里。所以早期去邯郸这样的三线城市开店，其实是因为三河厨房可以很轻松地覆盖到。</p>
+      
+    </div>
+    
+  </div>
+  
+
+  
+  <div class="mega-quote reveal clickable-quote" data-quote="达美乐目前入住了56个万达项目、30个万象系列商场">
+    <span>达美乐目前入住了56个万达项目、30个万象系列商场</span>
+  </div>
+  
+
+
+</section>
+
+<section id="sinking-market" style="background:var(--bg);">
+
+
+  
+  <div class="section-label reveal">开一个火一个，首店效应与必胜客的博弈</div>
+  <h2 class="section-title reveal">下沉市场的惊人表现</h2>
+  <div class="section-divider reveal"></div>
+
+  
+  <blockquote class="big-quote reveal clickable-quote" data-quote="下沉路线特别适合目前的达美乐中国">
+    下沉路线特别适合目前的达美乐中国
+  </blockquote>
+  
+
+  
+  <div class="action-items reveal">
+    
+    <div class="action-item reveal">
+      <div class="action-num">1</div>
+      <span>新店开业采用限量堂食+排队策略，制造稀缺感和社交传播</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-1">
+      <div class="action-num">2</div>
+      <span>黄牛代购、社交流量自然涌入，首店效应显著</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-2">
+      <div class="action-num">3</div>
+      <span>全国平均单店日均销售额涨了三成左右</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-3">
+      <div class="action-num">4</div>
+      <span>非一线城市门店在3年内单店日均销售额表现出色</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-4">
+      <div class="action-num">5</div>
+      <span>9个被达美乐选中的城市在其开城时必胜客已开始增长放缓</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-4">
+      <div class="action-num">6</div>
+      <span>达美乐与必胜客在部分城市形成直接竞争</span>
+    </div>
+    
+  </div>
+  
+
+  
+  <div class="story-cards reveal" style="margin-top:40px;">
+    
+    <div class="story-card">
+      
+      <div class="narrator">xiaoyang</div>
+      <p>沈阳达美乐首店开业后迅速铺开，从2024年底的两个店到现在已经有15个店。有9个被达美乐选中的城市，在达美乐开城时必胜客已经增长放缓，达美乐反而在这些城市快速扩张。</p>
+      
+    </div>
+    
+  </div>
+  
+
+  
+  <div class="mega-quote reveal clickable-quote" data-quote="这些低线城市门店在开业早期确实对整个公司业绩的拉动非常明显">
+    <span>这些低线城市门店在开业早期确实对整个公司业绩的拉动非常明显</span>
+  </div>
+  
+
+
+</section>
+
+<section id="financial-logic" style="background:var(--bg2);">
+
+
+  
+  <div class="section-label reveal">收支平衡周期与现金回报期的秘密</div>
+  <h2 class="section-title reveal">财务逻辑：为什么坚定走下沉路线</h2>
+  <div class="section-divider reveal"></div>
+
+  
+  <blockquote class="big-quote reveal clickable-quote" data-quote="非一线城市门店达到收支平衡和现金回报时间都明显更快">
+    非一线城市门店达到收支平衡和现金回报时间都明显更快
+  </blockquote>
+  
+
+  
+  <div class="action-items reveal">
+    
+    <div class="action-item reveal">
+      <div class="action-num">1</div>
+      <span>两个关键指标：收支平衡周期和现金投资回报期</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-1">
+      <div class="action-num">2</div>
+      <span>此前大部分门店需要13个月才能达到收支平衡</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-2">
+      <div class="action-num">3</div>
+      <span>非一线城市门店达到收支平衡和现金回报的时间明显更快</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-3">
+      <div class="action-num">4</div>
+      <span>新增门店的平均现金回报时间缩短到11个月</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-4">
+      <div class="action-num">5</div>
+      <span>新店没有爬坡期，直接从高点开始</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-4">
+      <div class="action-num">6</div>
+      <span>先进带后进，整个公司财务指标都好起来了</span>
+    </div>
+    
+  </div>
+  
+
+  
+
+  
+  <div class="mega-quote reveal clickable-quote" data-quote="这些城市门店开一个就火一个，先进带后进，整个公司财务指标也就好起来">
+    <span>这些城市门店开一个就火一个，先进带后进，整个公司财务指标也就好起来</span>
+  </div>
+  
+
+
+</section>
+
+<section id="product-localization" style="background:var(--bg);">
+
+
+  
+  <div class="section-label reveal">烤鸭披萨、火山熔岩与感官刺激</div>
+  <h2 class="section-title reveal">产品本土化与定价策略</h2>
+  <div class="section-divider reveal"></div>
+
+  
+  <blockquote class="big-quote reveal clickable-quote" data-quote="不得不说这些东西应该是蛮符合这些年偏感官刺激的流量玩法的">
+    不得不说这些东西应该是蛮符合这些年偏感官刺激的流量玩法的
+  </blockquote>
+  
+
+  
+  <div class="action-items reveal">
+    
+    <div class="action-item reveal">
+      <div class="action-num">1</div>
+      <span>达美乐中国做了一些本土化产品创新，如烤鸭披萨、火山熔岩等</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-1">
+      <div class="action-num">2</div>
+      <span>这些产品偏感官刺激，符合当下流量玩法</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-2">
+      <div class="action-num">3</div>
+      <span>部分产品价格较高，毛利可能较好</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-3">
+      <div class="action-num">4</div>
+      <span>价格带调整做得比较好</span>
+    </div>
+    
+  </div>
+  
+
+  
+
+  
+
+
+</section>
+
+<section id="conclusion" style="background:var(--bg2);">
+
+
+  
+  <div class="section-label reveal">绕开口味问题，找到更紧急的改善方向</div>
+  <h2 class="section-title reveal">总结：达美乐的胜利之道</h2>
+  <div class="section-divider reveal"></div>
+
+  
+  <blockquote class="big-quote reveal clickable-quote" data-quote="达美乐的胜利都在于先绕开了那个最直观想到的口味问题，而找到了其他紧急又重要的改善方向">
+    达美乐的胜利都在于先绕开了那个最直观想到的口味问题，而找到了其他紧急又重要的改善方向
+  </blockquote>
+  
+
+  
+  <div class="action-items reveal">
+    
+    <div class="action-item reveal">
+      <div class="action-num">1</div>
+      <span>达美乐中国转型可归结为两点：要更好地开店，要开更好的店</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-1">
+      <div class="action-num">2</div>
+      <span>门店扩张或收缩最终都要服务于财务指标，维系生意的长期性</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-2">
+      <div class="action-num">3</div>
+      <span>不管在美国还是中国，达美乐的胜利都在于绕开了口味问题，找到了其他紧急又重要的改善方向</span>
+    </div>
+    
+    <div class="action-item reveal reveal-delay-3">
+      <div class="action-num">4</div>
+      <span>披萨品类在中国可能被低估了</span>
+    </div>
+    
+  </div>
+  
+
+  
+
+  
+  <div class="mega-quote reveal clickable-quote" data-quote="外国品牌如何克服屏障？达美乐又一次成功跨越了">
+    <span>外国品牌如何克服屏障？达美乐又一次成功跨越了</span>
+  </div>
+  
+
+
+</section>
+
+
+<!-- ===== QUIZ ===== -->
+<section id="quiz" style="background:var(--bg2);">
+  <div class="section-label reveal">互动自测</div>
+  <h2 class="section-title reveal">你的商业直觉测试</h2>
+  <div class="section-divider reveal"></div>
+
+  <div class="quiz-container reveal">
+    <p class="quiz-intro">达美乐的故事充满了反直觉的商业洞察。来测测你的商业嗅觉如何？</p>
+
+    <div id="quiz-form">
+      
+      <div class="quiz-question">
+        <div class="quiz-q-text">1. 如果你要开一家餐饮连锁店，你会优先关注什么？</div>
+        
+        <div class="quiz-options">
+          
+          <div class="quiz-opt" data-q="q1" data-v="0">配送效率和覆盖密度</div>
+          
+          <div class="quiz-opt" data-q="q1" data-v="1">产品口味和菜品创新</div>
+          
+          <div class="quiz-opt" data-q="q1" data-v="2">选址和装修体验</div>
+          
+          <div class="quiz-opt" data-q="q1" data-v="3">营销推广和品牌形象</div>
+          
+        </div>
+        
+      </div>
+      
+      <div class="quiz-question">
+        <div class="quiz-q-text">2. 一个品牌在一线城市做了10年效果一般，你会建议？</div>
+        
+        <div class="quiz-options">
+          
+          <div class="quiz-opt" data-q="q2" data-v="0">大胆下沉，去二三线城市找增量</div>
+          
+          <div class="quiz-opt" data-q="q2" data-v="1">优化产品，先把一线做透</div>
+          
+          <div class="quiz-opt" data-q="q2" data-v="2">缩减门店，保存实力</div>
+          
+          <div class="quiz-opt" data-q="q2" data-v="3">考虑退出市场</div>
+          
+        </div>
+        
+      </div>
+      
+      <div class="quiz-question">
+        <div class="quiz-q-text">3. CEO公开承认&#34;我们的产品很烂&#34;，你怎么看？</div>
+        
+        <div class="quiz-options">
+          
+          <div class="quiz-opt" data-q="q3" data-v="0">高明的危机公关，坦诚反而赢得信任</div>
+          
+          <div class="quiz-opt" data-q="q3" data-v="1">有风险但值得一试</div>
+          
+          <div class="quiz-opt" data-q="q3" data-v="2">太冒险了，会伤害品牌</div>
+          
+          <div class="quiz-opt" data-q="q3" data-v="3">这人疯了吧</div>
+          
+        </div>
+        
+      </div>
+      
+      <div class="quiz-question">
+        <div class="quiz-q-text">4. 你觉得&#34;快&#34;和&#34;好吃&#34;哪个对外卖更重要？</div>
+        
+        <input type="range" class="quiz-slider" min="0" max="3" value="1" id="slider-q4">
+        <div class="slider-labels">
+          
+          <span>绝对是快</span>
+          
+          <span>快更重要</span>
+          
+          <span>好吃更重要</span>
+          
+          <span>绝对是好吃</span>
+          
+        </div>
+        
+      </div>
+      
+      <div class="quiz-question">
+        <div class="quiz-q-text">5. 拿到融资后90%用来开店，你觉得？</div>
+        
+        <div class="quiz-options">
+          
+          <div class="quiz-opt" data-q="q5" data-v="0">规模优先，跑马圈地才是核心</div>
+          
+          <div class="quiz-opt" data-q="q5" data-v="1">可以理解，但比例太高了</div>
+          
+          <div class="quiz-opt" data-q="q5" data-v="2">应该分散投入产品和营销</div>
+          
+          <div class="quiz-opt" data-q="q5" data-v="3">太激进了，应该留足现金流</div>
+          
+        </div>
+        
+      </div>
+      
+
+      <button class="quiz-btn" id="quiz-submit">查看结果 →</button>
+    </div>
+
+    <div class="quiz-result" id="quiz-result">
+      <div class="quiz-result-level" id="result-level"></div>
+      <div class="quiz-result-desc" id="result-desc"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ENDING ===== -->
+<section id="ending" style="background:var(--bg);">
+  <div class="section-label reveal">延伸阅读</div>
+  <h2 class="section-title reveal">推荐书单</h2>
+  <div class="section-divider reveal"></div>
+
+  
+  <div class="book-cards">
+    
+    <div class="book-card reveal">
+      <div class="book-tag">DATA · xiaoyang</div>
+      <div class="book-title">窄门餐饮</div>
+      <div class="book-author">窄门餐饮数据平台</div>
+      
+      <div class="book-quote clickable-quote" data-quote="专门的餐饮行业数据机构，提供门店选址和拓展数据分析">专门的餐饮行业数据机构，提供门店选址和拓展数据分析</div>
+      
+    </div>
+    
+  </div>
+  
+
+  <div class="podcast-card reveal">
+    <div class="podcast-name">商业就是这样</div>
+    <div class="podcast-hosts">肖文杰 × 小杨
+    </div>
+    <div class="podcast-ep">EP.232 · 达美乐的中国业绩为何能反转？
+    </div>
+  </div>
+
+  <div class="final-slogan reveal">
+    商业就是这样
+  </div>
+
+  
+  <div class="reveal" style="margin-top:64px;text-align:center;">
+    <blockquote class="big-quote clickable-quote"
+      data-quote="披萨品类在中国是有被低估的"
+      style="text-align:left;max-width:600px;margin:0 auto;font-size:clamp(14px,2vw,18px);">
+      披萨品类在中国是有被低估的
+    </blockquote>
+  </div>
+  
+
+  <div style="height:80px;"></div>
+</section>
+
+<script>
+// === Quiz 配置（由模板注入）===
+const QUIZ_CONFIG = {"required": ["q1", "q2", "q3", "q5"], "results": [{"desc": "\u4f60\u6709\u6781\u5f3a\u7684\u5546\u4e1a\u76f4\u89c9\uff0c\u80fd\u6293\u4f4f\u89c4\u6a21\u6548\u5e94\u548c\u6548\u7387\u4f18\u5148\u7684\u6838\u5fc3\u903b\u8f91\u3002\u8fbe\u7f8e\u4e50\u7684\u6210\u529f\u4e4b\u9053\u4f60\u4e00\u773c\u5c31\u80fd\u770b\u7a7f\u2014\u2014\u6709\u65f6\u5019\u7ed5\u5f00\u95ee\u9898\u6bd4\u89e3\u51b3\u95ee\u9898\u66f4\u806a\u660e\u3002", "label": "\ud83c\udfc6 \u5546\u4e1a\u55c5\u89c9\u738b\u8005", "max": 0.8}, {"desc": "\u4f60\u5bf9\u5546\u4e1a\u6709\u4e0d\u9519\u7684\u611f\u89c9\uff0c\u4f46\u5076\u5c14\u4f1a\u88ab\"\u4ea7\u54c1\u4e3a\u738b\"\u8fd9\u7c7b\u76f4\u89c9\u8bef\u5bfc\u3002\u8bd5\u7740\u591a\u4ece\u6548\u7387\u548c\u8d22\u52a1\u6a21\u578b\u7684\u89d2\u5ea6\u601d\u8003\u95ee\u9898\uff0c\u4f60\u7684\u5546\u4e1a\u5224\u65ad\u4f1a\u66f4\u4e0a\u4e00\u5c42\u697c\u3002", "label": "\u2728 \u6f5c\u529b\u578b\u5546\u4e1a\u89c2\u5bdf\u8005", "max": 1.5}, {"desc": "\u4f60\u503e\u5411\u4e8e\u4f20\u7edf\u7684\u7ecf\u8425\u601d\u8def\uff0c\u6ce8\u91cd\u4ea7\u54c1\u548c\u54c1\u724c\u3002\u8fd9\u6ca1\u6709\u9519\uff0c\u4f46\u8fbe\u7f8e\u4e50\u544a\u8bc9\u6211\u4eec\uff1a\u6709\u65f6\u5019\u6700\u4e0d\u6027\u611f\u7684\u4e8b\u60c5\uff08\u914d\u9001\u6548\u7387\u3001\u9009\u5740\u5bc6\u5ea6\uff09\u624d\u662f\u771f\u6b63\u7684\u62a4\u57ce\u6cb3\u3002", "label": "\ud83d\ude05 \u4f20\u7edf\u6d3e\u7ecf\u8425\u8005", "max": 2.2}, {"desc": "\u4f60\u7684\u98ce\u9669\u504f\u597d\u8f83\u4f4e\uff0c\u503e\u5411\u4e8e\u7a33\u59a5\u7b56\u7565\u3002\u4f46\u5546\u4e1a\u4e16\u754c\u91cc\uff0c\u770b\u4f3c\u4fdd\u5b88\u7684\u9009\u62e9\u6709\u65f6\u53cd\u800c\u98ce\u9669\u66f4\u5927\u2014\u2014\u5f53\u4f60\u5728\u72b9\u8c6b\u65f6\uff0c\u8fbe\u7f8e\u4e50\u5df2\u7ecf\u5728\u4e09\u7ebf\u57ce\u5e02\u5f00\u51fa\u7b2c15\u5bb6\u5e97\u4e86\u3002", "label": "\ud83d\udd25 \u4fdd\u5b88\u8c28\u614e\u578b", "max": 99}], "sliders": ["q4"]};
+
+// === 进度条 ===
+const progressBar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.width = (scrollTop / docHeight * 100) + '%';
+});
+
+// === Intersection Observer 滚动动画 ===
+const reveals = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+reveals.forEach(el => revealObs.observe(el));
+
+// === 点导航 ===
+const sections = document.querySelectorAll('section[id]');
+const dots = document.querySelectorAll('.dot-nav-item');
+
+const sectionObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      dots.forEach(d => d.classList.toggle('active', d.dataset.section === id));
+    }
+  });
+}, { threshold: 0.4 });
+sections.forEach(s => sectionObs.observe(s));
+
+dots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    const target = document.getElementById(dot.dataset.section);
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// === 金句收藏系统 ===
+const savedQuotes = [];
+const savedList = document.getElementById('saved-list');
+const savedToggle = document.getElementById('saved-toggle');
+const savedPanel = document.getElementById('saved-panel');
+const savedCount = document.getElementById('saved-count');
+let panelOpen = false;
+
+document.querySelectorAll('.clickable-quote').forEach(el => {
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const quote = this.dataset.quote || this.textContent.trim().slice(0, 60);
+    if (this.classList.contains('highlighted')) {
+      this.classList.remove('highlighted');
+      const idx = savedQuotes.indexOf(quote);
+      if (idx > -1) savedQuotes.splice(idx, 1);
+    } else {
+      this.classList.add('highlighted');
+      if (!savedQuotes.includes(quote)) savedQuotes.push(quote);
+    }
+    updateSavedPanel();
+  });
+});
+
+function updateSavedPanel() {
+  savedCount.textContent = savedQuotes.length;
+  savedList.innerHTML = savedQuotes.map(q => `<div class="saved-quote-item">${q}</div>`).join('');
+  if (savedQuotes.length > 0) {
+    savedToggle.style.display = 'flex';
+  } else {
+    savedToggle.style.display = 'none';
+    savedPanel.style.display = 'none';
+    panelOpen = false;
+  }
+}
+
+savedToggle.addEventListener('click', () => {
+  panelOpen = !panelOpen;
+  savedPanel.style.display = panelOpen ? 'block' : 'none';
+  if (panelOpen) { savedPanel.style.bottom = '80px'; savedPanel.style.right = '24px'; }
+});
+
+document.addEventListener('click', (e) => {
+  if (!savedPanel.contains(e.target) && e.target !== savedToggle) {
+    savedPanel.style.display = 'none';
+    panelOpen = false;
+  }
+});
+
+// === Quiz 逻辑 ===
+const quizAnswers = {};
+
+document.querySelectorAll('.quiz-opt').forEach(opt => {
+  opt.addEventListener('click', function() {
+    const q = this.dataset.q;
+    document.querySelectorAll(`[data-q="${q}"]`).forEach(o => o.classList.remove('selected'));
+    this.classList.add('selected');
+    quizAnswers[q] = parseInt(this.dataset.v);
+  });
+});
+
+document.getElementById('quiz-submit').addEventListener('click', () => {
+  const missing = QUIZ_CONFIG.required.filter(q => !Object.prototype.hasOwnProperty.call(quizAnswers, q));
+  if (missing.length > 0) {
+    const btn = document.getElementById('quiz-submit');
+    btn.textContent = '请先回答所有问题 ✗';
+    btn.style.background = '#c04040';
+    setTimeout(() => { btn.textContent = '查看结果 →'; btn.style.background = ''; }, 2000);
+    return;
+  }
+
+  // 收集 slider 值
+  QUIZ_CONFIG.sliders.forEach(id => {
+    const slider = document.getElementById('slider-' + id);
+    if (slider) quizAnswers[id] = parseInt(slider.value);
+  });
+
+  let total = 0, count = 0;
+  for (const v of Object.values(quizAnswers)) { total += v; count++; }
+  const avgScore = count > 0 ? total / count : 0;
+
+  // 匹配结果区间
+  const results = QUIZ_CONFIG.results;
+  let result = results[results.length - 1];
+  for (const r of results) {
+    if (avgScore <= r.max) { result = r; break; }
+  }
+
+  document.getElementById('result-level').textContent = result.label;
+  document.getElementById('result-desc').textContent = result.desc;
+  const resultEl = document.getElementById('quiz-result');
+  resultEl.style.display = 'block';
+  resultEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+
+// Slider 渐变色更新
+QUIZ_CONFIG.sliders.forEach(id => {
+  const slider = document.getElementById('slider-' + id);
+  if (slider) {
+    slider.addEventListener('input', function() {
+      const pct = (this.value / 3) * 100;
+      this.style.background = `linear-gradient(to right, #d4a017 0%, #d4a017 ${pct}%, #5a5248 ${pct}%, #5a5248 100%)`;
+    });
+  }
+});
+</script>
+</body>
+</html>

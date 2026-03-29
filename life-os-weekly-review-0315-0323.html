@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tyrion 周策略复盘 | 03-15 → 03-23</title>
+  <style>
+    /* ========== 基础变量 ========== */
+    :root {
+      --bg-deep: #1a1a2e;
+      --bg-card: #16213e;
+      --bg-card-alt: #1c2a4a;
+      --bg-surface: #0f3460;
+      --text-primary: #e8e8e8;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --accent-warm: #f59e0b;
+      --accent-gold: #fbbf24;
+      --accent-soft: #d97706;
+      --green-bright: #34d399;
+      --green-mid: #6ee7b7;
+      --yellow: #fbbf24;
+      --orange: #f97316;
+      --red-soft: #ef8c6b;
+      --border: rgba(255, 255, 255, 0.06);
+      --radius: 12px;
+      --font-stack: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+    }
+
+    /* ========== 全局重置 ========== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+
+    /* ========== 布局 ========== */
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+    }
+
+    section {
+      margin-bottom: 72px;
+    }
+
+    /* ========== 头部 ========== */
+    .header {
+      text-align: center;
+      margin-bottom: 80px;
+      padding-top: 20px;
+    }
+
+    .header-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 4px 16px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .header .date-range {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .header .summary-line {
+      margin-top: 20px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ========== 章节标题 ========== */
+    .section-number {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--accent-warm);
+      margin-bottom: 8px;
+      opacity: 0.8;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 28px;
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent-gold);
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+    }
+
+    /* ========== 精力柱状图 ========== */
+    .energy-chart {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 8px;
+      height: 240px;
+      padding: 0 4px;
+      margin-bottom: 12px;
+    }
+
+    .bar-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      max-width: 64px;
+    }
+
+    .bar-score {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bar {
+      width: 100%;
+      border-radius: 6px 6px 3px 3px;
+      min-height: 4px;
+      position: relative;
+      transition: opacity 0.2s;
+    }
+
+    .bar-group:hover .bar {
+      opacity: 0.85;
+    }
+
+    .bar-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .bar-keyword {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 2px;
+      opacity: 0.7;
+    }
+
+    .chart-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .chart-meta span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .chart-meta .avg {
+      color: var(--accent-warm);
+      font-weight: 600;
+    }
+
+    /* ========== 洞察卡片 ========== */
+    .insight-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 28px 28px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .insight-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .insight-list li {
+      position: relative;
+      padding-left: 24px;
+      margin-bottom: 14px;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .insight-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .insight-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .insight-list.positive li::before {
+      background: var(--green-bright);
+      box-shadow: 0 0 8px rgba(52, 211, 153, 0.3);
+    }
+
+    .insight-list.negative li::before {
+      background: var(--red-soft);
+      box-shadow: 0 0 8px rgba(239, 140, 107, 0.2);
+    }
+
+    .highlight {
+      color: var(--accent-gold);
+      font-weight: 500;
+    }
+
+    .tag-inline {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 1px 8px;
+      border-radius: 4px;
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--accent-warm);
+      margin-left: 4px;
+      font-weight: 500;
+    }
+
+    /* ========== 对比表格 ========== */
+    .comparison-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.9rem;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .comparison-table thead th {
+      padding: 14px 18px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    .comparison-table thead th:first-child {
+      background: var(--bg-card);
+      color: var(--text-muted);
+      width: 80px;
+    }
+
+    .comparison-table thead th:nth-child(2) {
+      background: rgba(239, 140, 107, 0.1);
+      color: var(--red-soft);
+    }
+
+    .comparison-table thead th:nth-child(3) {
+      background: rgba(52, 211, 153, 0.1);
+      color: var(--green-bright);
+    }
+
+    .comparison-table tbody td {
+      padding: 14px 18px;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.6;
+    }
+
+    .comparison-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comparison-table tbody td:first-child {
+      background: var(--bg-card);
+      color: var(--accent-warm);
+      font-weight: 600;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .comparison-table tbody td:nth-child(2) {
+      background: rgba(239, 140, 107, 0.03);
+      color: var(--text-muted);
+    }
+
+    .comparison-table tbody td:nth-child(3) {
+      background: rgba(52, 211, 153, 0.04);
+      color: var(--text-secondary);
+    }
+
+    /* ========== 递归系统图 ========== */
+    .recursive-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 36px 0 40px;
+    }
+
+    .recursive-ring {
+      position: relative;
+      width: 360px;
+      height: 360px;
+    }
+
+    .recursive-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 2;
+    }
+
+    .recursive-center-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .recursive-center-text {
+      font-size: 1.1rem;
+      color: var(--accent-gold);
+      font-weight: 600;
+    }
+
+    .recursive-node {
+      position: absolute;
+      width: 110px;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .recursive-node-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+      font-size: 1.3rem;
+      border: 2px solid;
+    }
+
+    .recursive-node-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .recursive-node-role {
+      font-size: 0.7rem;
+      color: var(--accent-warm);
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .recursive-node-sub {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* 三个节点位置：三角形布局 */
+    .node-english {
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .node-english .recursive-node-icon {
+      background: rgba(52, 211, 153, 0.12);
+      border-color: rgba(52, 211, 153, 0.4);
+    }
+
+    .node-ai {
+      bottom: 20px;
+      right: -20px;
+    }
+    .node-ai .recursive-node-icon {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .node-obsidian {
+      bottom: 20px;
+      left: -20px;
+    }
+    .node-obsidian .recursive-node-icon {
+      background: rgba(99, 102, 241, 0.12);
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+
+    .recursive-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* ========== 对比卡片（上周 vs 这周） ========== */
+    .evolution-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .evolution-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .evolution-card-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+    }
+
+    .evolution-card-title {
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .evolution-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .evolution-card.before {
+      border-color: rgba(239, 140, 107, 0.15);
+    }
+
+    .evolution-card.after {
+      border-color: rgba(52, 211, 153, 0.15);
+    }
+
+    .evolution-card.before .evolution-card-label {
+      color: var(--red-soft);
+    }
+
+    .evolution-card.after .evolution-card-label {
+      color: var(--green-bright);
+    }
+
+    .evolution-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .evolution-arrow span {
+      display: inline-block;
+      margin: 0 12px;
+      color: var(--accent-warm);
+    }
+
+    /* ========== 问题区域 ========== */
+    .question-box {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.06), rgba(217, 119, 6, 0.03));
+      border: 1px solid rgba(245, 158, 11, 0.15);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+    }
+
+    .question-box p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+
+    .question-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .question-highlight {
+      color: var(--accent-gold);
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    /* ========== 页脚 ========== */
+    .footer {
+      text-align: center;
+      padding-top: 48px;
+      border-top: 1px solid var(--border);
+      margin-top: 0;
+    }
+
+    .footer-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+    }
+
+    .footer-divider {
+      display: inline-block;
+      width: 1px;
+      height: 10px;
+      background: var(--text-muted);
+      opacity: 0.3;
+      margin: 0 12px;
+      vertical-align: middle;
+    }
+
+    /* ========== 分隔线 ========== */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0 0 72px;
+    }
+
+    /* ========== 响应式 ========== */
+    @media (max-width: 640px) {
+      .container {
+        padding: 40px 18px 60px;
+      }
+
+      .header h1 {
+        font-size: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+      }
+
+      section {
+        margin-bottom: 56px;
+      }
+
+      .energy-chart {
+        height: 180px;
+        gap: 4px;
+      }
+
+      .bar-score {
+        font-size: 0.65rem;
+      }
+
+      .bar-label {
+        font-size: 0.55rem;
+      }
+
+      .bar-keyword {
+        font-size: 0.55rem;
+      }
+
+      .insight-card {
+        padding: 20px 18px;
+      }
+
+      .comparison-table {
+        font-size: 0.8rem;
+      }
+
+      .comparison-table thead th,
+      .comparison-table tbody td {
+        padding: 10px 12px;
+      }
+
+      .recursive-ring {
+        width: 290px;
+        height: 290px;
+      }
+
+      .recursive-node {
+        width: 90px;
+      }
+
+      .recursive-node-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 1rem;
+      }
+
+      .recursive-node-label {
+        font-size: 0.75rem;
+      }
+
+      .recursive-node-role {
+        font-size: 0.6rem;
+      }
+
+      .recursive-node-sub {
+        font-size: 0.55rem;
+      }
+
+      .node-ai {
+        right: -10px;
+      }
+
+      .node-obsidian {
+        left: -10px;
+      }
+
+      .evolution-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .question-box {
+        padding: 24px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ==================== 头部 ==================== -->
+  <header class="header">
+    <div class="header-tag">Life OS</div>
+    <h1>Tyrion 周策略复盘</h1>
+    <div class="date-range">2026.03.15 — 2026.03.23</div>
+    <p class="summary-line">9 天，从卧床到合流。从线性闭环到递归系统。</p>
+  </header>
+
+  <!-- ==================== 一、精力曲线 ==================== -->
+  <section>
+    <span class="section-number">01</span>
+    <h2>精力曲线</h2>
+
+    <div class="energy-chart" id="energyChart"></div>
+
+    <div class="chart-meta">
+      <span>9 天趋势：5 分卧床 → 8 分合流</span>
+      <span class="avg">均值 7.2</span>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ==================== 二、什么拉高了精力 ==================== -->
+  <section>
+    <span class="section-number">02</span>
+    <h2>什么拉高了精力？</h2>
+
+    <p style="margin-bottom: 20px;">8 分以上的日子有 <span class="highlight">4 天</span>（03-17 / 20 / 21 / 23），三个共同点：</p>
+
+    <div class="insight-card">
+      <ul class="insight-list positive">
+        <li><span class="highlight">被认可的创造性产出</span>——赛虾方案被老板说"启发了我"，递归大师播客完整上线</li>
+        <li><span class="highlight">家人+自然</span>——郊野公园骑行、清河营野餐、拍两周岁纪念照</li>
+        <li><span class="highlight">系统性的连接感</span>——三条线（英语 x AI x Obsidian）自然合流，"降维打击"的领悟</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ==================== 三、什么拉低了精力 ==================== -->
+  <section>
+    <span class="section-number">03</span>
+    <h2>什么拉低了精力？</h2>
+
+    <p style="margin-bottom: 20px;">低于 7 分的只有 <span class="highlight">2 天</span>（03-15 和 03-16），共同点：</p>
+
+    <div class="insight-card">
+      <ul class="insight-list negative">
+        <li><span class="highlight">身体拖后腿</span>——感冒卧床，上吐下泻</li>
+        <li><span class="highlight">情绪碰撞消耗</span>——和老公聊天从共振到争执，"越不想聊越要聊"的上头模式</li>
+        <li>但即便是最低的 5 分，内在质量并未崩塌——卧床一天完成了《鱼不存在》的阅读 → 写作闭环</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ==================== 四、9 天里你发生了什么变化 ==================== -->
+  <section>
+    <span class="section-number">04</span>
+    <h2>9 天里你发生了什么变化？</h2>
+
+    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>维度</th>
+            <th>03-15 的你</th>
+            <th>03-23 的你</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>身体</td>
+            <td>感冒卧床上吐下泻</td>
+            <td>早上跑 3.45 公里，身体回归</td>
+          </tr>
+          <tr>
+            <td>项目</td>
+            <td>播客可视化为主，其他暂停</td>
+            <td>递归大师播客、Obsidian、易经，三线合一</td>
+          </tr>
+          <tr>
+            <td>学习</td>
+            <td>阅读 → 写作的线性闭环</td>
+            <td>输入 → 输出 → 沉淀的递归系统</td>
+          </tr>
+          <tr>
+            <td>育儿</td>
+            <td>知道要做英文启蒙，还在摸索</td>
+            <td>SSS儿歌 → 绘本全英文讲，孩子全听懂，小循环跑通</td>
+          </tr>
+          <tr>
+            <td>工作</td>
+            <td>感冒无法工作</td>
+            <td>赛虾获老板认可、配置如期完成</td>
+          </tr>
+          <tr>
+            <td>心态</td>
+            <td>"低体力不等于低质量"的领悟</td>
+            <td>"不在那个阶段，不能说轻飘飘的话"——对他人处境有敬畏</td>
+          </tr>
+          <tr>
+            <td>休息</td>
+            <td>被迫休息（生病）</td>
+            <td>主动休息（"学会休息"）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ==================== 五、递归系统 ==================== -->
+  <section>
+    <span class="section-number">05</span>
+    <h2>递归系统</h2>
+
+    <div class="recursive-container">
+      <div class="recursive-ring">
+        <!-- SVG 三角循环箭头 -->
+        <svg class="recursive-svg" viewBox="0 0 360 360">
+          <defs>
+            <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="rgba(245,158,11,0.4)" />
+            </marker>
+          </defs>
+          <!-- 英语(上) → AI(右下) -->
+          <path d="M 210 55 Q 310 100, 290 230" fill="none" stroke="rgba(245,158,11,0.2)" stroke-width="1.5" marker-end="url(#arrowhead)" />
+          <!-- AI(右下) → Obsidian(左下) -->
+          <path d="M 240 290 Q 180 350, 110 290" fill="none" stroke="rgba(245,158,11,0.2)" stroke-width="1.5" marker-end="url(#arrowhead)" />
+          <!-- Obsidian(左下) → 英语(上) -->
+          <path d="M 65 230 Q 45 100, 145 55" fill="none" stroke="rgba(245,158,11,0.2)" stroke-width="1.5" marker-end="url(#arrowhead)" />
+
+          <!-- 内圈虚线圆（递归感） -->
+          <circle cx="180" cy="180" r="70" fill="none" stroke="rgba(245,158,11,0.08)" stroke-width="1" stroke-dasharray="4 4" />
+          <circle cx="180" cy="180" r="120" fill="none" stroke="rgba(245,158,11,0.06)" stroke-width="1" stroke-dasharray="6 6" />
+        </svg>
+
+        <!-- 中心文字 -->
+        <div class="recursive-center">
+          <span class="recursive-center-label">RECURSIVE SYSTEM</span>
+          <span class="recursive-center-text">递归</span>
+        </div>
+
+        <!-- 三个节点 -->
+        <div class="recursive-node node-english">
+          <div class="recursive-node-icon">A</div>
+          <div class="recursive-node-label">英语</div>
+          <div class="recursive-node-role">切入点</div>
+          <div class="recursive-node-sub">SSS儿歌 → 绘本 → 亲子对话</div>
+        </div>
+
+        <div class="recursive-node node-ai">
+          <div class="recursive-node-icon">AI</div>
+          <div class="recursive-node-label">AI</div>
+          <div class="recursive-node-role">加速器</div>
+          <div class="recursive-node-sub">定制播客 / 自动化 / vibe coding</div>
+        </div>
+
+        <div class="recursive-node node-obsidian">
+          <div class="recursive-node-icon">O</div>
+          <div class="recursive-node-label">Obsidian</div>
+          <div class="recursive-node-role">基础设施</div>
+          <div class="recursive-node-sub">知识管理 / 承载所有递归</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 进化对比卡片 -->
+    <h3>从线性到递归</h3>
+    <div class="evolution-cards">
+      <div class="evolution-card before">
+        <div class="evolution-card-label">上周的你</div>
+        <div class="evolution-card-title">阅读 → 写作</div>
+        <div class="evolution-card-desc">线性闭环<br>输入产出，用完即止</div>
+      </div>
+      <div class="evolution-card after">
+        <div class="evolution-card-label">这周的你</div>
+        <div class="evolution-card-title">输入 → 输出 → 沉淀 → 递归</div>
+        <div class="evolution-card-desc">螺旋上升<br>每一轮都成为下一轮的养分</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ==================== 六、一个问题 ==================== -->
+  <section>
+    <span class="section-number">06</span>
+    <h2>一个问题</h2>
+
+    <div class="question-box">
+      <p>这 9 天，你从卧床到合流，从被迫休息到主动休息，从线性闭环到递归系统。</p>
+
+      <p>你在赛虾讲完发抖的那一刻，在听自己做的播客的那个早上，在发现孩子全英文听懂绘本的那一秒——这三个瞬间有什么共同点？</p>
+
+      <p class="question-highlight" style="margin-top: 24px;">它们都是你亲手种下的东西，长出来了。</p>
+
+      <p style="margin-top: 24px;">问题是：你现在有很多种子同时在发芽。你打算怎么浇水？</p>
+    </div>
+  </section>
+
+  <!-- ==================== 页脚 ==================== -->
+  <footer class="footer">
+    <div class="footer-text">
+      Life OS
+      <span class="footer-divider"></span>
+      Tyrion 周策略复盘
+      <span class="footer-divider"></span>
+      2026-03-15 → 2026-03-23
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // ========== 精力柱状图 ==========
+  const data = [
+    { date: '03-15', score: 5,   keyword: '感冒卧床' },
+    { date: '03-16', score: 6,   keyword: '陪伴+碰撞' },
+    { date: '03-17', score: 8.5, keyword: '赛虾高光' },
+    { date: '03-18', score: 7,   keyword: '配置+恢复' },
+    { date: '03-19', score: 7,   keyword: '学会休息' },
+    { date: '03-20', score: 8,   keyword: '家庭日+造物' },
+    { date: '03-21', score: 8.5, keyword: '递归大师' },
+    { date: '03-22', score: 7,   keyword: '轻松工作' },
+    { date: '03-23', score: 8,   keyword: '方法论合流' },
+  ];
+
+  const minScore = 4;
+  const maxScore = 10;
+  const chartHeight = 200;
+
+  function getBarColor(score) {
+    if (score >= 8)   return '#34d399'; // 亮绿
+    if (score >= 7)   return '#fbbf24'; // 黄
+    if (score >= 6)   return '#f97316'; // 橙
+    return '#ef8c6b';                   // 暗红/橙
+  }
+
+  const chart = document.getElementById('energyChart');
+
+  data.forEach(d => {
+    const pct = ((d.score - minScore) / (maxScore - minScore)) * 100;
+    const barH = Math.max(pct * chartHeight / 100, 8);
+
+    const group = document.createElement('div');
+    group.className = 'bar-group';
+
+    const scoreEl = document.createElement('div');
+    scoreEl.className = 'bar-score';
+    scoreEl.textContent = d.score;
+
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.style.height = barH + 'px';
+    bar.style.background = getBarColor(d.score);
+    bar.style.boxShadow = '0 0 12px ' + getBarColor(d.score) + '33';
+
+    const label = document.createElement('div');
+    label.className = 'bar-label';
+    label.textContent = d.date;
+
+    const kw = document.createElement('div');
+    kw.className = 'bar-keyword';
+    kw.textContent = d.keyword;
+
+    group.appendChild(scoreEl);
+    group.appendChild(bar);
+    group.appendChild(label);
+    group.appendChild(kw);
+    chart.appendChild(group);
+  });
+</script>
+
+</body>
+</html>

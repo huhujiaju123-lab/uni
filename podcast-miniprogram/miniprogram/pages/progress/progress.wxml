@@ -1,0 +1,43 @@
+<view class="page-progress">
+  <!-- 播客信息 -->
+  <view class="meta-card" wx:if="{{metadata}}">
+    <image class="meta-cover" src="{{metadata.cover_url}}" mode="aspectFill" wx:if="{{metadata.cover_url}}" />
+    <view class="meta-info">
+      <view class="meta-name">{{metadata.podcast_name}}</view>
+      <view class="meta-title">{{metadata.title}}</view>
+    </view>
+  </view>
+
+  <!-- 步骤 -->
+  <view class="steps-container">
+    <view
+      class="step-item step-{{item.status}}"
+      wx:for="{{steps}}"
+      wx:key="name"
+    >
+      <view class="step-icon-wrap">
+        <text class="step-icon">{{item.icon}}</text>
+        <view class="step-line" wx:if="{{index < steps.length - 1}}"></view>
+      </view>
+      <view class="step-content">
+        <view class="step-name">{{item.name}}</view>
+        <view class="step-detail" wx:if="{{item.detail}}">{{item.detail}}</view>
+        <view class="step-spinner" wx:if="{{item.status === 'running'}}">
+          <view class="spinner-dot"></view>
+        </view>
+      </view>
+      <view class="step-check" wx:if="{{item.status === 'done'}}">✓</view>
+    </view>
+  </view>
+
+  <!-- 错误 -->
+  <view class="error-card" wx:if="{{error}}">
+    <text class="error-text">{{error}}</text>
+    <view class="btn-primary" bindtap="onBack" style="margin-top: 24rpx;">返回重试</view>
+  </view>
+
+  <!-- 提示 -->
+  <view class="hint-text" wx:if="{{!done && !error}}">
+    首次处理需要 3-5 分钟，可以先去喝杯咖啡
+  </view>
+</view>

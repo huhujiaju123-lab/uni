@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>0212涨价实验追踪更新 - 截至03-16</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  /* === 重置与基础 === */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg-deep: #0b1120;
+    --bg-primary: #0f172a;
+    --bg-card: #1e293b;
+    --bg-card-alt: #162032;
+    --bg-hover: #263450;
+    --border: #334155;
+    --border-light: #475569;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent-blue: #60a5fa;
+    --accent-indigo: #818cf8;
+    --accent-purple: #a78bfa;
+    --color-g1: #f59e0b;
+    --color-g1-bg: rgba(245, 158, 11, 0.12);
+    --color-g2: #8b5cf6;
+    --color-g2-bg: rgba(139, 92, 246, 0.12);
+    --color-ctrl: #60a5fa;
+    --color-ctrl-bg: rgba(96, 165, 250, 0.12);
+    --positive: #34d399;
+    --positive-bg: rgba(52, 211, 153, 0.12);
+    --negative: #f87171;
+    --negative-bg: rgba(248, 113, 113, 0.12);
+    --neutral: #94a3b8;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* === 页面布局 === */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  /* === 顶部 Hero === */
+  .hero {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #1a1040 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px 48px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(129, 140, 248, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -40px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.06) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(96, 165, 250, 0.15);
+    color: var(--accent-blue);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(96, 165, 250, 0.25);
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+    position: relative;
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+  }
+
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    position: relative;
+  }
+
+  .hero-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .hero-meta-item .label { color: var(--text-muted); }
+  .hero-meta-item .value { color: var(--text-secondary); font-weight: 500; }
+
+  /* === 实验组标签 === */
+  .group-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .group-tag {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 20px;
+    flex: 1;
+    min-width: 240px;
+  }
+
+  .group-tag .dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .group-tag.g1 .dot { background: var(--color-g1); box-shadow: 0 0 8px rgba(245, 158, 11, 0.4); }
+  .group-tag.g2 .dot { background: var(--color-g2); box-shadow: 0 0 8px rgba(139, 92, 246, 0.4); }
+  .group-tag.ctrl .dot { background: var(--color-ctrl); box-shadow: 0 0 8px rgba(96, 165, 250, 0.4); }
+
+  .group-tag .info { flex: 1; }
+  .group-tag .name { font-weight: 700; font-size: 14px; color: var(--text-primary); }
+  .group-tag .desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .group-tag .count { font-size: 13px; color: var(--text-secondary); font-weight: 500; text-align: right; white-space: nowrap; }
+
+  /* === Section 通用 === */
+  .section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .section-icon {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* === 核心结论卡片 === */
+  .conclusion-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  .conclusion-card {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 20px 24px;
+    border-left: 3px solid var(--accent-indigo);
+    transition: border-color 0.2s;
+  }
+
+  .conclusion-card:hover { border-left-color: var(--accent-blue); }
+
+  .conclusion-card .num {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .conclusion-card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+
+  .conclusion-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .conclusion-card .tag-pos {
+    display: inline-block;
+    background: var(--positive-bg);
+    color: var(--positive);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 4px;
+  }
+
+  .conclusion-card .tag-neg {
+    display: inline-block;
+    background: var(--negative-bg);
+    color: var(--negative);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 4px;
+  }
+
+  .conclusion-card .tag-warn {
+    display: inline-block;
+    background: rgba(245, 158, 11, 0.12);
+    color: #fbbf24;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 4px;
+  }
+
+  /* === 全量汇总 KPI 卡片 === */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .kpi-card {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 20px 24px;
+    text-align: center;
+  }
+
+  .kpi-card .kpi-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+
+  .kpi-card .kpi-values {
+    display: flex;
+    justify-content: space-around;
+    gap: 8px;
+  }
+
+  .kpi-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .kpi-item .kpi-group {
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .kpi-item.g1 .kpi-group { color: var(--color-g1); }
+  .kpi-item.g2 .kpi-group { color: var(--color-g2); }
+  .kpi-item.ctrl .kpi-group { color: var(--color-ctrl); }
+
+  .kpi-item .kpi-num {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+  }
+
+  .kpi-item .kpi-diff {
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 4px;
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+
+  .kpi-item .kpi-diff.pos { color: var(--positive); background: var(--positive-bg); }
+  .kpi-item .kpi-diff.neg { color: var(--negative); background: var(--negative-bg); }
+  .kpi-item .kpi-diff.neu { color: var(--neutral); background: rgba(148, 163, 184, 0.12); }
+
+  /* === 数据表格 === */
+  .data-table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 20px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .data-table thead th {
+    background: #162032;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 16px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .data-table thead th:first-child {
+    text-align: left;
+    padding-left: 20px;
+  }
+
+  .data-table tbody td {
+    padding: 11px 16px;
+    text-align: right;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .data-table tbody td:first-child {
+    text-align: left;
+    padding-left: 20px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .data-table tbody tr:hover { background: rgba(96, 165, 250, 0.04); }
+  .data-table tbody tr:last-child td { border-bottom: none; }
+
+  /* 组列背景色 */
+  .data-table .col-g1 { background: rgba(245, 158, 11, 0.04); }
+  .data-table .col-g2 { background: rgba(139, 92, 246, 0.04); }
+  .data-table .col-ctrl { background: rgba(96, 165, 250, 0.04); }
+
+  /* diff 标注 */
+  .diff-pos { color: var(--positive) !important; font-weight: 600; }
+  .diff-neg { color: var(--negative) !important; font-weight: 600; }
+  .diff-neu { color: var(--neutral) !important; }
+
+  /* 分层标签 */
+  .layer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    padding: 6px 14px;
+    border-radius: 6px;
+  }
+
+  .layer-badge.active {
+    background: rgba(52, 211, 153, 0.1);
+    color: var(--positive);
+    border: 1px solid rgba(52, 211, 153, 0.2);
+  }
+
+  .layer-badge.decay {
+    background: rgba(245, 158, 11, 0.1);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+  }
+
+  .layer-badge.churn {
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--accent-purple);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+  }
+
+  .layer-verdict {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    padding: 10px 16px;
+    background: var(--bg-card-alt);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--border-light);
+    line-height: 1.7;
+  }
+
+  .layer-verdict strong { color: var(--text-primary); }
+
+  /* === 对比变化区块 === */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+  }
+
+  .compare-card {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 18px 20px;
+  }
+
+  .compare-card .compare-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .compare-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+  }
+
+  .compare-row:last-child { border-bottom: none; }
+
+  .compare-row .group-name {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .compare-values {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+  }
+
+  .compare-values .old {
+    color: var(--text-muted);
+    text-decoration: line-through;
+    font-size: 12px;
+  }
+
+  .compare-values .arrow {
+    font-size: 14px;
+  }
+
+  .compare-values .arrow.up { color: var(--positive); }
+  .compare-values .arrow.down { color: var(--negative); }
+  .compare-values .arrow.flat { color: var(--neutral); }
+
+  .compare-values .new {
+    font-weight: 700;
+  }
+
+  .compare-values .new.pos { color: var(--positive); }
+  .compare-values .new.neg { color: var(--negative); }
+  .compare-values .new.neu { color: var(--neutral); }
+
+  /* === 图表容器 === */
+  .chart-container {
+    position: relative;
+    height: 320px;
+    margin: 16px 0;
+  }
+
+  .chart-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .chart-tab {
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .chart-tab:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .chart-tab.active {
+    background: rgba(96, 165, 250, 0.12);
+    color: var(--accent-blue);
+    border-color: rgba(96, 165, 250, 0.3);
+  }
+
+  /* === 脚注 === */
+  .footnote {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 32px;
+    margin-top: 8px;
+  }
+
+  .footnote h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .footnote ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .footnote li {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 3px 0;
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .footnote li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border-light);
+  }
+
+  /* === 响应式 === */
+  @media (max-width: 768px) {
+    .container { padding: 16px 12px 40px; }
+    .hero { padding: 28px 24px; }
+    .hero h1 { font-size: 24px; }
+    .section { padding: 20px 16px; }
+    .kpi-grid { grid-template-columns: 1fr; }
+    .conclusion-grid { grid-template-columns: 1fr; }
+    .group-tags { flex-direction: column; }
+    .group-tag { min-width: auto; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .chart-container { height: 260px; }
+    .data-table { font-size: 12px; }
+    .data-table thead th, .data-table tbody td { padding: 8px 10px; }
+  }
+
+  /* === 动画 === */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeInUp 0.5s ease forwards;
+  }
+
+  @keyframes fadeInUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in:nth-child(1) { animation-delay: 0.05s; }
+  .fade-in:nth-child(2) { animation-delay: 0.1s; }
+  .fade-in:nth-child(3) { animation-delay: 0.15s; }
+  .fade-in:nth-child(4) { animation-delay: 0.2s; }
+  .fade-in:nth-child(5) { animation-delay: 0.25s; }
+  .fade-in:nth-child(6) { animation-delay: 0.3s; }
+  .fade-in:nth-child(7) { animation-delay: 0.35s; }
+  .fade-in:nth-child(8) { animation-delay: 0.4s; }
+  .fade-in:nth-child(9) { animation-delay: 0.45s; }
+  .fade-in:nth-child(10) { animation-delay: 0.5s; }
+
+  /* 分隔线 */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 4px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ==================== Hero ==================== -->
+  <header class="hero fade-in">
+    <div class="hero-badge">AB Experiment Tracking</div>
+    <h1>0212 涨价实验追踪更新</h1>
+    <p class="hero-sub">老客定价策略实验 -- 截至 03-16 数据，对比上次分析（截至 03-04）的趋势变化</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="label">实验开始</span>
+        <span class="value">2026-02-12（分流日 02-02）</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="label">数据区间</span>
+        <span class="value">02-13 ~ 03-16（33天）</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="label">分层方法</span>
+        <span class="value">Recency（距实验开始日最近下单天数）</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="label">报告日期</span>
+        <span class="value">2026-03-17</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== 实验组信息 ==================== -->
+  <div class="group-tags fade-in">
+    <div class="group-tag g1">
+      <div class="dot"></div>
+      <div class="info">
+        <div class="name">涨价组1</div>
+        <div class="desc">75折系券包</div>
+      </div>
+      <div class="count">38,095 人</div>
+    </div>
+    <div class="group-tag g2">
+      <div class="dot"></div>
+      <div class="info">
+        <div class="name">涨价组2</div>
+        <div class="desc">7折系券包</div>
+      </div>
+      <div class="count">38,062 人</div>
+    </div>
+    <div class="group-tag ctrl">
+      <div class="dot"></div>
+      <div class="info">
+        <div class="name">对照组3</div>
+        <div class="desc">原价券包</div>
+      </div>
+      <div class="count">50,302 人</div>
+    </div>
+  </div>
+
+  <!-- ==================== 核心结论 ==================== -->
+  <section class="section fade-in">
+    <div class="section-header">
+      <div class="section-icon" style="background: rgba(129, 140, 248, 0.12); color: var(--accent-indigo);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div>
+        <div class="section-title">核心结论</div>
+        <div class="section-subtitle">基于 33 天数据的综合判断</div>
+      </div>
+    </div>
+
+    <div class="conclusion-grid">
+      <div class="conclusion-card">
+        <div class="num">结论 1</div>
+        <h3>组1（75折系）优于组2（7折系）</h3>
+        <p>组1 全量 ITT 与对照几乎持平（~0%），组2 持续负向（-4.6%）。<span class="tag-pos">组1 可行</span><span class="tag-neg">组2 亏损</span></p>
+      </div>
+      <div class="conclusion-card">
+        <div class="num">结论 2</div>
+        <h3>衰退用户是最佳分层</h3>
+        <p>16-30天衰退用户：组1 单杯实收 +11.7%，ITT +7.4%，是唯一"提价 + 提收入"双赢的分层。<span class="tag-pos">强正向</span></p>
+      </div>
+      <div class="conclusion-card">
+        <div class="num">结论 3</div>
+        <h3>流失用户回流效应在衰减</h3>
+        <p>30+ 天流失用户 ITT 正向从 +14.8% 缩窄至 +10.0%（组1），组2 从 +11.7% 降至 +5.0%。初期高回流不可持续。<span class="tag-warn">趋势衰减</span></p>
+      </div>
+      <div class="conclusion-card">
+        <div class="num">结论 4</div>
+        <h3>活跃用户持续承压</h3>
+        <p>0-15天活跃用户杯量被抑制（组1 -6.2%，组2 -12.6%），组1 靠提价勉强打平 ITT，组2 明显亏损。<span class="tag-neg">需关注</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 全量汇总 KPI ==================== -->
+  <section class="section fade-in">
+    <div class="section-header">
+      <div class="section-icon" style="background: rgba(96, 165, 250, 0.12); color: var(--accent-blue);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+      </div>
+      <div>
+        <div class="section-title">全量汇总</div>
+        <div class="section-subtitle">全部 126,459 名用户 | 02-13 ~ 03-16</div>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <!-- 单杯实收 -->
+      <div class="kpi-card">
+        <div class="kpi-label">单杯实收</div>
+        <div class="kpi-values">
+          <div class="kpi-item g1">
+            <div class="kpi-group">组1</div>
+            <div class="kpi-num">$3.55</div>
+            <div class="kpi-diff pos">+9.9%</div>
+          </div>
+          <div class="kpi-item g2">
+            <div class="kpi-group">组2</div>
+            <div class="kpi-num">$3.51</div>
+            <div class="kpi-diff pos">+8.7%</div>
+          </div>
+          <div class="kpi-item ctrl">
+            <div class="kpi-group">对照</div>
+            <div class="kpi-num">$3.23</div>
+            <div class="kpi-diff neu">基准</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 进组人均实收 (ITT) -->
+      <div class="kpi-card">
+        <div class="kpi-label">进组人均实收 (ITT)</div>
+        <div class="kpi-values">
+          <div class="kpi-item g1">
+            <div class="kpi-group">组1</div>
+            <div class="kpi-num">$1.73</div>
+            <div class="kpi-diff neu">~0%</div>
+          </div>
+          <div class="kpi-item g2">
+            <div class="kpi-group">组2</div>
+            <div class="kpi-num">$1.65</div>
+            <div class="kpi-diff neg">-4.6%</div>
+          </div>
+          <div class="kpi-item ctrl">
+            <div class="kpi-group">对照</div>
+            <div class="kpi-num">$1.73</div>
+            <div class="kpi-diff neu">基准</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 人均杯量 -->
+      <div class="kpi-card">
+        <div class="kpi-label">人均杯量</div>
+        <div class="kpi-values">
+          <div class="kpi-item g1">
+            <div class="kpi-group">组1</div>
+            <div class="kpi-num">0.486</div>
+            <div class="kpi-diff neg">-9.2%</div>
+          </div>
+          <div class="kpi-item g2">
+            <div class="kpi-group">组2</div>
+            <div class="kpi-num">0.471</div>
+            <div class="kpi-diff neg">-12.0%</div>
+          </div>
+          <div class="kpi-item ctrl">
+            <div class="kpi-group">对照</div>
+            <div class="kpi-num">0.535</div>
+            <div class="kpi-diff neu">基准</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== Recency 分层数据 ==================== -->
+  <section class="section fade-in">
+    <div class="section-header">
+      <div class="section-icon" style="background: rgba(52, 211, 153, 0.12); color: var(--positive);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div>
+        <div class="section-title">Recency 分层详情</div>
+        <div class="section-subtitle">按最近下单距实验开始日的天数分层</div>
+      </div>
+    </div>
+
+    <!-- 0-15天活跃 -->
+    <div style="margin-bottom: 32px;">
+      <div class="layer-badge active">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        0-15天 活跃用户
+      </div>
+      <div class="layer-verdict">
+        <strong>组1 勉强打平，组2 明显亏损。</strong>涨价对活跃用户的杯量/下单率有显著抑制。组1 单杯实收 +7.4% 堪堪覆盖杯量损失（ITT +0.6%），组2 则覆盖不了（ITT -7.9%）。
+      </div>
+      <div class="data-table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>指标</th>
+              <th class="col-g1">涨价组1</th>
+              <th class="col-g1">vs 对照</th>
+              <th class="col-g2">涨价组2</th>
+              <th class="col-g2">vs 对照</th>
+              <th class="col-ctrl">对照组3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>用户数</td>
+              <td class="col-g1">4,247</td>
+              <td class="col-g1 diff-neu">--</td>
+              <td class="col-g2">4,415</td>
+              <td class="col-g2 diff-neu">--</td>
+              <td class="col-ctrl">5,906</td>
+            </tr>
+            <tr>
+              <td>下单率</td>
+              <td class="col-g1">64.61%</td>
+              <td class="col-g1 diff-neg">-3.2pp</td>
+              <td class="col-g2">62.90%</td>
+              <td class="col-g2 diff-neg">-4.9pp</td>
+              <td class="col-ctrl">67.80%</td>
+            </tr>
+            <tr>
+              <td>单杯实收</td>
+              <td class="col-g1">$3.77</td>
+              <td class="col-g1 diff-pos">+7.4%</td>
+              <td class="col-g2">$3.70</td>
+              <td class="col-g2 diff-pos">+5.4%</td>
+              <td class="col-ctrl">$3.51</td>
+            </tr>
+            <tr>
+              <td>进组人均实收(ITT)</td>
+              <td class="col-g1">$10.52</td>
+              <td class="col-g1 diff-pos">+0.6%</td>
+              <td class="col-g2">$9.63</td>
+              <td class="col-g2 diff-neg">-7.9%</td>
+              <td class="col-ctrl">$10.46</td>
+            </tr>
+            <tr>
+              <td>人均杯量</td>
+              <td class="col-g1">2.79</td>
+              <td class="col-g1 diff-neg">-6.2%</td>
+              <td class="col-g2">2.60</td>
+              <td class="col-g2 diff-neg">-12.6%</td>
+              <td class="col-ctrl">2.98</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 16-30天衰退 -->
+    <div style="margin-bottom: 32px;">
+      <div class="layer-badge decay">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+        16-30天 衰退用户
+      </div>
+      <div class="layer-verdict">
+        <strong>最佳分层 -- 涨价正向效果最明确。</strong>组1 单杯实收 +11.7% 的同时 ITT +7.4%，"提价+提收入"双赢。衰退用户对价格敏感度低于活跃用户，提价不影响回访意愿。
+      </div>
+      <div class="data-table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>指标</th>
+              <th class="col-g1">涨价组1</th>
+              <th class="col-g1">vs 对照</th>
+              <th class="col-g2">涨价组2</th>
+              <th class="col-g2">vs 对照</th>
+              <th class="col-ctrl">对照组3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>用户数</td>
+              <td class="col-g1">3,383</td>
+              <td class="col-g1 diff-neu">--</td>
+              <td class="col-g2">3,350</td>
+              <td class="col-g2 diff-neu">--</td>
+              <td class="col-ctrl">4,292</td>
+            </tr>
+            <tr>
+              <td>下单率</td>
+              <td class="col-g1">29.59%</td>
+              <td class="col-g1 diff-neg">-0.3pp</td>
+              <td class="col-g2">28.30%</td>
+              <td class="col-g2 diff-neg">-1.6pp</td>
+              <td class="col-ctrl">29.87%</td>
+            </tr>
+            <tr>
+              <td>单杯实收</td>
+              <td class="col-g1">$3.34</td>
+              <td class="col-g1 diff-pos">+11.7%</td>
+              <td class="col-g2">$3.38</td>
+              <td class="col-g2 diff-pos">+13.0%</td>
+              <td class="col-ctrl">$2.99</td>
+            </tr>
+            <tr>
+              <td>进组人均实收(ITT)</td>
+              <td class="col-g1">$2.33</td>
+              <td class="col-g1 diff-pos">+7.4%</td>
+              <td class="col-g2">$2.29</td>
+              <td class="col-g2 diff-pos">+5.5%</td>
+              <td class="col-ctrl">$2.17</td>
+            </tr>
+            <tr>
+              <td>人均杯量</td>
+              <td class="col-g1">0.70</td>
+              <td class="col-g1 diff-neg">-3.9%</td>
+              <td class="col-g2">0.68</td>
+              <td class="col-g2 diff-neg">-6.6%</td>
+              <td class="col-ctrl">0.73</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 30+天流失 -->
+    <div style="margin-bottom: 8px;">
+      <div class="layer-badge churn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        30+天 流失用户
+      </div>
+      <div class="layer-verdict">
+        <strong>提价效果显著但正向在衰减。</strong>单杯实收涨幅最大（组1 +19.4%），ITT 仍正（+10.0%），但对比上次 +14.8% 已有下降。初期高回流效应不可持续，长期效果需继续追踪。
+      </div>
+      <div class="data-table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>指标</th>
+              <th class="col-g1">涨价组1</th>
+              <th class="col-g1">vs 对照</th>
+              <th class="col-g2">涨价组2</th>
+              <th class="col-g2">vs 对照</th>
+              <th class="col-ctrl">对照组3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>用户数</td>
+              <td class="col-g1">30,298</td>
+              <td class="col-g1 diff-neu">--</td>
+              <td class="col-g2">30,141</td>
+              <td class="col-g2 diff-neu">--</td>
+              <td class="col-ctrl">39,851</td>
+            </tr>
+            <tr>
+              <td>下单率</td>
+              <td class="col-g1">7.30%</td>
+              <td class="col-g1 diff-neg">-0.4pp</td>
+              <td class="col-g2">7.02%</td>
+              <td class="col-g2 diff-neg">-0.7pp</td>
+              <td class="col-ctrl">7.72%</td>
+            </tr>
+            <tr>
+              <td>单杯实收</td>
+              <td class="col-g1">$3.08</td>
+              <td class="col-g1 diff-pos">+19.4%</td>
+              <td class="col-g2">$3.05</td>
+              <td class="col-g2 diff-pos">+18.2%</td>
+              <td class="col-ctrl">$2.58</td>
+            </tr>
+            <tr>
+              <td>进组人均实收(ITT)</td>
+              <td class="col-g1">$0.44</td>
+              <td class="col-g1 diff-pos">+10.0%</td>
+              <td class="col-g2">$0.42</td>
+              <td class="col-g2 diff-pos">+5.0%</td>
+              <td class="col-ctrl">$0.40</td>
+            </tr>
+            <tr>
+              <td>人均杯量</td>
+              <td class="col-g1">0.14</td>
+              <td class="col-g1 diff-neg">-9.2%</td>
+              <td class="col-g2">0.14</td>
+              <td class="col-g2 diff-neg">-11.3%</td>
+              <td class="col-ctrl">0.16</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 与上次对比 ==================== -->
+  <section class="section fade-in">
+    <div class="section-header">
+      <div class="section-icon" style="background: rgba(245, 158, 11, 0.12); color: var(--color-g1);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      </div>
+      <div>
+        <div class="section-title">与上次分析对比</div>
+        <div class="section-subtitle">ITT 差异变化 | 上次：02-13~03-04（21天） vs 本次：02-13~03-16（33天）</div>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <!-- 全量 -->
+      <div class="compare-card">
+        <div class="compare-label">全量 -- ITT vs 对照</div>
+        <div class="compare-row">
+          <span class="group-name" style="color: var(--color-g1);">涨价组1</span>
+          <div class="compare-values">
+            <span class="old">-0.2%</span>
+            <span class="arrow flat">&rarr;</span>
+            <span class="new neu">~0%</span>
+          </div>
+        </div>
+        <div class="compare-row">
+          <span class="group-name" style="color: var(--color-g2);">涨价组2</span>
+          <div class="compare-values">
+            <span class="old">-4.0%</span>
+            <span class="arrow down">&darr;</span>
+            <span class="new neg">-4.6%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 活跃 -->
+      <div class="compare-card">
+        <div class="compare-label">0-15天活跃 -- ITT vs 对照</div>
+        <div class="compare-row">
+          <span class="group-name" style="color: var(--color-g1);">涨价组1</span>
+          <div class="compare-values">
+            <span class="old">+1.1%</span>
+            <span class="arrow down">&darr;</span>
+            <span class="new pos">+0.6%</span>
+          </div>
+        </div>
+        <div class="compare-row">
+          <span class="group-name" style="color: var(--color-g2);">涨价组2</span>
+          <div class="compare-values">
+            <span class="old">-7.4%</span>
+            <span class="arrow down">&darr;</span>
+            <span class="new neg">-7.9%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 衰退 -->
+      <div class="compare-card">
+        <div class="compare-label">16-30天衰退 -- ITT vs 对照</div>
+        <div class="compare-row">
+          <span class="group-name" style="color: var(--color-g1);">涨价组1</span>
+          <div class="compare-values">
+            <span class="old">+3.3%</span>
+            <span class="arrow up">&uarr;</span>
+            <span class="new pos">+7.4%</span>
+          </div>
+        </div>
+        <div class="compare-row">
+          <span class="group-name" style="color: var(--color-g2);">涨价组2</span>
+          <div class="compare-values">
+            <span class="old">+5.9%</span>
+            <span class="arrow down">&darr;</span>
+            <span class="new pos">+5.5%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 流失 -->
+      <div class="compare-card">
+        <div class="compare-label">30+天流失 -- ITT vs 对照</div>
+        <div class="compare-row">
+          <span class="group-name" style="color: var(--color-g1);">涨价组1</span>
+          <div class="compare-values">
+            <span class="old">+14.8%</span>
+            <span class="arrow down">&darr;</span>
+            <span class="new pos">+10.0%</span>
+          </div>
+        </div>
+        <div class="compare-row">
+          <span class="group-name" style="color: var(--color-g2);">涨价组2</span>
+          <div class="compare-values">
+            <span class="old">+11.7%</span>
+            <span class="arrow down">&darr;</span>
+            <span class="new pos">+5.0%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 趋势总结 -->
+    <div style="margin-top: 20px; padding: 16px 20px; background: var(--bg-card-alt); border-radius: var(--radius-sm); border: 1px solid var(--border);">
+      <div style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px;">趋势变化总结</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 8px; font-size: 13px; color: var(--text-secondary); line-height: 1.8;">
+        <div><span style="color: var(--neutral);">&bull;</span> 组1 整体持平（-0.2% &rarr; ~0%），<strong style="color: var(--text-primary);">结论不变</strong></div>
+        <div><span style="color: var(--negative);">&bull;</span> 组2 整体负向扩大（-4.0% &rarr; -4.6%），<strong style="color: var(--negative);">继续恶化</strong></div>
+        <div><span style="color: var(--positive);">&bull;</span> 衰退用户正向扩大（组1 +3.3% &rarr; +7.4%），<strong style="color: var(--positive);">最好的分层</strong></div>
+        <div><span style="color: #fbbf24;">&bull;</span> 流失用户正向缩窄（组1 +14.8% &rarr; +10.0%），<strong style="color: #fbbf24;">回流效应衰减</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 周趋势图 ==================== -->
+  <section class="section fade-in">
+    <div class="section-header">
+      <div class="section-icon" style="background: rgba(167, 139, 250, 0.12); color: var(--accent-purple);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      </div>
+      <div>
+        <div class="section-title">周趋势</div>
+        <div class="section-subtitle">全量用户 | 按自然周汇总</div>
+      </div>
+    </div>
+
+    <div class="chart-tabs">
+      <button class="chart-tab active" data-chart="arpu" onclick="switchChart('arpu')">ARPU (ITT)</button>
+      <button class="chart-tab" data-chart="aov" onclick="switchChart('aov')">单杯实收</button>
+      <button class="chart-tab" data-chart="cvr" onclick="switchChart('cvr')">下单率</button>
+    </div>
+
+    <div class="chart-container">
+      <canvas id="trendChart"></canvas>
+    </div>
+
+    <!-- 周趋势表 -->
+    <div class="data-table-wrapper" style="margin-top: 20px;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>周</th>
+            <th class="col-ctrl">对照-ARPU</th>
+            <th class="col-g1">组1-ARPU</th>
+            <th class="col-g2">组2-ARPU</th>
+            <th class="col-ctrl">对照-单杯</th>
+            <th class="col-g1">组1-单杯</th>
+            <th class="col-g2">组2-单杯</th>
+            <th class="col-ctrl">对照-下单率</th>
+            <th class="col-g1">组1-下单率</th>
+            <th class="col-g2">组2-下单率</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>W7 (2/13-16)</td>
+            <td class="col-ctrl">$0.16</td>
+            <td class="col-g1">$0.15</td>
+            <td class="col-g2">$0.15</td>
+            <td class="col-ctrl">$3.20</td>
+            <td class="col-g1">$3.51</td>
+            <td class="col-g2">$3.46</td>
+            <td class="col-ctrl">3.27%</td>
+            <td class="col-g1">2.97%</td>
+            <td class="col-g2">3.03%</td>
+          </tr>
+          <tr>
+            <td>W8 (2/17-23)</td>
+            <td class="col-ctrl">$0.37</td>
+            <td class="col-g1">$0.37</td>
+            <td class="col-g2">$0.35</td>
+            <td class="col-ctrl">$3.24</td>
+            <td class="col-g1">$3.59</td>
+            <td class="col-g2">$3.56</td>
+            <td class="col-ctrl">6.28%</td>
+            <td class="col-g1">5.91%</td>
+            <td class="col-g2">5.72%</td>
+          </tr>
+          <tr>
+            <td>W9 (2/24-3/2)</td>
+            <td class="col-ctrl">$0.35</td>
+            <td class="col-g1">$0.34</td>
+            <td class="col-g2">$0.33</td>
+            <td class="col-ctrl">$3.26</td>
+            <td class="col-g1">$3.58</td>
+            <td class="col-g2">$3.53</td>
+            <td class="col-ctrl">6.29%</td>
+            <td class="col-g1">5.71%</td>
+            <td class="col-g2">5.55%</td>
+          </tr>
+          <tr>
+            <td>W10 (3/3-9)</td>
+            <td class="col-ctrl">$0.39</td>
+            <td class="col-g1">$0.40</td>
+            <td class="col-g2">$0.38</td>
+            <td class="col-ctrl">$3.20</td>
+            <td class="col-g1">$3.57</td>
+            <td class="col-g2">$3.49</td>
+            <td class="col-ctrl">6.80%</td>
+            <td class="col-g1">6.22%</td>
+            <td class="col-g2">6.03%</td>
+          </tr>
+          <tr>
+            <td>W11 (3/10-16)</td>
+            <td class="col-ctrl">$0.41</td>
+            <td class="col-g1">$0.41</td>
+            <td class="col-g2">$0.39</td>
+            <td class="col-ctrl">$3.24</td>
+            <td class="col-g1">$3.49</td>
+            <td class="col-g2">$3.47</td>
+            <td class="col-ctrl">6.98%</td>
+            <td class="col-g1">6.74%</td>
+            <td class="col-g2">6.47%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ==================== 分层 ITT 趋势对比图 ==================== -->
+  <section class="section fade-in">
+    <div class="section-header">
+      <div class="section-icon" style="background: rgba(52, 211, 153, 0.12); color: var(--positive);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      </div>
+      <div>
+        <div class="section-title">分层 ITT 差异变化</div>
+        <div class="section-subtitle">各分层涨价组 vs 对照的 ITT 差异 | 上次(03-04) vs 本次(03-16)</div>
+      </div>
+    </div>
+
+    <div class="chart-container" style="height: 340px;">
+      <canvas id="layerCompareChart"></canvas>
+    </div>
+  </section>
+
+  <!-- ==================== 数据口径说明 ==================== -->
+  <div class="footnote fade-in">
+    <h4>数据口径说明</h4>
+    <ul>
+      <li>数据源：dwd_t_ord_order_item_d_inc（DWD 订单明细表）</li>
+      <li>订单过滤：order_status = 90（成功订单），order_category = '门店订单'</li>
+      <li>用户过滤：type NOT IN (3, 4, 5)，排除待确认/游客/外卖用户</li>
+      <li>门店过滤：排除 NJ Test Kitchen / NJ Test Kitchen 2</li>
+      <li>实收口径：仅饮品实收（one_category_name = 'Drink'），不含食品等非饮品</li>
+      <li>进组人均实收（ITT）= 分组总饮品实收 / 分组总用户数（含未下单用户）</li>
+      <li>单杯实收 = 总饮品实收 / 总饮品杯量（仅下单用户的饮品）</li>
+      <li>Recency 分层：以实验开始日(02-12)为基准，按用户最近一次下单日距基准日的天数划分</li>
+      <li>上次分析数据来源：同事分析报告（02-13 ~ 03-04），本次为独立查询（02-13 ~ 03-16）</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+/* === Chart.js 全局配置 === */
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.borderColor = 'rgba(51, 65, 85, 0.5)';
+Chart.defaults.font.family = "-apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif";
+
+/* === 颜色常量 === */
+const COLORS = {
+  g1: '#f59e0b',
+  g1_bg: 'rgba(245, 158, 11, 0.08)',
+  g2: '#8b5cf6',
+  g2_bg: 'rgba(139, 92, 246, 0.08)',
+  ctrl: '#60a5fa',
+  ctrl_bg: 'rgba(96, 165, 250, 0.08)',
+  positive: '#34d399',
+  negative: '#f87171',
+};
+
+/* === 周趋势数据 === */
+const weekLabels = ['W7\n(2/13-16)', 'W8\n(2/17-23)', 'W9\n(2/24-3/2)', 'W10\n(3/3-9)', 'W11\n(3/10-16)'];
+
+const chartData = {
+  arpu: {
+    label: 'ARPU (ITT)',
+    prefix: '$',
+    ctrl: [0.16, 0.37, 0.35, 0.39, 0.41],
+    g1:   [0.15, 0.37, 0.34, 0.40, 0.41],
+    g2:   [0.15, 0.35, 0.33, 0.38, 0.39],
+  },
+  aov: {
+    label: '单杯实收',
+    prefix: '$',
+    ctrl: [3.20, 3.24, 3.26, 3.20, 3.24],
+    g1:   [3.51, 3.59, 3.58, 3.57, 3.49],
+    g2:   [3.46, 3.56, 3.53, 3.49, 3.47],
+  },
+  cvr: {
+    label: '下单率',
+    prefix: '',
+    suffix: '%',
+    ctrl: [3.27, 6.28, 6.29, 6.80, 6.98],
+    g1:   [2.97, 5.91, 5.71, 6.22, 6.74],
+    g2:   [3.03, 5.72, 5.55, 6.03, 6.47],
+  }
+};
+
+let currentChart = 'arpu';
+let trendChartInstance = null;
+
+function createTrendChart(type) {
+  const ctx = document.getElementById('trendChart').getContext('2d');
+  const d = chartData[type];
+
+  if (trendChartInstance) trendChartInstance.destroy();
+
+  trendChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: weekLabels,
+      datasets: [
+        {
+          label: '对照组3',
+          data: d.ctrl,
+          borderColor: COLORS.ctrl,
+          backgroundColor: COLORS.ctrl_bg,
+          borderWidth: 2.5,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          pointBackgroundColor: COLORS.ctrl,
+          tension: 0.3,
+          fill: true,
+        },
+        {
+          label: '涨价组1 (75折系)',
+          data: d.g1,
+          borderColor: COLORS.g1,
+          backgroundColor: COLORS.g1_bg,
+          borderWidth: 2.5,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          pointBackgroundColor: COLORS.g1,
+          tension: 0.3,
+          fill: true,
+        },
+        {
+          label: '涨价组2 (7折系)',
+          data: d.g2,
+          borderColor: COLORS.g2,
+          backgroundColor: COLORS.g2_bg,
+          borderWidth: 2.5,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          pointBackgroundColor: COLORS.g2,
+          tension: 0.3,
+          fill: true,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            usePointStyle: true,
+            pointStyle: 'circle',
+            padding: 20,
+            font: { size: 12, weight: '600' }
+          }
+        },
+        tooltip: {
+          backgroundColor: '#1e293b',
+          borderColor: '#334155',
+          borderWidth: 1,
+          titleFont: { size: 13, weight: '700' },
+          bodyFont: { size: 12 },
+          padding: 12,
+          cornerRadius: 8,
+          callbacks: {
+            label: function(context) {
+              let val = context.parsed.y;
+              let prefix = d.prefix || '';
+              let suffix = d.suffix || '';
+              return context.dataset.label + ': ' + prefix + val.toFixed(2) + suffix;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 11, weight: '500' } }
+        },
+        y: {
+          grid: { color: 'rgba(51, 65, 85, 0.3)' },
+          ticks: {
+            font: { size: 11 },
+            callback: function(value) {
+              let prefix = d.prefix || '';
+              let suffix = d.suffix || '';
+              return prefix + value.toFixed(2) + suffix;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function switchChart(type) {
+  currentChart = type;
+  document.querySelectorAll('.chart-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.chart === type);
+  });
+  createTrendChart(type);
+}
+
+/* === 分层 ITT 差异对比图（分组柱状图） === */
+function createLayerCompareChart() {
+  const ctx = document.getElementById('layerCompareChart').getContext('2d');
+
+  const categories = ['全量', '0-15天\n活跃', '16-30天\n衰退', '30+天\n流失'];
+
+  /* 上次(03-04)数据 */
+  const g1_old = [-0.2, 1.1, 3.3, 14.8];
+  const g2_old = [-4.0, -7.4, 5.9, 11.7];
+
+  /* 本次(03-16)数据 */
+  const g1_new = [0, 0.6, 7.4, 10.0];
+  const g2_new = [-4.6, -7.9, 5.5, 5.0];
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: categories,
+      datasets: [
+        {
+          label: '组1 上次(03-04)',
+          data: g1_old,
+          backgroundColor: 'rgba(245, 158, 11, 0.25)',
+          borderColor: 'rgba(245, 158, 11, 0.5)',
+          borderWidth: 1,
+          borderRadius: 4,
+          barPercentage: 0.7,
+          categoryPercentage: 0.8,
+        },
+        {
+          label: '组1 本次(03-16)',
+          data: g1_new,
+          backgroundColor: 'rgba(245, 158, 11, 0.7)',
+          borderColor: COLORS.g1,
+          borderWidth: 1.5,
+          borderRadius: 4,
+          barPercentage: 0.7,
+          categoryPercentage: 0.8,
+        },
+        {
+          label: '组2 上次(03-04)',
+          data: g2_old,
+          backgroundColor: 'rgba(139, 92, 246, 0.25)',
+          borderColor: 'rgba(139, 92, 246, 0.5)',
+          borderWidth: 1,
+          borderRadius: 4,
+          barPercentage: 0.7,
+          categoryPercentage: 0.8,
+        },
+        {
+          label: '组2 本次(03-16)',
+          data: g2_new,
+          backgroundColor: 'rgba(139, 92, 246, 0.7)',
+          borderColor: COLORS.g2,
+          borderWidth: 1.5,
+          borderRadius: 4,
+          barPercentage: 0.7,
+          categoryPercentage: 0.8,
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            usePointStyle: true,
+            pointStyle: 'rect',
+            padding: 16,
+            font: { size: 11, weight: '600' }
+          }
+        },
+        tooltip: {
+          backgroundColor: '#1e293b',
+          borderColor: '#334155',
+          borderWidth: 1,
+          titleFont: { size: 13, weight: '700' },
+          bodyFont: { size: 12 },
+          padding: 12,
+          cornerRadius: 8,
+          callbacks: {
+            label: function(context) {
+              let val = context.parsed.y;
+              let sign = val >= 0 ? '+' : '';
+              return context.dataset.label + ': ' + sign + val.toFixed(1) + '%';
+            }
+          }
+        },
+        /* 零线标注 */
+        annotation: undefined
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: {
+            font: { size: 12, weight: '600' },
+            color: '#cbd5e1',
+          }
+        },
+        y: {
+          grid: { color: 'rgba(51, 65, 85, 0.3)' },
+          ticks: {
+            font: { size: 11 },
+            callback: function(value) {
+              return (value >= 0 ? '+' : '') + value + '%';
+            }
+          },
+          /* 零线突出 */
+          afterBuildTicks: function(axis) {},
+        }
+      }
+    },
+    plugins: [{
+      /* 手绘零线 */
+      id: 'zeroLine',
+      afterDraw: function(chart) {
+        const yScale = chart.scales.y;
+        const ctx = chart.ctx;
+        const yPixel = yScale.getPixelForValue(0);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(chart.chartArea.left, yPixel);
+        ctx.lineTo(chart.chartArea.right, yPixel);
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.5)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([6, 4]);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }]
+  });
+}
+
+/* === 初始化 === */
+document.addEventListener('DOMContentLoaded', function() {
+  createTrendChart('arpu');
+  createLayerCompareChart();
+});
+</script>
+
+</body>
+</html>

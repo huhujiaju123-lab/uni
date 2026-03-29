@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>递归大师 - Podcast Cover</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@latest/lxgwwenkai-bold/result.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@latest/lxgwwenkai-regular/result.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@latest/lxgwwenkai-light/result.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #111;
+  }
+
+  .cover {
+    width: 3000px;
+    height: 3000px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(160deg, #0D1B2A 0%, #1B2D45 35%, #162032 65%, #0F1923 100%);
+  }
+
+  /* ── Grid ── */
+  .grid-layer {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(74,144,217,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(74,144,217,0.04) 1px, transparent 1px);
+    background-size: 75px 75px;
+  }
+  .dot-grid {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(74,144,217,0.07) 1.5px, transparent 1.5px);
+    background-size: 75px 75px;
+    background-position: 37.5px 37.5px;
+  }
+
+  /* ── Glows ── */
+  .glow-tr {
+    position: absolute; top: -400px; right: -200px;
+    width: 1800px; height: 1800px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(74,144,217,0.12) 0%, transparent 70%);
+    filter: blur(120px);
+  }
+  .glow-bl {
+    position: absolute; bottom: -300px; left: -100px;
+    width: 1400px; height: 1400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(218,165,60,0.08) 0%, transparent 70%);
+    filter: blur(100px);
+  }
+  .glow-center {
+    position: absolute; top: 42%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1800px; height: 1800px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(74,144,217,0.08) 0%, transparent 55%);
+    filter: blur(80px);
+  }
+
+  /* ── Corners ── */
+  .corner { position: absolute; width: 120px; height: 120px; }
+  .corner-tl { top: 160px; left: 160px; border-top: 3px solid rgba(74,144,217,0.25); border-left: 3px solid rgba(74,144,217,0.25); border-radius: 12px 0 0 0; }
+  .corner-tr { top: 160px; right: 160px; border-top: 3px solid rgba(74,144,217,0.25); border-right: 3px solid rgba(74,144,217,0.25); border-radius: 0 12px 0 0; }
+  .corner-bl { bottom: 160px; left: 160px; border-bottom: 3px solid rgba(218,165,60,0.2); border-left: 3px solid rgba(218,165,60,0.2); border-radius: 0 0 0 12px; }
+  .corner-br { bottom: 160px; right: 160px; border-bottom: 3px solid rgba(218,165,60,0.2); border-right: 3px solid rgba(218,165,60,0.2); border-radius: 0 0 12px 0; }
+
+  /* ── 主标题：递归大师 ── */
+  .main-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+    text-align: center;
+  }
+  .main-title-text {
+    font-family: 'LXGW WenKai', 'STKaiti', serif;
+    font-size: 580px;
+    font-weight: 700;
+    letter-spacing: 40px;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #4A90D9 0%, #5BA3E6 25%, #6DB8F0 45%, #DAA53C 80%, #E8B84A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 80px rgba(74,144,217,0.25));
+    white-space: nowrap;
+  }
+  /* 描边重影 */
+  .main-title-ghost {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -55%) scale(1.06);
+    font-family: 'LXGW WenKai', 'STKaiti', serif;
+    font-size: 580px;
+    font-weight: 700;
+    letter-spacing: 40px;
+    line-height: 1.1;
+    -webkit-text-stroke: 2px rgba(74,144,217,0.08);
+    -webkit-text-fill-color: transparent;
+    white-space: nowrap;
+  }
+
+  /* ── AB 标记 + AI Briefing ── */
+  .ab-badge {
+    position: absolute;
+    top: 340px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 30px;
+  }
+  .ab-letter {
+    font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    font-size: 120px;
+    font-weight: 800;
+    letter-spacing: -5px;
+    background: linear-gradient(135deg, rgba(74,144,217,0.5), rgba(218,165,60,0.5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .ab-divider {
+    width: 3px;
+    height: 80px;
+    background: linear-gradient(180deg, rgba(74,144,217,0.4), rgba(218,165,60,0.3));
+    border-radius: 2px;
+  }
+  .ab-text {
+    font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    font-size: 64px;
+    font-weight: 300;
+    color: rgba(200,210,225,0.5);
+    letter-spacing: 12px;
+    text-transform: uppercase;
+  }
+
+  /* ── 波形 ── */
+  .waveform {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 340px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 60px;
+  }
+  .wave-bar {
+    width: 7px;
+    border-radius: 4px;
+    background: linear-gradient(180deg, rgba(74,144,217,0.45) 0%, rgba(218,165,60,0.3) 100%);
+  }
+
+  /* ── 分隔线 ── */
+  .divider {
+    position: absolute;
+    bottom: 520px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 350px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(218,165,60,0.4), rgba(74,144,217,0.4), transparent);
+  }
+
+  /* ── Tagline ── */
+  .tagline {
+    position: absolute;
+    bottom: 400px;
+    left: 0; right: 0;
+    text-align: center;
+    font-family: 'LXGW WenKai', 'STKaiti', serif;
+    font-size: 64px;
+    color: rgba(200,210,225,0.5);
+    letter-spacing: 10px;
+    font-weight: 300;
+  }
+
+  /* ── Daily 标签 ── */
+  .daily-tag {
+    position: absolute;
+    bottom: 270px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: rgba(74,144,217,0.45);
+    letter-spacing: 24px;
+    text-transform: uppercase;
+    border: 1px solid rgba(74,144,217,0.15);
+    padding: 14px 50px;
+    border-radius: 8px;
+  }
+
+  /* ── Particles ── */
+  .particle { position: absolute; border-radius: 50%; opacity: 0.15; }
+  .p1 { top: 320px; left: 380px; width: 12px; height: 12px; background: #4A90D9; }
+  .p2 { top: 480px; right: 520px; width: 8px; height: 8px; background: #DAA53C; }
+  .p3 { top: 700px; left: 600px; width: 10px; height: 10px; background: #4A90D9; }
+  .p4 { bottom: 700px; right: 400px; width: 14px; height: 14px; background: #DAA53C; opacity: 0.1; }
+  .p5 { top: 400px; left: 900px; width: 6px; height: 6px; background: #6DB8F0; }
+  .p6 { bottom: 800px; left: 350px; width: 10px; height: 10px; background: #E8B84A; opacity: 0.1; }
+  .p7 { top: 600px; right: 350px; width: 8px; height: 8px; background: #4A90D9; }
+
+  /* ── Code brackets ── */
+  .bracket {
+    position: absolute;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    color: rgba(74,144,217,0.05);
+    font-size: 280px;
+    font-weight: 200;
+  }
+  .bracket-left { top: 420px; left: 260px; }
+  .bracket-right { bottom: 720px; right: 260px; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="grid-layer"></div>
+  <div class="dot-grid"></div>
+
+  <div class="glow-tr"></div>
+  <div class="glow-bl"></div>
+  <div class="glow-center"></div>
+
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <div class="bracket bracket-left">{</div>
+  <div class="bracket bracket-right">}</div>
+
+  <div class="particle p1"></div>
+  <div class="particle p2"></div>
+  <div class="particle p3"></div>
+  <div class="particle p4"></div>
+  <div class="particle p5"></div>
+  <div class="particle p6"></div>
+  <div class="particle p7"></div>
+
+  <!-- AB badge + AI Briefing -->
+  <div class="ab-badge">
+    <span class="ab-letter">AB</span>
+    <span class="ab-divider"></span>
+    <span class="ab-text">AI Briefing</span>
+  </div>
+
+  <!-- 主标题描边重影 -->
+  <div class="main-title-ghost">递归大师</div>
+
+  <!-- 主标题 -->
+  <div class="main-title">
+    <div class="main-title-text">递归大师</div>
+  </div>
+
+  <!-- 波形 -->
+  <div class="waveform">
+    <div class="wave-bar" style="height:18px"></div>
+    <div class="wave-bar" style="height:32px"></div>
+    <div class="wave-bar" style="height:50px"></div>
+    <div class="wave-bar" style="height:38px"></div>
+    <div class="wave-bar" style="height:60px"></div>
+    <div class="wave-bar" style="height:55px"></div>
+    <div class="wave-bar" style="height:42px"></div>
+    <div class="wave-bar" style="height:58px"></div>
+    <div class="wave-bar" style="height:35px"></div>
+    <div class="wave-bar" style="height:48px"></div>
+    <div class="wave-bar" style="height:60px"></div>
+    <div class="wave-bar" style="height:40px"></div>
+    <div class="wave-bar" style="height:52px"></div>
+    <div class="wave-bar" style="height:30px"></div>
+    <div class="wave-bar" style="height:45px"></div>
+    <div class="wave-bar" style="height:55px"></div>
+    <div class="wave-bar" style="height:38px"></div>
+    <div class="wave-bar" style="height:48px"></div>
+    <div class="wave-bar" style="height:28px"></div>
+    <div class="wave-bar" style="height:42px"></div>
+    <div class="wave-bar" style="height:35px"></div>
+    <div class="wave-bar" style="height:50px"></div>
+    <div class="wave-bar" style="height:20px"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="tagline">每日 AI 动态 / Builder 视角深度解读</div>
+
+  <div class="daily-tag">daily podcast</div>
+</div>
+
+</body>
+</html>

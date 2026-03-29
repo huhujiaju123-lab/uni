@@ -1,0 +1,251 @@
+{
+  "page_funnel": [
+    {
+      "dt": "2026-02-06",
+      "screen_name": "LKIDialogWebController",
+      "uv": "1185"
+    },
+    {
+      "dt": "2026-02-06",
+      "screen_name": "home",
+      "uv": "5547"
+    },
+    {
+      "dt": "2026-02-06",
+      "screen_name": "mine",
+      "uv": "2155"
+    },
+    {
+      "dt": "2026-02-07",
+      "screen_name": "LKIDialogWebController",
+      "uv": "342"
+    },
+    {
+      "dt": "2026-02-07",
+      "screen_name": "home",
+      "uv": "3098"
+    },
+    {
+      "dt": "2026-02-07",
+      "screen_name": "mine",
+      "uv": "1213"
+    },
+    {
+      "dt": "2026-02-08",
+      "screen_name": "LKIDialogWebController",
+      "uv": "268"
+    },
+    {
+      "dt": "2026-02-08",
+      "screen_name": "home",
+      "uv": "2821"
+    },
+    {
+      "dt": "2026-02-08",
+      "screen_name": "mine",
+      "uv": "1140"
+    },
+    {
+      "dt": "2026-02-09",
+      "screen_name": "H5luckydaypage",
+      "uv": "1309"
+    },
+    {
+      "dt": "2026-02-09",
+      "screen_name": "LKIDialogWebController",
+      "uv": "1328"
+    },
+    {
+      "dt": "2026-02-09",
+      "screen_name": "home",
+      "uv": "5629"
+    },
+    {
+      "dt": "2026-02-09",
+      "screen_name": "mine",
+      "uv": "2046"
+    },
+    {
+      "dt": "2026-02-10",
+      "screen_name": "H5luckydaypage",
+      "uv": "1495"
+    },
+    {
+      "dt": "2026-02-10",
+      "screen_name": "LKIDialogWebController",
+      "uv": "1388"
+    },
+    {
+      "dt": "2026-02-10",
+      "screen_name": "home",
+      "uv": "5696"
+    },
+    {
+      "dt": "2026-02-10",
+      "screen_name": "mine",
+      "uv": "2275"
+    },
+    {
+      "dt": "2026-02-11",
+      "screen_name": "H5luckydaypage",
+      "uv": "1508"
+    },
+    {
+      "dt": "2026-02-11",
+      "screen_name": "LKIDialogWebController",
+      "uv": "1380"
+    },
+    {
+      "dt": "2026-02-11",
+      "screen_name": "home",
+      "uv": "6371"
+    },
+    {
+      "dt": "2026-02-11",
+      "screen_name": "mine",
+      "uv": "2424"
+    },
+    {
+      "dt": "2026-02-12",
+      "screen_name": "H5luckydaypage",
+      "uv": "1342"
+    },
+    {
+      "dt": "2026-02-12",
+      "screen_name": "LKIDialogWebController",
+      "uv": "1281"
+    },
+    {
+      "dt": "2026-02-12",
+      "screen_name": "home",
+      "uv": "5388"
+    },
+    {
+      "dt": "2026-02-12",
+      "screen_name": "mine",
+      "uv": "2134"
+    },
+    {
+      "dt": "2026-02-13",
+      "screen_name": "H5luckydaypage",
+      "uv": "1264"
+    },
+    {
+      "dt": "2026-02-13",
+      "screen_name": "LKIDialogWebController",
+      "uv": "1103"
+    },
+    {
+      "dt": "2026-02-13",
+      "screen_name": "home",
+      "uv": "4813"
+    },
+    {
+      "dt": "2026-02-13",
+      "screen_name": "mine",
+      "uv": "1804"
+    },
+    {
+      "dt": "2026-02-14",
+      "screen_name": "H5luckydaypage",
+      "uv": "2213"
+    },
+    {
+      "dt": "2026-02-14",
+      "screen_name": "LKIDialogWebController",
+      "uv": "591"
+    },
+    {
+      "dt": "2026-02-14",
+      "screen_name": "home",
+      "uv": "5069"
+    },
+    {
+      "dt": "2026-02-14",
+      "screen_name": "mine",
+      "uv": "1826"
+    },
+    {
+      "dt": "2026-02-15",
+      "screen_name": "H5luckydaypage",
+      "uv": "86"
+    },
+    {
+      "dt": "2026-02-15",
+      "screen_name": "LKIDialogWebController",
+      "uv": "523"
+    },
+    {
+      "dt": "2026-02-15",
+      "screen_name": "home",
+      "uv": "3551"
+    },
+    {
+      "dt": "2026-02-15",
+      "screen_name": "mine",
+      "uv": "1399"
+    }
+  ],
+  "buyer_pages": [
+    {
+      "screen_name": null,
+      "buyer_uv": "121"
+    },
+    {
+      "screen_name": "menu",
+      "buyer_uv": "120"
+    },
+    {
+      "screen_name": "home",
+      "buyer_uv": "120"
+    },
+    {
+      "screen_name": "",
+      "buyer_uv": "110"
+    },
+    {
+      "screen_name": "productdetail",
+      "buyer_uv": "107"
+    },
+    {
+      "screen_name": "confirmorder",
+      "buyer_uv": "103"
+    },
+    {
+      "screen_name": "orderdetail",
+      "buyer_uv": "100"
+    },
+    {
+      "screen_name": "mine",
+      "buyer_uv": "80"
+    },
+    {
+      "screen_name": "orderlist",
+      "buyer_uv": "73"
+    },
+    {
+      "screen_name": "LKITabBarController",
+      "buyer_uv": "67"
+    },
+    {
+      "screen_name": "shopselection",
+      "buyer_uv": "51"
+    },
+    {
+      "screen_name": "H5luckydaypage",
+      "buyer_uv": "20"
+    },
+    {
+      "screen_name": "LKIDialogWebController",
+      "buyer_uv": "15"
+    },
+    {
+      "screen_name": "shareFriends",
+      "buyer_uv": "11"
+    },
+    {
+      "screen_name": "combodetail",
+      "buyer_uv": "7"
+    }
+  ]
+}
