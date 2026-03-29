@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "updated_at": "2026-03-26T07:04:58",
+  "energy": {
+    "today_score": 8.5,
+    "today_tags": [
+      "工作收尾",
+      "玩具时间",
+      "好奇心充电",
+      "轻松愉悦"
+    ],
+    "weekly_avg": 7.8,
+    "source": "lifeos_sync"
+  },
+  "channels": {
+    "ai-daily": {
+      "difficulty_level": 4,
+      "mastered_concepts": [
+        "AB实验",
+        "ITT分析",
+        "留存曲线",
+        "RFM分析",
+        "MCP",
+        "Agent"
+      ],
+      "weak_areas": [],
+      "avg_feedback_score": null,
+      "last_feedback_note": ""
+    },
+    "english-coach": {
+      "difficulty_level": 3,
+      "mastered_concepts": [],
+      "weak_areas": [],
+      "avg_feedback_score": null,
+      "last_feedback_note": ""
+    }
+  },
+  "global_preferences": {
+    "role": "数据分析师，增长运营，Lucky US",
+    "session_length_minutes": 15,
+    "tts_speed_ratio": 1.2,
+    "example_style": "用数据分析/增长运营/AB实验场景举例",
+    "current_goals": [
+      "理解AI Agent的实际应用场景",
+      "提升英语商业表达能力"
+    ]
+  }
+}

@@ -1,0 +1,3 @@
+setup
+repeat 7400 [ go ]
+show (gini-index-reserve / count turtles) * 2

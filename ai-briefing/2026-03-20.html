@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Builder 日报 | 2026-03-20</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@callmebill/lxgw-wenkai-web@latest/style.css">
+<style>
+:root {
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --bg-card: #1e2a45;
+  --bg-card-hover: #243352;
+  --bg-quote: #0f1729;
+  --text-primary: #e8e6e3;
+  --text-secondary: #a0a0b0;
+  --text-muted: #6c6c80;
+  --gold: #d4a944;
+  --gold-dim: #b8922e;
+  --gold-glow: rgba(212, 169, 68, 0.15);
+  --accent-blue: #4a9eff;
+  --accent-green: #5cb85c;
+  --accent-red: #e74c3c;
+  --accent-purple: #9b59b6;
+  --border: #2a3a5c;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'LXGW WenKai', 'STKaiti', 'KaiTi', serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.8;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-dim); }
+
+/* Container */
+.container {
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ========== HERO ========== */
+.hero {
+  position: relative;
+  padding: 60px 0 48px;
+  text-align: center;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -120px; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-date {
+  font-size: 14px;
+  color: var(--gold);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.hero-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.hero-subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 28px;
+}
+.hero-stat {
+  text-align: center;
+}
+.hero-stat-num {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1.2;
+}
+.hero-stat-label {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.hero-takeaway {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius);
+  padding: 16px 28px;
+  font-size: 16px;
+  color: var(--gold);
+  max-width: 640px;
+  line-height: 1.7;
+}
+.hero-takeaway::before {
+  content: '>>> ';
+  opacity: 0.5;
+}
+
+/* ========== SECTION HEADERS ========== */
+.section {
+  margin-bottom: 48px;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.section-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.section-icon.fire { background: rgba(231,76,60,0.15); }
+.section-icon.eye { background: rgba(74,158,255,0.15); }
+.section-icon.bolt { background: rgba(212,169,68,0.15); }
+.section-icon.mic { background: rgba(155,89,182,0.15); }
+.section-icon.check { background: rgba(92,184,92,0.15); }
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.section-count {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+/* ========== STORY CARDS ========== */
+.story-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.story-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.story-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--gold-dim);
+  box-shadow: var(--shadow);
+}
+
+.story-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+.badge.critical { background: rgba(231,76,60,0.2); color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); }
+.badge.important { background: rgba(212,169,68,0.2); color: var(--gold); border: 1px solid rgba(212,169,68,0.3); }
+.badge.notable { background: rgba(74,158,255,0.2); color: var(--accent-blue); border: 1px solid rgba(74,158,255,0.3); }
+.badge.info { background: rgba(155,89,182,0.15); color: var(--accent-purple); border: 1px solid rgba(155,89,182,0.25); }
+
+.story-source {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.story-likes {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.story-title {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.quote-block {
+  background: var(--bg-quote);
+  border-left: 3px solid var(--gold-dim);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  font-style: italic;
+}
+.quote-author {
+  font-size: 12px;
+  color: var(--gold-dim);
+  font-style: normal;
+  margin-top: 8px;
+}
+
+.feynman {
+  margin-bottom: 16px;
+  font-size: 15px;
+  color: var(--text-primary);
+  line-height: 1.9;
+}
+.feynman-label {
+  font-size: 12px;
+  color: var(--gold);
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.builder-action {
+  background: rgba(92,184,92,0.08);
+  border: 1px solid rgba(92,184,92,0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--accent-green);
+  line-height: 1.7;
+}
+.builder-action::before {
+  content: 'Builder Action: ';
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+/* ========== QUICK SCAN ========== */
+.quick-list {
+  list-style: none;
+}
+.quick-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(42,58,92,0.5);
+  align-items: flex-start;
+  opacity: 0;
+  transform: translateX(-10px);
+}
+.quick-item.visible {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.3s ease;
+}
+.quick-item:last-child { border-bottom: none; }
+.quick-bullet {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold-dim);
+  margin-top: 10px;
+  flex-shrink: 0;
+}
+.quick-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.quick-text strong {
+  color: var(--text-primary);
+}
+
+/* ========== PODCAST DEEP DIVE ========== */
+.podcast-card {
+  background: linear-gradient(135deg, #1e1e3a 0%, var(--bg-card) 100%);
+  border: 1px solid var(--accent-purple);
+  border-radius: var(--radius);
+  padding: 32px;
+  margin-bottom: 20px;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.podcast-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.podcast-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.podcast-sub {
+  font-size: 14px;
+  color: var(--accent-purple);
+  margin-bottom: 20px;
+}
+.podcast-point {
+  margin-bottom: 20px;
+  padding-left: 16px;
+  border-left: 2px solid rgba(155,89,182,0.3);
+}
+.podcast-point-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.podcast-point-body {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+.podcast-point-body em {
+  color: var(--gold);
+  font-style: normal;
+}
+
+/* ========== ACTION LIST ========== */
+.action-list {
+  list-style: none;
+  counter-reset: action-counter;
+}
+.action-item {
+  counter-increment: action-counter;
+  display: flex;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(42,58,92,0.5);
+  align-items: flex-start;
+  opacity: 0;
+  transform: translateY(10px);
+}
+.action-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s ease;
+}
+.action-item:last-child { border-bottom: none; }
+.action-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(212,169,68,0.15);
+  border: 1px solid var(--gold-dim);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+.action-num::after {
+  content: counter(action-counter);
+}
+.action-content {
+  flex: 1;
+}
+.action-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.action-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ========== FOOTER ========== */
+.footer {
+  text-align: center;
+  padding: 40px 0 60px;
+  border-top: 1px solid var(--border);
+  margin-top: 20px;
+}
+.footer-text {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+.footer-text a {
+  color: var(--gold-dim);
+  text-decoration: none;
+}
+
+/* ========== DIVIDER ========== */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 40px 0;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 640px) {
+  .container { padding: 0 16px; }
+  .hero { padding: 40px 0 32px; }
+  .hero-title { font-size: 24px; }
+  .hero-stats { gap: 20px; }
+  .hero-stat-num { font-size: 28px; }
+  .hero-takeaway { padding: 12px 18px; font-size: 14px; }
+  .story-card { padding: 20px; }
+  .story-title { font-size: 17px; }
+  .section-title { font-size: 19px; }
+  .podcast-card { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-date">2026 / 03 / 20 FRIDAY</div>
+    <h1 class="hero-title">AI Builder 日报</h1>
+    <p class="hero-subtitle">李宵霄的 AI 前沿情报</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">12</div>
+        <div class="hero-stat-label">条动态</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">4</div>
+        <div class="hero-stat-label">条值得深入</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">1</div>
+        <div class="hero-stat-label">播客深度解读</div>
+      </div>
+    </div>
+    <div class="hero-takeaway">今日核心判断：AI 正在从「对话工具」变成「随时在线的协作者」。Claude Code Channels 让你从手机直接指挥 AI 干活，这不是聊天机器人的升级，是工作方式的范式迁移。</div>
+  </div>
+</section>
+
+<div class="container">
+
+<!-- ==================== SECTION 1: TOP STORIES ==================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-icon fire">&#128293;</div>
+    <h2 class="section-title">重磅动态</h2>
+    <span class="section-count">4 条</span>
+  </div>
+
+  <!-- Story 1: Claude Code Channels -->
+  <article class="story-card" data-animate>
+    <div class="story-meta">
+      <span class="badge critical">必读</span>
+      <span class="story-source">Anthropic / Claude Code 团队</span>
+      <span class="story-likes">17,162 likes</span>
+    </div>
+    <h3 class="story-title">Claude Code Channels -- 从手机远程操控你的 AI 编程助手</h3>
+    <div class="quote-block">
+      "We just released Claude Code channels, which allows you to control your Claude Code session through select MCPs, starting with Telegram and Discord. Use this to message Claude Code directly from your phone."
+      <div class="quote-author">-- Thariq, Claude Code team @ Anthropic</div>
+    </div>
+    <div class="quote-block">
+      "it's weird to call this thing Claude Code still if I'm just using it to text my AI friend in bed. How about Clawd"
+      <div class="quote-author">-- Peter Yang, PM @ Roblox</div>
+    </div>
+    <div class="feynman">
+      <div class="feynman-label">FEYNMAN EXPLAIN</div>
+      <p>想象你有一个超级程序员坐在你办公室的电脑前。以前你必须坐在他旁边才能跟他说话。现在，Channels 功能就像给这个程序员装了一部手机 -- 你在地铁上、在床上、在咖啡店里，都可以发条消息让他帮你改代码、跑测试、查日志。</p>
+      <p style="margin-top:8px;">本质上，这是<strong>「异步 AI 协作」</strong>（不需要同时在场就能一起干活）的里程碑。Claude Code 不再是一个你必须「打开使用」的工具，而是一个你随时可以 ping 的队友。</p>
+    </div>
+    <div class="builder-action">
+      你正在做飞书 Bot 对接 Claude 的项目，这个方向完全正确。关注 Channels 的 MCP 协议实现，看能否直接复用到飞书 MCP。短期：试玩 Telegram Channel；中期：研究其 MCP 接口规范，为飞书适配做技术储备。
+    </div>
+  </article>
+
+  <!-- Story 2: Cursor Composer 2 -->
+  <article class="story-card" data-animate>
+    <div class="story-meta">
+      <span class="badge critical">必读</span>
+      <span class="story-source">Cursor / Ryo Lu</span>
+      <span class="story-likes">351 likes</span>
+    </div>
+    <h3 class="story-title">Cursor Composer 2 -- 前沿智能，极低成本，极快速度</h3>
+    <div class="quote-block">
+      "Frontier intelligence. Fraction of cost. Fast. Composer 2."
+      <div class="quote-author">-- Ryo Lu, Design @ Cursor</div>
+    </div>
+    <div class="quote-block">
+      "I asked Composer 2 to optimize my production QA process and pitted it against GPT-5.4. Composer 2's response won (as judged by both 5.4 and Opus 4.6)."
+      <div class="quote-author">-- Dan Shipper, CEO @ Every</div>
+    </div>
+    <div class="feynman">
+      <div class="feynman-label">FEYNMAN EXPLAIN</div>
+      <p>Cursor 是 VS Code 的一个 AI 增强版编辑器。Composer 是它的核心功能 -- 你用自然语言描述需求，它帮你写代码。这次 Composer 2 的升级相当于：原来你请了个普通程序员帮你干活，现在换成了一个又快又便宜的高级工程师。</p>
+      <p style="margin-top:8px;">这意味着 <strong>AI 编程工具之间的军备竞赛</strong>正在白热化。Claude Code (终端流)、Cursor (编辑器流)、Replit (在线流) 三条路线同时在进化，Builder 要做的不是押注一个，而是理解每个的最佳场景。</p>
+    </div>
+    <div class="builder-action">
+      保持 Claude Code + Cursor 双栈策略。Claude Code 强在终端自动化和长链任务（比如数据分析流水线），Cursor 强在 UI/前端的快速迭代。根据任务性质切换工具，不要只用一个。
+    </div>
+  </article>
+
+  <!-- Story 3: Token Budget -->
+  <article class="story-card" data-animate>
+    <div class="story-meta">
+      <span class="badge important">趋势</span>
+      <span class="story-source">Aaron Levie, CEO @ Box</span>
+      <span class="story-likes">261 likes</span>
+    </div>
+    <h3 class="story-title">「Token 预算」-- AI 时代的生产力计量单位</h3>
+    <div class="quote-block">
+      "For any worker who is able to wield AI agents effectively, their compute budgets are just going to monotonically go up over time... Many activities will essentially be token-dependent in how much work a single person can do. These aren't chatbot workflows but agents running incredible amounts of data at scale. Maybe the CFO is ultimately the head of AI."
+      <div class="quote-author">-- Aaron Levie, CEO @ Box</div>
+    </div>
+    <div class="feynman">
+      <div class="feynman-label">FEYNMAN EXPLAIN</div>
+      <p><strong>Token</strong> 是 AI 处理文本的最小单位（大约相当于 0.75 个英文单词或 0.5 个中文字）。每次你跟 AI 对话、让 AI 写代码，都在消耗 Token，而 Token 要花钱。</p>
+      <p style="margin-top:8px;">Aaron Levie 说的是一个深刻的转变：过去，一个人能做多少工作取决于他的<strong>时间</strong>（一天 8 小时）。未来，取决于他能调动多少<strong>算力</strong>（Token 预算）。就像工业革命后，工厂产能不再取决于工人数量，而是取决于蒸汽机的马力。</p>
+      <p style="margin-top:8px;">推到极致：公司的 AI 预算可能会像薪资一样重要，CFO 要管的不只是人力成本，还有 Token 成本。</p>
+    </div>
+    <div class="builder-action">
+      开始追踪你的 Token 消耗和产出比。你现在的 Claude Code 每月花费多少？产出了多少可量化的工作成果？这是向老板证明 AI 投入值得的最佳论据，也是你作为 Builder 的竞争壁垒。
+    </div>
+  </article>
+
+  <!-- Story 4: Designer + Coding Agent -->
+  <article class="story-card" data-animate>
+    <div class="story-meta">
+      <span class="badge important">实战</span>
+      <span class="story-source">Swyx (Latent Space)</span>
+      <span class="story-likes">36 likes</span>
+    </div>
+    <h3 class="story-title">给设计师 Coding Agent 的权限 -- 你可能才是瓶颈</h3>
+    <div class="quote-block">
+      "Give your designer access to your coding agent. It is imperative. You'll see the most productivity and beauty in your work in a month. And then you'll realize just how much -you- were holding them back this entire time."
+      <div class="quote-author">-- Swyx</div>
+    </div>
+    <div class="feynman">
+      <div class="feynman-label">FEYNMAN EXPLAIN</div>
+      <p>传统流程：设计师出 Figma 稿 -> 扔给开发 -> 开发还原 -> 设计师说「这跟我画的不一样」-> 来回三轮。Swyx 说的是：把 AI 编程工具直接给设计师用，让他们自己「说」出想要的效果，AI 直接生成代码。</p>
+      <p style="margin-top:8px;">更深的洞察：很多时候不是设计师能力不够，而是<strong>开发者成了信息传递的瓶颈</strong>。AI 编程工具消除了这个瓶颈，让设计意图直接变成代码。</p>
+    </div>
+    <div class="builder-action">
+      你刚安装了 frontend-design skill，这正好印证了这个趋势。尝试在下一个前端项目中，先用自然语言描述视觉效果，让 AI 直接生成。跳过「先画原型图」的步骤，直接从语言到代码。
+    </div>
+  </article>
+</section>
+
+<!-- ==================== SECTION 2: NOTABLE ==================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-icon eye">&#128065;</div>
+    <h2 class="section-title">值得关注</h2>
+    <span class="section-count">4 条</span>
+  </div>
+
+  <!-- Garry Tan -->
+  <article class="story-card" data-animate>
+    <div class="story-meta">
+      <span class="badge notable">洞察</span>
+      <span class="story-source">Garry Tan, CEO @ Y Combinator</span>
+    </div>
+    <h3 class="story-title">Markdown + LLM 是新代码</h3>
+    <div class="quote-block">
+      "Markdown+LLM is code and for creating high value complex contextual and intelligence-required tasks it is much much better than any deterministic language."
+      <div class="quote-author">-- Garry Tan, CEO @ Y Combinator</div>
+    </div>
+    <div class="feynman">
+      <div class="feynman-label">FEYNMAN EXPLAIN</div>
+      <p>传统编程：你写 Python/JavaScript，告诉计算机每一步怎么做（确定性的）。Markdown+LLM 编程：你用结构化的自然语言写清楚「要什么」，LLM 自己想办法做到（智能的）。YC CEO 自己也在用 Claude Code 做 Skill -- 说明这不是概念，是他每天在用的工具。</p>
+      <p style="margin-top:8px;">你的 CLAUDE.md、skill.md 文件本质上就是「Markdown 代码」-- 它们控制着 AI 的行为，跟写程序没有区别。</p>
+    </div>
+    <div class="builder-action">
+      重新审视你的 CLAUDE.md 和各个 skill.md，把它们当作「代码」来维护：版本控制、测试、迭代优化。写好一份 Markdown 指令的 ROI 可能比写一段 Python 脚本还高。
+    </div>
+  </article>
+
+  <!-- Replit -->
+  <article class="story-card" data-animate>
+    <div class="story-meta">
+      <span class="badge notable">产品</span>
+      <span class="story-source">Amjad Masad, CEO @ Replit</span>
+    </div>
+    <h3 class="story-title">Replit: 无限设计探索 -> 一键生成生产应用</h3>
+    <div class="quote-block">
+      "The most magical thing is once you're done infinitely exploring designs you can just click 'Build' and you get a production app!"
+      <div class="quote-author">-- Amjad Masad, CEO @ Replit</div>
+    </div>
+    <div class="feynman">
+      <div class="feynman-label">FEYNMAN EXPLAIN</div>
+      <p>Replit 把「设计」和「开发」彻底打通了。你可以像画草图一样不断尝试不同的界面设计（零成本试错），满意了按一个按钮，直接变成可以上线的应用。这相当于：你在白板上画了个 App 草图，画完一擦白板它就上线了。</p>
+    </div>
+    <div class="builder-action">
+      对于快速原型验证场景（比如给老板展示一个数据看板 Demo），Replit 可能比 Claude Code 更快。纳入你的工具箱，场景化使用。
+    </div>
+  </article>
+
+  <!-- OpenAI Strategy -->
+  <article class="story-card" data-animate>
+    <div class="story-meta">
+      <span class="badge notable">格局</span>
+      <span class="story-source">Peter Yang 分析</span>
+    </div>
+    <h3 class="story-title">OpenAI 的三段式战略与时间窗口</h3>
+    <div class="quote-block">
+      "OpenAI's strategy: 1) More people have ChatGPT installed than any other AI product 2) Make it great for coding and knowledge work 3) Make it a personal assistant. They need to do 2 and 3 faster before people switch to Claude or Gemini."
+      <div class="quote-author">-- Peter Yang 分析</div>
+    </div>
+    <div class="feynman">
+      <div class="feynman-label">FEYNMAN EXPLAIN</div>
+      <p>OpenAI 现在的处境类似 2010 年的诺基亚：市场份额最大（ChatGPT 装机量），但竞争对手在专业场景上已经超越了它。Claude 在编程上更强，Gemini 在多模态上追得紧。OpenAI 必须在用户「习惯性切换」之前把护城河挖深。</p>
+    </div>
+    <div class="builder-action">
+      作为 Builder，不要绑定任何一家。保持 Claude Code (主力) + GPT (通用对话) + Gemini (多模态) 的组合拳。关注 OpenAI 在 Coding Agent 上的下一步动作。
+    </div>
+  </article>
+
+  <!-- Dan Shipper: AI Writing Guide -->
+  <article class="story-card" data-animate>
+    <div class="story-meta">
+      <span class="badge notable">技巧</span>
+      <span class="story-source">Dan Shipper, CEO @ Every</span>
+    </div>
+    <h3 class="story-title">AI 写作终极指南 / MySay 语音生成不像 AI 的文案</h3>
+    <div class="quote-block">
+      "We just published the definitive guide to writing good prose with your AI."
+      <div class="quote-author">-- Dan Shipper</div>
+    </div>
+    <div class="quote-block">
+      "An AI that asks you questions via voice, and turns what you said into tweets and LinkedIn posts that actually sound like you. This is the only AI writing solution I've found that doesn't produce slop."
+      <div class="quote-author">-- Zara Zhang, 关于 MySay</div>
+    </div>
+    <div class="feynman">
+      <div class="feynman-label">FEYNMAN EXPLAIN</div>
+      <p>AI 写作的核心痛点不是「能不能写」，而是「写出来像不像人」。MySay 的思路很聪明：不让你打字输入，而是用语音问答，因为<strong>人说话时比打字时更真实</strong>。AI 再把你的口语整理成文字，保留了你的语气和观点，去掉了口水话。</p>
+    </div>
+    <div class="builder-action">
+      两个可行动项：(1) 找到 Dan Shipper 的 AI 写作指南，收藏为参考；(2) 试试 MySay 来写你的内部周报或分享有礼活动文案，看是否比直接用 ChatGPT 写更有「人味」。
+    </div>
+  </article>
+</section>
+
+<!-- ==================== SECTION 3: QUICK SCAN ==================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-icon bolt">&#9889;</div>
+    <h2 class="section-title">快速扫描</h2>
+    <span class="section-count">3 条</span>
+  </div>
+  <ul class="quick-list">
+    <li class="quick-item" data-animate>
+      <div class="quick-bullet"></div>
+      <div class="quick-text"><strong>Prompt to Chip 可视化</strong> -- Nikunj 做了一个从「用户输入提示词」到「芯片计算再返回结果」的全链路可视化图解。适合收藏为教学素材，帮你向非技术同事解释 AI 是怎么工作的。</div>
+    </li>
+    <li class="quick-item" data-animate>
+      <div class="quick-bullet"></div>
+      <div class="quick-text"><strong>Gemini 语音不再打断你</strong> -- Google VP Josh Woodward 宣布 Android 上的 Gemini 语音交互优化：你停顿、喘气、犹豫，它都不会抢话了。看似小功能，实则是 AI 语音交互走向自然对话的关键一步。</div>
+    </li>
+    <li class="quick-item" data-animate>
+      <div class="quick-bullet"></div>
+      <div class="quick-text"><strong>Karpathy 看了《Project Hail Mary》</strong> -- AI 大佬也需要看电影放松。非 AI 相关，跳过。</div>
+    </li>
+  </ul>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==================== SECTION 4: PODCAST DEEP DIVE ==================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-icon mic">&#127897;</div>
+    <h2 class="section-title">播客深度解读</h2>
+    <span class="section-count">Benedict Evans @ Data Driven NYC</span>
+  </div>
+
+  <article class="podcast-card" data-animate>
+    <h3 class="podcast-title">Benedict Evans: OpenAI 的护城河危机与软件的未来</h3>
+    <p class="podcast-sub">Data Driven NYC 播客 | 长篇分析，值得 15 分钟深读</p>
+
+    <div class="podcast-point">
+      <h4 class="podcast-point-title">1. OpenAI 的护城河是什么？答：几乎没有</h4>
+      <p class="podcast-point-body">Evans 认为 OpenAI 的核心技术（Transformer 架构、RLHF 训练方法）本质上是<em>商品化技术</em>（commodity technology），Google、Meta、Anthropic 都能做。更尴尬的是，它的竞争对手们（Google、Microsoft）有巨额的<em>遗产现金流</em>（legacy cash flows）-- 搜索广告和 Office 订阅 -- 可以无限烧钱。OpenAI 必须跑得比所有人都快，因为它没有退路。</p>
+    </div>
+
+    <div class="podcast-point">
+      <h4 class="podcast-point-title">2. 「即兴软件」(Improvised Software) -- AI 让编程变便宜会发生什么？</h4>
+      <p class="podcast-point-body">反直觉的结论：AI 让写代码变便宜，不会让程序员失业，而是会创造<em>更多</em>软件。就像 Excel 没有让会计失业，而是让每个人都能做表格分析 -- 分析的总量暴增。同理，AI 编程会让「软件」从专业产品变成即兴工具：你遇到一个问题，随手让 AI 写个脚本解决，用完就扔。这就是「即兴软件」。</p>
+    </div>
+
+    <div class="podcast-point">
+      <h4 class="podcast-point-title">3.「每个人都会自己写软件」-- 完全错误</h4>
+      <p class="podcast-point-body">Evans 认为「人人都是开发者」的叙事是错的。原因：软件的难点从来不是写代码，而是<em>定义需求</em>。「我要一个 CRM」-- 但 CRM 要管理什么？权限怎么设？报表怎么出？这些问题 AI 回答不了。所以未来不是「每个人自己建软件」，而是会有<em>更多专业化的 SaaS</em>，因为 AI 让开发 SaaS 的成本大幅降低。</p>
+    </div>
+
+    <div class="podcast-point">
+      <h4 class="podcast-point-title">4. 大厂的万亿美元资本开支危机</h4>
+      <p class="podcast-point-body">Google、Microsoft、Meta、Amazon 正在 AI 基础设施上投入<em>万亿级美元</em>。Evans 的问题很尖锐：这些投入什么时候能回本？如果 AI 技术快速商品化（就像云计算一样），这些巨额投资可能变成沉没成本。历史参考：2000 年互联网泡沫时，电信公司铺了大量光纤，最后很多公司破产了 -- 但光纤留下来了，后来被便宜地利用。AI 算力可能走同样的路。</p>
+    </div>
+
+    <div class="podcast-point">
+      <h4 class="podcast-point-title">5.「Desktop Linux 时刻」-- OpenClaw 能否成为开源 AI 的拐点？</h4>
+      <p class="podcast-point-body">Evans 提到了一个微妙的类比：Linux 在桌面端从未真正成功（Desktop Linux 是永远的「明年就是 Linux 年」），但在服务器端统治了世界。开源 AI 模型（如 LLaMA、Mistral）可能走类似路线：不会取代 ChatGPT 给普通用户用，但会成为企业和开发者的基础设施。<em>OpenClaw</em> 等开源项目的意义在于：它们降低了 AI 的接入门槛，让 Builder 不必依赖任何一家公司。</p>
+    </div>
+
+    <div style="margin-top: 24px;">
+      <div class="builder-action">
+        三个 takeaway：(1) 不要押注单一 AI 供应商，保持多模型策略；(2) 「即兴软件」的概念对你很重要 -- 你每天用 Claude Code 写的一次性数据分析脚本，就是即兴软件的典型案例，这是你的竞争优势；(3) 关注开源模型进展，它们是你降低 Token 成本的备选方案（对应你的 podcast-viz 项目用 faster-whisper 降本的思路）。
+      </div>
+    </div>
+  </article>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==================== SECTION 5: BUILDER ACTION LIST ==================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-icon check">&#9745;</div>
+    <h2 class="section-title">Builder 行动清单</h2>
+    <span class="section-count">基于今日情报</span>
+  </div>
+  <ul class="action-list">
+    <li class="action-item" data-animate>
+      <div class="action-num"></div>
+      <div class="action-content">
+        <div class="action-title">试用 Claude Code Channels (Telegram)</div>
+        <div class="action-desc">花 15 分钟配置 Telegram Channel，体验从手机操控 Claude Code。然后思考：飞书 Bot 能否复用同样的 MCP 协议？</div>
+      </div>
+    </li>
+    <li class="action-item" data-animate>
+      <div class="action-num"></div>
+      <div class="action-content">
+        <div class="action-title">追踪你的月度 Token 消耗与产出</div>
+        <div class="action-desc">建一个简单的表格：日期 / Token 用量 / 完成的任务 / 估算节省的小时数。这是你未来向公司申请更多 AI 预算的弹药。</div>
+      </div>
+    </li>
+    <li class="action-item" data-animate>
+      <div class="action-num"></div>
+      <div class="action-content">
+        <div class="action-title">把 CLAUDE.md 和 Skill 文件当代码维护</div>
+        <div class="action-desc">YC CEO 都在写 Claude Code Skill。审视你的 skill.md 文件，是否有过时的指令？是否有可以优化的 prompt？投入 30 分钟做一次 code review。</div>
+      </div>
+    </li>
+    <li class="action-item" data-animate>
+      <div class="action-num"></div>
+      <div class="action-content">
+        <div class="action-title">收藏 Dan Shipper 的 AI 写作指南</div>
+        <div class="action-desc">找到 Every 发布的 AI 写作指南全文，提炼出 3 条可以立即用于你日常写作（周报、实验报告、分享有礼月报）的技巧。</div>
+      </div>
+    </li>
+    <li class="action-item" data-animate>
+      <div class="action-num"></div>
+      <div class="action-content">
+        <div class="action-title">听 Benedict Evans 播客原文 (可选)</div>
+        <div class="action-desc">如果今天有通勤时间，原文播客值得一听。重点关注「即兴软件」和「资本开支危机」两个论点，思考对你的 podcast-viz 项目商业模式的启发。</div>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+  <p class="footer-text">
+    AI Builder 日报 | 2026-03-20<br>
+    Curated for 李宵霄<br>
+    <span style="opacity:0.5;">Generated with Claude Code (Opus 4.6)</span>
+  </p>
+</footer>
+
+</div><!-- .container -->
+
+<!-- ==================== SCROLL ANIMATION ==================== -->
+<script>
+(function() {
+  // Intersection Observer for scroll-triggered animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        // Stagger animation slightly
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, index * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  // Observe all animated elements
+  document.querySelectorAll('[data-animate]').forEach(el => {
+    observer.observe(el);
+  });
+
+  // Make elements above the fold visible immediately
+  setTimeout(() => {
+    document.querySelectorAll('[data-animate]').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight) {
+        el.classList.add('visible');
+      }
+    });
+  }, 100);
+})();
+</script>
+
+</body>
+</html>

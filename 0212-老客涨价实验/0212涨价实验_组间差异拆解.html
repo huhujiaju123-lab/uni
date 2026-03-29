@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>0212 涨价实验：组1 vs 组2 差异拆解</title>
+<style>
+body { font-family: -apple-system, sans-serif; margin: 20px; font-size: 13px; max-width: 1100px; }
+h1 { color: #333; font-size: 18px; border-bottom: 2px solid #333; padding-bottom: 8px; }
+h2 { color: #555; font-size: 15px; margin-top: 28px; border-left: 4px solid #1976D2; padding-left: 8px; }
+h3 { color: #666; font-size: 14px; margin-top: 20px; }
+table { border-collapse: collapse; margin: 10px 0; }
+th, td { border: 1px solid #ddd; padding: 5px 10px; text-align: right; white-space: nowrap; }
+th { background: #f5f5f5; font-weight: 600; text-align: center; }
+td:first-child { text-align: left; font-weight: 500; }
+.highlight { background: #FFF9C4; }
+.positive { color: #D32F2F; font-weight: 600; }
+.negative { color: #388E3C; font-weight: 600; }
+.neutral { color: #757575; }
+.finding { background: #E3F2FD; border-left: 4px solid #1976D2; padding: 10px 14px; margin: 12px 0; border-radius: 0 4px 4px 0; }
+.conclusion { background: #FFF3E0; border-left: 4px solid #FF9800; padding: 10px 14px; margin: 12px 0; border-radius: 0 4px 4px 0; }
+.key { background: #FFEBEE; border-left: 4px solid #D32F2F; padding: 10px 14px; margin: 12px 0; border-radius: 0 4px 4px 0; }
+</style></head><body>
+
+<h1>0212 涨价实验：涨价组1 vs 涨价组2 表现差异拆解分析</h1>
+<p>分析日期: 2026-02-25 | 实验周期: 2026-02-12 ~ 2026-02-24 | 仅含老客</p>
+
+<div class="key">
+<strong>核心问题</strong>：涨价组2 折扣更大（7折/5.5折系），但整体表现不如涨价组1（75折/6折系）。原因是什么？
+</div>
+
+<!-- ============================================================ -->
+<h2>第一层：基线特征检验</h2>
+<p>验证两组实验前是否存在人群偏差（实验前90天：2025-11-14 ~ 2026-02-11）</p>
+
+<table>
+<tr><th>指标</th><th>涨价组1</th><th>涨价组2</th><th>对照组3</th><th>组1 vs 组2</th></tr>
+<tr><td>总用户数</td><td>38,093</td><td>38,058</td><td>50,295</td><td class="neutral">-35 (≈0)</td></tr>
+<tr><td>90天活跃率</td><td>49.36%</td><td>49.62%</td><td>49.26%</td><td class="neutral">-0.26pp</td></tr>
+<tr><td>人均订单数</td><td>1.50</td><td>1.50</td><td>1.50</td><td class="neutral">0</td></tr>
+<tr><td>活跃用户平均消费</td><td>$13.75</td><td>$13.72</td><td>$13.83</td><td class="neutral">+$0.03</td></tr>
+<tr><td>活跃用户平均客单价</td><td>$4.21</td><td>$4.16</td><td>$4.14</td><td class="neutral">+$0.05</td></tr>
+</table>
+
+<div class="finding">
+<strong>结论</strong>：两组基线完全一致，活跃率、订单频次、消费金额、客单价均无显著差异。<strong>排除人群偏差</strong>。
+</div>
+
+<!-- ============================================================ -->
+<h2>第二层：生命周期分布</h2>
+
+<table>
+<tr><th>生命周期</th><th colspan="2">涨价组1</th><th colspan="2">涨价组2</th><th colspan="2">对照组3</th></tr>
+<tr><th></th><th>人数</th><th>占比</th><th>人数</th><th>占比</th><th>人数</th><th>占比</th></tr>
+<tr><td>0-15天</td><td>128</td><td>0.34%</td><td>148</td><td>0.39%</td><td>180</td><td>0.36%</td></tr>
+<tr><td>16-30天</td><td>1,896</td><td>4.98%</td><td>2,050</td><td>5.39%</td><td>2,518</td><td>5.01%</td></tr>
+<tr class="highlight"><td><strong>31天+</strong></td><td><strong>36,069</strong></td><td><strong>94.69%</strong></td><td><strong>35,860</strong></td><td><strong>94.22%</strong></td><td><strong>47,597</strong></td><td><strong>94.64%</strong></td></tr>
+</table>
+
+<div class="finding">
+<strong>结论</strong>：三组均以 31天+ 老客为主（94%+），生命周期分布几乎一致。差异不来自人群结构。
+</div>
+
+<!-- ============================================================ -->
+<h2>第三层：分生命周期效果拆解（核心发现）</h2>
+
+<h3>策略回顾</h3>
+<table>
+<tr><th>生命周期</th><th>涨价组1</th><th>涨价组2</th><th>对照组3</th></tr>
+<tr><td>0-15天</td><td>75折×2</td><td>7折×2</td><td>6折限+7折全</td></tr>
+<tr><td>16-30天</td><td>5折</td><td>5折</td><td>4折</td></tr>
+<tr class="highlight"><td><strong>31天+</strong></td><td><strong>4折 + $2.99 + 7折t7</strong></td><td><strong>4折t7 + $2.99t + 6折t7</strong></td><td>3折t7 + $2.99t7 + 5折t7</td></tr>
+</table>
+
+<h3>31天+ 老客（占 94%，决定整体表现）</h3>
+<table>
+<tr><th>指标</th><th>涨价组1</th><th>涨价组2</th><th>对照组3</th><th>组1 vs 组2</th><th>组1 vs 对照</th><th>组2 vs 对照</th></tr>
+<tr><td>用户数</td><td>36,069</td><td>35,860</td><td>47,597</td><td colspan="3"></td></tr>
+<tr><td>转化率</td><td>8.43%</td><td>8.20%</td><td>9.04%</td><td class="positive">+0.23pp</td><td>-0.61pp</td><td>-0.84pp</td></tr>
+<tr><td>杯量</td><td>7,008</td><td>6,723</td><td>10,112</td><td class="positive">+4.2%*</td><td>-8.6%*</td><td>-11.7%*</td></tr>
+<tr><td>单杯实收</td><td>$3.60</td><td>$3.54</td><td>$3.28</td><td class="positive">+$0.06</td><td>+$0.32</td><td>+$0.26</td></tr>
+<tr><td>ARPU(有购)</td><td>$9.02</td><td>$8.81</td><td>$8.39</td><td class="positive">+$0.21</td><td>+$0.63</td><td>+$0.42</td></tr>
+<tr class="highlight"><td><strong>3日复购率</strong></td><td><strong>24.72%</strong></td><td><strong>23.04%</strong></td><td><strong>24.60%</strong></td><td class="positive"><strong>+1.68pp</strong></td><td>+0.12pp</td><td class="positive">-1.56pp</td></tr>
+</table>
+<p style="font-size:11px; color:#999;">* 杯量已拉齐到相同用户基数对比</p>
+
+<div class="key">
+<strong>关键发现</strong>：31天+ 老客占 94%，其中涨价组2 的 <strong>3日复购率比组1 低 1.68pp</strong>（23.04% vs 24.72%），<strong>转化率低 0.23pp</strong>，<strong>单杯实收低 $0.06</strong>。这三个差距叠加，导致了整体表现的分化。
+</div>
+
+<h3>16-30天 老客（占 5%）</h3>
+<table>
+<tr><th>指标</th><th>涨价组1</th><th>涨价组2</th><th>对照组3</th><th>组1 vs 组2</th></tr>
+<tr><td>用户数</td><td>1,896</td><td>2,050</td><td>2,518</td><td></td></tr>
+<tr><td>转化率</td><td>13.45%</td><td>15.32%</td><td>14.14%</td><td class="positive">组2 +1.87pp ✓</td></tr>
+<tr><td>单杯实收</td><td>$3.74</td><td>$3.66</td><td>$3.49</td><td>组1 +$0.08</td></tr>
+<tr><td>3日复购率</td><td>28.15%</td><td>25.00%</td><td>29.67%</td><td class="positive">组2 -3.15pp ✗</td></tr>
+</table>
+
+<div class="finding">
+<strong>发现</strong>：16-30天段两组策略相同（5折），涨价组2 转化率反而更高（+1.87pp），但 <strong>复购率更低（-3.15pp）</strong>。说明组2用户首购意愿好，但留存差。
+</div>
+
+<!-- ============================================================ -->
+<h2>第四层：券核销对比</h2>
+
+<h3>主要券种使用情况（使用量 Top 5）</h3>
+<table>
+<tr><th>券名</th><th>对应折扣</th><th colspan="2">涨价组1</th><th colspan="2">涨价组2</th></tr>
+<tr><th></th><th></th><th>使用量</th><th>核销率</th><th>使用量</th><th>核销率</th></tr>
+<tr><td>60% Off Any Drink</td><td>4折</td><td>1,119</td><td>0.91%</td><td>1,064</td><td>1.11%</td></tr>
+<tr><td>25% Off Any Drink</td><td>75折(组1)</td><td>1,118</td><td>1.05%</td><td>—</td><td>—</td></tr>
+<tr><td>30% Off Any Drink</td><td>7折(组2)</td><td>193</td><td>0.19%</td><td>1,434</td><td>1.24%</td></tr>
+<tr><td>50% Off Any Drink</td><td>5折</td><td>594</td><td>1.43%</td><td>539</td><td>1.42%</td></tr>
+<tr><td>Weekday Deals</td><td>工作日券</td><td>259</td><td>23.52%</td><td>275</td><td>24.69%</td></tr>
+</table>
+
+<div class="finding">
+<strong>发现</strong>：<br>
+• 涨价组1 的 75折券核销 1,118 次，涨价组2 的 7折券核销 1,434 次（+28%）。<strong>折扣大→用的人更多，但拉低了单杯实收。</strong><br>
+• 涨价组1 同时还有 30% Off（7折）193次核销，说明组1也有7折券但几乎没人用，因为有75折够了。<br>
+• 两组的 4折券和 5折券核销率接近，说明差异主要在主力日常券（75折 vs 7折）。
+</div>
+
+<!-- ============================================================ -->
+<h2>第五层：时间趋势</h2>
+<p>利用已有的每日数据，观察两组差异随时间的变化。</p>
+
+<table>
+<tr><th>日期</th><th>组1下单</th><th>组2下单</th><th>Δ下单</th><th>组1单杯</th><th>组2单杯</th><th>Δ单杯</th></tr>
+<tr><td>02/12</td><td>634</td><td>697</td><td class="negative">组2多</td><td>$3.61</td><td>$3.40</td><td class="positive">+$0.21</td></tr>
+<tr><td>02/13</td><td>576</td><td>571</td><td class="neutral">≈</td><td>$3.59</td><td>$3.56</td><td class="neutral">+$0.03</td></tr>
+<tr><td>02/17</td><td>627</td><td>605</td><td class="positive">组1多</td><td>$3.60</td><td>$3.57</td><td class="neutral">+$0.03</td></tr>
+<tr><td>02/18</td><td>628</td><td>564</td><td class="positive">组1多</td><td>$3.60</td><td>$3.60</td><td class="neutral">≈</td></tr>
+<tr><td>02/19</td><td>639</td><td>628</td><td class="neutral">≈</td><td>$3.69</td><td>$3.59</td><td class="positive">+$0.10</td></tr>
+<tr><td>02/24</td><td>485</td><td>482</td><td class="neutral">≈</td><td>$3.69</td><td>$3.67</td><td class="neutral">+$0.02</td></tr>
+</table>
+
+<div class="finding">
+<strong>发现</strong>：单杯实收差异在第一天最大（+$0.21），之后逐渐收敛。下单用户数从第3天起组1开始反超组2。说明 <strong>组2 的首日表现有"首购折扣驱动"的特征</strong>，后续复购乏力导致持续落后。
+</div>
+
+<!-- ============================================================ -->
+<h2>综合结论</h2>
+
+<div class="conclusion">
+<strong>一、差异定位</strong><br><br>
+两组整体差异 <strong>94% 来自 31天+ 老客群体</strong>，且集中在三个指标：<br>
+① 3日复购率差 1.68pp（组2 23.04% vs 组1 24.72%）<br>
+② 转化率差 0.23pp（组2 8.20% vs 组1 8.43%）<br>
+③ 单杯实收差 $0.06（组2 $3.54 vs 组1 $3.60）<br><br>
+
+<strong>二、根因分析</strong><br><br>
+31天+ 策略差异：组1「4折 + $2.99 + <u>7折</u>t7」 vs 组2「4折t7 + $2.99t + <u>6折</u>t7」<br><br>
+
+核心差异在<strong>第三张券</strong>（7折 vs 6折）和<strong>券时效</strong>（组1的4折无t7限制 vs 组2的4折有t7限制）：<br>
+• <strong>组2 的 7折券核销量高 28%</strong>（1,434 vs 1,118），说明更大折扣吸引了更多首购使用<br>
+• 但组2 复购率低 1.68pp，说明 <strong>折扣深度越大，用户越容易形成"等券消费"的习惯</strong>，不给券就不来<br>
+• 组1 给 75折（折扣更浅），首购门槛稍高但 <strong>建立了更健康的价格预期</strong>，用户不依赖券也愿意消费<br><br>
+
+<strong>三、时效限制的影响</strong><br><br>
+组1 的 4折券可能无 t7 时效限制，用户可按自己节奏使用，减少了压迫感。而组2 所有券均有 t7 限制，过期后用户缺乏消费动机。<br><br>
+
+<strong>四、策略建议</strong><br><br>
+① 31天+ 老客的日常券控制在 <strong>7折（25% off）以内</strong>，避免 6折以上大额折扣形成价格依赖<br>
+② 高价值召回券（4折）<strong>放宽时效</strong>，给用户更多弹性使用时间<br>
+③ 复购率是涨价策略成功的关键指标，单纯看首购转化会误判
+</div>
+
+</body></html>

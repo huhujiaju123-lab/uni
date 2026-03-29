@@ -1,0 +1,2370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>天火同人 · 2026年世界年卦解读</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ========== CSS 变量 ========== */
+:root {
+  --ink-black: #1a1a1a;
+  --ink-dark: #2d2d2d;
+  --ink-medium: #555;
+  --ink-light: #888;
+  --paper: #f5f0e8;
+  --paper-light: #faf7f0;
+  --paper-dark: #e8e0d0;
+  --gold: #b8860b;
+  --gold-light: #d4a843;
+  --gold-bright: #e6c453;
+  --vermilion: #c23a2b;
+  --vermilion-light: #d4554a;
+  --vermilion-dark: #8b1a1a;
+  --flame-orange: #e87a2e;
+  --flame-yellow: #f5c542;
+  --sky-deep: #1a2744;
+  --sky-mid: #2c3e5a;
+  --cloud-white: rgba(255,255,255,0.6);
+  --shadow-ink: rgba(26,26,26,0.08);
+  --radius: 4px;
+  --font-main: 'Noto Serif SC', 'Songti SC', 'SimSun', serif;
+  --font-body: 'Noto Serif SC', -apple-system, 'PingFang SC', serif;
+}
+
+/* ========== 全局重置 ========== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink-black);
+  background-color: var(--paper);
+  line-height: 1.9;
+  overflow-x: hidden;
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(200,190,170,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 50%, rgba(200,190,170,0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ========== 通用容器 ========== */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+section {
+  padding: 5rem 0;
+  position: relative;
+}
+
+/* ========== 淡入动画 ========== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-in-delay-1 { transition-delay: 0.15s; }
+.fade-in-delay-2 { transition-delay: 0.3s; }
+.fade-in-delay-3 { transition-delay: 0.45s; }
+.fade-in-delay-4 { transition-delay: 0.6s; }
+.fade-in-delay-5 { transition-delay: 0.75s; }
+
+/* ========== 分隔线 ========== */
+.divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ink-light), transparent);
+  margin: 2rem auto;
+}
+.divider-gold {
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.divider-vermilion {
+  background: linear-gradient(90deg, transparent, var(--vermilion), transparent);
+}
+.divider-wide {
+  width: 120px;
+}
+
+/* ========== 导航栏 ========== */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(245, 240, 232, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  transform: translateY(-100%);
+  transition: transform 0.4s ease;
+}
+.nav.visible {
+  transform: translateY(0);
+}
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0.6rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-dark);
+  letter-spacing: 0.1em;
+}
+.nav-links {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.nav-links a {
+  font-size: 0.7rem;
+  color: var(--ink-medium);
+  text-decoration: none;
+  padding: 0.3rem 0.5rem;
+  border-radius: 3px;
+  transition: all 0.3s;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.nav-links a:hover {
+  color: var(--vermilion);
+  background: rgba(194, 58, 43, 0.06);
+}
+
+/* ========== 首屏 Hero ========== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg,
+    #1a2744 0%,
+    #2c3e5a 25%,
+    #3d4f6a 40%,
+    #5a6a80 55%,
+    #8a7a60 70%,
+    #c5a55a 82%,
+    #e8b830 90%,
+    #f5c542 95%,
+    #fff5d0 100%
+  );
+}
+
+/* 火焰光晕 */
+.hero-fire-glow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(ellipse at center bottom,
+    rgba(255, 180, 50, 0.4) 0%,
+    rgba(232, 122, 46, 0.2) 30%,
+    rgba(194, 58, 43, 0.1) 50%,
+    transparent 70%
+  );
+  z-index: 1;
+  animation: fireGlow 4s ease-in-out infinite alternate;
+}
+@keyframes fireGlow {
+  0% { opacity: 0.7; transform: translateX(-50%) scale(1); }
+  100% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+}
+
+/* 星辰 */
+.hero-stars {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 60%;
+  z-index: 1;
+}
+
+.hero-content {
+  text-align: center;
+  position: relative;
+  z-index: 5;
+  padding: 2rem;
+}
+
+.hero-title {
+  font-size: clamp(5rem, 15vw, 10rem);
+  font-weight: 900;
+  color: #f5f0e8;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 60px rgba(245, 197, 66, 0.3), 0 2px 20px rgba(0,0,0,0.3);
+  opacity: 0;
+  animation: brushReveal 1.5s ease forwards 0.3s;
+}
+
+@keyframes brushReveal {
+  0% { opacity: 0; transform: scale(0.8); filter: blur(4px); }
+  60% { opacity: 0.8; transform: scale(1.02); filter: blur(0); }
+  100% { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+.hero-kua-name {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  color: var(--flame-yellow);
+  letter-spacing: 0.8em;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 0.8s;
+}
+
+.hero-subtitle {
+  font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+  color: rgba(245, 240, 232, 0.7);
+  letter-spacing: 0.3em;
+  margin-bottom: 2.5rem;
+  font-weight: 400;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 1s;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-hexagram {
+  margin: 0 auto 2rem;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 1.3s;
+}
+
+.hero-guaci {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: var(--flame-yellow);
+  margin-bottom: 1rem;
+  font-weight: 600;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 1.6s;
+  text-shadow: 0 1px 10px rgba(0,0,0,0.3);
+}
+
+.hero-year {
+  font-size: clamp(0.8rem, 1.3vw, 0.95rem);
+  color: rgba(245, 240, 232, 0.5);
+  letter-spacing: 0.2em;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 1.9s;
+}
+
+/* 下滑提示 */
+.scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  text-align: center;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 2.2s;
+}
+.scroll-hint span {
+  display: block;
+  font-size: 0.75rem;
+  color: rgba(245, 240, 232, 0.4);
+  letter-spacing: 0.3em;
+  margin-bottom: 0.5rem;
+}
+.scroll-arrow {
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+  border-right: 1.5px solid rgba(245, 240, 232, 0.4);
+  border-bottom: 1.5px solid rgba(245, 240, 232, 0.4);
+  transform: rotate(45deg);
+  animation: scrollBounce 2s ease infinite;
+}
+@keyframes scrollBounce {
+  0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: 0.5; }
+  50% { transform: rotate(45deg) translate(5px, 5px); opacity: 1; }
+}
+
+/* ========== 章节标题 ========== */
+.section-title {
+  text-align: center;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--ink-black);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.15em;
+}
+
+.section-step {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--vermilion);
+  letter-spacing: 0.4em;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--ink-light);
+  letter-spacing: 0.3em;
+  margin-bottom: 3rem;
+}
+
+/* ========== 交替背景 ========== */
+.section-light {
+  background: var(--paper-light);
+  border-top: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.section-warm {
+  background: linear-gradient(180deg, var(--paper) 0%, #f0e8d8 100%);
+}
+
+/* ========== 内容文本 ========== */
+.content-text {
+  font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+  color: var(--ink-dark);
+  line-height: 2;
+  margin-bottom: 1.5rem;
+}
+
+.content-text.center {
+  text-align: center;
+}
+
+.highlight-text {
+  color: var(--vermilion);
+  font-weight: 600;
+}
+
+.gold-text {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* 引文 */
+.quote-block {
+  background: var(--paper-light);
+  border-left: 3px solid var(--gold);
+  padding: 1.5rem 2rem;
+  margin: 2rem 0;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-style: italic;
+  color: var(--ink-dark);
+  font-size: 1rem;
+  line-height: 2;
+  position: relative;
+}
+
+.quote-block::before {
+  content: '\201C';
+  position: absolute;
+  top: -0.3rem;
+  left: 0.5rem;
+  font-size: 3rem;
+  color: var(--gold-light);
+  opacity: 0.4;
+  font-style: normal;
+}
+
+.quote-source {
+  display: block;
+  text-align: right;
+  font-size: 0.85rem;
+  color: var(--ink-light);
+  margin-top: 0.5rem;
+  font-style: normal;
+}
+
+/* ========== 1. 观象 - 火焰通天场景 ========== */
+.scene-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  height: 320px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #1a2744 0%, #2c3e5a 40%, #4a3828 70%, #3d2e1e 100%);
+}
+
+/* 篝火场景 SVG 容器 */
+.bonfire-scene {
+  width: 100%;
+  height: 100%;
+}
+
+/* ========== 2. 读彖 - 三大核心 ========== */
+.tuan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.tuan-card {
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 8px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tuan-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--vermilion));
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+.tuan-card:hover::before {
+  transform: scaleX(1);
+}
+
+.tuan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.tuan-icon {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.tuan-label {
+  font-size: 0.75rem;
+  color: var(--vermilion);
+  letter-spacing: 0.2em;
+  margin-bottom: 0.5rem;
+}
+
+.tuan-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink-black);
+  margin-bottom: 0.8rem;
+}
+
+.tuan-desc {
+  font-size: 0.88rem;
+  color: var(--ink-medium);
+  line-height: 1.8;
+}
+
+/* ========== 3. 训字 - 字义表格 ========== */
+.char-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 2rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.char-table thead th {
+  background: var(--ink-dark);
+  color: var(--paper);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 1rem 1.2rem;
+  letter-spacing: 0.1em;
+  text-align: left;
+}
+
+.char-table tbody tr {
+  transition: background 0.3s;
+}
+
+.char-table tbody tr:hover {
+  background: rgba(184, 134, 11, 0.06);
+}
+
+.char-table tbody td {
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  font-size: 0.92rem;
+  color: var(--ink-dark);
+  vertical-align: top;
+}
+
+.char-table tbody td:first-child {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--ink-black);
+  text-align: center;
+  width: 70px;
+  vertical-align: middle;
+}
+
+.char-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.char-table tbody tr:nth-child(even) {
+  background: rgba(0,0,0,0.015);
+}
+
+/* ========== 4. 析位 - 爻位结构图 ========== */
+.xiwei-layout {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 3rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.yao-structure {
+  flex: 0 0 280px;
+}
+
+.yao-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  transition: all 0.3s;
+}
+
+.yao-row:hover {
+  background: rgba(184, 134, 11, 0.04);
+  border-radius: 4px;
+}
+
+.yao-row.yao-highlight {
+  background: rgba(194, 58, 43, 0.06);
+  border-radius: 4px;
+  border-bottom-color: rgba(194, 58, 43, 0.1);
+}
+
+.yao-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink-dark);
+  min-width: 40px;
+}
+
+.yao-name.yin {
+  color: var(--vermilion);
+}
+
+.yao-line-mini {
+  display: flex;
+  gap: 4px;
+  min-width: 50px;
+}
+
+.yao-line-mini .bar {
+  height: 4px;
+  background: var(--ink-dark);
+  border-radius: 2px;
+}
+
+.yao-line-mini .bar.yang {
+  width: 50px;
+}
+
+.yao-line-mini .bar.yin {
+  width: 20px;
+}
+
+.yao-line-mini .bar.yin-highlight {
+  width: 20px;
+  background: var(--vermilion);
+}
+
+.yao-tags {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.yao-tag {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  background: rgba(184, 134, 11, 0.1);
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.yao-tag.tag-vermilion {
+  background: rgba(194, 58, 43, 0.1);
+  color: var(--vermilion);
+}
+
+.xiwei-insight {
+  flex: 0 0 280px;
+  background: linear-gradient(135deg, rgba(194, 58, 43, 0.04), rgba(184, 134, 11, 0.04));
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 8px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.xiwei-insight h4 {
+  font-size: 1rem;
+  color: var(--vermilion);
+  margin-bottom: 1rem;
+  letter-spacing: 0.1em;
+}
+
+.xiwei-insight p {
+  font-size: 0.9rem;
+  color: var(--ink-dark);
+  line-height: 1.9;
+}
+
+/* ========== 5. 六爻走势图 ========== */
+.chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 8px;
+  padding: 2rem 1rem 1rem;
+  overflow-x: auto;
+}
+
+.chart-svg-wrap {
+  min-width: 600px;
+}
+
+.chart-tooltip {
+  position: absolute;
+  background: var(--ink-dark);
+  color: var(--paper);
+  padding: 0.8rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 10;
+  max-width: 240px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.chart-tooltip.show {
+  opacity: 1;
+}
+
+/* 六爻卡片 */
+.yao-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 3rem 0;
+}
+
+.yao-card {
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 8px;
+  padding: 1.8rem;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+
+.yao-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.yao-card.level-safe::after { background: #4a9c6d; }
+.yao-card.level-warn::after { background: var(--gold); }
+.yao-card.level-danger::after { background: var(--vermilion); }
+.yao-card.level-turn::after { background: #3a7bd5; }
+.yao-card.level-climax::after { background: linear-gradient(180deg, var(--vermilion), var(--gold)); }
+.yao-card.level-end::after { background: var(--ink-light); }
+
+.yao-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.yao-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.yao-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.yao-card.level-safe .yao-card-icon { background: rgba(74, 156, 109, 0.12); }
+.yao-card.level-warn .yao-card-icon { background: rgba(184, 134, 11, 0.12); }
+.yao-card.level-danger .yao-card-icon { background: rgba(194, 58, 43, 0.12); }
+.yao-card.level-turn .yao-card-icon { background: rgba(58, 123, 213, 0.12); }
+.yao-card.level-climax .yao-card-icon { background: rgba(184, 134, 11, 0.12); }
+.yao-card.level-end .yao-card-icon { background: rgba(136, 136, 136, 0.12); }
+
+.yao-card-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink-black);
+}
+
+.yao-card-original {
+  font-size: 0.85rem;
+  color: var(--ink-light);
+  font-style: italic;
+}
+
+.yao-card-text {
+  font-size: 0.92rem;
+  color: var(--ink-dark);
+  line-height: 1.9;
+}
+
+/* ========== 6. 察变 - 序卦因果链 ========== */
+.xugua-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 2.5rem 0;
+  flex-wrap: wrap;
+}
+
+.xugua-node {
+  text-align: center;
+  padding: 1.5rem 2rem;
+  border-radius: 8px;
+  position: relative;
+  transition: all 0.4s;
+  min-width: 140px;
+}
+
+.xugua-node:hover {
+  transform: scale(1.05);
+}
+
+.xugua-node.node-past {
+  background: rgba(136, 136, 136, 0.08);
+  border: 1px solid rgba(136, 136, 136, 0.15);
+}
+
+.xugua-node.node-present {
+  background: rgba(194, 58, 43, 0.08);
+  border: 2px solid var(--vermilion);
+  box-shadow: 0 0 20px rgba(194, 58, 43, 0.1);
+}
+
+.xugua-node.node-future {
+  background: rgba(184, 134, 11, 0.08);
+  border: 1px solid rgba(184, 134, 11, 0.2);
+}
+
+.xugua-kua {
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin-bottom: 0.3rem;
+}
+
+.xugua-name {
+  font-size: 0.85rem;
+  color: var(--ink-medium);
+  margin-bottom: 0.3rem;
+}
+
+.xugua-meaning {
+  font-size: 0.75rem;
+  color: var(--ink-light);
+}
+
+.xugua-arrow {
+  font-size: 1.5rem;
+  color: var(--ink-light);
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.xugua-arrow-label {
+  font-size: 0.65rem;
+  color: var(--ink-light);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+/* 综卦对照 */
+.zonggua-compare {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2.5rem 0;
+  flex-wrap: wrap;
+}
+
+.zonggua-item {
+  text-align: center;
+  padding: 2rem;
+  border-radius: 8px;
+  min-width: 160px;
+  transition: all 0.4s;
+}
+
+.zonggua-item:hover {
+  transform: translateY(-3px);
+}
+
+.zonggua-item.zg-tongren {
+  background: linear-gradient(135deg, rgba(232, 184, 48, 0.08), rgba(194, 58, 43, 0.08));
+  border: 1px solid rgba(184, 134, 11, 0.15);
+}
+
+.zonggua-item.zg-shi {
+  background: linear-gradient(135deg, rgba(42, 62, 90, 0.08), rgba(100, 100, 100, 0.08));
+  border: 1px solid rgba(100, 100, 100, 0.15);
+}
+
+.zonggua-kua {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-bottom: 0.3rem;
+}
+
+.zonggua-name {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.zonggua-desc {
+  font-size: 0.82rem;
+  color: var(--ink-medium);
+}
+
+.zonggua-symbol {
+  font-size: 2rem;
+  color: var(--ink-light);
+  display: flex;
+  align-items: center;
+}
+
+/* ========== 7. 归德 ========== */
+.de-cards {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.de-card {
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  flex: 0 1 250px;
+  transition: all 0.4s;
+}
+
+.de-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.de-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.de-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink-black);
+  margin-bottom: 0.3rem;
+}
+
+.de-sub {
+  font-size: 0.8rem;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  margin-bottom: 0.8rem;
+}
+
+.de-desc {
+  font-size: 0.88rem;
+  color: var(--ink-medium);
+  line-height: 1.8;
+}
+
+/* ========== 8. 征引 ========== */
+.citation-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.citation-item {
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+
+.citation-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+}
+
+.citation-item::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--vermilion));
+  transform: scaleX(0);
+  transition: transform 0.4s;
+  transform-origin: left;
+}
+
+.citation-item:hover::before {
+  transform: scaleX(1);
+}
+
+.citation-yao {
+  font-size: 0.7rem;
+  color: var(--vermilion);
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.citation-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink-black);
+  margin-bottom: 0.5rem;
+}
+
+.citation-desc {
+  font-size: 0.85rem;
+  color: var(--ink-medium);
+  line-height: 1.7;
+}
+
+/* ========== 9. 映射 - 行动指南 ========== */
+.guide-timeline {
+  position: relative;
+  padding: 2rem 0;
+  margin: 2rem 0;
+}
+
+.guide-timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--gold), var(--vermilion), var(--ink-light));
+  transform: translateX(-50%);
+}
+
+.guide-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.guide-item:nth-child(odd) {
+  flex-direction: row;
+  padding-right: calc(50% + 2rem);
+  text-align: right;
+}
+
+.guide-item:nth-child(even) {
+  flex-direction: row-reverse;
+  padding-left: calc(50% + 2rem);
+  text-align: left;
+}
+
+.guide-dot {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--paper);
+  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.2);
+  z-index: 2;
+}
+
+.guide-dot.dot-warn {
+  background: var(--vermilion);
+  box-shadow: 0 0 0 3px rgba(194, 58, 43, 0.2);
+}
+
+.guide-dot.dot-turn {
+  background: #3a7bd5;
+  box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.2);
+}
+
+.guide-dot.dot-hope {
+  background: var(--gold-bright);
+  box-shadow: 0 0 0 3px rgba(230, 196, 83, 0.2);
+}
+
+.guide-content {
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.4s;
+  width: 100%;
+}
+
+.guide-content:hover {
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
+
+.guide-yao-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink-black);
+  margin-bottom: 0.3rem;
+}
+
+.guide-label {
+  font-size: 0.7rem;
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.guide-label.label-safe { background: rgba(74, 156, 109, 0.12); color: #4a9c6d; }
+.guide-label.label-warn { background: rgba(194, 58, 43, 0.12); color: var(--vermilion); }
+.guide-label.label-danger { background: rgba(139, 26, 26, 0.12); color: var(--vermilion-dark); }
+.guide-label.label-turn { background: rgba(58, 123, 213, 0.12); color: #3a7bd5; }
+.guide-label.label-hope { background: rgba(184, 134, 11, 0.12); color: var(--gold); }
+.guide-label.label-end { background: rgba(136, 136, 136, 0.12); color: var(--ink-light); }
+
+.guide-desc {
+  font-size: 0.9rem;
+  color: var(--ink-dark);
+  line-height: 1.8;
+}
+
+/* ========== 综合结论 ========== */
+.conclusion-section {
+  background: linear-gradient(180deg, var(--paper) 0%, #e8dcc8 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.conclusion-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 10%, var(--gold) 50%, transparent 90%);
+}
+
+.conclusion-box {
+  background: var(--paper-light);
+  border: 1px solid rgba(184, 134, 11, 0.15);
+  border-radius: 12px;
+  padding: 3rem;
+  position: relative;
+}
+
+.conclusion-box::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 2rem;
+  right: 2rem;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--vermilion), var(--gold));
+  border-radius: 2px 2px 0 0;
+}
+
+.conclusion-highlight {
+  background: rgba(194, 58, 43, 0.04);
+  border-left: 3px solid var(--vermilion);
+  padding: 1.2rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.conclusion-highlight p {
+  font-size: 0.95rem;
+  color: var(--ink-dark);
+  line-height: 1.9;
+  margin-bottom: 0.5rem;
+}
+
+.conclusion-highlight p:last-child {
+  margin-bottom: 0;
+}
+
+.conclusion-final {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+.conclusion-final p {
+  font-size: 1rem;
+  color: var(--ink-dark);
+  line-height: 2;
+}
+
+/* ========== 页脚 ========== */
+.footer {
+  padding: 3rem 0;
+  text-align: center;
+  background: var(--ink-dark);
+  color: rgba(245, 240, 232, 0.5);
+}
+
+.footer p {
+  font-size: 0.8rem;
+  line-height: 1.8;
+  margin-bottom: 0.5rem;
+}
+
+.footer .footer-quote {
+  font-size: 0.85rem;
+  color: rgba(245, 197, 66, 0.6);
+  font-style: italic;
+  margin-top: 1rem;
+}
+
+/* ========== 回到顶部 ========== */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 44px;
+  height: 44px;
+  background: var(--ink-dark);
+  color: var(--paper);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s;
+  z-index: 99;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: var(--vermilion);
+  transform: translateY(-3px);
+}
+
+/* ========== 云纹装饰 ========== */
+.cloud-deco {
+  position: absolute;
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+/* ========== 回纹边框 ========== */
+.huiwen-border {
+  position: relative;
+  padding: 2rem;
+}
+
+.huiwen-border::before,
+.huiwen-border::after {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--gold-light);
+  opacity: 0.3;
+}
+
+.huiwen-border::before {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
+.huiwen-border::after {
+  bottom: 0;
+  right: 0;
+  border-left: none;
+  border-top: none;
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1.2rem;
+  }
+  section {
+    padding: 3.5rem 0;
+  }
+  .tuan-grid {
+    grid-template-columns: 1fr;
+  }
+  .yao-cards {
+    grid-template-columns: 1fr;
+  }
+  .citation-list {
+    grid-template-columns: 1fr;
+  }
+  .xiwei-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+  .yao-structure, .xiwei-insight {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 400px;
+  }
+  .xugua-flow {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .xugua-arrow {
+    transform: rotate(90deg);
+  }
+  .zonggua-compare {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .zonggua-symbol {
+    transform: rotate(90deg);
+  }
+  /* 时间线移到左侧 */
+  .guide-timeline::before {
+    left: 1rem;
+  }
+  .guide-item:nth-child(odd),
+  .guide-item:nth-child(even) {
+    flex-direction: row;
+    padding-right: 0;
+    padding-left: 3rem;
+    text-align: left;
+  }
+  .guide-dot {
+    left: 1rem;
+  }
+  .de-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+  .de-card {
+    width: 100%;
+    max-width: 350px;
+  }
+  .nav-links {
+    display: none;
+  }
+  .hero-title {
+    font-size: clamp(3.5rem, 12vw, 6rem);
+  }
+  .conclusion-box {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .char-table thead th {
+    padding: 0.7rem 0.6rem;
+    font-size: 0.75rem;
+  }
+  .char-table tbody td {
+    padding: 0.7rem 0.6rem;
+    font-size: 0.82rem;
+  }
+  .char-table tbody td:first-child {
+    font-size: 1.4rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- 导航栏 -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <div class="nav-title">天火同人</div>
+    <div class="nav-links">
+      <a href="#guanxiang">观象</a>
+      <a href="#dutuan">读彖</a>
+      <a href="#xunzi">训字</a>
+      <a href="#xiwei">析位</a>
+      <a href="#wanci">玩辞</a>
+      <a href="#chabian">察变</a>
+      <a href="#guide">归德</a>
+      <a href="#zhengyin">征引</a>
+      <a href="#yingshe">映射</a>
+    </div>
+  </div>
+</nav>
+
+<!-- 首屏 -->
+<header class="hero" id="top">
+  <!-- 星辰 -->
+  <svg class="hero-stars" aria-hidden="true">
+    <circle cx="10%" cy="15%" r="1" fill="rgba(255,255,255,0.4)"><animate attributeName="opacity" values="0.2;0.8;0.2" dur="3s" repeatCount="indefinite"/></circle>
+    <circle cx="25%" cy="8%" r="1.2" fill="rgba(255,255,255,0.5)"><animate attributeName="opacity" values="0.3;0.9;0.3" dur="4s" repeatCount="indefinite"/></circle>
+    <circle cx="40%" cy="20%" r="0.8" fill="rgba(255,255,255,0.3)"><animate attributeName="opacity" values="0.1;0.7;0.1" dur="5s" repeatCount="indefinite"/></circle>
+    <circle cx="60%" cy="12%" r="1" fill="rgba(255,255,255,0.4)"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="3.5s" repeatCount="indefinite"/></circle>
+    <circle cx="75%" cy="18%" r="1.3" fill="rgba(255,255,255,0.5)"><animate attributeName="opacity" values="0.3;0.8;0.3" dur="4.5s" repeatCount="indefinite"/></circle>
+    <circle cx="88%" cy="10%" r="0.9" fill="rgba(255,255,255,0.35)"><animate attributeName="opacity" values="0.15;0.7;0.15" dur="3.8s" repeatCount="indefinite"/></circle>
+    <circle cx="15%" cy="30%" r="0.7" fill="rgba(255,255,255,0.25)"><animate attributeName="opacity" values="0.1;0.5;0.1" dur="5.2s" repeatCount="indefinite"/></circle>
+    <circle cx="50%" cy="5%" r="1.1" fill="rgba(255,255,255,0.45)"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="4.2s" repeatCount="indefinite"/></circle>
+    <circle cx="92%" cy="25%" r="0.6" fill="rgba(255,255,255,0.3)"><animate attributeName="opacity" values="0.1;0.6;0.1" dur="6s" repeatCount="indefinite"/></circle>
+  </svg>
+
+  <!-- 火焰光晕 -->
+  <div class="hero-fire-glow"></div>
+
+  <div class="hero-content">
+    <div class="hero-title">同人</div>
+    <div class="hero-kua-name">天火同人 第十三卦</div>
+    <div class="hero-subtitle">否极而通，以文明之光汇聚天下之志</div>
+
+    <!-- 卦象 SVG -->
+    <svg class="hero-hexagram" width="180" height="140" viewBox="0 0 180 140" aria-label="天火同人卦象：上乾下离">
+      <!-- 上卦：乾（三阳爻） -->
+      <g>
+        <!-- 上九 -->
+        <rect x="30" y="5" width="120" height="8" rx="2" fill="rgba(245,240,232,0.8)"/>
+        <!-- 九五 -->
+        <rect x="30" y="27" width="120" height="8" rx="2" fill="rgba(245,240,232,0.8)"/>
+        <!-- 九四 -->
+        <rect x="30" y="49" width="120" height="8" rx="2" fill="rgba(245,240,232,0.8)"/>
+      </g>
+      <!-- 分隔标识 -->
+      <text x="165" y="32" fill="rgba(245,240,232,0.35)" font-size="10" font-family="var(--font-main)">乾</text>
+      <text x="165" y="100" fill="rgba(245,197,66,0.5)" font-size="10" font-family="var(--font-main)">离</text>
+      <!-- 下卦：离（阳阴阳） -->
+      <g>
+        <!-- 九三 -->
+        <rect x="30" y="75" width="120" height="8" rx="2" fill="rgba(245,240,232,0.8)"/>
+        <!-- 六二 - 卦主，阴爻，特殊高亮 -->
+        <rect x="30" y="97" width="50" height="8" rx="2" fill="#f5c542"/>
+        <rect x="100" y="97" width="50" height="8" rx="2" fill="#f5c542"/>
+        <!-- 初九 -->
+        <rect x="30" y="119" width="120" height="8" rx="2" fill="rgba(245,240,232,0.8)"/>
+      </g>
+      <!-- 六二标注 -->
+      <line x1="20" y1="101" x2="28" y2="101" stroke="#f5c542" stroke-width="1" opacity="0.6"/>
+      <text x="5" y="104" fill="#f5c542" font-size="8" font-family="var(--font-main)" opacity="0.8">卦主</text>
+    </svg>
+
+    <div class="hero-guaci">同人于野，亨。利涉大川，利君子贞。</div>
+    <div class="hero-year">二零二六年 世界年卦</div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>向下阅读</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</header>
+
+<!-- ==================== 第一步：观象 ==================== -->
+<section id="guanxiang" class="section-light">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-step">第一步</p>
+      <h2 class="section-title">观象</h2>
+      <div class="divider divider-gold"></div>
+      <p class="section-subtitle">上天下火，光焰通天</p>
+    </div>
+
+    <!-- 篝火场景 -->
+    <div class="fade-in fade-in-delay-1">
+      <div class="scene-container">
+        <svg class="bonfire-scene" viewBox="0 0 600 320" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <!-- 火焰渐变 -->
+            <linearGradient id="fireGrad" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%" stop-color="#c23a2b"/>
+              <stop offset="40%" stop-color="#e87a2e"/>
+              <stop offset="70%" stop-color="#f5c542"/>
+              <stop offset="100%" stop-color="#fff5d0"/>
+            </linearGradient>
+            <!-- 光晕 -->
+            <radialGradient id="glowGrad" cx="50%" cy="85%" r="40%">
+              <stop offset="0%" stop-color="rgba(245,197,66,0.3)"/>
+              <stop offset="50%" stop-color="rgba(232,122,46,0.1)"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+            <!-- 星光 -->
+            <filter id="starGlow">
+              <feGaussianBlur stdDeviation="1.5" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- 夜空 -->
+          <rect width="600" height="320" fill="url(#skyGrad)"/>
+
+          <!-- 星星 -->
+          <circle cx="80" cy="30" r="1.5" fill="#fff" opacity="0.6" filter="url(#starGlow)"/>
+          <circle cx="200" cy="50" r="1" fill="#fff" opacity="0.4"/>
+          <circle cx="350" cy="25" r="1.2" fill="#fff" opacity="0.5" filter="url(#starGlow)"/>
+          <circle cx="480" cy="45" r="1" fill="#fff" opacity="0.4"/>
+          <circle cx="550" cy="20" r="1.3" fill="#fff" opacity="0.5"/>
+          <circle cx="120" cy="70" r="0.8" fill="#fff" opacity="0.3"/>
+          <circle cx="420" cy="60" r="0.9" fill="#fff" opacity="0.35"/>
+
+          <!-- 旷野地面 -->
+          <path d="M0 250 Q100 240 200 248 Q300 255 400 245 Q500 238 600 250 L600 320 L0 320 Z" fill="#2a1f15"/>
+          <path d="M0 260 Q150 252 300 258 Q450 265 600 255 L600 320 L0 320 Z" fill="#1d1510"/>
+
+          <!-- 远处小山 -->
+          <path d="M0 250 Q50 230 100 245 Q130 238 160 250" fill="#352a20" opacity="0.6"/>
+          <path d="M450 248 Q500 225 550 240 Q580 235 600 250" fill="#352a20" opacity="0.5"/>
+
+          <!-- 光晕 -->
+          <ellipse cx="300" cy="250" rx="200" ry="100" fill="url(#glowGrad)"/>
+
+          <!-- 人群剪影 -->
+          <!-- 左侧人物 -->
+          <g opacity="0.6">
+            <ellipse cx="140" cy="245" rx="8" ry="6" fill="#1a1410"/>
+            <rect x="136" y="220" width="8" height="25" rx="3" fill="#1a1410"/>
+          </g>
+          <g opacity="0.5">
+            <ellipse cx="165" cy="243" rx="7" ry="5.5" fill="#1a1410"/>
+            <rect x="161" y="220" width="8" height="23" rx="3" fill="#1a1410"/>
+          </g>
+          <!-- 右侧人物 -->
+          <g opacity="0.6">
+            <ellipse cx="440" cy="244" rx="8" ry="6" fill="#1a1410"/>
+            <rect x="436" y="218" width="8" height="26" rx="3" fill="#1a1410"/>
+          </g>
+          <g opacity="0.5">
+            <ellipse cx="465" cy="246" rx="7" ry="5.5" fill="#1a1410"/>
+            <rect x="461" y="222" width="8" height="24" rx="3" fill="#1a1410"/>
+          </g>
+          <g opacity="0.45">
+            <ellipse cx="185" cy="248" rx="6" ry="5" fill="#1a1410"/>
+            <rect x="182" y="226" width="6" height="22" rx="3" fill="#1a1410"/>
+          </g>
+          <g opacity="0.45">
+            <ellipse cx="415" cy="247" rx="6" ry="5" fill="#1a1410"/>
+            <rect x="412" y="225" width="6" height="22" rx="3" fill="#1a1410"/>
+          </g>
+
+          <!-- 篝火柴堆 -->
+          <line x1="280" y1="255" x2="310" y2="240" stroke="#4a3520" stroke-width="3" stroke-linecap="round"/>
+          <line x1="320" y1="255" x2="290" y2="238" stroke="#4a3520" stroke-width="3" stroke-linecap="round"/>
+          <line x1="295" y1="256" x2="305" y2="236" stroke="#4a3520" stroke-width="2.5" stroke-linecap="round"/>
+
+          <!-- 篝火火焰 -->
+          <g class="fire-group">
+            <path d="M300 245 Q290 220 295 200 Q300 180 305 200 Q310 220 300 245" fill="url(#fireGrad)" opacity="0.9">
+              <animate attributeName="d" values="M300 245 Q290 220 295 200 Q300 180 305 200 Q310 220 300 245;M300 245 Q288 218 293 195 Q300 175 307 195 Q312 218 300 245;M300 245 Q290 220 295 200 Q300 180 305 200 Q310 220 300 245" dur="1.5s" repeatCount="indefinite"/>
+            </path>
+            <path d="M295 248 Q282 225 290 205 Q295 190 298 210 Q300 230 295 248" fill="url(#fireGrad)" opacity="0.7">
+              <animate attributeName="d" values="M295 248 Q282 225 290 205 Q295 190 298 210 Q300 230 295 248;M295 248 Q280 222 288 200 Q295 185 300 208 Q302 228 295 248;M295 248 Q282 225 290 205 Q295 190 298 210 Q300 230 295 248" dur="1.8s" repeatCount="indefinite"/>
+            </path>
+            <path d="M305 248 Q310 228 308 208 Q305 192 302 210 Q298 228 305 248" fill="url(#fireGrad)" opacity="0.7">
+              <animate attributeName="d" values="M305 248 Q310 228 308 208 Q305 192 302 210 Q298 228 305 248;M305 248 Q312 225 310 203 Q305 188 300 208 Q296 226 305 248;M305 248 Q310 228 308 208 Q305 192 302 210 Q298 228 305 248" dur="2s" repeatCount="indefinite"/>
+            </path>
+            <!-- 火星 -->
+            <circle cx="298" cy="190" r="1.5" fill="#f5c542" opacity="0.8">
+              <animate attributeName="cy" values="190;140;100" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.8;0.4;0" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="303" cy="195" r="1" fill="#fff5d0" opacity="0.6">
+              <animate attributeName="cy" values="195;150;110" dur="3.5s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.6;0.3;0" dur="3.5s" repeatCount="indefinite"/>
+              <animate attributeName="cx" values="303;308;312" dur="3.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="296" cy="200" r="0.8" fill="#f5c542" opacity="0.5">
+              <animate attributeName="cy" values="200;160;125" dur="4s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.5;0.2;0" dur="4s" repeatCount="indefinite"/>
+              <animate attributeName="cx" values="296;290;286" dur="4s" repeatCount="indefinite"/>
+            </circle>
+          </g>
+
+          <!-- 文字标注 -->
+          <text x="300" y="155" text-anchor="middle" fill="rgba(245,197,66,0.6)" font-size="12" font-family="var(--font-main)" letter-spacing="3">
+            火性炎上 与天同向
+          </text>
+          <text x="300" y="290" text-anchor="middle" fill="rgba(245,240,232,0.4)" font-size="11" font-family="var(--font-main)" letter-spacing="2">
+            循光而聚 不分亲疏
+          </text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="fade-in fade-in-delay-2">
+      <p class="content-text">上乾为天，下离为火。火性炎上，与天同方向，光明照耀于天际——这就是<span class="highlight-text">"同人"之象</span>。</p>
+      <div class="quote-block">
+        说卦传：乾为天、为君、为健；离为火、为日、为电、为中女、为甲胄、为戈兵。
+      </div>
+      <p class="content-text">叠合场景：烈日当空，光焰通天。火焰向上，天道向上，上下同德同向。就像旷野上的篝火，光明照彻四方，所有人循光而聚，不分亲疏远近。</p>
+    </div>
+
+    <div class="fade-in fade-in-delay-3">
+      <div class="quote-block" style="border-left-color: var(--vermilion);">
+        <strong>年卦取象</strong>：2026年的世界图景——不同力量在经历分裂与碰撞后，开始寻找共同方向。火在天下，意味着文明（离）向着更高秩序（乾）汇聚，但这个"同"需要走出小圈子（宗）到旷野（野）才能真正亨通。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 第二步：读彖 ==================== -->
+<section id="dutuan" class="section-warm">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-step">第二步</p>
+      <h2 class="section-title">读彖</h2>
+      <div class="divider divider-gold"></div>
+      <p class="section-subtitle">唯君子为能通天下之志</p>
+    </div>
+
+    <div class="fade-in fade-in-delay-1">
+      <div class="quote-block">
+        彖曰：「同人，柔得位得中，而应乎乾，曰同人。同人曰"同人于野，亨，利涉大川"，乾行也。文明以健，中正而应，君子正也。唯君子为能通天下之志。」
+      </div>
+    </div>
+
+    <div class="fade-in fade-in-delay-2">
+      <p class="content-text center" style="margin-bottom: 2rem; color: var(--ink-medium);">三个核心信息</p>
+      <div class="tuan-grid">
+        <div class="tuan-card">
+          <span class="tuan-icon">&#9775;</span>
+          <p class="tuan-label">取象依据</p>
+          <h3 class="tuan-title">一柔通五刚</h3>
+          <p class="tuan-desc">六二（唯一阴爻）得位得中，上应九五——一柔与众刚和谐共处，以柔通刚</p>
+        </div>
+        <div class="tuan-card">
+          <span class="tuan-icon">&#9978;</span>
+          <p class="tuan-label">核心判断</p>
+          <h3 class="tuan-title">亨通利涉</h3>
+          <p class="tuan-desc">"亨"、"利涉大川"——通达，适合做大事、冒大险</p>
+        </div>
+        <div class="tuan-card">
+          <span class="tuan-icon">&#9734;</span>
+          <p class="tuan-label">判断理由</p>
+          <h3 class="tuan-title">文明以健</h3>
+          <p class="tuan-desc">"文明以健"（下离文明+上乾刚健），"中正而应"（六二与九五正应），君子正道</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fade-in fade-in-delay-3">
+      <div class="huiwen-border" style="text-align: center; margin: 2rem 0;">
+        <p class="content-text" style="font-size: 1.2rem; font-weight: 700; color: var(--ink-black); letter-spacing: 0.1em;">
+          「唯君子为能通天下之志」
+        </p>
+        <p class="content-text" style="font-size: 0.92rem; color: var(--ink-medium);">
+          只有具备君子之德的人，才能打通天下人的心志，实现真正的"大同"。
+        </p>
+      </div>
+    </div>
+
+    <div class="fade-in fade-in-delay-4">
+      <div class="quote-block" style="border-left-color: var(--vermilion);">
+        <strong>年卦启示</strong>：2026年，世界秩序的重建不靠武力，而靠"文明以健"——以文明之光配合刚健之行。六二的"柔得位得中"暗示：推动世界走向合作的关键力量，未必是最强大的，而是<span class="highlight-text">最居中、最包容的</span>。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 第三步：训字 ==================== -->
+<section id="xunzi" class="section-light">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-step">第三步</p>
+      <h2 class="section-title">训字</h2>
+      <div class="divider divider-gold"></div>
+      <p class="section-subtitle">拆解关键字的本义与引申</p>
+    </div>
+
+    <div class="fade-in fade-in-delay-1">
+      <table class="char-table">
+        <thead>
+          <tr>
+            <th>字</th>
+            <th>字形 / 本义</th>
+            <th>在年卦中的引申</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>同</td>
+            <td>从凡从口。众人同声、同心。</td>
+            <td>不同国家、文明之间寻求共同利益和共同价值</td>
+          </tr>
+          <tr>
+            <td>人</td>
+            <td>甲骨文象侧立人形。</td>
+            <td>强调是"人与人"的事，回归到人本</td>
+          </tr>
+          <tr>
+            <td>野</td>
+            <td>从里从予。郊外之地。</td>
+            <td>超越"自家地盘"，走到国际舞台上寻求联合</td>
+          </tr>
+          <tr>
+            <td>亨</td>
+            <td>甲骨文像高大台基上建有殿堂形。</td>
+            <td>走出封闭圈层后，道路才通达</td>
+          </tr>
+          <tr>
+            <td>涉</td>
+            <td>从水从步。赤脚趟水过河。</td>
+            <td>2026年有大的艰险要渡过，但条件有利</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 第四步：析位 ==================== -->
+<section id="xiwei">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-step">第四步</p>
+      <h2 class="section-title">析位</h2>
+      <div class="divider divider-gold"></div>
+      <p class="section-subtitle">五阳争一阴，一柔引五刚</p>
+    </div>
+
+    <div class="fade-in fade-in-delay-1">
+      <p class="content-text center">同人卦有一个极其特殊的结构——<span class="highlight-text">全卦仅有一个阴爻（六二）</span>，其余五爻皆阳。</p>
+    </div>
+
+    <div class="fade-in fade-in-delay-2">
+      <div class="xiwei-layout">
+        <!-- 爻位结构 -->
+        <div class="yao-structure">
+          <div class="yao-row">
+            <span class="yao-name">上九</span>
+            <div class="yao-line-mini"><div class="bar yang"></div></div>
+            <div class="yao-tags">
+              <span class="yao-tag">阳</span>
+            </div>
+          </div>
+          <div class="yao-row">
+            <span class="yao-name">九五</span>
+            <div class="yao-line-mini"><div class="bar yang"></div></div>
+            <div class="yao-tags">
+              <span class="yao-tag">阳 得位</span>
+              <span class="yao-tag">得中</span>
+              <span class="yao-tag tag-vermilion">正应六二</span>
+            </div>
+          </div>
+          <div class="yao-row">
+            <span class="yao-name">九四</span>
+            <div class="yao-line-mini"><div class="bar yang"></div></div>
+            <div class="yao-tags">
+              <span class="yao-tag">阳</span>
+            </div>
+          </div>
+          <div class="yao-row">
+            <span class="yao-name">九三</span>
+            <div class="yao-line-mini"><div class="bar yang"></div></div>
+            <div class="yao-tags">
+              <span class="yao-tag">阳</span>
+            </div>
+          </div>
+          <div class="yao-row yao-highlight">
+            <span class="yao-name yin">六二</span>
+            <div class="yao-line-mini"><div class="bar yin-highlight"></div><div class="bar yin-highlight"></div></div>
+            <div class="yao-tags">
+              <span class="yao-tag tag-vermilion">阴 得位</span>
+              <span class="yao-tag tag-vermilion">得中</span>
+              <span class="yao-tag tag-vermilion">卦主</span>
+            </div>
+          </div>
+          <div class="yao-row">
+            <span class="yao-name">初九</span>
+            <div class="yao-line-mini"><div class="bar yang"></div></div>
+            <div class="yao-tags">
+              <span class="yao-tag">阳</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 洞察 -->
+        <div class="xiwei-insight">
+          <h4>五阳争一阴</h4>
+          <p>所有阳爻都想与六二亲近，造成竞争。</p>
+          <p style="margin-top: 1rem;">六二——阴爻居阴位（得位）；居下卦之中（得中）；与九五正应（有应）。这是全卦最关键的一爻：<strong style="color: var(--vermilion);">一柔引五刚</strong>。</p>
+          <div class="divider" style="margin: 1.5rem auto;"></div>
+          <p style="font-size: 0.85rem; color: var(--ink-medium);"><strong>年卦启示</strong>：2026年的国际格局，可以看作多方强势力量（五阳）争相拉拢某个关键的中间力量或资源（六二）。谁能守住中正之道，谁就是赢家。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 第五步：玩辞（六爻详解+走势图） ==================== -->
+<section id="wanci" class="section-light">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-step">第五步</p>
+      <h2 class="section-title">玩辞</h2>
+      <div class="divider divider-gold"></div>
+      <p class="section-subtitle">六爻详解 · 吉凶走势</p>
+    </div>
+
+    <!-- 走势图 -->
+    <div class="fade-in fade-in-delay-1">
+      <div class="chart-container" id="chartContainer">
+        <div class="chart-svg-wrap">
+          <svg id="trendChart" width="100%" viewBox="0 0 760 300" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(194,58,43,0.15)"/>
+                <stop offset="100%" stop-color="rgba(194,58,43,0)"/>
+              </linearGradient>
+              <linearGradient id="trendLine" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#4a9c6d"/>
+                <stop offset="20%" stop-color="#b8860b"/>
+                <stop offset="40%" stop-color="#c23a2b"/>
+                <stop offset="60%" stop-color="#3a7bd5"/>
+                <stop offset="80%" stop-color="#d4a843"/>
+                <stop offset="100%" stop-color="#888"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Y轴标签 -->
+            <text x="55" y="48" text-anchor="end" fill="#888" font-size="10" font-family="var(--font-main)">吉</text>
+            <text x="55" y="155" text-anchor="end" fill="#888" font-size="10" font-family="var(--font-main)">平</text>
+            <text x="55" y="255" text-anchor="end" fill="#888" font-size="10" font-family="var(--font-main)">凶</text>
+
+            <!-- 网格线 -->
+            <line x1="70" y1="45" x2="720" y2="45" stroke="rgba(0,0,0,0.05)" stroke-width="1"/>
+            <line x1="70" y1="150" x2="720" y2="150" stroke="rgba(0,0,0,0.08)" stroke-width="1" stroke-dasharray="4"/>
+            <line x1="70" y1="250" x2="720" y2="250" stroke="rgba(0,0,0,0.05)" stroke-width="1"/>
+
+            <!-- 填充区域 -->
+            <path d="M110 140 L230 175 L350 240 L470 85 L590 60 L710 120 L710 270 L110 270 Z" fill="url(#trendFill)" opacity="0.5"/>
+
+            <!-- 走势线 -->
+            <path d="M110 140 L230 175 L350 240 L470 85 L590 60 L710 120" fill="none" stroke="url(#trendLine)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+            <!-- 数据点和标签 -->
+            <!-- 初九 -->
+            <circle cx="110" cy="140" r="6" fill="#4a9c6d" stroke="white" stroke-width="2" class="chart-dot" data-index="0"/>
+            <text x="110" y="275" text-anchor="middle" fill="var(--ink-dark)" font-size="11" font-weight="700" font-family="var(--font-main)">初九</text>
+            <text x="110" y="125" text-anchor="middle" fill="#4a9c6d" font-size="9" font-family="var(--font-main)">平和起步</text>
+            <text x="110" y="137" text-anchor="middle" fill="#4a9c6d" font-size="8" font-family="var(--font-main)">（无咎）</text>
+
+            <!-- 六二 -->
+            <circle cx="230" cy="175" r="6" fill="#b8860b" stroke="white" stroke-width="2" class="chart-dot" data-index="1"/>
+            <text x="230" y="275" text-anchor="middle" fill="var(--vermilion)" font-size="11" font-weight="700" font-family="var(--font-main)">六二</text>
+            <text x="230" y="195" text-anchor="middle" fill="#b8860b" font-size="9" font-family="var(--font-main)">格局受限</text>
+            <text x="230" y="207" text-anchor="middle" fill="#b8860b" font-size="8" font-family="var(--font-main)">（吝）</text>
+
+            <!-- 九三 -->
+            <circle cx="350" cy="240" r="7" fill="#c23a2b" stroke="white" stroke-width="2" class="chart-dot" data-index="2"/>
+            <text x="350" y="275" text-anchor="middle" fill="var(--ink-dark)" font-size="11" font-weight="700" font-family="var(--font-main)">九三</text>
+            <text x="350" y="232" text-anchor="middle" fill="#c23a2b" font-size="9" font-weight="600" font-family="var(--font-main)">暗流涌动</text>
+            <text x="350" y="221" text-anchor="middle" fill="#c23a2b" font-size="8" font-family="var(--font-main)">最凶险</text>
+
+            <!-- 九四 - 转折点 -->
+            <circle cx="470" cy="85" r="7" fill="#3a7bd5" stroke="white" stroke-width="2" class="chart-dot" data-index="3"/>
+            <text x="470" y="275" text-anchor="middle" fill="var(--ink-dark)" font-size="11" font-weight="700" font-family="var(--font-main)">九四</text>
+            <text x="470" y="78" text-anchor="middle" fill="#3a7bd5" font-size="9" font-weight="600" font-family="var(--font-main)">知止而退</text>
+            <text x="470" y="67" text-anchor="middle" fill="#3a7bd5" font-size="8" font-family="var(--font-main)">转折点 吉</text>
+
+            <!-- 九五 - 高潮 -->
+            <circle cx="590" cy="60" r="8" fill="#d4a843" stroke="white" stroke-width="2" class="chart-dot" data-index="4"/>
+            <text x="590" y="275" text-anchor="middle" fill="var(--ink-dark)" font-size="11" font-weight="700" font-family="var(--font-main)">九五</text>
+            <text x="590" y="50" text-anchor="middle" fill="#d4a843" font-size="9" font-weight="600" font-family="var(--font-main)">先痛后悦</text>
+            <text x="590" y="39" text-anchor="middle" fill="#d4a843" font-size="8" font-family="var(--font-main)">高潮</text>
+
+            <!-- 上九 -->
+            <circle cx="710" cy="120" r="6" fill="#888" stroke="white" stroke-width="2" class="chart-dot" data-index="5"/>
+            <text x="710" y="275" text-anchor="middle" fill="var(--ink-dark)" font-size="11" font-weight="700" font-family="var(--font-main)">上九</text>
+            <text x="710" y="110" text-anchor="middle" fill="#888" font-size="9" font-family="var(--font-main)">未竟之志</text>
+            <text x="710" y="99" text-anchor="middle" fill="#888" font-size="8" font-family="var(--font-main)">（无悔）</text>
+
+            <!-- 转折箭头标注 -->
+            <path d="M390 230 Q430 260 460 100" fill="none" stroke="rgba(58,123,213,0.3)" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#arrowBlue)"/>
+            <defs>
+              <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(58,123,213,0.4)"/>
+              </marker>
+            </defs>
+            <text x="440" y="262" fill="rgba(58,123,213,0.5)" font-size="8" font-family="var(--font-main)">转机</text>
+          </svg>
+        </div>
+        <div class="chart-tooltip" id="chartTooltip"></div>
+      </div>
+    </div>
+
+    <!-- 六爻卡片 -->
+    <div class="yao-cards">
+      <div class="yao-card level-safe fade-in">
+        <div class="yao-card-header">
+          <div class="yao-card-icon">&#128330;</div>
+          <div>
+            <p class="yao-card-name">初九</p>
+            <p class="yao-card-original">同人于门，无咎。</p>
+          </div>
+        </div>
+        <p class="yao-card-text">从最近的盟友开始合作，区域内部先统一步调。门内之同，是合作的起点，平和无害。</p>
+      </div>
+
+      <div class="yao-card level-warn fade-in">
+        <div class="yao-card-header">
+          <div class="yao-card-icon">&#9888;</div>
+          <div>
+            <p class="yao-card-name" style="color: var(--vermilion);">六二（卦主）</p>
+            <p class="yao-card-original">同人于宗，吝。</p>
+          </div>
+        </div>
+        <p class="yao-card-text"><strong>警告！</strong>只搞小集团、排他性联盟，就会进退两难。"宗"是宗族小圈子，格局太小。</p>
+      </div>
+
+      <div class="yao-card level-danger fade-in">
+        <div class="yao-card-header">
+          <div class="yao-card-icon">&#9876;</div>
+          <div>
+            <p class="yao-card-name">九三</p>
+            <p class="yao-card-original">伏戎于莽，升其高陵，三岁不兴。</p>
+          </div>
+        </div>
+        <p class="yao-card-text">暗中的军事博弈。各方在"伏戎"——埋伏兵力于草莽之中，登高观望。但三年内不会爆发全面冲突。</p>
+      </div>
+
+      <div class="yao-card level-turn fade-in">
+        <div class="yao-card-header">
+          <div class="yao-card-icon">&#127987;</div>
+          <div>
+            <p class="yao-card-name">九四</p>
+            <p class="yao-card-original">乘其墉，弗克攻，吉。</p>
+          </div>
+        </div>
+        <p class="yao-card-text">2026年最关键的转机——拥有攻击能力却选择收手，反而得吉。城墙上的将领收剑入鞘，止戈为武。</p>
+      </div>
+
+      <div class="yao-card level-climax fade-in">
+        <div class="yao-card-header">
+          <div class="yao-card-icon">&#127774;</div>
+          <div>
+            <p class="yao-card-name">九五</p>
+            <p class="yao-card-original">同人，先号啕而后笑。大师克相遇。</p>
+          </div>
+        </div>
+        <p class="yao-card-text">真正的合作建立在共同经历了痛苦之后。先有号啕之痛，后有重逢之喜。<strong>"二人同心，其利断金。"</strong></p>
+      </div>
+
+      <div class="yao-card level-end fade-in">
+        <div class="yao-card-header">
+          <div class="yao-card-icon">&#127749;</div>
+          <div>
+            <p class="yao-card-name">上九</p>
+            <p class="yao-card-original">同人于郊，无悔。</p>
+          </div>
+        </div>
+        <p class="yao-card-text">大方向对了，但离理想还远。"郊"比"野"近一步，但仍在城外。2026是开局之年，不是完成之年。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 第六步：察变 ==================== -->
+<section id="chabian">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-step">第六步</p>
+      <h2 class="section-title">察变</h2>
+      <div class="divider divider-gold"></div>
+      <p class="section-subtitle">序卦因果 · 综卦对照</p>
+    </div>
+
+    <!-- 序卦因果链 -->
+    <div class="fade-in fade-in-delay-1">
+      <p class="content-text center" style="margin-bottom: 0.5rem; font-weight: 600;">序卦因果链</p>
+      <p class="content-text center" style="font-size: 0.88rem; color: var(--ink-light); margin-bottom: 2rem;">「物不可以终否，故受之以同人。」「与人同者，物必归焉。」</p>
+
+      <div class="xugua-flow">
+        <div class="xugua-node node-past">
+          <p class="xugua-kua" style="color: var(--ink-medium);">否</p>
+          <p class="xugua-name">天地否</p>
+          <p class="xugua-meaning">闭塞不通</p>
+        </div>
+        <div class="xugua-arrow">
+          <span class="xugua-arrow-label">否极泰来</span>
+          <span>&#10140;</span>
+        </div>
+        <div class="xugua-node node-present">
+          <p class="xugua-kua" style="color: var(--vermilion);">同人</p>
+          <p class="xugua-name">天火同人</p>
+          <p class="xugua-meaning">志同道合</p>
+        </div>
+        <div class="xugua-arrow">
+          <span class="xugua-arrow-label">物必归焉</span>
+          <span>&#10140;</span>
+        </div>
+        <div class="xugua-node node-future">
+          <p class="xugua-kua" style="color: var(--gold);">大有</p>
+          <p class="xugua-name">火天大有</p>
+          <p class="xugua-meaning">共同繁荣</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider divider-wide" style="margin: 3rem auto;"></div>
+
+    <!-- 综卦对照 -->
+    <div class="fade-in fade-in-delay-2">
+      <p class="content-text center" style="margin-bottom: 0.5rem; font-weight: 600;">综卦对照</p>
+      <p class="content-text center" style="font-size: 0.88rem; color: var(--ink-light); margin-bottom: 2rem;">正面看是合作，反面看是军事动员</p>
+
+      <div class="zonggua-compare">
+        <div class="zonggua-item zg-tongren">
+          <p class="zonggua-kua" style="color: var(--gold);">&#9776;&#9777;</p>
+          <p class="zonggua-name" style="color: var(--gold);">同人</p>
+          <p class="zonggua-desc">亲也。文明之光，志同道合。<br/>以文德聚天下。</p>
+        </div>
+        <div class="zonggua-symbol">&#8596;</div>
+        <div class="zonggua-item zg-shi">
+          <p class="zonggua-kua" style="color: var(--ink-medium);">&#9783;&#9776;</p>
+          <p class="zonggua-name" style="color: var(--ink-medium);">师</p>
+          <p class="zonggua-desc">众也。军事动员，整军出征。<br/>以武力聚天下。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fade-in fade-in-delay-3">
+      <div class="quote-block">
+        杂卦传：「同人，亲也。」——同人的本质是亲近、亲和。<br/>
+        综卦揭示：文（同人）与武（师）是一体两面。2026年的世界，合作与军事博弈并存，关键在于选择以哪一面为主。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 第七步：归德 ==================== -->
+<section id="guide" class="section-light">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-step">第七步</p>
+      <h2 class="section-title">归德</h2>
+      <div class="divider divider-gold"></div>
+      <p class="section-subtitle">君子以此卦修何德</p>
+    </div>
+
+    <div class="fade-in fade-in-delay-1">
+      <div class="de-cards">
+        <div class="de-card">
+          <div class="de-icon">&#128167;</div>
+          <p class="de-name">井</p>
+          <p class="de-sub">德之地</p>
+          <p class="de-desc">滋养他人，不求回报。不因亲疏远近而区别对待。如同井水，有求必应，无私奉献。</p>
+        </div>
+        <div class="de-card">
+          <div class="de-icon">&#9968;</div>
+          <p class="de-name">谦</p>
+          <p class="de-sub">德之柄</p>
+          <p class="de-desc">有实力但不以实力压人。裒多益寡，称物平施。实力在手，谦让在心。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 第八步：征引 ==================== -->
+<section id="zhengyin" class="section-warm">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-step">第八步</p>
+      <h2 class="section-title">征引</h2>
+      <div class="divider divider-gold"></div>
+      <p class="section-subtitle">以史为鉴，观古知今</p>
+    </div>
+
+    <div class="fade-in fade-in-delay-1">
+      <div class="citation-list">
+        <div class="citation-item">
+          <p class="citation-yao">同人于野</p>
+          <p class="citation-title">齐桓公九合诸侯</p>
+          <p class="citation-desc">"九合诸侯，不以兵车"——不靠武力而靠道义与利益联合天下，是"同人于野"的历史典范。</p>
+        </div>
+        <div class="citation-item">
+          <p class="citation-yao">先号啕而后笑</p>
+          <p class="citation-title">越王勾践卧薪尝胆</p>
+          <p class="citation-desc">经历亡国之痛与十年苦忍，最终复国成功——先有号啕之苦，后有胜利之笑。</p>
+        </div>
+        <div class="citation-item">
+          <p class="citation-yao">乘其墉弗克攻</p>
+          <p class="citation-title">宋襄公泓水之战</p>
+          <p class="citation-desc">"不攻半渡"——拥有攻击时机却选择仁义之举。虽然宋襄公因此败亡，但这一选择本身映射了"弗克攻"的精神。</p>
+        </div>
+        <div class="citation-item">
+          <p class="citation-yao">否极同人</p>
+          <p class="citation-title">二战后联合国建立</p>
+          <p class="citation-desc">经历了人类最惨烈的战争（号啕）之后，各国才真正坐到一起建立联合国（同人）——否极而通的现代映射。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 第九步：映射 ==================== -->
+<section id="yingshe">
+  <div class="container">
+    <div class="fade-in">
+      <p class="section-step">第九步</p>
+      <h2 class="section-title">映射</h2>
+      <div class="divider divider-vermilion"></div>
+      <p class="section-subtitle">2026世界行动指南</p>
+    </div>
+
+    <div class="fade-in fade-in-delay-1">
+      <div class="guide-timeline">
+        <!-- 初九 -->
+        <div class="guide-item">
+          <div class="guide-dot"></div>
+          <div class="guide-content">
+            <p class="guide-yao-name">初九</p>
+            <span class="guide-label label-safe">起步</span>
+            <p class="guide-desc">先从身边做起，区域合作、双边对话。好的开始，步步为营。</p>
+          </div>
+        </div>
+        <!-- 六二 -->
+        <div class="guide-item">
+          <div class="guide-dot dot-warn"></div>
+          <div class="guide-content">
+            <p class="guide-yao-name">六二</p>
+            <span class="guide-label label-warn">警惕</span>
+            <p class="guide-desc">排他性小圈子同盟是最大陷阱。"同人于宗"会让世界更加分裂。</p>
+          </div>
+        </div>
+        <!-- 九三 -->
+        <div class="guide-item">
+          <div class="guide-dot dot-warn"></div>
+          <div class="guide-content">
+            <p class="guide-yao-name">九三</p>
+            <span class="guide-label label-danger">暗流</span>
+            <p class="guide-desc">暗中军事博弈不会消失，但不会全面爆发。"三岁不兴"——三年内不至于全面冲突。</p>
+          </div>
+        </div>
+        <!-- 九四 -->
+        <div class="guide-item">
+          <div class="guide-dot dot-turn"></div>
+          <div class="guide-content">
+            <p class="guide-yao-name">九四</p>
+            <span class="guide-label label-turn">转机</span>
+            <p class="guide-desc">剑拔弩张之际选择止戈为武。"弗克攻"——不是没能力攻，是选择不攻。这是2026最关键的智慧。</p>
+          </div>
+        </div>
+        <!-- 九五 -->
+        <div class="guide-item">
+          <div class="guide-dot dot-hope"></div>
+          <div class="guide-content">
+            <p class="guide-yao-name">九五</p>
+            <span class="guide-label label-hope">希望</span>
+            <p class="guide-desc">共同危机推动真诚合作。"先号啕而后笑"——痛苦足够真实，合作才足够真诚。</p>
+          </div>
+        </div>
+        <!-- 上九 -->
+        <div class="guide-item">
+          <div class="guide-dot"></div>
+          <div class="guide-content">
+            <p class="guide-yao-name">上九</p>
+            <span class="guide-label label-end">持续</span>
+            <p class="guide-desc">大方向对了，但这是持续的历程。2026是开局之年，方向正确，前路尚远。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 综合结论 ==================== -->
+<section class="conclusion-section">
+  <div class="container">
+    <div class="fade-in">
+      <h2 class="section-title">综合结论</h2>
+      <div class="divider divider-gold divider-wide"></div>
+    </div>
+
+    <div class="fade-in fade-in-delay-1">
+      <div class="conclusion-box">
+        <p class="content-text">天火同人卦作为2026年世界年卦，核心信息是：<span class="highlight-text">否极之后，世界从分裂走向联合</span>——但这个"同"不是廉价的和谐，而是经历了隔绝、备战、对峙、甚至号啕之痛后的真实和解。</p>
+
+        <div class="conclusion-highlight">
+          <p><strong class="highlight-text">最需要警惕</strong>的是"同人于宗"——排他性的小圈子同盟。</p>
+          <p><strong class="gold-text">最值得期待</strong>的是"乘其墉弗克攻"——剑拔弩张之际选择止戈为武。</p>
+          <p><strong>最终的希望</strong>在于"二人同心，其利断金"——当痛苦足够真实，合作才足够真诚。</p>
+        </div>
+
+        <div class="conclusion-final">
+          <p>序卦传告诉我们：同人之后是<span class="gold-text">大有</span>。</p>
+          <p>如果2026年世界能真正走出"否"的闭塞，走向"同人"的联合，<br/>那么2027年的"大有"——共同繁荣——就不是空想。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 页脚 -->
+<footer class="footer">
+  <div class="container">
+    <p>本解读融合易传方法论与佑安释易实践方法，按九步流程系统解读。</p>
+    <p>仅供国学研习参考，不作预测之用。</p>
+    <p class="footer-quote">「前识者，道之华，而愚之始。」——《道德经》</p>
+  </div>
+</footer>
+
+<!-- 回到顶部 -->
+<button class="back-to-top" id="backToTop" aria-label="回到顶部">&#8593;</button>
+
+<script>
+/* ========== 导航栏显示/隐藏 ========== */
+(function() {
+  const nav = document.getElementById('mainNav');
+  let lastScrollY = 0;
+  const heroHeight = window.innerHeight * 0.6;
+
+  window.addEventListener('scroll', function() {
+    const currentY = window.scrollY;
+    if (currentY > heroHeight) {
+      nav.classList.add('visible');
+    } else {
+      nav.classList.remove('visible');
+    }
+    lastScrollY = currentY;
+  }, { passive: true });
+})();
+
+/* ========== 平滑滚动 ========== */
+document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    var target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      var offset = 60;
+      var top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    }
+  });
+});
+
+/* ========== 淡入动画（IntersectionObserver） ========== */
+(function() {
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-in').forEach(function(el) {
+    observer.observe(el);
+  });
+})();
+
+/* ========== 回到顶部 ========== */
+(function() {
+  var btn = document.getElementById('backToTop');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 600) {
+      btn.classList.add('visible');
+    } else {
+      btn.classList.remove('visible');
+    }
+  }, { passive: true });
+
+  btn.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+
+/* ========== 走势图 Tooltip ========== */
+(function() {
+  var tooltip = document.getElementById('chartTooltip');
+  var container = document.getElementById('chartContainer');
+  var dots = document.querySelectorAll('.chart-dot');
+
+  var data = [
+    { name: '初九', text: '同人于门，无咎。', desc: '从最近的盟友开始合作，区域内部先统一步调。平和起步，无咎。' },
+    { name: '六二', text: '同人于宗，吝。', desc: '只搞小集团、排他性联盟，会进退两难。格局受限。' },
+    { name: '九三', text: '伏戎于莽，升其高陵，三岁不兴。', desc: '暗中军事博弈，但三年内不会爆发全面冲突。全卦最凶险之处。' },
+    { name: '九四', text: '乘其墉，弗克攻，吉。', desc: '拥有攻击能力却选择收手。止戈为武，反而得吉。全卦转折点。' },
+    { name: '九五', text: '先号啕而后笑。大师克相遇。', desc: '真正的合作建立在共同经历痛苦之后。二人同心，其利断金。' },
+    { name: '上九', text: '同人于郊，无悔。', desc: '大方向对了，但离理想还远。无悔但志未得。' }
+  ];
+
+  dots.forEach(function(dot) {
+    dot.addEventListener('mouseenter', function(e) {
+      var idx = parseInt(this.getAttribute('data-index'));
+      var d = data[idx];
+      tooltip.innerHTML = '<strong>' + d.name + '</strong><br><em>' + d.text + '</em><br><br>' + d.desc;
+      tooltip.classList.add('show');
+
+      var rect = container.getBoundingClientRect();
+      var dotRect = this.getBoundingClientRect();
+      var x = dotRect.left - rect.left + dotRect.width / 2;
+      var y = dotRect.top - rect.top - 10;
+
+      // 调整位置避免溢出
+      var tipWidth = 240;
+      if (x + tipWidth / 2 > rect.width) {
+        x = rect.width - tipWidth - 10;
+      } else if (x - tipWidth / 2 < 0) {
+        x = 10;
+      } else {
+        x = x - tipWidth / 2;
+      }
+
+      tooltip.style.left = x + 'px';
+      tooltip.style.top = (y - tooltip.offsetHeight) + 'px';
+    });
+
+    dot.addEventListener('mouseleave', function() {
+      tooltip.classList.remove('show');
+    });
+  });
+
+  // 触摸设备支持
+  dots.forEach(function(dot) {
+    dot.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      // 先隐藏所有
+      tooltip.classList.remove('show');
+      // 模拟 mouseenter
+      var event = new Event('mouseenter');
+      this.dispatchEvent(event);
+    }, { passive: false });
+  });
+
+  document.addEventListener('touchstart', function(e) {
+    if (!e.target.classList.contains('chart-dot')) {
+      tooltip.classList.remove('show');
+    }
+  });
+})();
+
+/* ========== 走势图线条绘制动画 ========== */
+(function() {
+  var chart = document.getElementById('trendChart');
+  var line = chart.querySelector('path[d^="M110 140"]');
+  if (!line) return;
+
+  var length = line.getTotalLength();
+  line.style.strokeDasharray = length;
+  line.style.strokeDashoffset = length;
+  line.style.transition = 'none';
+
+  var animated = false;
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting && !animated) {
+        animated = true;
+        // 延迟一帧后开始动画
+        requestAnimationFrame(function() {
+          line.style.transition = 'stroke-dashoffset 2s ease-in-out';
+          line.style.strokeDashoffset = '0';
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+
+  observer.observe(chart);
+})();
+</script>
+</body>
+</html>

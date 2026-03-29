@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>播客用户研究报告 | podcast-viz</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root {
+  --bg: #0a0a14;
+  --bg-card: #12121e;
+  --bg-card-alt: #181828;
+  --bg-table-head: #1a1a2e;
+  --bg-table-row: #14142a;
+  --bg-table-row-alt: #10101e;
+  --bg-code: #1e1e30;
+  --border: #2a2a3e;
+  --border-light: #3a3a50;
+  --gold: #d4a017;
+  --gold-light: #f0c040;
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --green: #22c55e;
+  --red: #ef4444;
+  --orange: #f59e0b;
+  --cyan: #06b6d4;
+  --text: #e8e8f0;
+  --text-dim: #8888a0;
+  --text-muted: #5a5a70;
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+/* 顶部导航 */
+.top-bar {
+  position: fixed; top:0; left:0; right:0; z-index:100;
+  background: rgba(10,10,20,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+.top-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+}
+.logo { font-size: 15px; font-weight: 700; color: var(--gold); letter-spacing: 1px; }
+.logo span { color: var(--text-dim); font-weight: 400; }
+/* Tab 导航 */
+.tabs {
+  display: flex; gap: 4px;
+}
+.tab-btn {
+  background: none; border: none; color: var(--text-dim);
+  font-size: 13px; padding: 8px 16px; cursor: pointer;
+  border-radius: 6px; transition: all 0.25s; font-family: inherit;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+.tab-btn.active {
+  color: var(--gold); background: rgba(212,160,23,0.12);
+  font-weight: 600;
+}
+/* 主内容 */
+main { max-width: 1200px; margin: 0 auto; padding: 80px 24px 60px; }
+.tab-content { display: none; animation: fadeUp 0.4s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(12px); }
+  to { opacity:1; transform: translateY(0); }
+}
+/* 报告头部 */
+.report-header {
+  margin-bottom: 40px; padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.report-header h1 {
+  font-size: 28px; font-weight: 700; margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.report-meta {
+  font-size: 13px; color: var(--text-dim);
+  display: flex; gap: 16px; flex-wrap: wrap;
+}
+.report-meta i { margin-right: 4px; }
+/* 章节 */
+.section { margin-bottom: 48px; }
+.section-title {
+  font-size: 20px; font-weight: 700; margin-bottom: 20px;
+  padding-left: 14px; border-left: 3px solid var(--gold);
+  color: var(--text);
+}
+.sub-title {
+  font-size: 16px; font-weight: 600; margin: 24px 0 12px;
+  color: var(--accent-light);
+}
+.sub-title-sm {
+  font-size: 14px; font-weight: 600; margin: 16px 0 8px;
+  color: var(--cyan);
+}
+p, .desc { font-size: 14px; color: var(--text-dim); margin-bottom: 12px; line-height: 1.8; }
+.highlight { color: var(--gold); font-weight: 600; }
+.accent { color: var(--accent-light); font-weight: 600; }
+.green { color: var(--green); }
+.red { color: var(--red); }
+/* 表格 */
+.table-wrap {
+  overflow-x: auto; margin: 16px 0 24px;
+  border-radius: var(--radius); border: 1px solid var(--border);
+}
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: 13px; white-space: nowrap;
+}
+thead th {
+  background: var(--bg-table-head); color: var(--gold);
+  padding: 10px 14px; text-align: left; font-weight: 600;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top:0;
+}
+tbody td {
+  padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+tbody tr { background: var(--bg-table-row); }
+tbody tr:nth-child(even) { background: var(--bg-table-row-alt); }
+tbody tr:hover { background: rgba(99,102,241,0.08); }
+td:first-child { font-weight: 600; color: var(--text); }
+/* 卡片网格 */
+.card-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px; margin: 16px 0 24px;
+}
+.card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.card:hover { transform: translateY(-2px); border-color: var(--accent); }
+.card-label {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-muted); margin-bottom: 6px;
+}
+.card-value {
+  font-size: 24px; font-weight: 700; color: var(--gold);
+  margin-bottom: 4px;
+}
+.card-desc { font-size: 12px; color: var(--text-dim); }
+.card h4 {
+  font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 8px;
+}
+.card p { font-size: 13px; color: var(--text-dim); margin-bottom: 0; }
+/* 标签 */
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 16px; }
+.tag {
+  font-size: 11px; padding: 3px 10px; border-radius: 20px;
+  background: rgba(99,102,241,0.12); color: var(--accent-light);
+  border: 1px solid rgba(99,102,241,0.2);
+}
+.tag.gold {
+  background: rgba(212,160,23,0.12); color: var(--gold);
+  border-color: rgba(212,160,23,0.25);
+}
+.tag.green {
+  background: rgba(34,197,94,0.1); color: var(--green);
+  border-color: rgba(34,197,94,0.2);
+}
+.tag.red {
+  background: rgba(239,68,68,0.1); color: var(--red);
+  border-color: rgba(239,68,68,0.2);
+}
+/* 洞察列表 */
+.insight-list { list-style: none; margin: 12px 0 24px; }
+.insight-list li {
+  padding: 12px 16px; margin-bottom: 8px;
+  background: var(--bg-card); border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 14px; color: var(--text-dim); line-height: 1.7;
+}
+.insight-list li strong { color: var(--text); }
+/* 代码块 */
+.code-block {
+  background: var(--bg-code); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 20px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 13px; line-height: 1.6; overflow-x: auto;
+  margin: 12px 0 24px; color: var(--text-dim);
+  white-space: pre;
+}
+/* 优先级标签 */
+.priority {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-size: 11px; font-weight: 700; margin-right: 6px;
+}
+.priority.p0 { background: rgba(239,68,68,0.2); color: var(--red); }
+.priority.p1 { background: rgba(245,158,11,0.2); color: var(--orange); }
+.priority.p2 { background: rgba(99,102,241,0.15); color: var(--accent-light); }
+.priority.p3 { background: rgba(136,136,160,0.15); color: var(--text-dim); }
+/* 星级 */
+.stars { color: var(--gold); letter-spacing: 1px; }
+.stars-dim { color: var(--text-muted); letter-spacing: 1px; }
+/* 分割线 */
+hr { border: none; height: 1px; background: var(--border); margin: 32px 0; }
+/* 状态徽章 */
+.badge {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-size: 11px; font-weight: 600;
+}
+.badge.done { background: rgba(34,197,94,0.15); color: var(--green); }
+.badge.warn { background: rgba(245,158,11,0.15); color: var(--orange); }
+.badge.miss { background: rgba(239,68,68,0.15); color: var(--red); }
+/* phase 时间线 */
+.phase-line {
+  border-left: 2px solid var(--border); margin-left: 12px; padding-left: 24px;
+}
+.phase-node {
+  position: relative; margin-bottom: 32px;
+}
+.phase-node::before {
+  content: ''; position: absolute; left: -30px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--accent); border: 2px solid var(--bg);
+}
+.phase-node h3 {
+  font-size: 16px; font-weight: 700; color: var(--accent-light);
+  margin-bottom: 8px;
+}
+/* 响应式 */
+@media (max-width: 768px) {
+  .top-inner { flex-direction: column; height: auto; padding: 10px 0; gap: 6px; }
+  .tabs { overflow-x: auto; width: 100%; }
+  .tab-btn { font-size: 12px; padding: 6px 12px; }
+  main { padding: 120px 16px 40px; }
+  .report-header h1 { font-size: 22px; }
+  .card-grid { grid-template-columns: 1fr; }
+  table { font-size: 12px; }
+  thead th, tbody td { padding: 7px 10px; }
+}
+@media (max-width: 480px) {
+  .tab-btn { font-size: 11px; padding: 5px 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<nav class="top-bar">
+  <div class="top-inner">
+    <div class="logo">PODCAST-VIZ <span>/ 用户研究</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="tab1"><i class="fas fa-globe"></i> 生态调研</button>
+      <button class="tab-btn" data-tab="tab2"><i class="fas fa-users"></i> 听众需求</button>
+      <button class="tab-btn" data-tab="tab3"><i class="fas fa-layer-group"></i> 需求整合</button>
+      <button class="tab-btn" data-tab="tab4"><i class="fas fa-rocket"></i> 功能建议</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ==================== 报告1：生态调研 ==================== -->
+<div class="tab-content active" id="tab1">
+  <div class="report-header">
+    <h1>小宇宙播客生态调研报告</h1>
+    <div class="report-meta">
+      <span><i class="fas fa-calendar"></i> 2026-03-07</span>
+      <span><i class="fas fa-database"></i> 小宇宙官方 / CPA白皮书 / 艾媒咨询</span>
+    </div>
+  </div>
+
+  <!-- 核心数据卡片 -->
+  <div class="section">
+    <div class="section-title">平台概况</div>
+    <p>小宇宙是中国最大的独立播客平台，由即刻团队于2020年推出，定位"为播客而生"的垂直应用。不同于喜马拉雅等综合平台，小宇宙专注播客赛道，强调内容发现与社区互动。</p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-label">中文播客听众规模</div>
+        <div class="card-value">1.5亿+</div>
+        <div class="card-desc">2025年预估，增速43.6%（全球第一）</div>
+      </div>
+      <div class="card">
+        <div class="card-label">节目总量</div>
+        <div class="card-value">13万+</div>
+        <div class="card-desc">同比增长40%，2025年新增6.4万档</div>
+      </div>
+      <div class="card">
+        <div class="card-label">新增单集</div>
+        <div class="card-value">70万</div>
+        <div class="card-desc">2025全年，市场营收规模预估50亿+</div>
+      </div>
+      <div class="card">
+        <div class="card-label">用户月均消费</div>
+        <div class="card-value">6,994元</div>
+        <div class="card-desc">42%听众播客支出较上年增加</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主流播客类型 -->
+  <div class="section">
+    <div class="section-title">主流播客类型</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>类型</th>
+            <th>播放量/增速</th>
+            <th>代表播客</th>
+            <th>核心特征</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>自我成长/知识</td>
+            <td><span class="highlight">80亿+分钟（品类第一）</span></td>
+            <td>翻转电台 / 无人知晓 / 得意忘形</td>
+            <td>碎片时间认知提升</td>
+          </tr>
+          <tr>
+            <td>深度访谈</td>
+            <td>订阅量最高品类之一</td>
+            <td>忽左忽右 / 随机波动(29万+订阅)</td>
+            <td>观点碰撞与思想深度</td>
+          </tr>
+          <tr>
+            <td>故事/叙事</td>
+            <td><span class="highlight">21亿+分钟（品类第二）</span></td>
+            <td>故事FM / 声东击西 / 纵横四海</td>
+            <td>沉浸感强，增长最快</td>
+          </tr>
+          <tr>
+            <td>新闻/时事</td>
+            <td><span class="highlight">搜索量+450%（增速最快）</span></td>
+            <td>声动早咖啡 / 不合时宜</td>
+            <td>深度媒体功能</td>
+          </tr>
+          <tr>
+            <td>闲聊/生活</td>
+            <td>治愈陪伴类重要品类</td>
+            <td>日谈公园 / 凹凸电波(百万订阅)</td>
+            <td>陪伴感是核心价值</td>
+          </tr>
+          <tr>
+            <td>商业/财经</td>
+            <td><span class="highlight">商业故事+250%，投资理财11亿+分钟</span></td>
+            <td>商业就是这样 / 知行小酒馆</td>
+            <td>AI创业播客+137%</td>
+          </tr>
+          <tr>
+            <td>文化/历史</td>
+            <td>历史类10亿+分钟</td>
+            <td>博物志 / 大内密谈 / 看理想系列</td>
+            <td>现代视角审视历史</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-title">新兴增长型</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>类型</th><th>增长信号</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>AI/科技创业</td><td><span class="highlight">播放量+137%</span></td><td>AI创业者核心交流阵地</td></tr>
+          <tr><td>视频播客</td><td>95%用户知晓，42%消费增长</td><td>从补充变为主流形态</td></tr>
+          <tr><td>家庭/育儿</td><td>2025十大趋势之一</td><td>新世代养育声场</td></tr>
+          <tr><td>品牌播客</td><td>120+品牌入局</td><td>奢侈品、快消品自制播客</td></tr>
+          <tr><td>50+银发播客</td><td>收听时长+35%</td><td>播客突破年龄限制</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 用户画像 -->
+  <div class="section">
+    <div class="section-title">用户画像</div>
+    <div class="card-grid">
+      <div class="card">
+        <h4><i class="fas fa-user-group"></i> 核心人群</h4>
+        <p>25-40岁为主（Z世代+千禧一代占80%），50+用户收听时长增幅达<span class="highlight">35%</span></p>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-city"></i> 城市分布</h4>
+        <p>一线城市<span class="highlight">42.4%</span> / 新一线<span class="highlight">26.1%</span> / 二线及以下31.5%</p>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-graduation-cap"></i> 教育职业</h4>
+        <p>本科以上<span class="highlight">82.1%</span>，硕士以上25.4%。覆盖互联网/金融/法律/媒体等知识密集型行业。概括为<span class="highlight">「高知、高线、高敏」</span></p>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-brain"></i> 性格特征</h4>
+        <p>MBTI内向型（I型）占<span class="highlight">81.9%</span>，偏好深度内容与独处陪伴</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 使用场景 -->
+  <div class="section">
+    <div class="section-title">使用场景</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>场景</th><th>占比</th><th>同比变化</th><th>备注</th></tr></thead>
+        <tbody>
+          <tr><td>运动</td><td><span class="highlight">49.5%</span></td><td class="green">+14.3pp（增长最快）</td><td></td></tr>
+          <tr><td>起床</td><td>37.9%</td><td class="green">+10.9pp</td><td></td></tr>
+          <tr><td>睡前</td><td>35.2%</td><td>稳定</td><td></td></tr>
+          <tr><td>开车</td><td>33.9%</td><td class="green">+5.1pp</td><td></td></tr>
+          <tr><td>通勤</td><td>31.9%</td><td>稳定</td><td>场景占比最大</td></tr>
+          <tr><td>做家务</td><td>30.9%</td><td>稳定</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>核心场景共性：<span class="highlight">不便用眼和手操控手机的时段</span>。播客是"解放双手双眼"的深度内容形式，与短视频互补。周均收听<span class="highlight">5.5小时</span>，单次超30分钟。</p>
+  </div>
+
+  <!-- 小宇宙独有特征 -->
+  <div class="section">
+    <div class="section-title">小宇宙独有特征</div>
+    <div class="card-grid">
+      <div class="card">
+        <h4><i class="fas fa-clock"></i> 时间戳评论</h4>
+        <p>评论自动关联音频时间点，点击可跳转，类似"弹幕"互动体验，是最核心的产品创新</p>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-heart"></i> 社区文化</h4>
+        <p>"回家"般的归属感，主播语音回复，收听100h+专属徽章，评论质量远超其他平台</p>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-compass"></i> 内容发现</h4>
+        <p>编辑推荐制+单集推荐（非播客维度），降低发现门槛。9大领域分类+个性化算法</p>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-chart-bar"></i> 数据统计</h4>
+        <p>用户累计收听时长、年度收听报告、创作者数据后台（播放量/完播率/互动数据）</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 商业化 -->
+  <div class="section">
+    <div class="section-title">商业化现状</div>
+    <p><span class="highlight">61%</span> 主播收入上升（2024），<span class="highlight">55.2%</span> 创作者接到过商单（平均年4-5单）。120+品牌自制播客，广告接受度显著高于其他媒介。<span class="highlight">58%</span> 新听众从短视频切片发现播客。</p>
+  </div>
+
+  <!-- 关键洞察 -->
+  <div class="section">
+    <div class="section-title">关键洞察 -- 对可视化产品的启示</div>
+    <ul class="insight-list">
+      <li><strong>自我成长类是最大品类</strong>（80亿+分钟），可视化总结尤其有价值 -- 帮助提炼知识点和行动要点</li>
+      <li><strong>深度访谈是最经典形式</strong>，时间戳评论证明用户有"回顾特定段落"需求，可视化可更好服务</li>
+      <li><strong>高知高线用户群</strong>意味着对内容质量和呈现品质有较高要求</li>
+      <li><strong>82%内向型用户</strong>偏好独立消化内容，可视化总结是他们的理想消费形式</li>
+      <li><strong>运动和通勤是主要场景</strong>，不便做笔记，事后的可视化回顾有强需求</li>
+      <li><strong>时间戳评论的成功</strong>说明"将长音频结构化"是用户真实需求</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== 报告2：听众需求 ==================== -->
+<div class="tab-content" id="tab2">
+  <div class="report-header">
+    <h1>播客听众可视化内容需求分析</h1>
+    <div class="report-meta">
+      <span><i class="fas fa-calendar"></i> 2026-03-07</span>
+      <span><i class="fas fa-flask"></i> 桌面研究：行业报告 / 产品分析 / 用户行为数据</span>
+    </div>
+  </div>
+
+  <!-- 二次消费行为 -->
+  <div class="section">
+    <div class="section-title">播客听众的二次消费行为</div>
+    <p>播客作为纯音频媒介，天然存在"信息留存困难"的问题。<span class="highlight">38%</span>的听众会阅读show notes，<span class="highlight">50%+</span>的听众存在自主学习行为。</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>场景</th><th>行为描述</th><th>用户比例</th></tr></thead>
+        <tbody>
+          <tr><td>听前筛选</td><td>通过摘要/标题判断是否值得听</td><td><span class="highlight">60-70%</span></td></tr>
+          <tr><td>社交分享</td><td>转发金句卡片、推荐给朋友</td><td>20-30%</td></tr>
+          <tr><td>听中标记</td><td>暂停记笔记、截图时间戳</td><td>15-25%</td></tr>
+          <tr><td>听后回顾</td><td>回看笔记、导出到Obsidian/Notion</td><td>10-20%</td></tr>
+          <tr><td>知识归档</td><td>纳入PKM系统长期管理</td><td>5-10%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-title">竞品定位分化</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>产品</th><th>定位</th><th>月费</th><th>核心行为</th></tr></thead>
+        <tbody>
+          <tr><td>Snipd</td><td>听中高亮捕获</td><td>$7/月</td><td>边听边标记，AI生成上下文，导出Readwise/Notion</td></tr>
+          <tr><td>Podwise</td><td>读代替听</td><td>$8/月</td><td>不听原音频，直接读AI结构化摘要和思维导图</td></tr>
+          <tr><td>NotebookLM</td><td>AI研究助手</td><td>免费</td><td>上传转录文本后对话式问答、生成学习指南</td></tr>
+          <tr><td>小宇宙</td><td>社区+发现</td><td>免费</td><td>评论互动、时间戳标记、播客社交</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>三类产品代表三种范式：<span class="accent">实时捕获</span>（Snipd）、<span class="accent">替代阅读</span>（Podwise）、<span class="accent">深度研究</span>（NotebookLM）。podcast-viz最接近"替代阅读"路线，但增加了<span class="highlight">视觉化维度</span>。</p>
+  </div>
+
+  <!-- 按类型分析 -->
+  <div class="section">
+    <div class="section-title">按播客类型分析可视化需求</div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>类型</th>
+            <th>可视化价值</th>
+            <th>核心诉求</th>
+            <th>理想形态</th>
+            <th>关键注意</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>知识/教育型</td>
+            <td><span class="stars">★★★★★</span></td>
+            <td>知识提炼+概念索引+可导出笔记</td>
+            <td>结构化知识卡片+逻辑关系图+时间轴</td>
+            <td>Podwise思维导图模式接受度最高</td>
+          </tr>
+          <tr>
+            <td>深度访谈型</td>
+            <td><span class="stars">★★★★</span><span class="stars-dim">★</span></td>
+            <td>嘉宾观点提取+对话脉络+金句</td>
+            <td>对话流图+观点对照+金句卡片</td>
+            <td>需保留"呼吸感"，避免干巴巴要点列表</td>
+          </tr>
+          <tr>
+            <td>新闻/时事型</td>
+            <td><span class="stars">★★★</span><span class="stars-dim">★★</span></td>
+            <td>核心事件+多角度对比+背景</td>
+            <td>事件摘要卡+观点+背景时间线</td>
+            <td><span class="red">延迟超过24小时价值骤降</span></td>
+          </tr>
+          <tr>
+            <td>故事/叙事型</td>
+            <td><span class="stars">★★</span><span class="stars-dim">★★★</span></td>
+            <td>故事线回顾+情节记忆+情感共鸣</td>
+            <td>听后回顾卡（非听前预览）</td>
+            <td><span class="red">过度剧透会破坏叙事体验</span></td>
+          </tr>
+          <tr>
+            <td>闲聊/生活型</td>
+            <td><span class="stars">★</span><span class="stars-dim">★★★★</span></td>
+            <td>社交分享素材+氛围延续</td>
+            <td>仅金句+表情包式片段+分享海报</td>
+            <td>强行做"内容总结"会让用户觉得"没啥内容"</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 使用场景 -->
+  <div class="section">
+    <div class="section-title">跨类型使用场景</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>场景</th><th>描述</th><th>最匹配类型</th><th>可视化价值</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>快速浏览 (Preview)</td>
+            <td>30秒内判断值不值得听</td>
+            <td>知识型 > 访谈型 > 新闻型</td>
+            <td><span class="highlight">高 -- 最大公约数功能</span></td>
+          </tr>
+          <tr>
+            <td>深度回顾 (Review)</td>
+            <td>听后整理笔记和要点</td>
+            <td>知识型 > 访谈型</td>
+            <td>高（竞品已较成熟）</td>
+          </tr>
+          <tr>
+            <td>社交分享 (Share)</td>
+            <td>用有吸引力的形式推荐给朋友</td>
+            <td>闲聊型 > 访谈型 > 故事型</td>
+            <td><span class="highlight">中 -- 竞品覆盖薄弱，差异化机会</span></td>
+          </tr>
+          <tr>
+            <td>学习积累 (Archive)</td>
+            <td>Markdown导出到Obsidian/Notion</td>
+            <td>知识型</td>
+            <td>高（但用户基数小5-10%）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 核心洞察 -->
+  <div class="section">
+    <div class="section-title">核心洞察总结</div>
+    <ul class="insight-list">
+      <li><strong>可视化价值与信息密度正相关</strong>：知识型 > 访谈型 > 新闻型 > 故事型 > 闲聊型。闲聊型核心价值在"陪伴"，可视化反而减损体验</li>
+      <li><strong>"听前预览"是最大公约数需求</strong>：所有类型的听众都需要快速判断"值不值得听"，这是覆盖面最广的基础功能</li>
+      <li><strong>社交分享是差异化蓝海</strong>：Snipd/Podwise主攻"个人学习"，社交传播场景几乎无人做好。可视化海报/卡片可能是真正的增长引擎</li>
+    </ul>
+
+    <div class="sub-title">产品方向启示</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>优先级</th><th>功能方向</th><th>覆盖用户</th><th>竞争态势</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="priority p0">P0</span></td>
+            <td>一键预览：30秒了解一期播客</td>
+            <td>所有用户</td>
+            <td>小宇宙简介部分满足，不够结构化</td>
+          </tr>
+          <tr>
+            <td><span class="priority p1">P1</span></td>
+            <td>社交分享卡片：可视化海报+金句</td>
+            <td>分享型用户</td>
+            <td><span class="highlight">蓝海</span></td>
+          </tr>
+          <tr>
+            <td><span class="priority p2">P2</span></td>
+            <td>结构化笔记：章节摘要+要点提取</td>
+            <td>学习型用户</td>
+            <td>Podwise/Snipd已成熟</td>
+          </tr>
+          <tr>
+            <td><span class="priority p3">P3</span></td>
+            <td>知识导出：Markdown/Notion集成</td>
+            <td>PKM用户</td>
+            <td>用户基数小但付费意愿高</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 报告3 和 报告4 占位 ==================== -->
+<!-- ==================== 报告3：需求整合 ==================== -->
+<div class="tab-content" id="tab3">
+  <div class="report-header">
+    <h1>用户需求整合：共性、差异与优先级</h1>
+    <div class="report-meta">
+      <span><i class="fas fa-calendar"></i> 2026-03-07</span>
+      <span><i class="fas fa-link"></i> 基于生态调研 + 听众需求分析</span>
+    </div>
+  </div>
+
+  <!-- 需求矩阵 -->
+  <div class="section">
+    <div class="section-title">需求强度矩阵（播客类型 x 功能）</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>功能需求</th>
+            <th>知识型</th>
+            <th>访谈型</th>
+            <th>故事型</th>
+            <th>新闻型</th>
+            <th>闲聊型</th>
+            <th>商业型</th>
+            <th>覆盖面</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>一句话概括</td><td>5</td><td>5</td><td>4</td><td>5</td><td>3</td><td>5</td><td><span class="tag gold">全类型</span></td></tr>
+          <tr><td>话题标签</td><td>5</td><td>4</td><td>3</td><td>5</td><td>3</td><td>5</td><td><span class="tag gold">全类型</span></td></tr>
+          <tr><td>章节结构/时间线</td><td>5</td><td>5</td><td>4</td><td>4</td><td>2</td><td>5</td><td><span class="tag">高信息密度</span></td></tr>
+          <tr><td>核心观点提取</td><td>5</td><td>5</td><td>2</td><td>4</td><td>1</td><td>5</td><td><span class="tag">知识+访谈</span></td></tr>
+          <tr><td>金句收藏</td><td>4</td><td>5</td><td>3</td><td>3</td><td>4</td><td>3</td><td><span class="tag">访谈+闲聊</span></td></tr>
+          <tr><td>思维导图</td><td>5</td><td>4</td><td>1</td><td>3</td><td>1</td><td>4</td><td><span class="tag">知识型刚需</span></td></tr>
+          <tr><td>内联图表</td><td>5</td><td>3</td><td>1</td><td>3</td><td>1</td><td>4</td><td><span class="tag">知识+商业</span></td></tr>
+          <tr><td>故事/案例卡片</td><td>3</td><td>4</td><td>5</td><td>2</td><td>3</td><td>3</td><td><span class="tag">故事型刚需</span></td></tr>
+          <tr><td>嘉宾信息卡</td><td>2</td><td>5</td><td>2</td><td>3</td><td>3</td><td>4</td><td><span class="tag">访谈型刚需</span></td></tr>
+          <tr><td>社交分享卡片</td><td>3</td><td>4</td><td>3</td><td>3</td><td>5</td><td>3</td><td><span class="tag green">差异化机会</span></td></tr>
+          <tr><td>自测/互动</td><td>4</td><td>3</td><td>2</td><td>1</td><td>2</td><td>3</td><td><span class="tag">知识型适配</span></td></tr>
+          <tr><td>听前预览</td><td>4</td><td>4</td><td>3</td><td>5</td><td>3</td><td>5</td><td><span class="tag gold">全类型最大公约数</span></td></tr>
+          <tr><td>知识导出</td><td>5</td><td>3</td><td>1</td><td>2</td><td>1</td><td>3</td><td><span class="tag">小众高价值</span></td></tr>
+          <tr><td>情节时间线</td><td>1</td><td>2</td><td>5</td><td>3</td><td>1</td><td>2</td><td><span class="tag">故事型特有</span></td></tr>
+          <tr><td>人物关系图</td><td>1</td><td>2</td><td>5</td><td>1</td><td>1</td><td>1</td><td><span class="tag">故事型特有</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="code-block">全类型刚需（所有用户都要）：
+  ✅ 一句话概括 + 话题标签 + 听前预览 → 产品基础层，必须做好
+
+高信息密度类刚需（知识+访谈+商业，占小宇宙 60%+）：
+  ✅ 章节结构 + 核心观点 + 思维导图 + 内联图表 → 当前已有，需优化
+
+差异化机会（竞品薄弱）：
+  &#x1F535; 社交分享卡片/海报 → 所有类型都有需求，竞品几乎没做
+  &#x1F535; 听前预览 → 小宇宙简介过于简单，结构化预览有空间</div>
+  </div>
+
+  <!-- 优先级排序 -->
+  <div class="section">
+    <div class="section-title">跨类型共性需求（优先级排序）</div>
+
+    <div class="sub-title"><span class="priority p0">P0</span> 所有用户都需要的基础功能</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>需求</th><th>描述</th><th>当前状态</th><th>竞品覆盖</th></tr></thead>
+        <tbody>
+          <tr><td>30秒听前预览</td><td>一句话总结+话题标签+嘉宾+时长+适合人群</td><td><span class="badge miss">&#x274C; 缺失</span></td><td>小宇宙简介部分满足</td></tr>
+          <tr><td>一句话总结</td><td>15-30字概括核心内容</td><td><span class="badge done">&#x2705; 有</span></td><td>Podwise有</td></tr>
+          <tr><td>章节目录</td><td>可点击跳转的分章节导航</td><td><span class="badge done">&#x2705; 成熟</span></td><td>标准功能</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-title"><span class="priority p1">P1</span> 高覆盖面的增强功能</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>需求</th><th>描述</th><th>当前状态</th><th>竞品覆盖</th></tr></thead>
+        <tbody>
+          <tr><td>社交分享卡片</td><td>可保存为图片的精美海报</td><td><span class="badge miss">&#x274C; 缺失</span></td><td><span class="highlight">蓝海</span></td></tr>
+          <tr><td>金句收藏+导出</td><td>标记并批量导出</td><td><span class="badge warn">&#x26A0;&#xFE0F; 有UI无导出</span></td><td>Snipd做得好</td></tr>
+          <tr><td>阅读进度感知</td><td>已读标记、位置记忆</td><td><span class="badge warn">&#x26A0;&#xFE0F; 有已读无位置</span></td><td>标准功能</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-title"><span class="priority p2">P2</span> 知识型用户的深度功能</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>需求</th><th>当前状态</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>结构化笔记</td><td><span class="badge done">&#x2705; 有</span></td><td>Podwise已成熟</td></tr>
+          <tr><td>思维导图</td><td><span class="badge done">&#x2705; 有</span></td><td>NotebookLM有</td></tr>
+          <tr><td>关键概念索引</td><td><span class="badge done">&#x2705; 有</span></td><td>竞品少</td></tr>
+          <tr><td>内联图表（9种）</td><td><span class="badge done">&#x2705; 有</span></td><td><span class="highlight">竞品无 -- 差异化优势</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-title"><span class="priority p3">P3</span> 小众但高付费意愿</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>需求</th><th>当前状态</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>Markdown导出</td><td><span class="badge miss">&#x274C; 缺失</span></td><td>Snipd/Podwise有</td></tr>
+          <tr><td>原文时间戳跳转</td><td><span class="badge miss">&#x274C; 缺失</span></td><td>Snipd核心功能</td></tr>
+          <tr><td>自测/互动问答</td><td><span class="badge done">&#x2705; 有</span></td><td><span class="highlight">竞品无 -- 独有</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 类型特有需求 -->
+  <div class="section">
+    <div class="section-title">类型特有的差异化需求</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>类型</th>
+            <th>当前适配度</th>
+            <th>专属需求</th>
+            <th>缺失项</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>知识/教育型</td>
+            <td><span class="stars">★★★★</span><span class="stars-dim">★</span></td>
+            <td>知识卡片+方法论图表+行动清单</td>
+            <td>听前预览、导出、行动清单</td>
+          </tr>
+          <tr>
+            <td>深度访谈型</td>
+            <td><span class="stars">★★★</span><span class="stars-dim">★★</span></td>
+            <td>嘉宾信息卡+对话脉络+多角度对比</td>
+            <td>对话脉络图、观点与说话人绑定</td>
+          </tr>
+          <tr>
+            <td>故事/叙事型</td>
+            <td><span class="stars">★★</span><span class="stars-dim">★★★</span></td>
+            <td>听后模式+情节时间线+人物关系+情感标注</td>
+            <td><span class="red">防剧透模式、人物关系图、情感标注</span></td>
+          </tr>
+          <tr>
+            <td>新闻/时事型</td>
+            <td><span class="stars">★★★</span><span class="stars-dim">★★</span></td>
+            <td>事件脉络时间线+多方观点并列</td>
+            <td>事件视角（非播客结构视角）</td>
+          </tr>
+          <tr>
+            <td>闲聊/生活型</td>
+            <td><span class="stars">★</span><span class="stars-dim">★★★★</span></td>
+            <td>轻量化呈现+社交分享优先+有趣片段</td>
+            <td><span class="red">轻量模式、分享海报、高光片段</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 优先级总结 -->
+  <div class="section">
+    <div class="section-title">需求优先级总结</div>
+    <div class="card-grid">
+      <div class="card" style="border-color: var(--red);">
+        <h4 style="color: var(--red);">第一梯队 -- 立竿见影</h4>
+        <p>1. <strong>听前预览模块</strong> -- 30秒决策，覆盖所有类型<br>
+        2. <strong>社交分享卡片/海报</strong> -- 蓝海机会，增长引擎<br>
+        3. <strong>播客类型自适应</strong> -- 根据内容类型调整模板</p>
+      </div>
+      <div class="card" style="border-color: var(--orange);">
+        <h4 style="color: var(--orange);">第二梯队 -- 深度强化</h4>
+        <p>4. <strong>知识导出（Markdown）</strong> -- 知识型用户刚需<br>
+        5. <strong>金句导出功能</strong> -- 已有UI，只差最后一步<br>
+        6. <strong>对话流视图</strong> -- 访谈型差异化呈现</p>
+      </div>
+      <div class="card" style="border-color: var(--accent);">
+        <h4 style="color: var(--accent-light);">第三梯队 -- 拓展边界</h4>
+        <p>7. <strong>故事型专属模板</strong> -- 情节时间线+防剧透<br>
+        8. <strong>轻量模式</strong> -- 闲聊型极简呈现<br>
+        9. <strong>原文时间戳跳转</strong> -- 依赖小宇宙deeplink</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 目标用户 -->
+  <div class="section">
+    <div class="section-title">用户画像 x 产品定位</div>
+    <div class="card-grid">
+      <div class="card" style="border-color: var(--gold);">
+        <h4><span class="highlight">核心目标用户（60%+）</span></h4>
+        <p>25-35岁 | 一二线城市 | 本科以上 | 知识型+访谈型听众<br>
+        通勤/运动场景听播客 -> 事后想回顾要点 -> 发现可视化总结<br>
+        核心价值：<span class="highlight">效率（快速回顾）+ 质量（品质高于笔记）</span></p>
+      </div>
+      <div class="card" style="border-color: var(--green);">
+        <h4><span class="green">增长目标用户</span></h4>
+        <p>社交分享型：听到好播客想推荐给朋友，需要精美分享素材<br>
+        品牌播客运营：企业自有播客，需每集可视化传播物料</p>
+      </div>
+      <div class="card" style="border-color: var(--text-muted);">
+        <h4 style="color: var(--text-dim);">暂不重点投入</h4>
+        <p>闲聊型听众：可视化价值低，强行服务会稀释定位<br>
+        纯PKM用户：Snipd/Podwise已足够好，不值得正面竞争</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 报告4：功能建议 ==================== -->
+<div class="tab-content" id="tab4">
+  <div class="report-header">
+    <h1>podcast-viz 功能调整建议</h1>
+    <div class="report-meta">
+      <span><i class="fas fa-calendar"></i> 2026-03-07</span>
+      <span><i class="fas fa-code-branch"></i> 当前版本 v2.4 | 18集 | 暂无自然流量</span>
+    </div>
+  </div>
+
+  <!-- 核心判断 -->
+  <div class="section">
+    <div class="section-title">核心判断 -- 产品定位校准</div>
+    <div class="card-grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="card" style="border-color: var(--text-muted);">
+        <h4 style="color: var(--text-dim);">当前定位</h4>
+        <p>播客内容的深度结构化分析工具</p>
+      </div>
+      <div class="card" style="border-color: var(--gold);">
+        <h4><span class="highlight">建议定位</span></h4>
+        <p>播客内容的「读图」体验 -- 让一集播客在 <span class="highlight">30秒</span> 内被理解、在 <span class="highlight">3分钟</span> 内被消化、在 <span class="highlight">1秒</span> 内被分享</p>
+      </div>
+    </div>
+
+    <div class="sub-title">关键转变</div>
+    <ul class="insight-list">
+      <li>从「全功能深度分析」-> <strong>「分层体验」</strong>（预览层 / 消化层 / 深度层）</li>
+      <li>从「一刀切模板」-> <strong>「类型感知」</strong>（知识型 vs 访谈型 vs 故事型不同侧重）</li>
+      <li>从「个人学习工具」-> <strong>「社交传播载体」</strong>（增加分享维度）</li>
+    </ul>
+
+    <div class="sub-title">当前功能盘点</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>模块</th><th>状态</th><th>用户价值</th><th>模块</th><th>状态</th><th>用户价值</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>章节结构+导航</td><td><span class="badge done">&#x2705; 成熟</span></td><td>高</td>
+            <td>听前预览</td><td><span class="badge miss">&#x274C; 缺失</span></td><td><span class="highlight">极高</span></td>
+          </tr>
+          <tr>
+            <td>核心观点</td><td><span class="badge done">&#x2705; 成熟</span></td><td>高</td>
+            <td>社交分享卡片</td><td><span class="badge miss">&#x274C; 缺失</span></td><td><span class="highlight">高</span></td>
+          </tr>
+          <tr>
+            <td>内联图表(9种)</td><td><span class="badge done">&#x2705; 有</span></td><td>高（独有优势）</td>
+            <td>内容导出</td><td><span class="badge miss">&#x274C; 缺失</span></td><td>中</td>
+          </tr>
+          <tr>
+            <td>思维导图</td><td><span class="badge done">&#x2705; 有</span></td><td>中高</td>
+            <td>类型自适应</td><td><span class="badge miss">&#x274C; 缺失</span></td><td>高</td>
+          </tr>
+          <tr>
+            <td>金句收藏</td><td><span class="badge warn">&#x26A0;&#xFE0F; 有UI</span></td><td>中（缺导出）</td>
+            <td>故事型专属</td><td><span class="badge miss">&#x274C; 缺失</span></td><td>中</td>
+          </tr>
+          <tr>
+            <td>自测(quiz)</td><td><span class="badge done">&#x2705; 有</span></td><td>中（独有特色）</td>
+            <td>原文跳转</td><td><span class="badge miss">&#x274C; 缺失</span></td><td>中</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="section">
+    <div class="section-title">演进路线</div>
+
+    <div class="phase-line">
+      <div class="phase-node">
+        <h3>Phase 1 -- 快速见效（1-2周）</h3>
+
+        <div class="sub-title-sm">1.1 听前预览卡 (Preview Card)</div>
+        <p><span class="priority p0">P0</span> 用户打开页面直接面对深度分析，缺少"值不值得看"的快速入口</p>
+        <p>在 Hero 区下方插入「30秒预览」区块：一句话总结 + 话题标签 + 嘉宾信息 + 时长 + "适合你如果..." + 继续阅读按钮</p>
+        <p>改动量：<span class="tag green">小</span> prompt加3字段 + 模板加1区块</p>
+
+        <div class="sub-title-sm">1.2 社交分享海报</div>
+        <p><span class="priority p1">P1</span> 用户想推荐播客给朋友时，只能发链接，缺少视觉传播物料</p>
+        <p>推荐方案：纯CSS/HTML渲染 + html2canvas截图（前端完成，无后端改动）</p>
+        <p>改动量：<span class="tag">中</span> JS新增分享模块 + 海报模板CSS</p>
+
+        <div class="sub-title-sm">1.3 金句导出</div>
+        <p><span class="priority p1">P1</span> 已有收藏UI，增加「复制全部」按钮，一键复制为Markdown格式</p>
+        <p>改动量：<span class="tag green">极小</span> JS加一个复制按钮 + 格式化函数</p>
+      </div>
+
+      <div class="phase-node">
+        <h3>Phase 2 -- 类型自适应（2-4周）</h3>
+
+        <div class="sub-title-sm">2.1 播客类型识别 + 模板切换</div>
+        <p>AI自动识别类型（knowledge|interview|narrative|news|casual），模板按类型调整渲染权重</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>模块</th><th>知识型</th><th>访谈型</th><th>故事型</th><th>新闻型</th><th>闲聊型</th></tr></thead>
+            <tbody>
+              <tr><td>核心观点</td><td><strong class="highlight">突出</strong></td><td>突出</td><td>弱化</td><td>突出</td><td>隐藏</td></tr>
+              <tr><td>金句</td><td>正常</td><td><strong class="highlight">突出</strong></td><td>正常</td><td>正常</td><td><strong class="highlight">突出</strong></td></tr>
+              <tr><td>思维导图</td><td><strong class="highlight">突出</strong></td><td>正常</td><td>隐藏</td><td>正常</td><td>隐藏</td></tr>
+              <tr><td>故事卡片</td><td>正常</td><td>正常</td><td><strong class="highlight">突出</strong></td><td>弱化</td><td>正常</td></tr>
+              <tr><td>嘉宾信息</td><td>弱化</td><td><strong class="highlight">突出</strong></td><td>弱化</td><td>正常</td><td>正常</td></tr>
+              <tr><td>分享海报</td><td>有</td><td>有</td><td>有</td><td>有</td><td><strong class="highlight">突出</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>实现方式：不需要多套模板。generator.py 根据 podcast_type 设置模块 visible/emphasis 标志，Jinja2 条件渲染。</p>
+
+        <div class="sub-title-sm">2.2 访谈型增强</div>
+        <p>嘉宾信息卡片（头像/身份/代表作）+ 观点绑定speaker_id + 可选对话流视图</p>
+
+        <div class="sub-title-sm">2.3 故事型防剧透模式</div>
+        <p>预览卡不揭示结局，正文默认折叠（"已听完？展开完整回顾"），以情节时间线为主</p>
+      </div>
+
+      <div class="phase-node">
+        <h3>Phase 3 -- 深度功能（4-8周）</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>功能</th><th>目标用户</th><th>改动量</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td>Markdown/Notion导出</td><td>PKM用户(5-10%)</td><td>中</td><td>前端生成Markdown字符串+下载</td></tr>
+              <tr><td>原文时间戳跳转</td><td>深度用户</td><td>小</td><td>小宇宙deeplink已有start_sec/end_sec</td></tr>
+              <tr><td>行动清单</td><td>知识型听众</td><td>小</td><td>prompt新增action_items，checkbox列表+本地存储</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 不建议做 -->
+  <div class="section">
+    <div class="section-title">不建议做的事情</div>
+    <div class="card-grid">
+      <div class="card" style="border-left: 3px solid var(--red);">
+        <h4><span class="red">&#x274C;</span> 不要试图服务所有播客类型</h4>
+        <p>闲聊型播客可视化价值极低。勉强生成"闲聊要点总结"反而让用户觉得"这期没啥内容"</p>
+      </div>
+      <div class="card" style="border-left: 3px solid var(--red);">
+        <h4><span class="red">&#x274C;</span> 不要正面对标 Snipd/Podwise</h4>
+        <p>它们在"个人学习笔记"赛道已成熟。podcast-viz的差异化在于：<span class="highlight">视觉化 + 社交传播 + 互动体验</span></p>
+      </div>
+      <div class="card" style="border-left: 3px solid var(--red);">
+        <h4><span class="red">&#x274C;</span> 不要过早追求完美的说话人识别</h4>
+        <p>WhisperX成本高、准确率不稳定，且只有访谈型强需要。等用户量上来后再投入</p>
+      </div>
+      <div class="card" style="border-left: 3px solid var(--red);">
+        <h4><span class="red">&#x274C;</span> 不要增加太多模块</h4>
+        <p>当前已有15+内容模块，信息密度已很高。原则：<span class="highlight">宁可做少做精，不要大而全</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 实施摘要 -->
+  <div class="section">
+    <div class="section-title">实施建议摘要</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>时间</th><th>改动</th><th>影响面</th><th>复杂度</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="3" style="color: var(--green); font-weight:700;">立即可做<br>(&lt;1周)</td><td>金句导出（复制为Markdown）</td><td>已有用户</td><td><span class="stars">★</span></td></tr>
+          <tr><td>预览卡 prompt 字段</td><td>新生成内容</td><td><span class="stars">★★</span></td></tr>
+          <tr><td>预览卡模板渲染</td><td>新生成内容</td><td><span class="stars">★★</span></td></tr>
+          <tr><td rowspan="3" style="color: var(--orange); font-weight:700;">短期<br>(1-2周)</td><td>社交分享海报（html2canvas）</td><td>所有页面</td><td><span class="stars">★★★</span></td></tr>
+          <tr><td>播客类型识别（prompt）</td><td>新生成内容</td><td><span class="stars">★★</span></td></tr>
+          <tr><td>时间戳跳转链接</td><td>所有页面</td><td><span class="stars">★★</span></td></tr>
+          <tr><td rowspan="5" style="color: var(--accent-light); font-weight:700;">中期<br>(2-4周)</td><td>类型自适应模板渲染</td><td>全局</td><td><span class="stars">★★★★</span></td></tr>
+          <tr><td>故事型防剧透模式</td><td>故事类内容</td><td><span class="stars">★★★</span></td></tr>
+          <tr><td>访谈型嘉宾卡+观点归属</td><td>访谈类内容</td><td><span class="stars">★★★</span></td></tr>
+          <tr><td>Markdown导出</td><td>所有页面</td><td><span class="stars">★★★</span></td></tr>
+          <tr><td>行动清单</td><td>知识类内容</td><td><span class="stars">★★</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 成功指标 -->
+  <div class="section">
+    <div class="section-title">成功指标</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>指标</th><th>当前基线</th><th>目标</th><th>衡量方式</th></tr></thead>
+        <tbody>
+          <tr><td>页面停留时长</td><td>未知</td><td><span class="highlight">> 3分钟</span></td><td>埋点(v2.4已有)</td></tr>
+          <tr><td>预览->完整阅读转化率</td><td>N/A</td><td><span class="highlight">> 60%</span></td><td>新增埋点</td></tr>
+          <tr><td>分享海报生成次数</td><td>0</td><td><span class="highlight">> 5次/天</span></td><td>新增埋点</td></tr>
+          <tr><td>金句收藏/导出次数</td><td>未知</td><td>> 10次/天</td><td>已有基础</td></tr>
+          <tr><td>回访率</td><td>未知</td><td>> 20% D7</td><td>用户ID+埋点</td></tr>
+          <tr><td>自然流量</td><td>0</td><td><span class="highlight">> 50 UV/周</span></td><td>Nginx access log</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// Tab 切换
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>

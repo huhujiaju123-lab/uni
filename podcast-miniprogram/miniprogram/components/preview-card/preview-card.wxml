@@ -1,0 +1,36 @@
+<!-- 30 秒听前预览卡 — 对应 Web 版 Phase 1 新增功能 -->
+<view class="preview-card" wx:if="{{preview}}">
+  <view class="preview-header">
+    <text class="preview-label">30 秒预览</text>
+  </view>
+
+  <!-- 一句话总结 -->
+  <view class="preview-summary">{{preview.oneSentence}}</view>
+
+  <!-- 标签 -->
+  <view class="preview-tags" wx:if="{{preview.tags.length > 0}}">
+    <text class="tag" wx:for="{{preview.tags}}" wx:key="*this">#{{item}}</text>
+  </view>
+
+  <!-- 嘉宾 -->
+  <view class="preview-guests" wx:if="{{preview.guests.length > 0}}">
+    <view class="preview-guest" wx:for="{{preview.guests}}" wx:key="name">
+      <text class="guest-name">{{item.name}}</text>
+      <text class="guest-bio" wx:if="{{item.bio}}">{{item.bio}}</text>
+    </view>
+  </view>
+
+  <!-- 元信息 -->
+  <view class="preview-meta">
+    <text wx:if="{{preview.duration}}">{{preview.duration}}</text>
+    <text wx:if="{{preview.publishDate}}"> · {{preview.publishDate}}</text>
+  </view>
+
+  <!-- 适合你如果 -->
+  <view class="preview-audience" wx:if="{{preview.targetAudience.length > 0}}">
+    <view class="audience-label">适合你如果：</view>
+    <view class="audience-item" wx:for="{{preview.targetAudience}}" wx:key="*this">
+      · {{item}}
+    </view>
+  </view>
+</view>

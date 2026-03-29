@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一个数据分析师眼中的 Skills — 用跑数经验拆解 Anthropic 内部实战</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ========== CSS Variables ========== */
+:root {
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --primary-dark: #4f46e5;
+  --primary-glow: rgba(99, 102, 241, 0.15);
+  --accent: #f59e0b;
+  --accent-light: #fbbf24;
+  --accent-glow: rgba(245, 158, 11, 0.12);
+  --green: #10b981;
+  --green-light: #34d399;
+  --red: #ef4444;
+  --cyan: #06b6d4;
+  --pink: #ec4899;
+  --bg-body: #0b0f1a;
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: rgba(30, 41, 59, 0.6);
+  --bg-card-hover: rgba(51, 65, 85, 0.5);
+  --bg-code: #1a1f35;
+  --bg-inline-code: rgba(99, 102, 241, 0.12);
+  --border: rgba(148, 163, 184, 0.1);
+  --border-light: rgba(148, 163, 184, 0.06);
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-highlight: #e2e8f0;
+  --font-sans: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow: 0 4px 12px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.4);
+  --content-width: 760px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========== Reset & Base ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-body);
+  color: var(--text-primary);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--primary);
+  color: white;
+}
+
+/* ========== Background Decoration ========== */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background:
+    radial-gradient(ellipse 600px 400px at 20% 10%, rgba(99,102,241,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 500px at 80% 50%, rgba(6,182,212,0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 300px at 40% 90%, rgba(236,72,153,0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ========== Navigation / TOC Sidebar ========== */
+.toc-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  backdrop-filter: blur(12px);
+}
+.toc-toggle:hover {
+  color: var(--primary-light);
+  border-color: var(--primary);
+  background: var(--primary-glow);
+}
+.toc-toggle svg { width: 20px; height: 20px; }
+
+.toc-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+}
+.toc-overlay.active { opacity: 1; visibility: visible; }
+
+.toc-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 320px;
+  height: 100vh;
+  background: var(--bg-primary);
+  border-right: 1px solid var(--border);
+  z-index: 1000;
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  padding: 80px 24px 40px;
+}
+.toc-sidebar.active { transform: translateX(0); }
+
+.toc-sidebar h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  margin-bottom: 16px;
+  padding-left: 12px;
+}
+
+.toc-sidebar a {
+  display: block;
+  padding: 8px 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  border-left: 2px solid transparent;
+}
+.toc-sidebar a:hover {
+  color: var(--text-primary);
+  background: var(--primary-glow);
+  border-left-color: var(--primary);
+}
+.toc-sidebar a.active {
+  color: var(--primary-light);
+  background: var(--primary-glow);
+  border-left-color: var(--primary);
+}
+.toc-sidebar a.sub {
+  padding-left: 28px;
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
+}
+.toc-sidebar a.sub:hover { color: var(--text-secondary); }
+
+/* ========== Progress Bar ========== */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--cyan), var(--primary-light));
+  z-index: 1002;
+  transition: width 0.1s linear;
+}
+
+/* ========== Back to Top ========== */
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: var(--transition);
+  box-shadow: 0 4px 20px rgba(99,102,241,0.4);
+  z-index: 100;
+}
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.back-to-top:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+.back-to-top svg { width: 20px; height: 20px; }
+
+/* ========== Article Container ========== */
+.article-container {
+  position: relative;
+  z-index: 1;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ========== Hero / Header ========== */
+.hero {
+  padding: 100px 0 60px;
+  text-align: center;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  background: var(--primary-glow);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 100px;
+  font-size: 0.8125rem;
+  color: var(--primary-light);
+  margin-bottom: 28px;
+}
+.hero-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  animation: pulse-dot 2s ease infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.hero h1 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+.hero h1 .highlight-word {
+  background: linear-gradient(135deg, var(--primary-light), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: 1.0625rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 600px;
+  margin: 0 auto 32px;
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  flex-wrap: wrap;
+}
+.hero-meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hero-meta .dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+}
+
+.hero-divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  margin: 48px auto 0;
+}
+
+/* ========== Section Styling ========== */
+.section {
+  padding: 48px 0;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  margin-bottom: 12px;
+}
+.section-label::before {
+  content: '';
+  width: 20px;
+  height: 1px;
+  background: var(--text-tertiary);
+}
+
+h2 {
+  font-size: 1.625rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 40px;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+h4 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--text-highlight);
+  margin-top: 28px;
+  margin-bottom: 12px;
+}
+
+/* ========== Typography ========== */
+p {
+  margin-bottom: 16px;
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+a {
+  color: var(--primary-light);
+  text-decoration: none;
+  transition: var(--transition);
+}
+a:hover { color: var(--accent-light); }
+
+/* ========== Blockquote ========== */
+blockquote {
+  position: relative;
+  margin: 24px 0;
+  padding: 20px 24px;
+  background: var(--bg-card);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  backdrop-filter: blur(8px);
+}
+blockquote p {
+  color: var(--text-highlight);
+  font-style: italic;
+  margin-bottom: 0;
+  font-size: 0.9375rem;
+  line-height: 1.8;
+}
+
+/* ========== Concept Highlight Box ========== */
+.concept-box {
+  margin: 28px 0;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(6,182,212,0.06));
+  border: 1px solid rgba(99,102,241,0.15);
+  border-radius: var(--radius-lg);
+  position: relative;
+}
+.concept-box::before {
+  content: attr(data-label);
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  padding: 2px 12px;
+  background: var(--primary);
+  color: white;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  border-radius: 100px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.concept-box p { margin-bottom: 0; }
+.concept-box strong { color: var(--accent-light); }
+
+/* ========== Status Tags ========== */
+.tag-existing {
+  display: inline-block;
+  padding: 2px 10px;
+  background: rgba(16,185,129,0.1);
+  color: var(--green-light);
+  border: 1px solid rgba(16,185,129,0.2);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.tag-next {
+  display: inline-block;
+  padding: 2px 10px;
+  background: rgba(245,158,11,0.1);
+  color: var(--accent-light);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* ========== Type Card (for the 9 types) ========== */
+.type-card {
+  margin: 32px 0;
+  padding: 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(8px);
+  transition: var(--transition);
+}
+.type-card:hover {
+  border-color: rgba(99,102,241,0.2);
+  background: var(--bg-card-hover);
+}
+
+.type-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.type-number {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius);
+  background: var(--primary-glow);
+  border: 1px solid rgba(99,102,241,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--primary-light);
+  flex-shrink: 0;
+}
+.type-card-header h3 {
+  margin: 0;
+  font-size: 1.1875rem;
+}
+
+.type-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-light);
+}
+.type-section-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.type-section-label.original { color: var(--text-tertiary); }
+.type-section-label.translation { color: var(--primary-light); }
+.type-section-label.existing { color: var(--green); }
+.type-section-label.next { color: var(--accent); }
+
+/* ========== Tip Cards (for 8 tips) ========== */
+.tip-card {
+  margin: 32px 0;
+  padding: 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+}
+.tip-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--primary), var(--cyan));
+}
+.tip-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.tip-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+.tip-card-header h3 { margin: 0; font-size: 1.125rem; }
+
+/* ========== Tables ========== */
+.table-wrapper {
+  margin: 24px 0;
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+thead {
+  background: rgba(99,102,241,0.08);
+}
+th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--primary-light);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+td {
+  padding: 12px 16px;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-light);
+  vertical-align: top;
+}
+tr:hover td {
+  background: rgba(99,102,241,0.03);
+}
+
+/* 对比表格特殊样式 */
+.compare-table td:first-child {
+  color: var(--text-tertiary);
+  font-size: 0.8125rem;
+}
+.compare-table td:nth-child(2) {
+  color: var(--red);
+  opacity: 0.8;
+}
+.compare-table td:nth-child(3),
+.compare-table td:last-child {
+  color: var(--green-light);
+}
+
+/* ========== Code Blocks ========== */
+pre {
+  margin: 20px 0;
+  padding: 20px;
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: #e2e8f0;
+  position: relative;
+}
+pre::before {
+  content: attr(data-lang);
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 0.6875rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+p code, li code, td code {
+  padding: 2px 7px;
+  background: var(--bg-inline-code);
+  border-radius: 4px;
+  color: var(--primary-light);
+  font-size: 0.8125em;
+}
+
+/* 语法高亮 */
+.kw { color: #c084fc; }    /* 关键字: SELECT, FROM, WHERE, AS, AND, NOT IN, ORDER BY, GROUP BY, IF, BETWEEN */
+.fn { color: #67e8f9; }    /* 函数: COUNT, SUM, DATE, CONVERT_TZ, INSTR */
+.str { color: #86efac; }   /* 字符串 */
+.num { color: #fbbf24; }   /* 数字 */
+.cm { color: #64748b; font-style: italic; } /* 注释 */
+.op { color: #94a3b8; }    /* 操作符 */
+.var { color: #f9a8d4; }   /* 变量/参数 */
+.py-kw { color: #c084fc; } /* Python 关键字: def, import, return, if */
+.py-fn { color: #67e8f9; } /* Python 函数名 */
+.py-str { color: #86efac; }/* Python 字符串 */
+.py-cm { color: #64748b; font-style: italic; }
+.py-self { color: #f9a8d4; }
+.json-key { color: #67e8f9; }
+.json-str { color: #86efac; }
+.json-num { color: #fbbf24; }
+
+/* ========== Lists ========== */
+ul, ol {
+  margin: 12px 0 16px;
+  padding-left: 24px;
+  color: var(--text-secondary);
+}
+li {
+  margin-bottom: 6px;
+  font-size: 1rem;
+}
+li::marker {
+  color: var(--text-tertiary);
+}
+
+/* ========== Horizontal Rule ========== */
+hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 48px 0;
+}
+
+/* ========== Summary / Conclusion Box ========== */
+.conclusion-box {
+  margin: 40px 0;
+  padding: 32px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(245,158,11,0.06));
+  border: 1px solid rgba(99,102,241,0.15);
+  border-radius: var(--radius-xl);
+  text-align: center;
+}
+.conclusion-box .big-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.conclusion-box .sub-text {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+}
+.conclusion-box .cta {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 28px;
+  background: var(--primary);
+  color: white;
+  border-radius: 100px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: var(--transition);
+}
+.conclusion-box .cta:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(99,102,241,0.4);
+}
+
+/* ========== Footer ========== */
+.article-footer {
+  padding: 40px 0 60px;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 0.8125rem;
+}
+.article-footer .divider-line {
+  width: 40px;
+  height: 1px;
+  background: var(--border);
+  margin: 0 auto 20px;
+}
+
+/* ========== Animations ========== */
+.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-in.not-yet {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 640px) {
+  html { font-size: 15px; }
+  .article-container { padding: 0 16px; }
+  .hero { padding: 80px 0 40px; }
+  .hero h1 { font-size: 1.5rem; }
+  .type-card, .tip-card { padding: 20px; }
+  pre { padding: 16px; font-size: 0.75rem; }
+  .toc-sidebar { width: 280px; }
+  table { font-size: 0.8125rem; }
+  th, td { padding: 10px 12px; }
+  .hero-meta { flex-direction: column; gap: 8px; }
+  .hero-meta .dot { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- 阅读进度条 -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- 目录切换按钮 -->
+<button class="toc-toggle" id="tocToggle" aria-label="打开目录">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <line x1="3" y1="6" x2="21" y2="6"/>
+    <line x1="3" y1="12" x2="15" y2="12"/>
+    <line x1="3" y1="18" x2="18" y2="18"/>
+  </svg>
+</button>
+
+<!-- 目录遮罩 -->
+<div class="toc-overlay" id="tocOverlay"></div>
+
+<!-- 侧边目录 -->
+<nav class="toc-sidebar" id="tocSidebar">
+  <h3>目录导航</h3>
+  <a href="#intro">引言</a>
+  <a href="#part1">Skill 到底是什么</a>
+  <a href="#part2">九种 Skill 类型全解</a>
+  <a href="#type1" class="sub">1. 库与 API 参考</a>
+  <a href="#type2" class="sub">2. 产品验证</a>
+  <a href="#type3" class="sub">3. 数据获取与分析</a>
+  <a href="#type4" class="sub">4. 业务流程与团队自动化</a>
+  <a href="#type5" class="sub">5. 代码脚手架与模板</a>
+  <a href="#type6" class="sub">6. 代码质量与审查</a>
+  <a href="#type7" class="sub">7. CI/CD 与部署</a>
+  <a href="#type8" class="sub">8. 运维手册</a>
+  <a href="#type9" class="sub">9. 基础设施运维</a>
+  <a href="#part3">八个编写技巧全解</a>
+  <a href="#tip1" class="sub">1. 不要说显而易见的事</a>
+  <a href="#tip2" class="sub">2. 建一个踩坑点章节</a>
+  <a href="#tip3" class="sub">3. 利用文件系统</a>
+  <a href="#tip4" class="sub">4. 不要限制太死</a>
+  <a href="#tip5" class="sub">5. 考虑好初始设置</a>
+  <a href="#tip6" class="sub">6. description 是给模型看的</a>
+  <a href="#tip7" class="sub">7. 记忆与数据存储</a>
+  <a href="#tip8" class="sub">8. 存储脚本与生成代码</a>
+  <a href="#part4">分发与组合</a>
+  <a href="#part5">按需钩子</a>
+  <a href="#part6">综合对照表</a>
+  <a href="#conclusion">结语</a>
+</nav>
+
+<!-- 回到顶部 -->
+<button class="back-to-top" id="backToTop" aria-label="回到顶部">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+
+<!-- 文章主体 -->
+<main class="article-container">
+
+  <!-- ========== Hero ========== -->
+  <header class="hero">
+    <div class="hero-badge">深度解读</div>
+    <h1>一个数据分析师眼中的 <span class="highlight-word">Skills</span><br>用跑数经验拆解 Anthropic 内部实战</h1>
+    <p class="hero-subtitle">把 Anthropic 团队几百个 Skills 的经验，翻译成你每天跑 SQL、做 AB 实验、出日报时能直接用的东西</p>
+    <div class="hero-meta">
+      <span>李宵霄</span>
+      <span class="dot"></span>
+      <span>Lucky US 数据分析</span>
+      <span class="dot"></span>
+      <span>2026-03-23</span>
+    </div>
+    <div class="hero-divider"></div>
+  </header>
+
+  <!-- ========== 引言 ========== -->
+  <section class="section fade-in" id="intro">
+    <div class="section-label">引言</div>
+    <p>Anthropic 的 Claude Code 团队发了一篇内部实战总结——他们内部活跃使用的 Skills 已经有几百个。文章里讲了 9 种 Skill 类型、8 个编写技巧、分发和组合策略。</p>
+    <p>问题是：如果你不是专业程序员，而是一个每天跑 SQL、看数据、做实验分析的人，这些东西对你意味着什么？</p>
+    <div class="concept-box" data-label="本文目的">
+      <p><strong>用数据分析师的语言，把文章里每一个概念翻译成你已经在做的事情。</strong>读完之后，你不只是"了解了 Skills"，而是能说出"我明天要做哪个 Skill"。</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ========== 第一部分 ========== -->
+  <section class="section fade-in" id="part1">
+    <div class="section-label">第一部分</div>
+    <h2>Skill 到底是什么</h2>
+
+    <h3>原文怎么说的</h3>
+    <p>文章开头就纠正了一个常见误解：</p>
+    <blockquote>
+      <p>"我们经常听到一个误解，认为 Skills 只不过是 markdown 文件。但 Skills 最有意思的地方恰恰在于它们不只是文本文件——它们是文件夹。"</p>
+    </blockquote>
+    <p>一个 Skill 文件夹可以包含：指令文档、参考代码、脚本、数据文件、配置……Claude 会在需要的时候主动去翻阅这些文件。</p>
+
+    <h3>翻译成数据分析语言</h3>
+    <p>你跑一个复杂分析——比如 AB 实验月报——不是一条 SQL 能搞定的。你需要：</p>
+    <ul>
+      <li>分流质量检查的 SQL 模板</li>
+      <li>核心指标对比的 SQL 模板</li>
+      <li>各种口径约定（杯量怎么算、实收只看饮品、外卖要单独拆……）</li>
+      <li>踩过的坑（ODS 表会超时、tenant 必须过滤、试喝券要剔除……）</li>
+      <li>最终报告的 HTML 模板</li>
+    </ul>
+    <p>把这些全部放进一个文件夹，写一份说明告诉 Claude "当用户说做 AB 实验分析时，按照这个来"——这就是一个 Skill。</p>
+
+    <div class="concept-box" data-label="一句话">
+      <p><strong>Skill = 你脑子里那套"做某件事的全部经验"，文件夹化之后交给 AI。</strong></p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ========== 第二部分 ========== -->
+  <section class="section fade-in" id="part2">
+    <div class="section-label">第二部分</div>
+    <h2>九种 Skill 类型全解</h2>
+    <p>文章把几百个 Skills 归为 9 类。下面逐一翻译。</p>
+
+    <!-- 类型 1 -->
+    <div class="type-card fade-in" id="type1">
+      <div class="type-card-header">
+        <div class="type-number">1</div>
+        <h3>库与 API 参考</h3>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label original">原文</div>
+        <p>帮助你正确使用某个库或 SDK 的 Skills。包含参考代码和踩坑点列表。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label translation">数据分析翻译</div>
+        <p>这就是你的<strong>表结构速查手册</strong>。你每次跑数都要回忆：杯量用哪张表？留存用哪张表？来访用哪张表？字段叫什么？过滤条件是什么？</p>
+      </div>
+      <div class="table-wrapper compare-table">
+        <table>
+          <thead>
+            <tr><th>你现在怎么做</th><th>Skill 化之后</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>脑子里记着"用 ads 那张销售表"</td><td>写进 references/tables.md，Claude 自动查阅</td></tr>
+            <tr><td>每次提醒 Claude "tenant = LKUS"</td><td>写进 gotchas.md，Claude 自动遵守</td></tr>
+            <tr><td>偶尔忘了"杯量 &#x2260; 订单数"</td><td>写进踩坑点，永远不会再犯</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label existing">你已有的 <span class="tag-existing">i</span></div>
+        <p><code>luckyus-data-query</code> skill 里的 knowledge-base.md，已经有表结构和字段说明。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label next">下一步 <span class="tag-next">+1</span></div>
+        <p>给每张核心表加一个"踩坑点"章节。比如 <code>dwd_t_ord_order_item_d_inc</code> 的踩坑点：</p>
+      </div>
+      <pre data-lang="markdown"><span class="cm">踩坑点：</span>
+<span class="str">-</span> 杯量是 <span class="fn">COUNT</span>(*)，不是 <span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> order_id)
+<span class="str">-</span> 必须加 order_category = <span class="str">'门店订单'</span>
+<span class="str">-</span> 实收只看 one_category_name = <span class="str">'Drink'</span>
+<span class="str">-</span> 外卖渠道 channel <span class="kw">IN</span> (<span class="num">8</span>,<span class="num">9</span>,<span class="num">10</span>) 要单独分析
+<span class="str">-</span> 套餐识别用 spu_type = <span class="num">2</span></pre>
+    </div>
+
+    <!-- 类型 2 -->
+    <div class="type-card fade-in" id="type2">
+      <div class="type-card-header">
+        <div class="type-number">2</div>
+        <h3>产品验证</h3>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label original">原文</div>
+        <p>描述如何测试或验证代码是否正常工作。搭配 Playwright、tmux 等工具。值得安排一个工程师花一周时间打磨验证 Skills。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label translation">数据分析翻译</div>
+        <p>这就是<strong>数据质量校验</strong>。你跑完一个查询，怎么知道结果是对的？现在你靠肉眼看——数字对不对、量级合不合理、和上周比偏差大不大。这些检查完全可以自动化。</p>
+        <p><strong>具体场景</strong>：你做 AB 实验分流质量检查。现在的流程是：</p>
+        <ol>
+          <li>写 SQL 看各组人数</li>
+          <li>人肉判断"人数差异 &lt; 5% 就算合格"</li>
+          <li>写 SQL 看各组基础特征</li>
+          <li>人肉判断"p 值 &gt; 0.05 就算无显著差异"</li>
+        </ol>
+        <p>Skill 化：把这四步变成一个验证脚本。Claude 跑完分析后自动执行，如果不合格就告警"分流质量存疑"。你不用记住该检查什么——Skill 替你记住。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label existing">你已有的 <span class="tag-existing">i</span></div>
+        <p><code>ab-experiment</code> skill 里有分流质量检验的 SQL 框架。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label next">下一步 <span class="tag-next">+1</span></div>
+        <p>把"合格标准"写成可执行的断言：</p>
+      </div>
+      <pre data-lang="rules"><span class="cm">验证规则：</span>
+<span class="str">-</span> 各组人数偏差 &lt; <span class="num">5%</span>
+<span class="str">-</span> 关键基础指标（客单价、到访率）p值 &gt; <span class="num">0.05</span>
+<span class="str">-</span> 涨价组的活跃用户占比与对照组差异 &lt; <span class="num">3pp</span>
+<span class="str">-</span> <span class="kw">如果不通过</span>，输出：<span class="str">"&#x26A0;&#xFE0F; 分流质量存疑，建议核查"</span></pre>
+    </div>
+
+    <!-- 类型 3 -->
+    <div class="type-card fade-in" id="type3">
+      <div class="type-card-header">
+        <div class="type-number">3</div>
+        <h3>数据获取与分析</h3>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label original">原文</div>
+        <p>连接你的数据和监控体系。包含凭证、仪表盘 ID、常用工作流。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label translation">数据分析翻译</div>
+        <p>这是你<strong>从问题到数据的桥梁</strong>。你老板问："上周杯量为什么跌了？"你的脑子里有一条链路：先看天气 &rarr; 再看门店 &rarr; 再看渠道 &rarr; 再看券。但 Claude 不知道这条链路。</p>
+        <p>文章举的例子非常贴合你的场景：</p>
+        <ul>
+          <li><strong>funnel-query</strong>："要看注册&rarr;激活&rarr;付费的转化，需要关联哪些事件？"——这就是你看 APP 漏斗用 <code>dws_mg_log_user_screen_name_d_1d</code> 表的场景。</li>
+          <li><strong>cohort-compare</strong>："对比两个用户群的留存或转化率，标记统计显著的差异"——这就是你做 AB 实验效果分析的核心动作。</li>
+        </ul>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label existing">你已有的 <span class="tag-existing">i</span></div>
+        <p>日报系统 v2 脚本里硬编码了 5+7 个分析模块。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label next">下一步 <span class="tag-next">+1</span></div>
+        <p>把"杯量下跌归因"做成一个独立 Skill：</p>
+      </div>
+      <pre data-lang="workflow"><span class="cm">当用户说"杯量为什么跌了"时：</span>
+<span class="num">1.</span> 先查天气（Open-Meteo NYC）
+<span class="num">2.</span> 按门店拆（排除测试店）
+<span class="num">3.</span> 按渠道拆（Pickup vs 外卖）
+<span class="num">4.</span> 按用户类型拆（新客 vs 老客）
+<span class="num">5.</span> 按券类型拆
+<span class="num">6.</span> 综合归因，给出结论</pre>
+    </div>
+
+    <!-- 类型 4 -->
+    <div class="type-card fade-in" id="type4">
+      <div class="type-card-header">
+        <div class="type-number">4</div>
+        <h3>业务流程与团队自动化</h3>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label original">原文</div>
+        <p>把重复性工作流自动化为一条命令。通常指令简单，但可能依赖其他 Skills。文章强调：<strong>把之前的执行结果保存在日志文件中，有助于模型保持一致性。</strong></p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label translation">数据分析翻译</div>
+        <p>这就是你的<strong>日报/周报/月报</strong>。你每天出日报，每周出周报，每月出实验月报。这些流程本质上是固定的：拉数据 &rarr; 对比 &rarr; 归因 &rarr; 格式化输出。但你每次都重做一遍。</p>
+        <p>文章的例子 <code>standup-post</code>（汇总任务追踪器+GitHub活动&rarr;生成格式化站会汇报）完全对应你的日报流程。</p>
+        <p><strong>关键技巧</strong>：文章说"把之前的执行结果保存在日志文件中"。这对日报特别有用——如果 Claude 知道昨天的日报数据，今天就能自动算周同比、自动标注异常值。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label existing">你已有的 <span class="tag-existing">i</span></div>
+        <p><code>daily-report</code> skill 和 <code>generate_daily_report_v2.py</code>。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label next">下一步 <span class="tag-next">+1</span></div>
+        <p>给日报 Skill 加一个 <code>history/</code> 文件夹，每天的数据自动存一份 JSON。这样 Claude 生成今天日报时，自动读取历史数据计算趋势，不用你手动给基准值。</p>
+      </div>
+    </div>
+
+    <!-- 类型 5 -->
+    <div class="type-card fade-in" id="type5">
+      <div class="type-card-header">
+        <div class="type-number">5</div>
+        <h3>代码脚手架与模板</h3>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label original">原文</div>
+        <p>为代码库中的特定功能生成框架样板代码。当脚手架有自然语言需求、无法纯靠代码覆盖时特别有用。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label translation">数据分析翻译</div>
+        <p>这就是你的 <strong>SQL 模板库</strong>。你做 AB 实验分析，每次都要写类似的 SQL：Fixed Cohort 框架、Rolling Cohort 框架、Daily Dimension 框架。但每次的实验名、日期范围、分组字段都不一样。这种"结构固定、参数可变"的 SQL，就是模板。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label existing">你已有的 <span class="tag-existing">i</span></div>
+        <p><code>ab-experiment</code> skill 里有 3 个 SQL 框架。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label next">下一步 <span class="tag-next">+1</span></div>
+        <p>把每个框架做成带占位符的模板文件，例如 <code>templates/fixed_cohort.sql</code>：</p>
+      </div>
+      <pre data-lang="sql"><span class="cm">-- Fixed Cohort 框架</span>
+<span class="cm">-- 参数：{experiment_name}, {start_date}, {end_date}, {group_field}</span>
+<span class="kw">WITH</span> cohort <span class="kw">AS</span> (
+    <span class="kw">SELECT</span> user_id, <span class="var">{group_field}</span> <span class="kw">AS</span> experiment_group
+    <span class="kw">FROM</span> dw_ods.t_user_traffic_distribution
+    <span class="kw">WHERE</span> experiment_name = <span class="str">'{experiment_name}'</span>
+),
+orders <span class="kw">AS</span> (
+    <span class="kw">SELECT</span> ...
+    <span class="kw">FROM</span> dw_dwd.dwd_t_ord_order_item_d_inc
+    <span class="kw">WHERE</span> dt <span class="kw">BETWEEN</span> <span class="str">'{start_date}'</span> <span class="kw">AND</span> <span class="str">'{end_date}'</span>
+      <span class="kw">AND</span> order_status = <span class="num">90</span>
+      <span class="kw">AND</span> order_category = <span class="str">'门店订单'</span>
+      <span class="kw">AND</span> one_category_name = <span class="str">'Drink'</span>
+      <span class="kw">AND</span> tenant = <span class="str">'LKUS'</span>
+)
+...</pre>
+      <p>Claude 每次拿到新实验，直接填参数，不用从头写。</p>
+    </div>
+
+    <!-- 类型 6 -->
+    <div class="type-card fade-in" id="type6">
+      <div class="type-card-header">
+        <div class="type-number">6</div>
+        <h3>代码质量与审查</h3>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label original">原文</div>
+        <p>在团队内部执行代码质量标准。可以包含确定性脚本。可以作为钩子自动运行。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label translation">数据分析翻译</div>
+        <p>这就是<strong>SQL 质量检查清单</strong>。文章举了一个特别有意思的例子叫 <strong>adversarial-review</strong>——生成一个全新视角的子 Agent 来挑刺，反复迭代直到发现的问题退化为吹毛求疵。</p>
+        <p>翻译到你的场景：Claude 帮你写完一段分析 SQL 后，自动启动一个"审计 Agent"来检查：</p>
+        <ul>
+          <li>有没有忘加 tenant 过滤？</li>
+          <li>杯量算法对不对？</li>
+          <li>时区转换有没有做？</li>
+          <li>是不是用了 ODS 层的大表（会超时）？</li>
+          <li>外卖和堂食有没有分开？</li>
+        </ul>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label existing">你已有的 <span class="tag-existing">i</span></div>
+        <p>MEMORY.md 里记了一堆"关键约定"（tenant = LKUS, status = 90 等）。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label next">下一步 <span class="tag-next">+1</span></div>
+        <p>把这些约定变成一个 <code>sql-reviewer</code> Skill，可以作为钩子在每次 Claude 写完 SQL 后自动运行检查。</p>
+      </div>
+    </div>
+
+    <!-- 类型 7 -->
+    <div class="type-card fade-in" id="type7">
+      <div class="type-card-header">
+        <div class="type-number">7</div>
+        <h3>CI/CD 与部署</h3>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label original">原文</div>
+        <p>帮你拉取、推送和部署代码。示例：<code>babysit-pr</code>（监控 PR&rarr;重试不稳定的 CI&rarr;解决合并冲突&rarr;自动合并）。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label translation">数据分析翻译</div>
+        <p>这类对你相对远一些，但有一个直接对应——<strong>报告部署</strong>。你的日报、实验报告都是 HTML 文件。现在是手动 scp 到服务器。可以做一个 Skill：生成报告后自动部署到服务器，自动更新索引页。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label existing">你已有的 <span class="tag-existing">i</span></div>
+        <p>podcast-viz 已经有 systemd + Gunicorn 部署经验。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label next">下一步 <span class="tag-next">+1</span></div>
+        <p>写一个 <code>deploy-report</code> Skill，一键把 HTML 报告推到服务器并生成链接。</p>
+      </div>
+    </div>
+
+    <!-- 类型 8 -->
+    <div class="type-card fade-in" id="type8">
+      <div class="type-card-header">
+        <div class="type-number">8</div>
+        <h3>运维手册</h3>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label original">原文</div>
+        <p>接收一个现象（告警、错误），引导走完排查流程，生成结构化报告。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label translation">数据分析翻译</div>
+        <p>这就是<strong>数据异常排查手册</strong>。老板在群里问："今天杯量怎么比昨天少了 200 杯？"你的排查流程是固定的：</p>
+        <ol>
+          <li>先看是不是天气原因</li>
+          <li>哪个门店跌了</li>
+          <li>是新客跌了还是老客跌了</li>
+          <li>是堂食跌了还是外卖跌了</li>
+          <li>有没有大额券到期</li>
+        </ol>
+        <p>这整套排查链路，就是一个运维手册 Skill。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label existing">你已有的 <span class="tag-existing">i</span></div>
+        <p>日报系统的归因模块。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label next">下一步 <span class="tag-next">+1</span></div>
+        <p>做一个 <code>investigate-drop</code> Skill——输入"杯量下跌了"，自动走完排查链路，输出结构化报告。和类型 3（数据获取）的区别是：类型 3 是"怎么拿数据"，类型 8 是"拿到数据之后怎么推理"。</p>
+      </div>
+    </div>
+
+    <!-- 类型 9 -->
+    <div class="type-card fade-in" id="type9">
+      <div class="type-card-header">
+        <div class="type-number">9</div>
+        <h3>基础设施运维</h3>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label original">原文</div>
+        <p>执行日常维护和运维操作。其中一些涉及破坏性操作，需要安全护栏。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label translation">数据分析翻译</div>
+        <p>对你来说这是<strong>服务器和数据平台的维护</strong>。文章的例子 <code>cost-investigation</code>（"我们的存储费用为什么突然涨了"）直接对应你的场景——CyberData 平台有查询额度限制，你需要监控查询耗时和资源消耗。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label existing">你已有的 <span class="tag-existing">i</span></div>
+        <p>对 CyberData API 的使用经验。</p>
+      </div>
+      <div class="type-section">
+        <div class="type-section-label next">下一步 <span class="tag-next">+1</span></div>
+        <p>暂不优先，等前 8 类 Skills 稳定后再考虑。</p>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ========== 第三部分 ========== -->
+  <section class="section fade-in" id="part3">
+    <div class="section-label">第三部分</div>
+    <h2>八个编写技巧全解</h2>
+    <p>文章说"确定了要做什么 Skill 之后，怎么写呢？"以下是他们总结的技巧。</p>
+
+    <!-- 技巧 1 -->
+    <div class="tip-card fade-in" id="tip1">
+      <div class="tip-card-header">
+        <div class="tip-number">1</div>
+        <h3>不要说显而易见的事</h3>
+      </div>
+      <blockquote>
+        <p>Claude 对你的代码库已经很了解。Skill 应该把重点放在能打破 Claude 常规思维模式的信息上。</p>
+      </blockquote>
+      <p>你不需要在 Skill 里写"SELECT 是查询语句"——Claude 知道。你要写的是 Claude <strong>反复犯错的那些事</strong>。</p>
+      <p>比如 Claude 写 SQL 时有几个"默认坏习惯"：</p>
+      <ul>
+        <li>默认用 <code>COUNT(DISTINCT order_id)</code> 算杯量（<strong style="color:var(--red)">错的</strong>，应该用 <code>COUNT(*) from order_item</code>）</li>
+        <li>默认不加 tenant 过滤（漏了会查到其他租户的数据）</li>
+        <li>默认用 <code>create_time</code> 而不是 <code>local_dt</code>（时区没转）</li>
+      </ul>
+      <p>这些才是 Skill 应该写的——<strong>打破 Claude 的默认错误模式</strong>。</p>
+      <p>文章举了 <code>frontend-design</code> 这个 Skill 的例子：它专门避免 Claude 默认的"Inter 字体+紫色渐变"审美。翻译到你的场景：你的 Skill 专门避免 Claude 默认的"用错表+忘过滤+杯量算法错"。</p>
+    </div>
+
+    <!-- 技巧 2 -->
+    <div class="tip-card fade-in" id="tip2">
+      <div class="tip-card-header">
+        <div class="tip-number">2</div>
+        <h3>建一个踩坑点章节</h3>
+      </div>
+      <div class="concept-box" data-label="最重要">
+        <p><strong>这是整篇文章最重要的一句话。</strong></p>
+      </div>
+      <p>踩坑点不是你坐下来一次性写完的——是你每次用 Claude 跑数，发现它犯了一个错，就补一条。</p>
+      <p>举个真实例子。你在做 0311 价格实验分析时发现：涨价组2的分流质量存疑（到访率低 20pp），你当时调查后得出结论"组间构成不均衡，整体对比无效，必须分层分析"。这就是一个踩坑点：</p>
+      <pre data-lang="gotcha"><span class="cm">踩坑点 #7：AB实验不能只看整体</span>
+<span class="str">发现日期：</span><span class="num">2026-03-11</span>
+<span class="str">场景：</span>0311价格实验，涨价组2有<span class="num">25%</span>活跃用户，其他组仅<span class="num">11%</span>
+<span class="str">教训：</span>必须按用户生命周期分层（<span class="num">0-15</span>天/<span class="num">16-30</span>天/<span class="num">30+</span>天），
+     否则辛普森悖论会让整体对比完全失效</pre>
+      <p>你积累 10 个这样的踩坑点，Claude 以后做实验分析时就会自动分层、自动检查构成均衡性。<strong>这比任何 prompt 工程都管用</strong>。</p>
+    </div>
+
+    <!-- 技巧 3 -->
+    <div class="tip-card fade-in" id="tip3">
+      <div class="tip-card-header">
+        <div class="tip-number">3</div>
+        <h3>利用文件系统与渐进式披露</h3>
+      </div>
+      <blockquote>
+        <p>把整个文件系统当作上下文工程和渐进式披露的工具。告诉 Claude 你的 Skill 里有哪些文件，它会在合适的时候去读取。</p>
+      </blockquote>
+      <p>不要把所有信息塞在一个 markdown 里——会撑爆上下文窗口。渐进式披露的意思是：<strong>只在需要的时候才加载详细信息</strong>。</p>
+      <p>你的 <code>luckyus-data-query</code> skill 有一个 650 行的 knowledge-base.md。每次 Claude 启动时都要读这 650 行。但其实 90% 的查询只用到其中 3 张表。</p>
+      <p>更好的做法：</p>
+      <pre data-lang="structure">skill.md（主文件，<span class="num">50</span>行）
+  <span class="op">&rarr;</span> <span class="str">"门店杯量查 references/sales-table.md"</span>
+  <span class="op">&rarr;</span> <span class="str">"用户留存查 references/retention-table.md"</span>
+  <span class="op">&rarr;</span> <span class="str">"实验分析查 references/experiment-tables.md"</span>
+  <span class="op">&rarr;</span> <span class="str">"踩坑点汇总见 gotchas.md"</span></pre>
+      <p>Claude 看到主文件的目录，只在需要"实验分析"时才去读 experiment-tables.md。这就是渐进式披露——<strong>告诉 Claude 有什么，但不要一次全塞给它</strong>。</p>
+    </div>
+
+    <!-- 技巧 4 -->
+    <div class="tip-card fade-in" id="tip4">
+      <div class="tip-card-header">
+        <div class="tip-number">4</div>
+        <h3>不要把 Claude 限制得太死</h3>
+      </div>
+      <blockquote>
+        <p>给 Claude 需要的信息，但留给它适应具体情况的灵活性。</p>
+      </blockquote>
+      <p>你的 Skill 应该告诉 Claude "杯量必须用 <code>COUNT(*)</code> 从 order_item 表算"（这是硬规则，不能灵活），但不应该规定"输出格式必须是三列表格"（这应该根据具体分析灵活调整）。</p>
+      <p>区分两种指令：</p>
+      <ul>
+        <li><strong>硬规则</strong>（不可违反）：数据口径、过滤条件、关联方式</li>
+        <li><strong>软指引</strong>（可适应）：输出格式、分析维度选择、可视化方式</li>
+      </ul>
+    </div>
+
+    <!-- 技巧 5 -->
+    <div class="tip-card fade-in" id="tip5">
+      <div class="tip-card-header">
+        <div class="tip-number">5</div>
+        <h3>考虑好初始设置</h3>
+      </div>
+      <blockquote>
+        <p>有些 Skills 需要用户提供上下文来完成初始设置。好的做法是把设置信息存在 config.json 里。</p>
+      </blockquote>
+      <p>你的 AB 实验 Skill 需要知道"当前在跑哪些实验"。这个信息每隔几周就变。可以做一个 <code>config.json</code>：</p>
+      <pre data-lang="json">{
+  <span class="json-key">"active_experiments"</span>: [
+    {<span class="json-key">"name"</span>: <span class="json-str">"0311价格实验"</span>, <span class="json-key">"start_date"</span>: <span class="json-str">"2026-03-11"</span>, <span class="json-key">"groups"</span>: <span class="json-num">3</span>},
+    {<span class="json-key">"name"</span>: <span class="json-str">"0212老客涨价"</span>, <span class="json-key">"start_date"</span>: <span class="json-str">"2026-02-12"</span>, <span class="json-key">"groups"</span>: <span class="json-num">2</span>}
+  ],
+  <span class="json-key">"default_metrics"</span>: [<span class="json-str">"杯量"</span>, <span class="json-str">"实收"</span>, <span class="json-str">"访购率"</span>, <span class="json-str">"ITT人均饮品实收"</span>]
+}</pre>
+      <p>Claude 读到这个配置，就知道当前有什么实验在跑，不用你每次重复说明。</p>
+    </div>
+
+    <!-- 技巧 6 -->
+    <div class="tip-card fade-in" id="tip6">
+      <div class="tip-card-header">
+        <div class="tip-number">6</div>
+        <h3>description 字段是给模型看的</h3>
+      </div>
+      <blockquote>
+        <p>description 不是摘要——它描述的是何时该触发这个 Skill。好的 description 读起来更像 if-then 条件。</p>
+      </blockquote>
+      <p>这个很多人写错。对比：</p>
+      <div class="table-wrapper compare-table">
+        <table>
+          <thead>
+            <tr><th style="color:var(--red)">写成功能说明</th><th style="color:var(--green)">写成触发条件</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>"AB 实验分析技能，支持分流检验和效果分析"</td>
+              <td>"当用户提到 AB 实验、分流、实验效果、置信度检验时使用"</td>
+            </tr>
+            <tr>
+              <td>"Lucky US 数据查询工具"</td>
+              <td>"当用户需要跑数、写 SQL、分析业务数据时使用此技能"</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>第二种写法告诉 Claude：<strong>什么情况下你该被激活</strong>。Claude 每次收到用户消息，都会扫描所有 Skill 的 description，匹配最相关的那个。如果你写的是功能说明，Claude 不知道什么时候该用你。</p>
+    </div>
+
+    <!-- 技巧 7 -->
+    <div class="tip-card fade-in" id="tip7">
+      <div class="tip-card-header">
+        <div class="tip-number">7</div>
+        <h3>记忆与数据存储</h3>
+      </div>
+      <blockquote>
+        <p>有些 Skills 可以通过存储数据实现记忆——最简单的方式是一个只追加写入的文本日志文件或 JSON 文件。</p>
+      </blockquote>
+      <p>文章举了 <code>standup-post</code> 保存每次站会记录的例子。翻译到你的场景：你的日报 Skill 每天生成报告后，把关键指标追加写入一个 <code>history.jsonl</code>：</p>
+      <pre data-lang="jsonl">{<span class="json-key">"date"</span>:<span class="json-str">"2026-03-21"</span>,<span class="json-key">"cups"</span>:<span class="json-num">3280</span>,<span class="json-key">"orders"</span>:<span class="json-num">2100</span>,<span class="json-key">"new_users"</span>:<span class="json-num">45</span>,<span class="json-key">"revenue"</span>:<span class="json-num">12500</span>}
+{<span class="json-key">"date"</span>:<span class="json-str">"2026-03-22"</span>,<span class="json-key">"cups"</span>:<span class="json-num">3150</span>,<span class="json-key">"orders"</span>:<span class="json-num">1980</span>,<span class="json-key">"new_users"</span>:<span class="json-num">38</span>,<span class="json-key">"revenue"</span>:<span class="json-num">11800</span>}
+{<span class="json-key">"date"</span>:<span class="json-str">"2026-03-23"</span>,<span class="json-key">"cups"</span>:<span class="json-num">3420</span>,<span class="json-key">"orders"</span>:<span class="json-num">2200</span>,<span class="json-key">"new_users"</span>:<span class="json-num">52</span>,<span class="json-key">"revenue"</span>:<span class="json-num">13200</span>}</pre>
+      <p>明天 Claude 生成日报时，自动读取历史数据：</p>
+      <ul>
+        <li>自动算周同比（不用你手动给基准值）</li>
+        <li>自动标注异常值（"今天新客数比7天均值高37%"）</li>
+        <li>自动识别趋势（"连续3天杯量上升"）</li>
+      </ul>
+      <div class="concept-box" data-label="核心观点">
+        <p><strong>这就是 Skill 的"记忆"——让 AI 不再是每次都失忆的工具，而是一个积累了工作经验的助手。</strong></p>
+      </div>
+    </div>
+
+    <!-- 技巧 8 -->
+    <div class="tip-card fade-in" id="tip8">
+      <div class="tip-card-header">
+        <div class="tip-number">8</div>
+        <h3>存储脚本与生成代码</h3>
+      </div>
+      <blockquote>
+        <p>给 Claude 提供脚本和库，让它把精力花在组合编排上——决定下一步做什么，而不是重新构造样板代码。</p>
+      </blockquote>
+      <p>这是解决你"维度一直在变，SQL 没法固化"问题的关键思路。不固化最终 SQL，固化<strong>原子取数模块</strong>：</p>
+      <pre data-lang="python"><span class="py-cm"># modules/get_cups.py</span>
+<span class="py-kw">def</span> <span class="py-fn">get_daily_cups</span>(date, shop_filter=<span class="py-kw">None</span>):
+    <span class="py-str">"""从 ADS 表取门店杯量"""</span>
+    sql = <span class="py-str">f"""
+    SELECT shop_name, SUM(sku_cnt) AS cups, SUM(order_cnt) AS orders
+    FROM dw_ads.ads_mg_sku_shop_sales_statistic_d_1d
+    WHERE dt = '<span class="var">{date}</span>' AND tenant = 'LKUS'
+      AND one_category_name = 'Drink'
+      AND shop_name NOT IN ('NJ Test Kitchen', 'NJ Test Kitchen 2')
+    """</span>
+    <span class="py-kw">if</span> shop_filter:
+        sql += <span class="py-str">f" AND shop_name = '<span class="var">{shop_filter}</span>'"</span>
+    sql += <span class="py-str">" GROUP BY shop_name ORDER BY cups DESC"</span>
+    <span class="py-kw">return</span> sql</pre>
+      <pre data-lang="python"><span class="py-cm"># modules/get_retention.py</span>
+<span class="py-kw">def</span> <span class="py-fn">get_weekly_retention</span>(date):
+    <span class="py-str">"""从复购表取周留存"""</span>
+    ...
+
+<span class="py-cm"># modules/get_traffic.py</span>
+<span class="py-kw">def</span> <span class="py-fn">get_daily_visits</span>(date):
+    <span class="py-str">"""从日志表取来访"""</span>
+    ...</pre>
+      <p>这些是积木块。你说"帮我看上周每天的杯量和来访趋势"，Claude 自动组合 <code>get_daily_cups</code> + <code>get_daily_visits</code>，按日期展开，拼成完整查询。</p>
+      <div class="concept-box" data-label="关键思路">
+        <p><strong>你的维度会变，但积木块是稳定的。变化的部分交给 Claude 临场发挥，稳定的部分用 Skill 固化。</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ========== 第四部分 ========== -->
+  <section class="section fade-in" id="part4">
+    <div class="section-label">第四部分</div>
+    <h2>分发与组合</h2>
+
+    <h3>怎么分享 Skills</h3>
+    <p>文章提供两种方式：</p>
+    <ol>
+      <li><strong>提交到代码仓库</strong>（放在 <code>.claude/skills/</code> 下）——适合小团队</li>
+      <li><strong>做成插件市场</strong>——适合大规模分发</li>
+    </ol>
+    <p>对你来说，第一种就够了。你现在的 Skills 都在 <code>~/.claude/skills/</code> 下，自己用。</p>
+    <p>但文章有一个重要提醒：<strong>每个提交进去的 Skill 都会给模型的上下文增加一点负担</strong>。如果你的 Skill 太多、太大，Claude 启动时上下文就被占满了，留给实际工作的空间就少了。</p>
+    <p>这就是为什么"渐进式披露"很重要——Skill 的主文件要精简，详细信息放子文件里按需加载。</p>
+
+    <h3>Skills 怎么互相依赖</h3>
+    <p>文章说：目前没有正式的依赖管理，但你可以直接按名字引用其他 Skills。</p>
+    <p>翻译到你的场景：你的 <code>ab-experiment</code> Skill 在做实验分析时，需要用到 <code>luckyus-data-query</code> 里的表结构信息。你不需要把表结构复制一份到 ab-experiment 里——直接在 Skill 指令里写"表结构参考 luckyus-data-query 的 knowledge-base.md"，Claude 会自动去读。</p>
+
+    <h3>怎么衡量 Skills 效果</h3>
+    <p>文章说他们用 PreToolUse 钩子记录 Skill 使用频率。</p>
+    <p>对你更实用的衡量方式：<strong>看你让 Claude 重做的次数</strong>。如果一个 Skill 上线后，某类分析的重做率从 3 次降到 1 次，说明 Skill 有效。</p>
+  </section>
+
+  <hr>
+
+  <!-- ========== 第五部分 ========== -->
+  <section class="section fade-in" id="part5">
+    <div class="section-label">第五部分</div>
+    <h2>按需钩子——一个容易忽略的高级功能</h2>
+    <p>文章专门提了一个概念叫<strong>按需钩子（On Demand Hooks）</strong>——只在 Skill 被调用时才激活，整个会话期间保持生效。</p>
+    <p>两个例子：</p>
+    <ul>
+      <li><strong>/careful</strong>：拦截 <code>rm -rf</code>、<code>DROP TABLE</code>、<code>force-push</code> 等危险操作。你只在操作生产环境时才需要。</li>
+      <li><strong>/freeze</strong>：阻止对特定目录之外的任何编辑。调试时用——"我想加日志但老是不小心改了不相关的代码"。</li>
+    </ul>
+    <p><strong>翻译到你的场景</strong>：你可以做一个 <code>/production-mode</code> 钩子——当你在跑生产数据时激活，它会：</p>
+    <ul>
+      <li>强制所有 SQL 都带 <code>tenant = 'LKUS'</code> 过滤</li>
+      <li>禁止 DELETE/UPDATE/INSERT 操作（只允许 SELECT）</li>
+      <li>自动加 LIMIT 1000 防止拉出超大结果集</li>
+    </ul>
+    <p>平时关着不碍事，需要时说一声 <code>/production-mode</code> 就开启防护。</p>
+  </section>
+
+  <hr>
+
+  <!-- ========== 第六部分 ========== -->
+  <section class="section fade-in" id="part6">
+    <div class="section-label">第六部分</div>
+    <h2>综合对照表</h2>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>文章概念</th>
+            <th>数据分析翻译</th>
+            <th>你已有的 (i)</th>
+            <th>下一步 (+1)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>库与API参考</td>
+            <td>表结构速查</td>
+            <td>knowledge-base.md</td>
+            <td>给每张核心表加踩坑点</td>
+          </tr>
+          <tr>
+            <td>产品验证</td>
+            <td>数据质量校验</td>
+            <td>分流质量检查 SQL</td>
+            <td>写成可执行断言</td>
+          </tr>
+          <tr>
+            <td>数据获取与分析</td>
+            <td>问题&rarr;数据的桥梁</td>
+            <td>日报分析模块</td>
+            <td>做"杯量下跌归因" Skill</td>
+          </tr>
+          <tr>
+            <td>业务流程自动化</td>
+            <td>日报/周报/月报</td>
+            <td>daily-report skill</td>
+            <td>加 history/ 实现记忆</td>
+          </tr>
+          <tr>
+            <td>代码脚手架</td>
+            <td>SQL 模板库</td>
+            <td>AB实验3个SQL框架</td>
+            <td>做成带占位符的模板文件</td>
+          </tr>
+          <tr>
+            <td>代码质量审查</td>
+            <td>SQL 质量检查</td>
+            <td>MEMORY.md 里的约定</td>
+            <td>做 sql-reviewer Skill</td>
+          </tr>
+          <tr>
+            <td>CI/CD部署</td>
+            <td>报告部署</td>
+            <td>手动 scp</td>
+            <td>deploy-report Skill</td>
+          </tr>
+          <tr>
+            <td>运维手册</td>
+            <td>异常排查手册</td>
+            <td>日报归因模块</td>
+            <td>investigate-drop Skill</td>
+          </tr>
+          <tr>
+            <td>基础设施运维</td>
+            <td>平台维护</td>
+            <td>CyberData 经验</td>
+            <td>暂不优先</td>
+          </tr>
+          <tr>
+            <td>踩坑点章节</td>
+            <td>错误积累</td>
+            <td>散落在对话里</td>
+            <td>集中到 gotchas.md</td>
+          </tr>
+          <tr>
+            <td>渐进式披露</td>
+            <td>按需加载详情</td>
+            <td>650行全量加载</td>
+            <td>拆成子文件</td>
+          </tr>
+          <tr>
+            <td>按需钩子</td>
+            <td>安全防护</td>
+            <td>无</td>
+            <td>/production-mode</td>
+          </tr>
+          <tr>
+            <td>记忆与数据存储</td>
+            <td>历史数据追踪</td>
+            <td>无</td>
+            <td>history.jsonl</td>
+          </tr>
+          <tr>
+            <td>存储脚本</td>
+            <td>原子取数模块</td>
+            <td>无</td>
+            <td>modules/ 函数库</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ========== 结语 ========== -->
+  <section class="section fade-in" id="conclusion">
+    <div class="section-label">结语</div>
+    <h2>Skill 就是你的经验文件夹化</h2>
+
+    <div class="conclusion-box">
+      <div class="big-text">Skill 就是把你脑子里那套"做某件事的全部经验"<br>——包括该怎么做、不该怎么做、做了会怎样——<br>文件夹化之后交给 AI。</div>
+      <div class="sub-text">Anthropic 内部几百个 Skills，本质上就是几百个工程师把各自的专业经验沉淀成了文件夹。</div>
+    </div>
+
+    <p>你不需要一次做完 14 个 Skills。文章最后说的那句话才是最重要的：</p>
+
+    <blockquote>
+      <p>"我们大多数 Skills 一开始就是几行文字加一个踩坑点，后来因为大家不断补充 Claude 遇到的新边界情况，才慢慢变好的。"</p>
+    </blockquote>
+
+    <div class="concept-box" data-label="行动号召">
+      <p><strong>先做一个。从你最常踩的那个坑开始。</strong></p>
+    </div>
+  </section>
+
+  <!-- ========== Footer ========== -->
+  <footer class="article-footer">
+    <div class="divider-line"></div>
+    <p>李宵霄 &middot; Lucky US 数据分析 &middot; 2026-03-23</p>
+  </footer>
+
+</main>
+
+<script>
+// ========== 目录交互 ==========
+const tocToggle = document.getElementById('tocToggle');
+const tocSidebar = document.getElementById('tocSidebar');
+const tocOverlay = document.getElementById('tocOverlay');
+const tocLinks = tocSidebar.querySelectorAll('a');
+
+function openToc() {
+  tocSidebar.classList.add('active');
+  tocOverlay.classList.add('active');
+}
+function closeToc() {
+  tocSidebar.classList.remove('active');
+  tocOverlay.classList.remove('active');
+}
+
+tocToggle.addEventListener('click', () => {
+  tocSidebar.classList.contains('active') ? closeToc() : openToc();
+});
+tocOverlay.addEventListener('click', closeToc);
+
+tocLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    closeToc();
+  });
+});
+
+// ========== 阅读进度条 ==========
+const progressBar = document.getElementById('progressBar');
+function updateProgress() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  progressBar.style.width = progress + '%';
+}
+
+// ========== 回到顶部 ==========
+const backToTop = document.getElementById('backToTop');
+function updateBackToTop() {
+  if (window.scrollY > 400) {
+    backToTop.classList.add('visible');
+  } else {
+    backToTop.classList.remove('visible');
+  }
+}
+backToTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ========== 目录高亮 ==========
+const sections = document.querySelectorAll('[id]');
+function updateTocHighlight() {
+  let current = '';
+  sections.forEach(section => {
+    const rect = section.getBoundingClientRect();
+    if (rect.top <= 120) {
+      current = section.id;
+    }
+  });
+  tocLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+}
+
+// ========== 滚动入场动画 ==========
+const fadeElements = document.querySelectorAll('.fade-in');
+const observerOptions = {
+  root: null,
+  rootMargin: '0px 0px -60px 0px',
+  threshold: 0.1
+};
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, observerOptions);
+fadeElements.forEach(el => observer.observe(el));
+
+// ========== 合并滚动事件 ==========
+let ticking = false;
+window.addEventListener('scroll', () => {
+  if (!ticking) {
+    requestAnimationFrame(() => {
+      updateProgress();
+      updateBackToTop();
+      updateTocHighlight();
+      ticking = false;
+    });
+    ticking = true;
+  }
+}, { passive: true });
+
+// 初始化
+updateProgress();
+updateBackToTop();
+</script>
+</body>
+</html>

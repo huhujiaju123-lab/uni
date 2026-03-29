@@ -1,0 +1,21 @@
+<!-- 页脚 -->
+<footer class="footer">
+  {% if gua.relations %}
+  <div class="footer-nav">
+    {% if gua.relations.prev %}
+    <a href="{{ '%02d' % gua.relations.prev.number }}-{{ gua.relations.prev.pinyin }}.html">← {{ gua.relations.prev.name }}卦</a>
+    {% endif %}
+    <a href="index.html">六十四卦</a>
+    {% if gua.relations.next %}
+    <a href="{{ '%02d' % gua.relations.next.number }}-{{ gua.relations.next.pinyin }}.html">{{ gua.relations.next.name }}卦 →</a>
+    {% endif %}
+  </div>
+  {% endif %}
+  <div class="divider" style="margin:1rem auto;"></div>
+  <p>易经六十四卦 · AI在佑安方法论基础上的独立创作</p>
+  <p style="margin-top:0.5rem; font-size:0.7rem; color:var(--ink-light);">
+    内容来源标注：<span class="source-tag source-classic">经典原文</span>
+    <span class="source-tag source-youan">佑安释易</span>
+    <span class="source-tag source-ai">AI 分析</span>
+  </p>
+</footer>

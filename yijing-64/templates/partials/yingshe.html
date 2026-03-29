@@ -1,0 +1,16 @@
+<!-- 映射内容 -->
+<div class="guide-timeline">
+  {% for item in gua.steps.yingshe %}
+  <div class="guide-item fade-in">
+    <div class="guide-dot"></div>
+    <div class="guide-content">
+      <span class="guide-label level-label-{{ item.level }}">{{ item.yao }}</span>
+      <span class="source-tag source-{{ item.contentSource }}">
+        {% if item.contentSource == 'classic' %}经典{% elif item.contentSource == 'youan' %}佑安{% else %}AI{% endif %}
+      </span>
+      <h4>{{ item.scenario }}</h4>
+      <p>{{ item.actionAdvice }}</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>

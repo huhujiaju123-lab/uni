@@ -1,0 +1,5211 @@
+{
+  "Q1a_weekly_freq": {
+    "data": [
+      {
+        "yearweek": "202607",
+        "freq": "1",
+        "users": "10157"
+      },
+      {
+        "yearweek": "202607",
+        "freq": "2",
+        "users": "2196"
+      },
+      {
+        "yearweek": "202607",
+        "freq": "3",
+        "users": "653"
+      },
+      {
+        "yearweek": "202607",
+        "freq": "4",
+        "users": "284"
+      },
+      {
+        "yearweek": "202607",
+        "freq": "5+",
+        "users": "152"
+      },
+      {
+        "yearweek": "202608",
+        "freq": "1",
+        "users": "9923"
+      },
+      {
+        "yearweek": "202608",
+        "freq": "2",
+        "users": "1943"
+      },
+      {
+        "yearweek": "202608",
+        "freq": "3",
+        "users": "643"
+      },
+      {
+        "yearweek": "202608",
+        "freq": "4",
+        "users": "266"
+      },
+      {
+        "yearweek": "202608",
+        "freq": "5+",
+        "users": "196"
+      },
+      {
+        "yearweek": "202609",
+        "freq": "1",
+        "users": "10317"
+      },
+      {
+        "yearweek": "202609",
+        "freq": "2",
+        "users": "1824"
+      },
+      {
+        "yearweek": "202609",
+        "freq": "3",
+        "users": "589"
+      },
+      {
+        "yearweek": "202609",
+        "freq": "4",
+        "users": "212"
+      },
+      {
+        "yearweek": "202609",
+        "freq": "5+",
+        "users": "154"
+      },
+      {
+        "yearweek": "202610",
+        "freq": "1",
+        "users": "11648"
+      },
+      {
+        "yearweek": "202610",
+        "freq": "2",
+        "users": "2303"
+      },
+      {
+        "yearweek": "202610",
+        "freq": "3",
+        "users": "799"
+      },
+      {
+        "yearweek": "202610",
+        "freq": "4",
+        "users": "352"
+      },
+      {
+        "yearweek": "202610",
+        "freq": "5+",
+        "users": "254"
+      },
+      {
+        "yearweek": "202611",
+        "freq": "1",
+        "users": "3628"
+      },
+      {
+        "yearweek": "202611",
+        "freq": "2",
+        "users": "106"
+      },
+      {
+        "yearweek": "202611",
+        "freq": "3",
+        "users": "7"
+      },
+      {
+        "yearweek": "202611",
+        "freq": "5+",
+        "users": "3"
+      }
+    ],
+    "desc": "周频次分布（近4周）"
+  },
+  "Q1b_interval": {
+    "error": "Timeout",
+    "desc": "相邻订单间隔分布"
+  },
+  "Q1c_monthly_freq": {
+    "data": [
+      {
+        "month_str": "2025-12",
+        "freq": "1",
+        "users": "22872"
+      },
+      {
+        "month_str": "2025-12",
+        "freq": "2",
+        "users": "6043"
+      },
+      {
+        "month_str": "2025-12",
+        "freq": "3-4",
+        "users": "4076"
+      },
+      {
+        "month_str": "2025-12",
+        "freq": "5-7",
+        "users": "1715"
+      },
+      {
+        "month_str": "2025-12",
+        "freq": "8+",
+        "users": "1005"
+      },
+      {
+        "month_str": "2026-01",
+        "freq": "1",
+        "users": "21536"
+      },
+      {
+        "month_str": "2026-01",
+        "freq": "2",
+        "users": "5757"
+      },
+      {
+        "month_str": "2026-01",
+        "freq": "3-4",
+        "users": "4078"
+      },
+      {
+        "month_str": "2026-01",
+        "freq": "5-7",
+        "users": "1899"
+      },
+      {
+        "month_str": "2026-01",
+        "freq": "8+",
+        "users": "1225"
+      },
+      {
+        "month_str": "2026-02",
+        "freq": "1",
+        "users": "22309"
+      },
+      {
+        "month_str": "2026-02",
+        "freq": "2",
+        "users": "5986"
+      },
+      {
+        "month_str": "2026-02",
+        "freq": "3-4",
+        "users": "4174"
+      },
+      {
+        "month_str": "2026-02",
+        "freq": "5-7",
+        "users": "1919"
+      },
+      {
+        "month_str": "2026-02",
+        "freq": "8+",
+        "users": "1251"
+      }
+    ],
+    "desc": "月频次趋势（12月/1月/2月）"
+  },
+  "Q1d_multi_cup": {
+    "data": [
+      {
+        "yearweek": "202605",
+        "total_orders": "1981",
+        "total_cups": "2088",
+        "cups_per_order": "1.05"
+      },
+      {
+        "yearweek": "202606",
+        "total_orders": "20882",
+        "total_cups": "21922",
+        "cups_per_order": "1.05"
+      },
+      {
+        "yearweek": "202607",
+        "total_orders": "24625",
+        "total_cups": "25705",
+        "cups_per_order": "1.04"
+      },
+      {
+        "yearweek": "202608",
+        "total_orders": "21040",
+        "total_cups": "22050",
+        "cups_per_order": "1.05"
+      },
+      {
+        "yearweek": "202609",
+        "total_orders": "20375",
+        "total_cups": "21314",
+        "cups_per_order": "1.05"
+      },
+      {
+        "yearweek": "202610",
+        "total_orders": "24761",
+        "total_cups": "25866",
+        "cups_per_order": "1.04"
+      }
+    ],
+    "desc": "多杯率(ads表近似)"
+  },
+  "Q2a_migration": {
+    "data": [
+      {
+        "jan_tier": "1次",
+        "feb_tier": "1次",
+        "users": "2929"
+      },
+      {
+        "jan_tier": "1次",
+        "feb_tier": "2次",
+        "users": "1117"
+      },
+      {
+        "jan_tier": "1次",
+        "feb_tier": "3-4次",
+        "users": "639"
+      },
+      {
+        "jan_tier": "1次",
+        "feb_tier": "5+次",
+        "users": "301"
+      },
+      {
+        "jan_tier": "1次",
+        "feb_tier": "流失",
+        "users": "16550"
+      },
+      {
+        "jan_tier": "2次",
+        "feb_tier": "1次",
+        "users": "1353"
+      },
+      {
+        "jan_tier": "2次",
+        "feb_tier": "2次",
+        "users": "715"
+      },
+      {
+        "jan_tier": "2次",
+        "feb_tier": "3-4次",
+        "users": "534"
+      },
+      {
+        "jan_tier": "2次",
+        "feb_tier": "5+次",
+        "users": "292"
+      },
+      {
+        "jan_tier": "2次",
+        "feb_tier": "流失",
+        "users": "2863"
+      },
+      {
+        "jan_tier": "3-4次",
+        "feb_tier": "1次",
+        "users": "863"
+      },
+      {
+        "jan_tier": "3-4次",
+        "feb_tier": "2次",
+        "users": "639"
+      },
+      {
+        "jan_tier": "3-4次",
+        "feb_tier": "3-4次",
+        "users": "717"
+      },
+      {
+        "jan_tier": "3-4次",
+        "feb_tier": "5+次",
+        "users": "497"
+      },
+      {
+        "jan_tier": "3-4次",
+        "feb_tier": "流失",
+        "users": "1362"
+      },
+      {
+        "jan_tier": "5+次",
+        "feb_tier": "1次",
+        "users": "329"
+      },
+      {
+        "jan_tier": "5+次",
+        "feb_tier": "2次",
+        "users": "401"
+      },
+      {
+        "jan_tier": "5+次",
+        "feb_tier": "3-4次",
+        "users": "633"
+      },
+      {
+        "jan_tier": "5+次",
+        "feb_tier": "5+次",
+        "users": "1426"
+      },
+      {
+        "jan_tier": "5+次",
+        "feb_tier": "流失",
+        "users": "335"
+      },
+      {
+        "jan_tier": "新增",
+        "feb_tier": "1次",
+        "users": "16835"
+      },
+      {
+        "jan_tier": "新增",
+        "feb_tier": "2次",
+        "users": "3114"
+      },
+      {
+        "jan_tier": "新增",
+        "feb_tier": "3-4次",
+        "users": "1651"
+      },
+      {
+        "jan_tier": "新增",
+        "feb_tier": "5+次",
+        "users": "654"
+      }
+    ],
+    "desc": "频次迁移矩阵（1月→2月）"
+  },
+  "Q2c_freq_tiers": {
+    "data": [
+      {
+        "freq_tier": "A_极低频(<0.5/周)",
+        "users": "25011",
+        "avg_orders": "1.0"
+      },
+      {
+        "freq_tier": "B_低频(0.5-1/周)",
+        "users": "9267",
+        "avg_orders": "2.3"
+      },
+      {
+        "freq_tier": "C_中低频(1-2/周)",
+        "users": "3645",
+        "avg_orders": "5.0"
+      },
+      {
+        "freq_tier": "D_中频(2-3/周)",
+        "users": "754",
+        "avg_orders": "9.1"
+      },
+      {
+        "freq_tier": "E_高频(3+/周)",
+        "users": "486",
+        "avg_orders": "18.1"
+      }
+    ],
+    "desc": "频次分层用户规模（近4周）"
+  },
+  "Q3a_dow": {
+    "data": [
+      {
+        "dow": "1",
+        "day_name": "Sun",
+        "orders": "11412",
+        "users": "8914"
+      },
+      {
+        "dow": "2",
+        "day_name": "Mon",
+        "orders": "14556",
+        "users": "10675"
+      },
+      {
+        "dow": "3",
+        "day_name": "Tue",
+        "orders": "15570",
+        "users": "10996"
+      },
+      {
+        "dow": "4",
+        "day_name": "Wed",
+        "orders": "17131",
+        "users": "11685"
+      },
+      {
+        "dow": "5",
+        "day_name": "Thu",
+        "orders": "16585",
+        "users": "11521"
+      },
+      {
+        "dow": "6",
+        "day_name": "Fri",
+        "orders": "15016",
+        "users": "10827"
+      },
+      {
+        "dow": "7",
+        "day_name": "Sat",
+        "orders": "12654",
+        "users": "9932"
+      }
+    ],
+    "desc": "星期分布"
+  },
+  "Q3b_consecutive": {
+    "data": [
+      {
+        "streak_bucket": "1天",
+        "users": "55753"
+      },
+      {
+        "streak_bucket": "2天",
+        "users": "6380"
+      },
+      {
+        "streak_bucket": "3天",
+        "users": "1761"
+      },
+      {
+        "streak_bucket": "4-5天",
+        "users": "1100"
+      },
+      {
+        "streak_bucket": "6+天",
+        "users": "261"
+      }
+    ],
+    "desc": "最长连续消费天数分布"
+  },
+  "existing": {
+    "coffee_pass": {
+      "Q0_explore": [
+        {
+          "proposal_no": "LKUSCP118713952489488385",
+          "coupon_name": "Coffee Pass",
+          "coupon_denomination": "0.000000000",
+          "cnt": "695",
+          "user_cnt": "121",
+          "first_create": "2026-01-21T14:01:55",
+          "last_create": "2026-02-19T17:49:14"
+        }
+      ],
+      "Q1_sales": [
+        {
+          "dt": "2026-01-21",
+          "total_coupons": "25",
+          "total_packs": "5.0",
+          "buyer_cnt": "5",
+          "total_revenue": "99.5"
+        },
+        {
+          "dt": "2026-01-22",
+          "total_coupons": "10",
+          "total_packs": "2.0",
+          "buyer_cnt": "2",
+          "total_revenue": "39.8"
+        },
+        {
+          "dt": "2026-01-23",
+          "total_coupons": "5",
+          "total_packs": "1.0",
+          "buyer_cnt": "1",
+          "total_revenue": "19.9"
+        },
+        {
+          "dt": "2026-01-26",
+          "total_coupons": "20",
+          "total_packs": "4.0",
+          "buyer_cnt": "4",
+          "total_revenue": "79.6"
+        },
+        {
+          "dt": "2026-01-27",
+          "total_coupons": "40",
+          "total_packs": "8.0",
+          "buyer_cnt": "8",
+          "total_revenue": "159.2"
+        },
+        {
+          "dt": "2026-01-28",
+          "total_coupons": "10",
+          "total_packs": "2.0",
+          "buyer_cnt": "2",
+          "total_revenue": "39.8"
+        },
+        {
+          "dt": "2026-01-29",
+          "total_coupons": "25",
+          "total_packs": "5.0",
+          "buyer_cnt": "5",
+          "total_revenue": "99.5"
+        },
+        {
+          "dt": "2026-01-30",
+          "total_coupons": "5",
+          "total_packs": "1.0",
+          "buyer_cnt": "1",
+          "total_revenue": "19.9"
+        },
+        {
+          "dt": "2026-02-06",
+          "total_coupons": "120",
+          "total_packs": "24.0",
+          "buyer_cnt": "24",
+          "total_revenue": "477.6"
+        },
+        {
+          "dt": "2026-02-07",
+          "total_coupons": "55",
+          "total_packs": "11.0",
+          "buyer_cnt": "11",
+          "total_revenue": "218.9"
+        },
+        {
+          "dt": "2026-02-08",
+          "total_coupons": "40",
+          "total_packs": "8.0",
+          "buyer_cnt": "8",
+          "total_revenue": "159.2"
+        },
+        {
+          "dt": "2026-02-09",
+          "total_coupons": "50",
+          "total_packs": "10.0",
+          "buyer_cnt": "10",
+          "total_revenue": "199.0"
+        },
+        {
+          "dt": "2026-02-10",
+          "total_coupons": "60",
+          "total_packs": "12.0",
+          "buyer_cnt": "12",
+          "total_revenue": "238.8"
+        },
+        {
+          "dt": "2026-02-11",
+          "total_coupons": "65",
+          "total_packs": "13.0",
+          "buyer_cnt": "13",
+          "total_revenue": "258.7"
+        },
+        {
+          "dt": "2026-02-12",
+          "total_coupons": "35",
+          "total_packs": "7.0",
+          "buyer_cnt": "7",
+          "total_revenue": "139.3"
+        },
+        {
+          "dt": "2026-02-13",
+          "total_coupons": "60",
+          "total_packs": "12.0",
+          "buyer_cnt": "9",
+          "total_revenue": "238.8"
+        },
+        {
+          "dt": "2026-02-14",
+          "total_coupons": "30",
+          "total_packs": "6.0",
+          "buyer_cnt": "6",
+          "total_revenue": "119.4"
+        },
+        {
+          "dt": "2026-02-15",
+          "total_coupons": "35",
+          "total_packs": "7.0",
+          "buyer_cnt": "7",
+          "total_revenue": "139.3"
+        },
+        {
+          "dt": "2026-02-19",
+          "total_coupons": "5",
+          "total_packs": "1.0",
+          "buyer_cnt": "1",
+          "total_revenue": "19.9"
+        }
+      ],
+      "Q1b_packs_dist": [
+        {
+          "packs": "1.0",
+          "user_cnt": "106"
+        },
+        {
+          "packs": "2.0",
+          "user_cnt": "13"
+        },
+        {
+          "packs": "3.0",
+          "user_cnt": "1"
+        },
+        {
+          "packs": "4.0",
+          "user_cnt": "1"
+        }
+      ],
+      "Q2_redemption": [
+        {
+          "use_status": "1",
+          "cnt": "582",
+          "user_cnt": "115"
+        },
+        {
+          "use_status": "2",
+          "cnt": "113",
+          "user_cnt": "43"
+        }
+      ],
+      "Q2b_redeem_dist": [
+        {
+          "used_cnt": "0",
+          "user_cnt": "6"
+        },
+        {
+          "used_cnt": "1",
+          "user_cnt": "5"
+        },
+        {
+          "used_cnt": "2",
+          "user_cnt": "4"
+        },
+        {
+          "used_cnt": "3",
+          "user_cnt": "7"
+        },
+        {
+          "used_cnt": "4",
+          "user_cnt": "16"
+        },
+        {
+          "used_cnt": "5",
+          "user_cnt": "69"
+        },
+        {
+          "used_cnt": "8",
+          "user_cnt": "2"
+        },
+        {
+          "used_cnt": "9",
+          "user_cnt": "2"
+        },
+        {
+          "used_cnt": "10",
+          "user_cnt": "9"
+        },
+        {
+          "used_cnt": "15",
+          "user_cnt": "1"
+        }
+      ],
+      "Q3_redeem_timing": [
+        {
+          "days_to_use": "0",
+          "cnt": "131"
+        },
+        {
+          "days_to_use": "1",
+          "cnt": "47"
+        },
+        {
+          "days_to_use": "2",
+          "cnt": "44"
+        },
+        {
+          "days_to_use": "3",
+          "cnt": "33"
+        },
+        {
+          "days_to_use": "4",
+          "cnt": "39"
+        },
+        {
+          "days_to_use": "5",
+          "cnt": "37"
+        },
+        {
+          "days_to_use": "6",
+          "cnt": "34"
+        },
+        {
+          "days_to_use": "7",
+          "cnt": "33"
+        },
+        {
+          "days_to_use": "8",
+          "cnt": "24"
+        },
+        {
+          "days_to_use": "9",
+          "cnt": "15"
+        },
+        {
+          "days_to_use": "10",
+          "cnt": "18"
+        },
+        {
+          "days_to_use": "11",
+          "cnt": "12"
+        },
+        {
+          "days_to_use": "12",
+          "cnt": "9"
+        },
+        {
+          "days_to_use": "13",
+          "cnt": "19"
+        },
+        {
+          "days_to_use": "14",
+          "cnt": "18"
+        },
+        {
+          "days_to_use": "15",
+          "cnt": "10"
+        },
+        {
+          "days_to_use": "16",
+          "cnt": "8"
+        },
+        {
+          "days_to_use": "17",
+          "cnt": "1"
+        },
+        {
+          "days_to_use": "18",
+          "cnt": "5"
+        },
+        {
+          "days_to_use": "19",
+          "cnt": "9"
+        },
+        {
+          "days_to_use": "20",
+          "cnt": "5"
+        },
+        {
+          "days_to_use": "21",
+          "cnt": "12"
+        },
+        {
+          "days_to_use": "22",
+          "cnt": "4"
+        },
+        {
+          "days_to_use": "23",
+          "cnt": "1"
+        },
+        {
+          "days_to_use": "24",
+          "cnt": "5"
+        },
+        {
+          "days_to_use": "25",
+          "cnt": "1"
+        },
+        {
+          "days_to_use": "26",
+          "cnt": "4"
+        },
+        {
+          "days_to_use": "28",
+          "cnt": "1"
+        },
+        {
+          "days_to_use": "29",
+          "cnt": "1"
+        },
+        {
+          "days_to_use": "34",
+          "cnt": "1"
+        },
+        {
+          "days_to_use": "37",
+          "cnt": "1"
+        }
+      ],
+      "Q4_order_analysis": [],
+      "Q4b_order_trend": [
+        {
+          "dt": "2025-09-22",
+          "order_cnt": "109",
+          "user_cnt": "62",
+          "avg_pay": "7.22",
+          "total_pay": "1683.19"
+        },
+        {
+          "dt": "2025-09-23",
+          "order_cnt": "43",
+          "user_cnt": "33",
+          "avg_pay": "5.14",
+          "total_pay": "344.11"
+        },
+        {
+          "dt": "2025-09-24",
+          "order_cnt": "31",
+          "user_cnt": "23",
+          "avg_pay": "4.73",
+          "total_pay": "222.10"
+        },
+        {
+          "dt": "2025-09-25",
+          "order_cnt": "35",
+          "user_cnt": "29",
+          "avg_pay": "5.26",
+          "total_pay": "289.39"
+        },
+        {
+          "dt": "2025-09-26",
+          "order_cnt": "28",
+          "user_cnt": "22",
+          "avg_pay": "4.61",
+          "total_pay": "193.66"
+        },
+        {
+          "dt": "2025-09-27",
+          "order_cnt": "18",
+          "user_cnt": "11",
+          "avg_pay": "4.22",
+          "total_pay": "109.62"
+        },
+        {
+          "dt": "2025-09-28",
+          "order_cnt": "23",
+          "user_cnt": "19",
+          "avg_pay": "5.13",
+          "total_pay": "179.63"
+        },
+        {
+          "dt": "2025-09-29",
+          "order_cnt": "21",
+          "user_cnt": "18",
+          "avg_pay": "2.40",
+          "total_pay": "59.96"
+        },
+        {
+          "dt": "2025-09-30",
+          "order_cnt": "27",
+          "user_cnt": "20",
+          "avg_pay": "4.27",
+          "total_pay": "166.59"
+        },
+        {
+          "dt": "2025-10-01",
+          "order_cnt": "28",
+          "user_cnt": "25",
+          "avg_pay": "1.87",
+          "total_pay": "59.73"
+        },
+        {
+          "dt": "2025-10-02",
+          "order_cnt": "21",
+          "user_cnt": "18",
+          "avg_pay": "2.68",
+          "total_pay": "67.11"
+        },
+        {
+          "dt": "2025-10-03",
+          "order_cnt": "13",
+          "user_cnt": "11",
+          "avg_pay": "4.41",
+          "total_pay": "83.70"
+        },
+        {
+          "dt": "2025-10-04",
+          "order_cnt": "12",
+          "user_cnt": "9",
+          "avg_pay": "4.53",
+          "total_pay": "81.54"
+        },
+        {
+          "dt": "2025-10-05",
+          "order_cnt": "6",
+          "user_cnt": "5",
+          "avg_pay": "3.62",
+          "total_pay": "28.96"
+        },
+        {
+          "dt": "2025-10-06",
+          "order_cnt": "10",
+          "user_cnt": "7",
+          "avg_pay": "2.25",
+          "total_pay": "27.05"
+        },
+        {
+          "dt": "2025-10-07",
+          "order_cnt": "10",
+          "user_cnt": "10",
+          "avg_pay": "0.18",
+          "total_pay": "1.84"
+        },
+        {
+          "dt": "2025-10-08",
+          "order_cnt": "13",
+          "user_cnt": "9",
+          "avg_pay": "2.59",
+          "total_pay": "38.90"
+        },
+        {
+          "dt": "2025-10-09",
+          "order_cnt": "6",
+          "user_cnt": "6",
+          "avg_pay": "0.45",
+          "total_pay": "2.70"
+        },
+        {
+          "dt": "2025-10-10",
+          "order_cnt": "6",
+          "user_cnt": "6",
+          "avg_pay": "1.41",
+          "total_pay": "8.43"
+        },
+        {
+          "dt": "2025-10-11",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.54",
+          "total_pay": "0.54"
+        },
+        {
+          "dt": "2025-10-12",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2025-10-13",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2025-10-14",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2025-10-15",
+          "order_cnt": "3",
+          "user_cnt": "3",
+          "avg_pay": "2.71",
+          "total_pay": "8.12"
+        },
+        {
+          "dt": "2025-10-16",
+          "order_cnt": "5",
+          "user_cnt": "4",
+          "avg_pay": "0.11",
+          "total_pay": "0.54"
+        },
+        {
+          "dt": "2025-10-17",
+          "order_cnt": "4",
+          "user_cnt": "4",
+          "avg_pay": "0.27",
+          "total_pay": "1.08"
+        },
+        {
+          "dt": "2025-10-18",
+          "order_cnt": "2",
+          "user_cnt": "1",
+          "avg_pay": "0.98",
+          "total_pay": "1.96"
+        },
+        {
+          "dt": "2025-10-19",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "7.90",
+          "total_pay": "7.90"
+        },
+        {
+          "dt": "2025-10-20",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2025-10-21",
+          "order_cnt": "2",
+          "user_cnt": "2",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2025-10-23",
+          "order_cnt": "2",
+          "user_cnt": "2",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2025-10-24",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2025-10-31",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "6.70",
+          "total_pay": "6.70"
+        },
+        {
+          "dt": "2025-11-01",
+          "order_cnt": "2",
+          "user_cnt": "2",
+          "avg_pay": "0.27",
+          "total_pay": "0.54"
+        },
+        {
+          "dt": "2025-11-04",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2025-11-05",
+          "order_cnt": "2",
+          "user_cnt": "2",
+          "avg_pay": "0.71",
+          "total_pay": "1.42"
+        },
+        {
+          "dt": "2025-11-06",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2025-11-16",
+          "order_cnt": "3",
+          "user_cnt": "2",
+          "avg_pay": "0.18",
+          "total_pay": "0.54"
+        },
+        {
+          "dt": "2025-11-21",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2025-11-22",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2025-11-25",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2025-11-26",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2025-12-13",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2025-12-17",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "7.35",
+          "total_pay": "7.35"
+        },
+        {
+          "dt": "2025-12-18",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.59",
+          "total_pay": "0.59"
+        },
+        {
+          "dt": "2025-12-22",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2025-12-30",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2026-01-21",
+          "order_cnt": "10",
+          "user_cnt": "5",
+          "avg_pay": "16.60",
+          "total_pay": "498.04"
+        },
+        {
+          "dt": "2026-01-22",
+          "order_cnt": "5",
+          "user_cnt": "4",
+          "avg_pay": "15.35",
+          "total_pay": "199.54"
+        },
+        {
+          "dt": "2026-01-23",
+          "order_cnt": "4",
+          "user_cnt": "3",
+          "avg_pay": "12.44",
+          "total_pay": "99.50"
+        },
+        {
+          "dt": "2026-01-26",
+          "order_cnt": "10",
+          "user_cnt": "5",
+          "avg_pay": "15.37",
+          "total_pay": "399.62"
+        },
+        {
+          "dt": "2026-01-27",
+          "order_cnt": "26",
+          "user_cnt": "12",
+          "avg_pay": "13.92",
+          "total_pay": "807.19"
+        },
+        {
+          "dt": "2026-01-28",
+          "order_cnt": "9",
+          "user_cnt": "7",
+          "avg_pay": "12.18",
+          "total_pay": "207.11"
+        },
+        {
+          "dt": "2026-01-29",
+          "order_cnt": "20",
+          "user_cnt": "14",
+          "avg_pay": "12.64",
+          "total_pay": "505.76"
+        },
+        {
+          "dt": "2026-01-30",
+          "order_cnt": "7",
+          "user_cnt": "7",
+          "avg_pay": "9.14",
+          "total_pay": "100.58"
+        },
+        {
+          "dt": "2026-01-31",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2026-02-01",
+          "order_cnt": "2",
+          "user_cnt": "2",
+          "avg_pay": "4.22",
+          "total_pay": "8.44"
+        },
+        {
+          "dt": "2026-02-02",
+          "order_cnt": "10",
+          "user_cnt": "8",
+          "avg_pay": "0.30",
+          "total_pay": "3.03"
+        },
+        {
+          "dt": "2026-02-03",
+          "order_cnt": "12",
+          "user_cnt": "12",
+          "avg_pay": "0.23",
+          "total_pay": "2.70"
+        },
+        {
+          "dt": "2026-02-04",
+          "order_cnt": "6",
+          "user_cnt": "5",
+          "avg_pay": "0.28",
+          "total_pay": "1.67"
+        },
+        {
+          "dt": "2026-02-05",
+          "order_cnt": "6",
+          "user_cnt": "6",
+          "avg_pay": "0.09",
+          "total_pay": "0.54"
+        },
+        {
+          "dt": "2026-02-06",
+          "order_cnt": "47",
+          "user_cnt": "28",
+          "avg_pay": "16.75",
+          "total_pay": "2395.17"
+        },
+        {
+          "dt": "2026-02-07",
+          "order_cnt": "28",
+          "user_cnt": "14",
+          "avg_pay": "15.52",
+          "total_pay": "1117.42"
+        },
+        {
+          "dt": "2026-02-08",
+          "order_cnt": "18",
+          "user_cnt": "12",
+          "avg_pay": "16.19",
+          "total_pay": "809.64"
+        },
+        {
+          "dt": "2026-02-09",
+          "order_cnt": "42",
+          "user_cnt": "31",
+          "avg_pay": "12.58",
+          "total_pay": "1031.61"
+        },
+        {
+          "dt": "2026-02-10",
+          "order_cnt": "67",
+          "user_cnt": "44",
+          "avg_pay": "10.62",
+          "total_pay": "1220.88"
+        },
+        {
+          "dt": "2026-02-11",
+          "order_cnt": "56",
+          "user_cnt": "44",
+          "avg_pay": "12.13",
+          "total_pay": "1309.50"
+        },
+        {
+          "dt": "2026-02-12",
+          "order_cnt": "47",
+          "user_cnt": "38",
+          "avg_pay": "9.46",
+          "total_pay": "709.76"
+        },
+        {
+          "dt": "2026-02-13",
+          "order_cnt": "51",
+          "user_cnt": "36",
+          "avg_pay": "12.31",
+          "total_pay": "1218.44"
+        },
+        {
+          "dt": "2026-02-14",
+          "order_cnt": "23",
+          "user_cnt": "17",
+          "avg_pay": "13.27",
+          "total_pay": "623.78"
+        },
+        {
+          "dt": "2026-02-15",
+          "order_cnt": "31",
+          "user_cnt": "14",
+          "avg_pay": "11.95",
+          "total_pay": "705.26"
+        },
+        {
+          "dt": "2026-02-16",
+          "order_cnt": "17",
+          "user_cnt": "15",
+          "avg_pay": "1.34",
+          "total_pay": "22.80"
+        },
+        {
+          "dt": "2026-02-17",
+          "order_cnt": "30",
+          "user_cnt": "29",
+          "avg_pay": "0.70",
+          "total_pay": "20.93"
+        },
+        {
+          "dt": "2026-02-18",
+          "order_cnt": "16",
+          "user_cnt": "16",
+          "avg_pay": "0.54",
+          "total_pay": "8.65"
+        },
+        {
+          "dt": "2026-02-19",
+          "order_cnt": "24",
+          "user_cnt": "20",
+          "avg_pay": "4.01",
+          "total_pay": "112.37"
+        },
+        {
+          "dt": "2026-02-20",
+          "order_cnt": "8",
+          "user_cnt": "8",
+          "avg_pay": "0.27",
+          "total_pay": "2.16"
+        },
+        {
+          "dt": "2026-02-21",
+          "order_cnt": "11",
+          "user_cnt": "10",
+          "avg_pay": "1.45",
+          "total_pay": "15.98"
+        },
+        {
+          "dt": "2026-02-22",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.00",
+          "total_pay": "0.00"
+        },
+        {
+          "dt": "2026-02-24",
+          "order_cnt": "4",
+          "user_cnt": "4",
+          "avg_pay": "0.14",
+          "total_pay": "0.54"
+        },
+        {
+          "dt": "2026-02-25",
+          "order_cnt": "9",
+          "user_cnt": "9",
+          "avg_pay": "1.63",
+          "total_pay": "14.64"
+        },
+        {
+          "dt": "2026-02-26",
+          "order_cnt": "19",
+          "user_cnt": "17",
+          "avg_pay": "1.17",
+          "total_pay": "22.28"
+        },
+        {
+          "dt": "2026-02-27",
+          "order_cnt": "10",
+          "user_cnt": "8",
+          "avg_pay": "0.82",
+          "total_pay": "8.17"
+        },
+        {
+          "dt": "2026-02-28",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "0.54",
+          "total_pay": "0.54"
+        },
+        {
+          "dt": "2026-03-01",
+          "order_cnt": "3",
+          "user_cnt": "3",
+          "avg_pay": "3.53",
+          "total_pay": "10.58"
+        },
+        {
+          "dt": "2026-03-02",
+          "order_cnt": "7",
+          "user_cnt": "5",
+          "avg_pay": "0.31",
+          "total_pay": "2.16"
+        },
+        {
+          "dt": "2026-03-03",
+          "order_cnt": "4",
+          "user_cnt": "3",
+          "avg_pay": "1.35",
+          "total_pay": "5.39"
+        },
+        {
+          "dt": "2026-03-04",
+          "order_cnt": "7",
+          "user_cnt": "7",
+          "avg_pay": "0.15",
+          "total_pay": "1.08"
+        },
+        {
+          "dt": "2026-03-05",
+          "order_cnt": "3",
+          "user_cnt": "3",
+          "avg_pay": "3.03",
+          "total_pay": "9.09"
+        },
+        {
+          "dt": "2026-03-06",
+          "order_cnt": "7",
+          "user_cnt": "5",
+          "avg_pay": "0.08",
+          "total_pay": "0.54"
+        },
+        {
+          "dt": "2026-03-07",
+          "order_cnt": "2",
+          "user_cnt": "1",
+          "avg_pay": "2.65",
+          "total_pay": "5.30"
+        },
+        {
+          "dt": "2026-03-08",
+          "order_cnt": "1",
+          "user_cnt": "1",
+          "avg_pay": "5.01",
+          "total_pay": "5.01"
+        }
+      ],
+      "Q5_shop_top10": [
+        {
+          "shop_name": "",
+          "order_cnt": "269",
+          "user_cnt": "246",
+          "total_pay": "17340.50"
+        },
+        {
+          "shop_name": "8th & Broadway",
+          "order_cnt": "177",
+          "user_cnt": "57",
+          "total_pay": "78.50"
+        },
+        {
+          "shop_name": "54th & 8th",
+          "order_cnt": "159",
+          "user_cnt": "46",
+          "total_pay": "85.92"
+        },
+        {
+          "shop_name": "102 Fulton",
+          "order_cnt": "135",
+          "user_cnt": "40",
+          "total_pay": "112.57"
+        },
+        {
+          "shop_name": "221 Grand",
+          "order_cnt": "119",
+          "user_cnt": "25",
+          "total_pay": "68.14"
+        },
+        {
+          "shop_name": "28th & 6th",
+          "order_cnt": "107",
+          "user_cnt": "42",
+          "total_pay": "99.88"
+        },
+        {
+          "shop_name": "37th & Broadway",
+          "order_cnt": "105",
+          "user_cnt": "22",
+          "total_pay": "55.13"
+        },
+        {
+          "shop_name": "100 Maiden Ln",
+          "order_cnt": "64",
+          "user_cnt": "20",
+          "total_pay": "58.48"
+        },
+        {
+          "shop_name": "33rd & 10th",
+          "order_cnt": "43",
+          "user_cnt": "9",
+          "total_pay": "4.32"
+        },
+        {
+          "shop_name": "15th & 3rd",
+          "order_cnt": "26",
+          "user_cnt": "8",
+          "total_pay": "8.71"
+        }
+      ],
+      "Q6_user_profile": [
+        {
+          "user_type": "30天+老客",
+          "user_cnt": "90",
+          "avg_prior_orders": "8.1"
+        },
+        {
+          "user_type": "近16-30天活跃",
+          "user_cnt": "15",
+          "avg_prior_orders": "7.9"
+        },
+        {
+          "user_type": "新客",
+          "user_cnt": "8",
+          "avg_prior_orders": "0.0"
+        },
+        {
+          "user_type": "近15天活跃",
+          "user_cnt": "8",
+          "avg_prior_orders": "3.6"
+        }
+      ],
+      "Q6b_freq_dist": [
+        {
+          "freq_bucket": "0单",
+          "user_cnt": "14"
+        },
+        {
+          "freq_bucket": "1-2单",
+          "user_cnt": "20"
+        },
+        {
+          "freq_bucket": "3-5单",
+          "user_cnt": "25"
+        },
+        {
+          "freq_bucket": "6-10单",
+          "user_cnt": "32"
+        },
+        {
+          "freq_bucket": "10单+",
+          "user_cnt": "30"
+        }
+      ],
+      "Q7_before_after": [
+        {
+          "period": "购买前14天",
+          "total_buyers": "121",
+          "active_users": "96",
+          "total_orders": "364",
+          "avg_orders": "3.8",
+          "total_pay": "2217.05"
+        },
+        {
+          "period": "购买后至今",
+          "total_buyers": "121",
+          "active_users": "118",
+          "total_orders": "893",
+          "avg_orders": "7.6",
+          "total_pay": "3351.26"
+        }
+      ],
+      "Q8_expire": [
+        {
+          "coupon_state": "已核销",
+          "cnt": "582",
+          "user_cnt": "115"
+        },
+        {
+          "coupon_state": "未使用(有效期内)",
+          "cnt": "113",
+          "user_cnt": "43"
+        }
+      ],
+      "Q8b_unused_dist": [
+        {
+          "unused_cnt": "0",
+          "user_cnt": "78"
+        },
+        {
+          "unused_cnt": "1",
+          "user_cnt": "18"
+        },
+        {
+          "unused_cnt": "2",
+          "user_cnt": "9"
+        },
+        {
+          "unused_cnt": "3",
+          "user_cnt": "4"
+        },
+        {
+          "unused_cnt": "4",
+          "user_cnt": "4"
+        },
+        {
+          "unused_cnt": "5",
+          "user_cnt": "6"
+        },
+        {
+          "unused_cnt": "9",
+          "user_cnt": "1"
+        },
+        {
+          "unused_cnt": "10",
+          "user_cnt": "1"
+        }
+      ],
+      "Q9_repurchase": [
+        {
+          "buyer_group": "全部用完",
+          "total_users": "78",
+          "active_users": "75",
+          "return_rate": "96.2",
+          "total_orders": "430",
+          "avg_orders": "5.7",
+          "total_pay": "2096.40"
+        },
+        {
+          "buyer_group": "未用完",
+          "total_users": "43",
+          "active_users": "37",
+          "return_rate": "86.0",
+          "total_orders": "85",
+          "avg_orders": "2.3",
+          "total_pay": "252.18"
+        }
+      ]
+    },
+    "coffee_pass_r2": {
+      "R2_redemption": [
+        {
+          "use_status": "1",
+          "cnt": "449",
+          "user_cnt": "96"
+        },
+        {
+          "use_status": "2",
+          "cnt": "101",
+          "user_cnt": "38"
+        }
+      ],
+      "R2_redeem_dist": [
+        {
+          "used_cnt": "0",
+          "user_cnt": "6"
+        },
+        {
+          "used_cnt": "1",
+          "user_cnt": "4"
+        },
+        {
+          "used_cnt": "2",
+          "user_cnt": "3"
+        },
+        {
+          "used_cnt": "3",
+          "user_cnt": "7"
+        },
+        {
+          "used_cnt": "4",
+          "user_cnt": "16"
+        },
+        {
+          "used_cnt": "5",
+          "user_cnt": "62"
+        },
+        {
+          "used_cnt": "9",
+          "user_cnt": "1"
+        },
+        {
+          "used_cnt": "10",
+          "user_cnt": "2"
+        },
+        {
+          "used_cnt": "15",
+          "user_cnt": "1"
+        }
+      ],
+      "R2_timing": [
+        {
+          "days_to_use": "0",
+          "cnt": "100"
+        },
+        {
+          "days_to_use": "1",
+          "cnt": "39"
+        },
+        {
+          "days_to_use": "2",
+          "cnt": "36"
+        },
+        {
+          "days_to_use": "3",
+          "cnt": "32"
+        },
+        {
+          "days_to_use": "4",
+          "cnt": "33"
+        },
+        {
+          "days_to_use": "5",
+          "cnt": "30"
+        },
+        {
+          "days_to_use": "6",
+          "cnt": "27"
+        },
+        {
+          "days_to_use": "7",
+          "cnt": "23"
+        },
+        {
+          "days_to_use": "8",
+          "cnt": "12"
+        },
+        {
+          "days_to_use": "9",
+          "cnt": "13"
+        },
+        {
+          "days_to_use": "10",
+          "cnt": "14"
+        },
+        {
+          "days_to_use": "11",
+          "cnt": "8"
+        },
+        {
+          "days_to_use": "12",
+          "cnt": "4"
+        },
+        {
+          "days_to_use": "13",
+          "cnt": "14"
+        },
+        {
+          "days_to_use": "14",
+          "cnt": "13"
+        },
+        {
+          "days_to_use": "15",
+          "cnt": "7"
+        },
+        {
+          "days_to_use": "16",
+          "cnt": "7"
+        },
+        {
+          "days_to_use": "18",
+          "cnt": "4"
+        },
+        {
+          "days_to_use": "19",
+          "cnt": "6"
+        },
+        {
+          "days_to_use": "20",
+          "cnt": "4"
+        },
+        {
+          "days_to_use": "21",
+          "cnt": "9"
+        },
+        {
+          "days_to_use": "22",
+          "cnt": "4"
+        },
+        {
+          "days_to_use": "23",
+          "cnt": "1"
+        },
+        {
+          "days_to_use": "24",
+          "cnt": "5"
+        },
+        {
+          "days_to_use": "25",
+          "cnt": "1"
+        },
+        {
+          "days_to_use": "26",
+          "cnt": "2"
+        },
+        {
+          "days_to_use": "29",
+          "cnt": "1"
+        }
+      ],
+      "R2_expire": [
+        {
+          "coupon_state": "已核销",
+          "cnt": "449",
+          "user_cnt": "96"
+        },
+        {
+          "coupon_state": "未使用(有效期内)",
+          "cnt": "101",
+          "user_cnt": "38"
+        }
+      ],
+      "R2_unused_dist": [
+        {
+          "unused_cnt": "0",
+          "user_cnt": "64"
+        },
+        {
+          "unused_cnt": "1",
+          "user_cnt": "17"
+        },
+        {
+          "unused_cnt": "2",
+          "user_cnt": "7"
+        },
+        {
+          "unused_cnt": "3",
+          "user_cnt": "3"
+        },
+        {
+          "unused_cnt": "4",
+          "user_cnt": "3"
+        },
+        {
+          "unused_cnt": "5",
+          "user_cnt": "6"
+        },
+        {
+          "unused_cnt": "9",
+          "user_cnt": "1"
+        },
+        {
+          "unused_cnt": "10",
+          "user_cnt": "1"
+        }
+      ],
+      "R2_profile": [
+        {
+          "user_type": "30天+老客",
+          "user_cnt": "74",
+          "avg_prior_orders": "8.1"
+        },
+        {
+          "user_type": "近16-30天活跃",
+          "user_cnt": "12",
+          "avg_prior_orders": "7.2"
+        },
+        {
+          "user_type": "新客",
+          "user_cnt": "8",
+          "avg_prior_orders": "0.0"
+        },
+        {
+          "user_type": "近15天活跃",
+          "user_cnt": "8",
+          "avg_prior_orders": "3.6"
+        }
+      ],
+      "R2_before_after_30d": [
+        {
+          "period": "购买前30天",
+          "total_buyers": "102",
+          "active_users": "90",
+          "total_orders": "720",
+          "avg_orders": "7.1",
+          "total_pay": "4300.56"
+        },
+        {
+          "period": "购买后30天",
+          "total_buyers": "102",
+          "active_users": "102",
+          "total_orders": "902",
+          "avg_orders": "8.8",
+          "total_pay": "4776.23"
+        }
+      ],
+      "R2_before_after_14d": [
+        {
+          "period": "购买前14天",
+          "total_buyers": "102",
+          "active_users": "81",
+          "total_orders": "338",
+          "avg_orders": "3.3",
+          "total_pay": "1927.30"
+        },
+        {
+          "period": "购买后14天",
+          "total_buyers": "102",
+          "active_users": "102",
+          "total_orders": "643",
+          "avg_orders": "6.3",
+          "total_pay": "3402.12"
+        }
+      ],
+      "R2_repurchase": [
+        {
+          "buyer_group": "全部用完",
+          "total_users": "64",
+          "active_users": "63",
+          "return_rate": "98.4",
+          "total_orders": "390",
+          "avg_orders": "6.2",
+          "total_pay": "1910.31"
+        },
+        {
+          "buyer_group": "未用完",
+          "total_users": "38",
+          "active_users": "32",
+          "return_rate": "84.2",
+          "total_orders": "76",
+          "avg_orders": "2.4",
+          "total_pay": "185.37"
+        }
+      ],
+      "R2_freq_dist": [
+        {
+          "freq_bucket": "0单",
+          "user_cnt": "14"
+        },
+        {
+          "freq_bucket": "1-2单",
+          "user_cnt": "19"
+        },
+        {
+          "freq_bucket": "3-5单",
+          "user_cnt": "22"
+        },
+        {
+          "freq_bucket": "6-10单",
+          "user_cnt": "20"
+        },
+        {
+          "freq_bucket": "10单+",
+          "user_cnt": "27"
+        }
+      ],
+      "R2_packs_dist": [
+        {
+          "packs": "1.0",
+          "user_cnt": "96"
+        },
+        {
+          "packs": "2.0",
+          "user_cnt": "4"
+        },
+        {
+          "packs": "3.0",
+          "user_cnt": "2"
+        }
+      ]
+    },
+    "pricing_0212": {
+      "Q1": [
+        {
+          "grp": "对照组3",
+          "total_users": "50295"
+        },
+        {
+          "grp": "涨价组1",
+          "total_users": "38093"
+        },
+        {
+          "grp": "涨价组2",
+          "total_users": "38058"
+        }
+      ],
+      "Q2": [
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-12",
+          "order_users": "938",
+          "order_cnt": "978",
+          "revenue": "4531.14"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-12",
+          "order_users": "634",
+          "order_cnt": "659",
+          "revenue": "3218.77"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-12",
+          "order_users": "697",
+          "order_cnt": "731",
+          "revenue": "3341.32"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-13",
+          "order_users": "823",
+          "order_cnt": "856",
+          "revenue": "4141.38"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-13",
+          "order_users": "576",
+          "order_cnt": "605",
+          "revenue": "3093.02"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-13",
+          "order_users": "571",
+          "order_cnt": "594",
+          "revenue": "3026.29"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-14",
+          "order_users": "590",
+          "order_cnt": "618",
+          "revenue": "3034.87"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-14",
+          "order_users": "401",
+          "order_cnt": "417",
+          "revenue": "2208.14"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-14",
+          "order_users": "417",
+          "order_cnt": "439",
+          "revenue": "2264.22"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-15",
+          "order_users": "473",
+          "order_cnt": "501",
+          "revenue": "2652.49"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-15",
+          "order_users": "319",
+          "order_cnt": "334",
+          "revenue": "1747.92"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-15",
+          "order_users": "322",
+          "order_cnt": "335",
+          "revenue": "1745.87"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-16",
+          "order_users": "516",
+          "order_cnt": "535",
+          "revenue": "2672.80"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-16",
+          "order_users": "358",
+          "order_cnt": "373",
+          "revenue": "1918.49"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-16",
+          "order_users": "358",
+          "order_cnt": "367",
+          "revenue": "1921.54"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-17",
+          "order_users": "832",
+          "order_cnt": "859",
+          "revenue": "4016.08"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-17",
+          "order_users": "627",
+          "order_cnt": "651",
+          "revenue": "3202.28"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-17",
+          "order_users": "605",
+          "order_cnt": "625",
+          "revenue": "3136.70"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-18",
+          "order_users": "906",
+          "order_cnt": "945",
+          "revenue": "4385.00"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-18",
+          "order_users": "628",
+          "order_cnt": "648",
+          "revenue": "3318.78"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-18",
+          "order_users": "564",
+          "order_cnt": "578",
+          "revenue": "2930.49"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-19",
+          "order_users": "866",
+          "order_cnt": "904",
+          "revenue": "4043.76"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-19",
+          "order_users": "639",
+          "order_cnt": "657",
+          "revenue": "3294.26"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-19",
+          "order_users": "628",
+          "order_cnt": "648",
+          "revenue": "3094.41"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-20",
+          "order_users": "588",
+          "order_cnt": "604",
+          "revenue": "2970.73"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-20",
+          "order_users": "431",
+          "order_cnt": "442",
+          "revenue": "2361.69"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-20",
+          "order_users": "376",
+          "order_cnt": "389",
+          "revenue": "2071.32"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-21",
+          "order_users": "587",
+          "order_cnt": "611",
+          "revenue": "2928.63"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-21",
+          "order_users": "387",
+          "order_cnt": "403",
+          "revenue": "2065.01"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-21",
+          "order_users": "351",
+          "order_cnt": "365",
+          "revenue": "1955.70"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-22",
+          "order_users": "279",
+          "order_cnt": "288",
+          "revenue": "1468.13"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-22",
+          "order_users": "171",
+          "order_cnt": "174",
+          "revenue": "944.44"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-22",
+          "order_users": "196",
+          "order_cnt": "199",
+          "revenue": "1161.60"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-24",
+          "order_users": "668",
+          "order_cnt": "690",
+          "revenue": "3362.64"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-24",
+          "order_users": "485",
+          "order_cnt": "500",
+          "revenue": "2614.20"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-24",
+          "order_users": "482",
+          "order_cnt": "505",
+          "revenue": "2630.82"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-25",
+          "order_users": "852",
+          "order_cnt": "878",
+          "revenue": "4245.82"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-25",
+          "order_users": "566",
+          "order_cnt": "589",
+          "revenue": "2939.57"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-25",
+          "order_users": "577",
+          "order_cnt": "595",
+          "revenue": "3049.34"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-26",
+          "order_users": "974",
+          "order_cnt": "994",
+          "revenue": "4522.68"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-26",
+          "order_users": "652",
+          "order_cnt": "683",
+          "revenue": "3444.76"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-26",
+          "order_users": "613",
+          "order_cnt": "631",
+          "revenue": "3054.60"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-27",
+          "order_users": "826",
+          "order_cnt": "848",
+          "revenue": "3977.86"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-27",
+          "order_users": "548",
+          "order_cnt": "562",
+          "revenue": "2864.18"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-27",
+          "order_users": "549",
+          "order_cnt": "567",
+          "revenue": "2975.60"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-28",
+          "order_users": "590",
+          "order_cnt": "610",
+          "revenue": "2849.69"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-28",
+          "order_users": "393",
+          "order_cnt": "411",
+          "revenue": "2209.13"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-28",
+          "order_users": "375",
+          "order_cnt": "394",
+          "revenue": "2049.96"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-03-01",
+          "order_users": "458",
+          "order_cnt": "478",
+          "revenue": "2236.12"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-03-01",
+          "order_users": "325",
+          "order_cnt": "336",
+          "revenue": "1727.97"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-03-01",
+          "order_users": "330",
+          "order_cnt": "338",
+          "revenue": "1710.71"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-03-02",
+          "order_users": "829",
+          "order_cnt": "852",
+          "revenue": "3868.70"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-03-02",
+          "order_users": "570",
+          "order_cnt": "588",
+          "revenue": "2921.52"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-03-02",
+          "order_users": "551",
+          "order_cnt": "565",
+          "revenue": "2666.35"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-03-03",
+          "order_users": "784",
+          "order_cnt": "803",
+          "revenue": "3565.41"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-03-03",
+          "order_users": "536",
+          "order_cnt": "552",
+          "revenue": "2773.66"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-03-03",
+          "order_users": "540",
+          "order_cnt": "556",
+          "revenue": "2871.46"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-03-04",
+          "order_users": "921",
+          "order_cnt": "943",
+          "revenue": "4264.69"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-03-04",
+          "order_users": "671",
+          "order_cnt": "700",
+          "revenue": "3626.12"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-03-04",
+          "order_users": "641",
+          "order_cnt": "657",
+          "revenue": "3376.60"
+        }
+      ],
+      "Q3": [
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-12",
+          "visit_users": "6559"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-12",
+          "visit_users": "4940"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-12",
+          "visit_users": "4947"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-13",
+          "visit_users": "6890"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-13",
+          "visit_users": "5152"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-13",
+          "visit_users": "5117"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-14",
+          "visit_users": "10313"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-14",
+          "visit_users": "7692"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-14",
+          "visit_users": "7806"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-15",
+          "visit_users": "1149"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-15",
+          "visit_users": "858"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-15",
+          "visit_users": "852"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-16",
+          "visit_users": "4176"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-16",
+          "visit_users": "3184"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-16",
+          "visit_users": "3152"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-17",
+          "visit_users": "4581"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-17",
+          "visit_users": "3529"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-17",
+          "visit_users": "3491"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-18",
+          "visit_users": "8686"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-18",
+          "visit_users": "6600"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-18",
+          "visit_users": "6441"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-19",
+          "visit_users": "1713"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-19",
+          "visit_users": "1275"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-19",
+          "visit_users": "1306"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-20",
+          "visit_users": "7978"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-20",
+          "visit_users": "6007"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-20",
+          "visit_users": "6006"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-21",
+          "visit_users": "2092"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-21",
+          "visit_users": "1549"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-21",
+          "visit_users": "1513"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-22",
+          "visit_users": "3486"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-22",
+          "visit_users": "2604"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-22",
+          "visit_users": "2637"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-23",
+          "visit_users": "3878"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-23",
+          "visit_users": "2915"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-23",
+          "visit_users": "2937"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-24",
+          "visit_users": "4498"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-24",
+          "visit_users": "3349"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-24",
+          "visit_users": "3376"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-25",
+          "visit_users": "8457"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-25",
+          "visit_users": "6277"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-25",
+          "visit_users": "6307"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-26",
+          "visit_users": "2191"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-26",
+          "visit_users": "1573"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-26",
+          "visit_users": "1553"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-27",
+          "visit_users": "8298"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-27",
+          "visit_users": "6195"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-27",
+          "visit_users": "6184"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-28",
+          "visit_users": "1442"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-28",
+          "visit_users": "1017"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-28",
+          "visit_users": "1064"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-03-01",
+          "visit_users": "1449"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-03-01",
+          "visit_users": "1106"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-03-01",
+          "visit_users": "1099"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-03-02",
+          "visit_users": "1956"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-03-02",
+          "visit_users": "1425"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-03-02",
+          "visit_users": "1392"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-03-03",
+          "visit_users": "1903"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-03-03",
+          "visit_users": "1360"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-03-03",
+          "visit_users": "1335"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-03-04",
+          "visit_users": "5434"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-03-04",
+          "visit_users": "4088"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-03-04",
+          "visit_users": "4143"
+        }
+      ],
+      "Q4": [
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-12",
+          "cups": "1256",
+          "item_revenue": "4162.74",
+          "unit_price": "3.31"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-12",
+          "cups": "818",
+          "item_revenue": "2956.83",
+          "unit_price": "3.61"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-12",
+          "cups": "903",
+          "item_revenue": "3068.92",
+          "unit_price": "3.40"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-13",
+          "cups": "1136",
+          "item_revenue": "3805.03",
+          "unit_price": "3.35"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-13",
+          "cups": "793",
+          "item_revenue": "2845.49",
+          "unit_price": "3.59"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-13",
+          "cups": "782",
+          "item_revenue": "2784.27",
+          "unit_price": "3.56"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-14",
+          "cups": "876",
+          "item_revenue": "2786.00",
+          "unit_price": "3.18"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-14",
+          "cups": "577",
+          "item_revenue": "2028.59",
+          "unit_price": "3.52"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-14",
+          "cups": "593",
+          "item_revenue": "2083.46",
+          "unit_price": "3.51"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-15",
+          "cups": "755",
+          "item_revenue": "2438.16",
+          "unit_price": "3.23"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-15",
+          "cups": "452",
+          "item_revenue": "1607.95",
+          "unit_price": "3.56"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-15",
+          "cups": "471",
+          "item_revenue": "1607.62",
+          "unit_price": "3.41"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-16",
+          "cups": "749",
+          "item_revenue": "2453.46",
+          "unit_price": "3.28"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-16",
+          "cups": "501",
+          "item_revenue": "1762.47",
+          "unit_price": "3.52"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-16",
+          "cups": "497",
+          "item_revenue": "1763.68",
+          "unit_price": "3.55"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-17",
+          "cups": "1136",
+          "item_revenue": "3687.03",
+          "unit_price": "3.25"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-17",
+          "cups": "817",
+          "item_revenue": "2939.98",
+          "unit_price": "3.60"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-17",
+          "cups": "806",
+          "item_revenue": "2879.76",
+          "unit_price": "3.57"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-18",
+          "cups": "1208",
+          "item_revenue": "4025.69",
+          "unit_price": "3.33"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-18",
+          "cups": "847",
+          "item_revenue": "3046.92",
+          "unit_price": "3.60"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-18",
+          "cups": "747",
+          "item_revenue": "2690.41",
+          "unit_price": "3.60"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-19",
+          "cups": "1118",
+          "item_revenue": "3714.00",
+          "unit_price": "3.32"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-19",
+          "cups": "820",
+          "item_revenue": "3024.70",
+          "unit_price": "3.69"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-19",
+          "cups": "792",
+          "item_revenue": "2840.83",
+          "unit_price": "3.59"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-20",
+          "cups": "797",
+          "item_revenue": "2727.20",
+          "unit_price": "3.42"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-20",
+          "cups": "585",
+          "item_revenue": "2168.01",
+          "unit_price": "3.71"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-20",
+          "cups": "516",
+          "item_revenue": "1901.82",
+          "unit_price": "3.69"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-21",
+          "cups": "841",
+          "item_revenue": "2688.15",
+          "unit_price": "3.20"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-21",
+          "cups": "537",
+          "item_revenue": "1895.77",
+          "unit_price": "3.53"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-21",
+          "cups": "502",
+          "item_revenue": "1795.10",
+          "unit_price": "3.58"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-22",
+          "cups": "412",
+          "item_revenue": "1347.33",
+          "unit_price": "3.27"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-22",
+          "cups": "238",
+          "item_revenue": "866.89",
+          "unit_price": "3.64"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-22",
+          "cups": "298",
+          "item_revenue": "1066.35",
+          "unit_price": "3.58"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-24",
+          "cups": "901",
+          "item_revenue": "3087.03",
+          "unit_price": "3.43"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-24",
+          "cups": "651",
+          "item_revenue": "2399.70",
+          "unit_price": "3.69"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-24",
+          "cups": "659",
+          "item_revenue": "2415.25",
+          "unit_price": "3.67"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-25",
+          "cups": "1141",
+          "item_revenue": "3897.38",
+          "unit_price": "3.42"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-25",
+          "cups": "751",
+          "item_revenue": "2698.74",
+          "unit_price": "3.59"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-25",
+          "cups": "789",
+          "item_revenue": "2799.20",
+          "unit_price": "3.55"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-26",
+          "cups": "1256",
+          "item_revenue": "4151.88",
+          "unit_price": "3.31"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-26",
+          "cups": "873",
+          "item_revenue": "3162.83",
+          "unit_price": "3.62"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-26",
+          "cups": "785",
+          "item_revenue": "2804.56",
+          "unit_price": "3.57"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-27",
+          "cups": "1109",
+          "item_revenue": "3651.50",
+          "unit_price": "3.29"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-27",
+          "cups": "723",
+          "item_revenue": "2629.56",
+          "unit_price": "3.64"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-27",
+          "cups": "755",
+          "item_revenue": "2731.62",
+          "unit_price": "3.62"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-02-28",
+          "cups": "817",
+          "item_revenue": "2616.01",
+          "unit_price": "3.20"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-02-28",
+          "cups": "573",
+          "item_revenue": "2028.37",
+          "unit_price": "3.54"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-02-28",
+          "cups": "535",
+          "item_revenue": "1882.02",
+          "unit_price": "3.52"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-03-01",
+          "cups": "657",
+          "item_revenue": "2052.61",
+          "unit_price": "3.12"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-03-01",
+          "cups": "450",
+          "item_revenue": "1586.08",
+          "unit_price": "3.52"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-03-01",
+          "cups": "463",
+          "item_revenue": "1570.47",
+          "unit_price": "3.39"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-03-02",
+          "cups": "1092",
+          "item_revenue": "3551.35",
+          "unit_price": "3.25"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-03-02",
+          "cups": "746",
+          "item_revenue": "2681.61",
+          "unit_price": "3.59"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-03-02",
+          "cups": "698",
+          "item_revenue": "2447.60",
+          "unit_price": "3.51"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-03-03",
+          "cups": "1001",
+          "item_revenue": "3272.60",
+          "unit_price": "3.27"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-03-03",
+          "cups": "698",
+          "item_revenue": "2546.00",
+          "unit_price": "3.65"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-03-03",
+          "cups": "727",
+          "item_revenue": "2636.13",
+          "unit_price": "3.63"
+        },
+        {
+          "grp": "对照组3",
+          "dt": "2026-03-04",
+          "cups": "1198",
+          "item_revenue": "3915.22",
+          "unit_price": "3.27"
+        },
+        {
+          "grp": "涨价组1",
+          "dt": "2026-03-04",
+          "cups": "932",
+          "item_revenue": "3328.57",
+          "unit_price": "3.57"
+        },
+        {
+          "grp": "涨价组2",
+          "dt": "2026-03-04",
+          "cups": "888",
+          "item_revenue": "3099.42",
+          "unit_price": "3.49"
+        }
+      ],
+      "Q5": [
+        {
+          "grp": "对照组3",
+          "period_order_users": "6656",
+          "period_order_cnt": "14795",
+          "period_revenue": "69738.62"
+        },
+        {
+          "grp": "涨价组1",
+          "period_order_users": "4665",
+          "period_order_cnt": "10284",
+          "period_revenue": "52493.91"
+        },
+        {
+          "grp": "涨价组2",
+          "period_order_users": "4640",
+          "period_order_cnt": "10078",
+          "period_revenue": "51034.90"
+        }
+      ],
+      "Q6": [
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-12",
+          "day_buyers": "938",
+          "repurchase_users": "267",
+          "repurchase_rate_3d": "28.46"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-12",
+          "day_buyers": "634",
+          "repurchase_users": "170",
+          "repurchase_rate_3d": "26.81"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-12",
+          "day_buyers": "697",
+          "repurchase_users": "197",
+          "repurchase_rate_3d": "28.26"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-13",
+          "day_buyers": "823",
+          "repurchase_users": "192",
+          "repurchase_rate_3d": "23.33"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-13",
+          "day_buyers": "576",
+          "repurchase_users": "129",
+          "repurchase_rate_3d": "22.40"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-13",
+          "day_buyers": "571",
+          "repurchase_users": "133",
+          "repurchase_rate_3d": "23.29"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-14",
+          "day_buyers": "590",
+          "repurchase_users": "175",
+          "repurchase_rate_3d": "29.66"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-14",
+          "day_buyers": "401",
+          "repurchase_users": "140",
+          "repurchase_rate_3d": "34.91"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-14",
+          "day_buyers": "417",
+          "repurchase_users": "116",
+          "repurchase_rate_3d": "27.82"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-15",
+          "day_buyers": "473",
+          "repurchase_users": "144",
+          "repurchase_rate_3d": "30.44"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-15",
+          "day_buyers": "319",
+          "repurchase_users": "102",
+          "repurchase_rate_3d": "31.97"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-15",
+          "day_buyers": "322",
+          "repurchase_users": "94",
+          "repurchase_rate_3d": "29.19"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-16",
+          "day_buyers": "516",
+          "repurchase_users": "175",
+          "repurchase_rate_3d": "33.91"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-16",
+          "day_buyers": "358",
+          "repurchase_users": "138",
+          "repurchase_rate_3d": "38.55"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-16",
+          "day_buyers": "358",
+          "repurchase_users": "121",
+          "repurchase_rate_3d": "33.80"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-17",
+          "day_buyers": "832",
+          "repurchase_users": "346",
+          "repurchase_rate_3d": "41.59"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-17",
+          "day_buyers": "627",
+          "repurchase_users": "247",
+          "repurchase_rate_3d": "39.39"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-17",
+          "day_buyers": "605",
+          "repurchase_users": "247",
+          "repurchase_rate_3d": "40.83"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-18",
+          "day_buyers": "906",
+          "repurchase_users": "349",
+          "repurchase_rate_3d": "38.52"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-18",
+          "day_buyers": "628",
+          "repurchase_users": "249",
+          "repurchase_rate_3d": "39.65"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-18",
+          "day_buyers": "564",
+          "repurchase_users": "201",
+          "repurchase_rate_3d": "35.64"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-19",
+          "day_buyers": "866",
+          "repurchase_users": "222",
+          "repurchase_rate_3d": "25.64"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-19",
+          "day_buyers": "639",
+          "repurchase_users": "157",
+          "repurchase_rate_3d": "24.57"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-19",
+          "day_buyers": "628",
+          "repurchase_users": "138",
+          "repurchase_rate_3d": "21.97"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-20",
+          "day_buyers": "588",
+          "repurchase_users": "114",
+          "repurchase_rate_3d": "19.39"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-20",
+          "day_buyers": "431",
+          "repurchase_users": "73",
+          "repurchase_rate_3d": "16.94"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-20",
+          "day_buyers": "376",
+          "repurchase_users": "69",
+          "repurchase_rate_3d": "18.35"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-21",
+          "day_buyers": "587",
+          "repurchase_users": "128",
+          "repurchase_rate_3d": "21.81"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-21",
+          "day_buyers": "387",
+          "repurchase_users": "97",
+          "repurchase_rate_3d": "25.06"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-21",
+          "day_buyers": "351",
+          "repurchase_users": "83",
+          "repurchase_rate_3d": "23.65"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-22",
+          "day_buyers": "279",
+          "repurchase_users": "71",
+          "repurchase_rate_3d": "25.45"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-22",
+          "day_buyers": "171",
+          "repurchase_users": "53",
+          "repurchase_rate_3d": "30.99"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-22",
+          "day_buyers": "196",
+          "repurchase_users": "48",
+          "repurchase_rate_3d": "24.49"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-24",
+          "day_buyers": "668",
+          "repurchase_users": "315",
+          "repurchase_rate_3d": "47.16"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-24",
+          "day_buyers": "485",
+          "repurchase_users": "207",
+          "repurchase_rate_3d": "42.68"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-24",
+          "day_buyers": "482",
+          "repurchase_users": "240",
+          "repurchase_rate_3d": "49.79"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-25",
+          "day_buyers": "852",
+          "repurchase_users": "329",
+          "repurchase_rate_3d": "38.62"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-25",
+          "day_buyers": "566",
+          "repurchase_users": "204",
+          "repurchase_rate_3d": "36.04"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-25",
+          "day_buyers": "577",
+          "repurchase_users": "223",
+          "repurchase_rate_3d": "38.65"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-26",
+          "day_buyers": "974",
+          "repurchase_users": "264",
+          "repurchase_rate_3d": "27.10"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-26",
+          "day_buyers": "652",
+          "repurchase_users": "184",
+          "repurchase_rate_3d": "28.22"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-26",
+          "day_buyers": "613",
+          "repurchase_users": "168",
+          "repurchase_rate_3d": "27.41"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-27",
+          "day_buyers": "826",
+          "repurchase_users": "257",
+          "repurchase_rate_3d": "31.11"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-27",
+          "day_buyers": "548",
+          "repurchase_users": "193",
+          "repurchase_rate_3d": "35.22"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-27",
+          "day_buyers": "549",
+          "repurchase_users": "165",
+          "repurchase_rate_3d": "30.05"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-28",
+          "day_buyers": "590",
+          "repurchase_users": "180",
+          "repurchase_rate_3d": "30.51"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-28",
+          "day_buyers": "393",
+          "repurchase_users": "117",
+          "repurchase_rate_3d": "29.77"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-28",
+          "day_buyers": "375",
+          "repurchase_users": "107",
+          "repurchase_rate_3d": "28.53"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-03-01",
+          "day_buyers": "458",
+          "repurchase_users": "141",
+          "repurchase_rate_3d": "30.79"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-03-01",
+          "day_buyers": "325",
+          "repurchase_users": "102",
+          "repurchase_rate_3d": "31.38"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-03-01",
+          "day_buyers": "330",
+          "repurchase_users": "100",
+          "repurchase_rate_3d": "30.30"
+        }
+      ],
+      "Q7": [
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-12",
+          "day_buyers": "938",
+          "repurchase_users": "538",
+          "repurchase_rate_7d": "57.36"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-12",
+          "day_buyers": "634",
+          "repurchase_users": "354",
+          "repurchase_rate_7d": "55.84"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-12",
+          "day_buyers": "697",
+          "repurchase_users": "388",
+          "repurchase_rate_7d": "55.67"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-13",
+          "day_buyers": "823",
+          "repurchase_users": "442",
+          "repurchase_rate_7d": "53.71"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-13",
+          "day_buyers": "576",
+          "repurchase_users": "295",
+          "repurchase_rate_7d": "51.22"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-13",
+          "day_buyers": "571",
+          "repurchase_users": "304",
+          "repurchase_rate_7d": "53.24"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-14",
+          "day_buyers": "590",
+          "repurchase_users": "262",
+          "repurchase_rate_7d": "44.41"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-14",
+          "day_buyers": "401",
+          "repurchase_users": "210",
+          "repurchase_rate_7d": "52.37"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-14",
+          "day_buyers": "417",
+          "repurchase_users": "190",
+          "repurchase_rate_7d": "45.56"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-15",
+          "day_buyers": "473",
+          "repurchase_users": "222",
+          "repurchase_rate_7d": "46.93"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-15",
+          "day_buyers": "319",
+          "repurchase_users": "153",
+          "repurchase_rate_7d": "47.96"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-15",
+          "day_buyers": "322",
+          "repurchase_users": "148",
+          "repurchase_rate_7d": "45.96"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-16",
+          "day_buyers": "516",
+          "repurchase_users": "253",
+          "repurchase_rate_7d": "49.03"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-16",
+          "day_buyers": "358",
+          "repurchase_users": "166",
+          "repurchase_rate_7d": "46.37"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-16",
+          "day_buyers": "358",
+          "repurchase_users": "159",
+          "repurchase_rate_7d": "44.41"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-17",
+          "day_buyers": "832",
+          "repurchase_users": "405",
+          "repurchase_rate_7d": "48.68"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-17",
+          "day_buyers": "627",
+          "repurchase_users": "295",
+          "repurchase_rate_7d": "47.05"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-17",
+          "day_buyers": "605",
+          "repurchase_users": "289",
+          "repurchase_rate_7d": "47.77"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-18",
+          "day_buyers": "906",
+          "repurchase_users": "488",
+          "repurchase_rate_7d": "53.86"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-18",
+          "day_buyers": "628",
+          "repurchase_users": "326",
+          "repurchase_rate_7d": "51.91"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-18",
+          "day_buyers": "564",
+          "repurchase_users": "276",
+          "repurchase_rate_7d": "48.94"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-19",
+          "day_buyers": "866",
+          "repurchase_users": "497",
+          "repurchase_rate_7d": "57.39"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-19",
+          "day_buyers": "639",
+          "repurchase_users": "336",
+          "repurchase_rate_7d": "52.58"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-19",
+          "day_buyers": "628",
+          "repurchase_users": "296",
+          "repurchase_rate_7d": "47.13"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-20",
+          "day_buyers": "588",
+          "repurchase_users": "359",
+          "repurchase_rate_7d": "61.05"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-20",
+          "day_buyers": "431",
+          "repurchase_users": "247",
+          "repurchase_rate_7d": "57.31"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-20",
+          "day_buyers": "376",
+          "repurchase_users": "219",
+          "repurchase_rate_7d": "58.24"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-21",
+          "day_buyers": "587",
+          "repurchase_users": "258",
+          "repurchase_rate_7d": "43.95"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-21",
+          "day_buyers": "387",
+          "repurchase_users": "173",
+          "repurchase_rate_7d": "44.70"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-21",
+          "day_buyers": "351",
+          "repurchase_users": "165",
+          "repurchase_rate_7d": "47.01"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-22",
+          "day_buyers": "279",
+          "repurchase_users": "140",
+          "repurchase_rate_7d": "50.18"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-22",
+          "day_buyers": "171",
+          "repurchase_users": "104",
+          "repurchase_rate_7d": "60.82"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-22",
+          "day_buyers": "196",
+          "repurchase_users": "104",
+          "repurchase_rate_7d": "53.06"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-24",
+          "day_buyers": "668",
+          "repurchase_users": "417",
+          "repurchase_rate_7d": "62.43"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-24",
+          "day_buyers": "485",
+          "repurchase_users": "282",
+          "repurchase_rate_7d": "58.14"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-24",
+          "day_buyers": "482",
+          "repurchase_users": "299",
+          "repurchase_rate_7d": "62.03"
+        },
+        {
+          "grp": "对照组3",
+          "order_date": "2026-02-25",
+          "day_buyers": "852",
+          "repurchase_users": "509",
+          "repurchase_rate_7d": "59.74"
+        },
+        {
+          "grp": "涨价组1",
+          "order_date": "2026-02-25",
+          "day_buyers": "566",
+          "repurchase_users": "332",
+          "repurchase_rate_7d": "58.66"
+        },
+        {
+          "grp": "涨价组2",
+          "order_date": "2026-02-25",
+          "day_buyers": "577",
+          "repurchase_users": "344",
+          "repurchase_rate_7d": "59.62"
+        }
+      ]
+    },
+    "share_the_luck": {
+      "acquisition": {
+        "header": [
+          "dt",
+          "share_register_cnt",
+          "share_order_cnt",
+          "total_new_order_cnt",
+          "share_order_pct"
+        ],
+        "rows": [
+          [
+            "2026-02-01",
+            "42",
+            "31",
+            "457",
+            "6.78"
+          ],
+          [
+            "2026-02-02",
+            "51",
+            "33",
+            "396",
+            "8.33"
+          ],
+          [
+            "2026-02-03",
+            "40",
+            "31",
+            "487",
+            "6.37"
+          ],
+          [
+            "2026-02-04",
+            "43",
+            "33",
+            "514",
+            "6.42"
+          ],
+          [
+            "2026-02-05",
+            "63",
+            "42",
+            "496",
+            "8.47"
+          ],
+          [
+            "2026-02-06",
+            "63",
+            "39",
+            "659",
+            "5.92"
+          ],
+          [
+            "2026-02-07",
+            "53",
+            "35",
+            "516",
+            "6.78"
+          ],
+          [
+            "2026-02-08",
+            "32",
+            "25",
+            "356",
+            "7.02"
+          ],
+          [
+            "2026-02-09",
+            "47",
+            "34",
+            "441",
+            "7.71"
+          ],
+          [
+            "2026-02-10",
+            "50",
+            "32",
+            "579",
+            "5.53"
+          ],
+          [
+            "2026-02-11",
+            "54",
+            "33",
+            "607",
+            "5.44"
+          ],
+          [
+            "2026-02-12",
+            "60",
+            "43",
+            "622",
+            "6.91"
+          ],
+          [
+            "2026-02-13",
+            "57",
+            "34",
+            "647",
+            "5.26"
+          ],
+          [
+            "2026-02-14",
+            "48",
+            "37",
+            "863",
+            "4.29"
+          ],
+          [
+            "2026-02-15",
+            "44",
+            "38",
+            "818",
+            "4.65"
+          ],
+          [
+            "2026-02-16",
+            "42",
+            "30",
+            "615",
+            "4.88"
+          ],
+          [
+            "2026-02-17",
+            "43",
+            "31",
+            "692",
+            "4.48"
+          ],
+          [
+            "2026-02-18",
+            "49",
+            "34",
+            "555",
+            "6.13"
+          ],
+          [
+            "2026-02-19",
+            "51",
+            "34",
+            "610",
+            "5.57"
+          ],
+          [
+            "2026-02-20",
+            "49",
+            "30",
+            "515",
+            "5.83"
+          ],
+          [
+            "2026-02-21",
+            "55",
+            "40",
+            "860",
+            "4.65"
+          ],
+          [
+            "2026-02-22",
+            "34",
+            "19",
+            "269",
+            "7.06"
+          ],
+          [
+            "2026-02-23",
+            "8",
+            "3",
+            "0",
+            null
+          ],
+          [
+            "2026-02-24",
+            "25",
+            "13",
+            "397",
+            "3.27"
+          ],
+          [
+            "2026-02-25",
+            "43",
+            "26",
+            "452",
+            "5.75"
+          ],
+          [
+            "2026-02-26",
+            "92",
+            "57",
+            "810",
+            "7.04"
+          ],
+          [
+            "2026-02-27",
+            "56",
+            "0",
+            "757",
+            "0.00"
+          ],
+          [
+            "2026-02-28",
+            "62",
+            "0",
+            "1009",
+            "0.00"
+          ],
+          [
+            "2026-03-01",
+            "54",
+            "0",
+            "756",
+            "0.00"
+          ],
+          [
+            "2026-03-02",
+            "43",
+            "0",
+            "509",
+            "0.00"
+          ],
+          [
+            "2026-03-03",
+            "61",
+            "0",
+            "547",
+            "0.00"
+          ],
+          [
+            "2026-03-04",
+            "77",
+            "0",
+            "730",
+            "0.00"
+          ]
+        ]
+      },
+      "invitation": {
+        "header": [
+          "register_dt",
+          "register_invitee_cnt",
+          "inviter_cnt",
+          "order_d0_invitee_cnt",
+          "order_d3_invitee_cnt",
+          "order_d7_invitee_cnt",
+          "order_d14_invitee_cnt",
+          "avg_register_per_inviter"
+        ],
+        "rows": [
+          [
+            "2026-02-01",
+            "42",
+            "40",
+            "24",
+            "28",
+            "30",
+            "31",
+            "1.05"
+          ],
+          [
+            "2026-02-02",
+            "51",
+            "46",
+            "27",
+            "31",
+            "33",
+            "33",
+            "1.11"
+          ],
+          [
+            "2026-02-03",
+            "40",
+            "34",
+            "25",
+            "29",
+            "31",
+            "31",
+            "1.18"
+          ],
+          [
+            "2026-02-04",
+            "43",
+            "42",
+            "22",
+            "24",
+            "26",
+            "32",
+            "1.02"
+          ],
+          [
+            "2026-02-05",
+            "63",
+            "59",
+            "31",
+            "37",
+            "38",
+            "40",
+            "1.07"
+          ],
+          [
+            "2026-02-06",
+            "63",
+            "60",
+            "30",
+            "32",
+            "36",
+            "39",
+            "1.05"
+          ],
+          [
+            "2026-02-07",
+            "53",
+            "49",
+            "27",
+            "31",
+            "32",
+            "34",
+            "1.08"
+          ],
+          [
+            "2026-02-08",
+            "32",
+            "31",
+            "21",
+            "21",
+            "25",
+            "25",
+            "1.03"
+          ],
+          [
+            "2026-02-09",
+            "47",
+            "41",
+            "21",
+            "29",
+            "32",
+            "34",
+            "1.15"
+          ],
+          [
+            "2026-02-10",
+            "50",
+            "46",
+            "24",
+            "26",
+            "30",
+            "30",
+            "1.09"
+          ],
+          [
+            "2026-02-11",
+            "54",
+            "51",
+            "23",
+            "29",
+            "32",
+            "33",
+            "1.06"
+          ],
+          [
+            "2026-02-12",
+            "60",
+            "57",
+            "35",
+            "37",
+            "39",
+            "43",
+            "1.05"
+          ],
+          [
+            "2026-02-13",
+            "57",
+            "53",
+            "24",
+            "26",
+            "31",
+            "34",
+            "1.08"
+          ],
+          [
+            "2026-02-14",
+            "48",
+            "42",
+            "34",
+            "36",
+            "37",
+            "37",
+            "1.14"
+          ],
+          [
+            "2026-02-15",
+            "44",
+            "35",
+            "33",
+            "35",
+            "37",
+            "38",
+            "1.26"
+          ],
+          [
+            "2026-02-16",
+            "42",
+            "34",
+            "27",
+            "27",
+            "30",
+            "30",
+            "1.24"
+          ],
+          [
+            "2026-02-17",
+            "43",
+            "42",
+            "30",
+            "30",
+            "30",
+            "31",
+            "1.02"
+          ],
+          [
+            "2026-02-18",
+            "49",
+            "46",
+            "31",
+            "33",
+            "33",
+            "34",
+            "1.07"
+          ],
+          [
+            "2026-02-19",
+            "51",
+            "45",
+            "26",
+            "31",
+            "33",
+            "34",
+            "1.13"
+          ],
+          [
+            "2026-02-20",
+            "49",
+            "47",
+            "25",
+            "28",
+            "30",
+            "30",
+            "1.04"
+          ],
+          [
+            "2026-02-21",
+            "55",
+            "51",
+            "34",
+            "34",
+            "40",
+            "40",
+            "1.08"
+          ],
+          [
+            "2026-02-22",
+            "34",
+            "31",
+            "15",
+            "17",
+            "19",
+            "19",
+            "1.10"
+          ],
+          [
+            "2026-02-23",
+            "8",
+            "8",
+            "0",
+            "2",
+            "3",
+            "3",
+            "1.00"
+          ],
+          [
+            "2026-02-24",
+            "25",
+            "25",
+            "11",
+            "13",
+            "13",
+            "13",
+            "1.00"
+          ],
+          [
+            "2026-02-25",
+            "43",
+            "41",
+            "25",
+            "26",
+            "26",
+            "26",
+            "1.05"
+          ],
+          [
+            "2026-02-26",
+            "92",
+            "78",
+            "57",
+            "57",
+            "57",
+            "57",
+            "1.18"
+          ],
+          [
+            "2026-02-27",
+            "56",
+            "50",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1.12"
+          ],
+          [
+            "2026-02-28",
+            "62",
+            "52",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1.19"
+          ],
+          [
+            "2026-03-01",
+            "54",
+            "47",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1.15"
+          ],
+          [
+            "2026-03-02",
+            "43",
+            "40",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1.08"
+          ],
+          [
+            "2026-03-03",
+            "61",
+            "53",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1.15"
+          ],
+          [
+            "2026-03-04",
+            "77",
+            "66",
+            "0",
+            "0",
+            "0",
+            "0",
+            "1.17"
+          ]
+        ]
+      },
+      "invite_dist": {
+        "header": [
+          "invite_cnt",
+          "inviter_count"
+        ],
+        "rows": [
+          [
+            "1",
+            "1067"
+          ],
+          [
+            "2",
+            "168"
+          ],
+          [
+            "3",
+            "32"
+          ],
+          [
+            "4",
+            "12"
+          ],
+          [
+            "5",
+            "3"
+          ],
+          [
+            "6",
+            "3"
+          ],
+          [
+            "11",
+            "1"
+          ]
+        ]
+      },
+      "diag_resource": {
+        "header": [
+          "event",
+          "p_proposal_no",
+          "p_pic_url",
+          "cnt"
+        ],
+        "rows": [
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1766397498154_LKUSIMG118540929463328768.jpeg",
+            "60885"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1771904864253_LKUSIMG118910522539220992.jpeg",
+            "17378"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1767772777170_LKUSIMG118633222874660864.jpeg",
+            "11004"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.bw",
+            "LKUSCP117864583917731840",
+            null,
+            "9581"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.bw",
+            null,
+            null,
+            "5860"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1756910109103_LKUSIMG117904241565114368.png",
+            "5345"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.ck",
+            null,
+            null,
+            "4534"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.ck",
+            "LKUSCP117864583917731840",
+            null,
+            "4364"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.bw",
+            "LKUSCP118471397164236800",
+            null,
+            "3456"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.bw",
+            "LKUSCP118337189502435329",
+            null,
+            "3221"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.ck",
+            "LKUSCP118471397164236800",
+            null,
+            "2511"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.ck",
+            "LKUSCP118337189502435329",
+            null,
+            "2195"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1757927265317_LKUSIMG117972501749080064.jpeg",
+            "1351"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.bw",
+            "LKUSCP117880665483247616",
+            null,
+            "1159"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.bw",
+            "LKUSCP118703131520532480",
+            null,
+            "935"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.bw",
+            "LKUSCP118703137694547968",
+            null,
+            "908"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.ck",
+            "LKUSCP117880665483247616",
+            null,
+            "862"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.ck",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1766397498154_LKUSIMG118540929463328768.jpeg",
+            "629"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.ck",
+            "LKUSCP118703131520532480",
+            null,
+            "561"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.ck",
+            "LKUSCP118703137694547968",
+            null,
+            "512"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.ck",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1767772777170_LKUSIMG118633222874660864.jpeg",
+            "403"
+          ],
+          [
+            "$page.H5sharepage$model.popupwin$content.0$action.ck",
+            null,
+            null,
+            "341"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1757932024035_LKUSIMG117972821119868928.jpeg",
+            "333"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.bw",
+            "LKUSCP118842845062135808",
+            null,
+            "323"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.ck",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1771904864253_LKUSIMG118910522539220992.jpeg",
+            "288"
+          ],
+          [
+            "$page.H5sharepage$model.popupwin$content.0$action.bw",
+            null,
+            null,
+            "243"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.bw",
+            "LKUSCP118522903150198785",
+            null,
+            "233"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.bw",
+            "LKUSCP118842131090661376",
+            null,
+            "226"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1758291836072_LKUSIMG117996967694737408.jpeg",
+            "223"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.ck",
+            "LKUSCP118842845062135808",
+            null,
+            "189"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.ck",
+            "LKUSCP118522903150198785",
+            null,
+            "149"
+          ],
+          [
+            "$page.0$model.popupwin$content.0$action.ck",
+            "LKUSCP118842131090661376",
+            null,
+            "123"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1770371930242_LKUSIMG118807649079853056.jpeg",
+            "93"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.ck",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1757927265317_LKUSIMG117972501749080064.jpeg",
+            "77"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1757502457251_LKUSIMG117943993366781952.jpeg",
+            "70"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1758292041873_LKUSIMG117996981451759616.jpeg",
+            "59"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1770283839931_LKUSIMG118801737392955392.jpeg",
+            "42"
+          ],
+          [
+            "$page.checkout$model.popupwin$content.deletecmdty$action.ck",
+            null,
+            null,
+            "39"
+          ],
+          [
+            "$page.checkout$model.popupwin$content.stockpopup$action.bw",
+            null,
+            null,
+            "25"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.ck",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1757932024035_LKUSIMG117972821119868928.jpeg",
+            "11"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1764748663212_LKUSIMG118430278019514368.jpeg",
+            "4"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1770347318103_LKUSIMG118805997396533248.jpeg",
+            "4"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1765267820330_LKUSIMG118465118056062976.jpeg",
+            "4"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1749699811476_LKUSIMG117420366657232896.jpeg",
+            "4"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1766141771067_LKUSIMG118523767914864640.jpeg",
+            "3"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.ck",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1758292041873_LKUSIMG117996981451759616.jpeg",
+            "3"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.ck",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1757502457251_LKUSIMG117943993366781952.jpeg",
+            "3"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1769162897356_LKUSIMG118726512248725504.jpeg",
+            "3"
+          ],
+          [
+            "$page.0$model.resource$content.0$action.bw",
+            null,
+            "https://ilucky-fe-outside-aws-prod.luckincdn.us/luckymedia/1761722866196_LKUSIMG118227220220092416.jpeg",
+            "2"
+          ],
+          [
+            "$page.checkout$model.popupwin$content.0$action.ck",
+            null,
+            null,
+            "2"
+          ]
+        ]
+      },
+      "share_intent": {
+        "header": [
+          "dt",
+          "share_page_uv",
+          "share_button_click_uv"
+        ],
+        "rows": [
+          [
+            "2026-01-31",
+            "34",
+            "15"
+          ],
+          [
+            "2026-02-01",
+            "188",
+            "114"
+          ],
+          [
+            "2026-02-02",
+            "277",
+            "148"
+          ],
+          [
+            "2026-02-03",
+            "322",
+            "164"
+          ],
+          [
+            "2026-02-04",
+            "309",
+            "180"
+          ],
+          [
+            "2026-02-05",
+            "533",
+            "249"
+          ],
+          [
+            "2026-02-06",
+            "573",
+            "298"
+          ],
+          [
+            "2026-02-07",
+            "203",
+            "124"
+          ],
+          [
+            "2026-02-08",
+            "130",
+            "72"
+          ],
+          [
+            "2026-02-09",
+            "251",
+            "147"
+          ],
+          [
+            "2026-02-10",
+            "322",
+            "183"
+          ],
+          [
+            "2026-02-11",
+            "336",
+            "180"
+          ],
+          [
+            "2026-02-12",
+            "303",
+            "182"
+          ],
+          [
+            "2026-02-13",
+            "285",
+            "172"
+          ],
+          [
+            "2026-02-14",
+            "228",
+            "146"
+          ],
+          [
+            "2026-02-15",
+            "226",
+            "143"
+          ],
+          [
+            "2026-02-16",
+            "236",
+            "132"
+          ],
+          [
+            "2026-02-17",
+            "338",
+            "188"
+          ],
+          [
+            "2026-02-18",
+            "300",
+            "168"
+          ],
+          [
+            "2026-02-19",
+            "537",
+            "243"
+          ],
+          [
+            "2026-02-20",
+            "391",
+            "186"
+          ],
+          [
+            "2026-02-21",
+            "288",
+            "180"
+          ],
+          [
+            "2026-02-22",
+            "134",
+            "70"
+          ],
+          [
+            "2026-02-23",
+            "55",
+            "21"
+          ],
+          [
+            "2026-02-24",
+            "196",
+            "114"
+          ],
+          [
+            "2026-02-25",
+            "267",
+            "155"
+          ],
+          [
+            "2026-02-26",
+            "381",
+            "237"
+          ],
+          [
+            "2026-02-27",
+            "310",
+            "186"
+          ],
+          [
+            "2026-02-28",
+            "292",
+            "178"
+          ],
+          [
+            "2026-03-01",
+            "266",
+            "174"
+          ],
+          [
+            "2026-03-02",
+            "290",
+            "157"
+          ],
+          [
+            "2026-03-03",
+            "356",
+            "209"
+          ],
+          [
+            "2026-03-04",
+            "328",
+            "213"
+          ]
+        ]
+      },
+      "traffic": {
+        "header": [
+          "dt",
+          "icon_expose_uv",
+          "icon_click_uv",
+          "slot_expose_uv",
+          "slot_click_uv",
+          "popup_expose_uv",
+          "popup_click_uv"
+        ],
+        "rows": [
+          [
+            "2026-01-31",
+            "371",
+            "16",
+            "150",
+            "9",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-01",
+            "2945",
+            "60",
+            "1040",
+            "31",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-02",
+            "4518",
+            "92",
+            "1586",
+            "65",
+            "1",
+            "0"
+          ],
+          [
+            "2026-02-03",
+            "5040",
+            "89",
+            "1630",
+            "91",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-04",
+            "5308",
+            "93",
+            "4723",
+            "185",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-05",
+            "4887",
+            "78",
+            "1737",
+            "91",
+            "3254",
+            "234"
+          ],
+          [
+            "2026-02-06",
+            "5461",
+            "97",
+            "79",
+            "2",
+            "3776",
+            "272"
+          ],
+          [
+            "2026-02-07",
+            "3055",
+            "64",
+            "10",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-08",
+            "2796",
+            "51",
+            "67",
+            "2",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-09",
+            "5522",
+            "92",
+            "16",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-10",
+            "5609",
+            "97",
+            "14",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-11",
+            "6286",
+            "107",
+            "6",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-12",
+            "5292",
+            "72",
+            "6",
+            "1",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-13",
+            "4712",
+            "79",
+            "7",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-14",
+            "4971",
+            "73",
+            "11",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-15",
+            "3504",
+            "75",
+            "4",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-16",
+            "3683",
+            "63",
+            "1253",
+            "52",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-17",
+            "5131",
+            "95",
+            "1830",
+            "97",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-18",
+            "5085",
+            "89",
+            "4484",
+            "178",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-19",
+            "5126",
+            "67",
+            "1768",
+            "92",
+            "3525",
+            "247"
+          ],
+          [
+            "2026-02-20",
+            "3818",
+            "49",
+            "1222",
+            "42",
+            "2549",
+            "159"
+          ],
+          [
+            "2026-02-21",
+            "3854",
+            "59",
+            "1266",
+            "44",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-22",
+            "2289",
+            "45",
+            "727",
+            "30",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-23",
+            "1900",
+            "25",
+            "605",
+            "21",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-24",
+            "4232",
+            "60",
+            "847",
+            "38",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-25",
+            "4913",
+            "75",
+            "1054",
+            "99",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-26",
+            "5597",
+            "101",
+            "1209",
+            "65",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-27",
+            "5019",
+            "94",
+            "1039",
+            "37",
+            "0",
+            "0"
+          ],
+          [
+            "2026-02-28",
+            "4051",
+            "80",
+            "811",
+            "36",
+            "0",
+            "0"
+          ],
+          [
+            "2026-03-01",
+            "3606",
+            "73",
+            "789",
+            "30",
+            "0",
+            "0"
+          ],
+          [
+            "2026-03-02",
+            "4914",
+            "86",
+            "1063",
+            "42",
+            "0",
+            "0"
+          ],
+          [
+            "2026-03-03",
+            "4949",
+            "97",
+            "1120",
+            "71",
+            "0",
+            "0"
+          ],
+          [
+            "2026-03-04",
+            "5667",
+            "92",
+            "4968",
+            "189",
+            "0",
+            "0"
+          ]
+        ]
+      }
+    }
+  }
+}

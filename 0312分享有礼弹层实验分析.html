@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>0312 分享有礼弹层实验分析</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e2e4e9;
+    --text2: #9ca0ab;
+    --accent: #6c8cff;
+    --green: #4ade80;
+    --red: #f87171;
+    --orange: #fbbf24;
+    --purple: #a78bfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+    padding: 24px;
+    line-height: 1.6;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 32px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  .header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .header .meta {
+    color: var(--text2);
+    font-size: 13px;
+  }
+  .header .meta span { margin: 0 8px; }
+
+  /* Section */
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .section h2 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section h2 .badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+  .badge-green { background: rgba(74,222,128,0.15); color: var(--green); }
+  .badge-orange { background: rgba(251,191,36,0.15); color: var(--orange); }
+  .badge-red { background: rgba(248,113,113,0.15); color: var(--red); }
+
+  /* KPI row */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .kpi {
+    background: rgba(108,140,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+  }
+  .kpi .label { font-size: 11px; color: var(--text2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .kpi .value { font-size: 22px; font-weight: 700; color: var(--accent); }
+  .kpi .sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .kpi .lift { font-size: 13px; font-weight: 600; margin-top: 4px; }
+  .lift-up { color: var(--green); }
+  .lift-down { color: var(--red); }
+  .lift-flat { color: var(--text2); }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    background: rgba(108,140,255,0.08);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    color: var(--text2);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(42,45,58,0.5);
+  }
+  tr:hover { background: rgba(108,140,255,0.03); }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .highlight { color: var(--accent); font-weight: 600; }
+
+  /* Chart area */
+  .chart-container {
+    margin: 16px 0;
+    position: relative;
+  }
+  .bar-chart {
+    display: flex;
+    align-items: end;
+    gap: 3px;
+    height: 140px;
+    padding: 0 0 24px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .bar-group {
+    display: flex;
+    gap: 2px;
+    flex: 1;
+    align-items: end;
+    justify-content: center;
+    position: relative;
+  }
+  .bar {
+    width: 18px;
+    border-radius: 3px 3px 0 0;
+    transition: all 0.3s;
+    position: relative;
+    cursor: default;
+  }
+  .bar:hover { opacity: 0.8; }
+  .bar-exp { background: var(--accent); }
+  .bar-ctrl { background: var(--purple); opacity: 0.5; }
+  .bar-label {
+    position: absolute;
+    bottom: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: var(--text2);
+    white-space: nowrap;
+  }
+  .bar-value {
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 16px;
+    margin: 12px 0 8px;
+    font-size: 12px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+  }
+  .legend-exp { background: var(--accent); }
+  .legend-ctrl { background: var(--purple); opacity: 0.5; }
+
+  /* Distribution bars */
+  .dist-row {
+    display: flex;
+    align-items: center;
+    margin: 8px 0;
+    font-size: 13px;
+  }
+  .dist-label { width: 70px; color: var(--text2); flex-shrink: 0; }
+  .dist-bars { flex: 1; display: flex; gap: 4px; align-items: center; }
+  .dist-bar {
+    height: 22px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+    min-width: 40px;
+  }
+
+  /* Conclusion */
+  .conclusion {
+    background: linear-gradient(135deg, rgba(108,140,255,0.08), rgba(167,139,250,0.08));
+    border: 1px solid rgba(108,140,255,0.2);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .conclusion h3 {
+    font-size: 15px;
+    margin-bottom: 12px;
+    color: var(--accent);
+  }
+  .conclusion ul {
+    list-style: none;
+    padding: 0;
+  }
+  .conclusion li {
+    padding: 6px 0;
+    padding-left: 20px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .conclusion li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 13px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* Significance badge */
+  .sig-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(251,191,36,0.1);
+    border: 1px solid rgba(251,191,36,0.2);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--orange);
+    margin-top: 12px;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    body { padding: 12px; }
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 20px 0;
+    color: var(--text2);
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Header -->
+<div class="header">
+  <h1>0312 分享有礼弹层实验分析</h1>
+  <div class="meta">
+    <span>实验周期：2026-03-12 ~ 03-17（进行中）</span>
+    <span>|</span>
+    <span>总样本：11,399 人</span>
+    <span>|</span>
+    <span>生成时间：2026-03-17</span>
+  </div>
+</div>
+
+<!-- Section 1: 实验概况 -->
+<div class="section">
+  <h2>实验概况</h2>
+  <p style="font-size:14px; color:var(--text2); margin-bottom:16px;">
+    测试「分享有礼」弹层展示对用户分享意愿和邀请裂变效果的影响。实验组在触发点展示分享弹层，对照组不展示。
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>分组</th>
+        <th>说明</th>
+        <th class="num">人数</th>
+        <th class="num">占比</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span style="color:var(--accent); font-weight:600;">实验组</span></td>
+        <td>展示分享有礼弹层</td>
+        <td class="num">5,673</td>
+        <td class="num">49.8%</td>
+      </tr>
+      <tr>
+        <td><span style="color:var(--purple); font-weight:600;">对照组</span></td>
+        <td>不展示弹层（自然分享入口）</td>
+        <td class="num">5,726</td>
+        <td class="num">50.2%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="font-size:14px; margin:20px 0 12px; color:var(--text2);">每日入组人数</h3>
+  <div class="chart-container">
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot legend-exp"></div>实验组</div>
+      <div class="legend-item"><div class="legend-dot legend-ctrl"></div>对照组</div>
+    </div>
+    <div class="bar-chart" id="entryChart">
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:88%"><div class="bar-value">2328</div></div>
+        <div class="bar bar-ctrl" style="height:90%"><div class="bar-value">2375</div></div>
+        <div class="bar-label">3/12</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:91%"><div class="bar-value">2414</div></div>
+        <div class="bar bar-ctrl" style="height:96%"><div class="bar-value">2541</div></div>
+        <div class="bar-label">3/13</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:6%"><div class="bar-value">152</div></div>
+        <div class="bar bar-ctrl" style="height:6%"><div class="bar-value">158</div></div>
+        <div class="bar-label">3/14</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:1px; background:var(--border);"><div class="bar-value">0</div></div>
+        <div class="bar bar-ctrl" style="height:1px; background:var(--border);"><div class="bar-value">0</div></div>
+        <div class="bar-label">3/15</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:79%"><div class="bar-value">2093</div></div>
+        <div class="bar bar-ctrl" style="height:78%"><div class="bar-value">2060</div></div>
+        <div class="bar-label">3/16</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:9%"><div class="bar-value">239</div></div>
+        <div class="bar bar-ctrl" style="height:9%"><div class="bar-value">234</div></div>
+        <div class="bar-label">3/17</div>
+      </div>
+    </div>
+    <p style="font-size:11px; color:var(--text2); margin-top:28px;">
+      注：3/15（周六）无新增入组，符合"用户触发弹层触发点时实时分流"的入组机制。两组入组节奏一致，分流质量良好。
+    </p>
+  </div>
+</div>
+
+<!-- Section 2: 核心 KPI -->
+<div class="section">
+  <h2>核心裂变漏斗 <span class="badge badge-green">弹层正向</span></h2>
+
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="label">分享率</div>
+      <div class="value">1.62%</div>
+      <div class="sub">实验组 · 92人分享</div>
+      <div class="lift lift-up">+11.7% vs 对照</div>
+    </div>
+    <div class="kpi">
+      <div class="label">人均邀请 ITT</div>
+      <div class="value">0.0178</div>
+      <div class="sub">实验组 · 101人被邀请</div>
+      <div class="lift lift-up">+10.6% vs 对照</div>
+    </div>
+    <div class="kpi">
+      <div class="label">被邀请人转化率</div>
+      <div class="value">63.4%</div>
+      <div class="sub">实验组 · 64人转化</div>
+      <div class="lift lift-up">+3.6pp vs 对照</div>
+    </div>
+    <div class="kpi">
+      <div class="label">人均邀请/分享者</div>
+      <div class="value">1.10</div>
+      <div class="sub">实验组 · 每人邀1.1人</div>
+      <div class="lift lift-flat">持平 (对照1.11)</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>指标</th>
+        <th class="num">实验组（弹层）</th>
+        <th class="num">对照组</th>
+        <th class="num">差异</th>
+        <th class="num">Lift</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>进组人数</td>
+        <td class="num">5,673</td>
+        <td class="num">5,726</td>
+        <td class="num">-53</td>
+        <td class="num lift-flat">-</td>
+      </tr>
+      <tr>
+        <td>分享人数</td>
+        <td class="num highlight">92</td>
+        <td class="num">83</td>
+        <td class="num">+9</td>
+        <td class="num lift-up">+10.8%</td>
+      </tr>
+      <tr>
+        <td><strong>分享率</strong></td>
+        <td class="num highlight">1.62%</td>
+        <td class="num">1.45%</td>
+        <td class="num">+0.17pp</td>
+        <td class="num lift-up"><strong>+11.7%</strong></td>
+      </tr>
+      <tr>
+        <td>邀请注册人数</td>
+        <td class="num highlight">101</td>
+        <td class="num">92</td>
+        <td class="num">+9</td>
+        <td class="num lift-up">+9.8%</td>
+      </tr>
+      <tr>
+        <td><strong>人均邀请 (ITT)</strong></td>
+        <td class="num highlight">0.0178</td>
+        <td class="num">0.0161</td>
+        <td class="num">+0.0017</td>
+        <td class="num lift-up"><strong>+10.6%</strong></td>
+      </tr>
+      <tr>
+        <td>人均邀请/分享者</td>
+        <td class="num">1.10</td>
+        <td class="num">1.11</td>
+        <td class="num">-0.01</td>
+        <td class="num lift-flat">持平</td>
+      </tr>
+      <tr>
+        <td>成功转化人数</td>
+        <td class="num highlight">64</td>
+        <td class="num">55</td>
+        <td class="num">+9</td>
+        <td class="num lift-up">+16.4%</td>
+      </tr>
+      <tr>
+        <td><strong>裂变系数</strong></td>
+        <td class="num highlight">0.0113</td>
+        <td class="num">0.0096</td>
+        <td class="num">+0.0017</td>
+        <td class="num lift-up"><strong>+17.7%</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="sig-note">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    分享率 z=0.75, p=0.46，尚未达到统计显著（p&lt;0.05）。绝对样本小（分享者&lt;100人/组），建议持续观察至少 2 周积累更多数据。
+  </div>
+</div>
+
+<!-- Section 3: 被邀请人转化窗口 -->
+<div class="section">
+  <h2>被邀请人转化窗口</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>转化窗口</th>
+        <th class="num">实验组人数</th>
+        <th class="num">实验组转化率</th>
+        <th class="num">对照组人数</th>
+        <th class="num">对照组转化率</th>
+        <th class="num">差异</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>被邀请总人数</td>
+        <td class="num">101</td>
+        <td class="num">-</td>
+        <td class="num">92</td>
+        <td class="num">-</td>
+        <td class="num">+9.8%</td>
+      </tr>
+      <tr>
+        <td><strong>D0 当天下单</strong></td>
+        <td class="num highlight">59</td>
+        <td class="num highlight">58.4%</td>
+        <td class="num">50</td>
+        <td class="num">54.3%</td>
+        <td class="num lift-up">+4.1pp</td>
+      </tr>
+      <tr>
+        <td><strong>D3 三天内下单</strong></td>
+        <td class="num highlight">63</td>
+        <td class="num highlight">62.4%</td>
+        <td class="num">55</td>
+        <td class="num">59.8%</td>
+        <td class="num lift-up">+2.6pp</td>
+      </tr>
+      <tr>
+        <td><strong>D7 七天内下单</strong></td>
+        <td class="num highlight">64</td>
+        <td class="num highlight">63.4%</td>
+        <td class="num">55</td>
+        <td class="num">59.8%</td>
+        <td class="num lift-up">+3.6pp</td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="font-size:12px; color:var(--text2); margin-top:12px;">
+    注：D3/D7 转化率与 D0 差距极小，说明大多数被邀请人在注册当天即完成首单（D0 占 D7 的 92%+）。被邀请人转化漏斗非常紧凑，首单决策几乎发生在注册即时。
+  </p>
+</div>
+
+<!-- Section 4: 每日趋势 -->
+<div class="section">
+  <h2>每日分享趋势</h2>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot legend-exp"></div>实验组</div>
+    <div class="legend-item"><div class="legend-dot legend-ctrl"></div>对照组</div>
+  </div>
+
+  <h3 style="font-size:13px; margin:16px 0 8px; color:var(--text2);">每日分享人数</h3>
+  <div class="chart-container">
+    <div class="bar-chart" style="height:120px;">
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:97%"><div class="bar-value">29</div></div>
+        <div class="bar bar-ctrl" style="height:87%"><div class="bar-value">26</div></div>
+        <div class="bar-label">3/12</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:100%"><div class="bar-value">30</div></div>
+        <div class="bar bar-ctrl" style="height:80%"><div class="bar-value">24</div></div>
+        <div class="bar-label">3/13</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:30%"><div class="bar-value">9</div></div>
+        <div class="bar bar-ctrl" style="height:40%"><div class="bar-value">12</div></div>
+        <div class="bar-label">3/14</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:37%"><div class="bar-value">11</div></div>
+        <div class="bar bar-ctrl" style="height:23%"><div class="bar-value">7</div></div>
+        <div class="bar-label">3/15</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:53%"><div class="bar-value">16</div></div>
+        <div class="bar bar-ctrl" style="height:50%"><div class="bar-value">15</div></div>
+        <div class="bar-label">3/16</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:7%"><div class="bar-value">2</div></div>
+        <div class="bar bar-ctrl" style="height:3%"><div class="bar-value">1</div></div>
+        <div class="bar-label">3/17*</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-size:13px; margin:36px 0 8px; color:var(--text2);">每日邀请注册人数</h3>
+  <div class="chart-container">
+    <div class="bar-chart" style="height:120px;">
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:94%"><div class="bar-value">30</div></div>
+        <div class="bar bar-ctrl" style="height:88%"><div class="bar-value">28</div></div>
+        <div class="bar-label">3/12</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:100%"><div class="bar-value">32</div></div>
+        <div class="bar bar-ctrl" style="height:78%"><div class="bar-value">25</div></div>
+        <div class="bar-label">3/13</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:31%"><div class="bar-value">10</div></div>
+        <div class="bar bar-ctrl" style="height:44%"><div class="bar-value">14</div></div>
+        <div class="bar-label">3/14</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:34%"><div class="bar-value">11</div></div>
+        <div class="bar bar-ctrl" style="height:25%"><div class="bar-value">8</div></div>
+        <div class="bar-label">3/15</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:50%"><div class="bar-value">16</div></div>
+        <div class="bar bar-ctrl" style="height:50%"><div class="bar-value">16</div></div>
+        <div class="bar-label">3/16</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-exp" style="height:6%"><div class="bar-value">2</div></div>
+        <div class="bar bar-ctrl" style="height:3%"><div class="bar-value">1</div></div>
+        <div class="bar-label">3/17*</div>
+      </div>
+    </div>
+  </div>
+
+  <table style="margin-top:32px;">
+    <thead>
+      <tr>
+        <th>日期</th>
+        <th class="num">实验-分享</th>
+        <th class="num">对照-分享</th>
+        <th class="num">实验-邀请</th>
+        <th class="num">对照-邀请</th>
+        <th class="num">实验-转化</th>
+        <th class="num">对照-转化</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>03-12 (三)</td>
+        <td class="num highlight">29</td>
+        <td class="num">26</td>
+        <td class="num highlight">30</td>
+        <td class="num">28</td>
+        <td class="num">19</td>
+        <td class="num">16</td>
+      </tr>
+      <tr>
+        <td>03-13 (四)</td>
+        <td class="num highlight">30</td>
+        <td class="num">24</td>
+        <td class="num highlight">32</td>
+        <td class="num">25</td>
+        <td class="num">22</td>
+        <td class="num">15</td>
+      </tr>
+      <tr>
+        <td>03-14 (五)</td>
+        <td class="num">9</td>
+        <td class="num highlight">12</td>
+        <td class="num">10</td>
+        <td class="num highlight">14</td>
+        <td class="num">6</td>
+        <td class="num highlight">12</td>
+      </tr>
+      <tr>
+        <td>03-15 (六)</td>
+        <td class="num highlight">11</td>
+        <td class="num">7</td>
+        <td class="num highlight">11</td>
+        <td class="num">8</td>
+        <td class="num">8</td>
+        <td class="num">5</td>
+      </tr>
+      <tr>
+        <td>03-16 (日)</td>
+        <td class="num highlight">16</td>
+        <td class="num">15</td>
+        <td class="num">16</td>
+        <td class="num">16</td>
+        <td class="num">9</td>
+        <td class="num">7</td>
+      </tr>
+      <tr>
+        <td>03-17 (一)*</td>
+        <td class="num">2</td>
+        <td class="num">1</td>
+        <td class="num">2</td>
+        <td class="num">1</td>
+        <td class="num">0</td>
+        <td class="num">0</td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="font-size:11px; color:var(--text2); margin-top:8px;">
+    * 03-17 数据不完整（当天）。03-14（周五）对照组反超实验组，属小样本波动（9 vs 12人），不影响整体趋势。
+  </p>
+</div>
+
+<!-- Section 5: 邀请分布 -->
+<div class="section">
+  <h2>邀请分布</h2>
+  <p style="font-size:13px; color:var(--text2); margin-bottom:16px;">每位分享者邀请的注册人数分布。</p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+    <!-- 实验组 -->
+    <div>
+      <h3 style="font-size:13px; color:var(--accent); margin-bottom:12px;">实验组 (92人分享)</h3>
+      <div class="dist-row">
+        <div class="dist-label">邀1人</div>
+        <div class="dist-bars">
+          <div class="dist-bar" style="width:91.3%; background:var(--accent);">84人 &middot; 91.3%</div>
+        </div>
+      </div>
+      <div class="dist-row">
+        <div class="dist-label">邀2人</div>
+        <div class="dist-bars">
+          <div class="dist-bar" style="width:max(50px,7.6%); background:rgba(108,140,255,0.6);">7 &middot; 7.6%</div>
+        </div>
+      </div>
+      <div class="dist-row">
+        <div class="dist-label">邀3人</div>
+        <div class="dist-bars">
+          <div class="dist-bar" style="width:50px; background:rgba(108,140,255,0.4);">1 &middot; 1.1%</div>
+        </div>
+      </div>
+      <div class="dist-row">
+        <div class="dist-label">邀4+人</div>
+        <div class="dist-bars">
+          <div class="dist-bar" style="width:50px; background:rgba(108,140,255,0.2);">0 &middot; 0%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 对照组 -->
+    <div>
+      <h3 style="font-size:13px; color:var(--purple); margin-bottom:12px;">对照组 (83人分享)</h3>
+      <div class="dist-row">
+        <div class="dist-label">邀1人</div>
+        <div class="dist-bars">
+          <div class="dist-bar" style="width:90.4%; background:var(--purple); opacity:0.6;">75人 &middot; 90.4%</div>
+        </div>
+      </div>
+      <div class="dist-row">
+        <div class="dist-label">邀2人</div>
+        <div class="dist-bars">
+          <div class="dist-bar" style="width:max(50px,8.4%); background:var(--purple); opacity:0.5;">7 &middot; 8.4%</div>
+        </div>
+      </div>
+      <div class="dist-row">
+        <div class="dist-label">邀3人</div>
+        <div class="dist-bars">
+          <div class="dist-bar" style="width:50px; background:var(--purple); opacity:0.4;">1 &middot; 1.2%</div>
+        </div>
+      </div>
+      <div class="dist-row">
+        <div class="dist-label">邀4+人</div>
+        <div class="dist-bars">
+          <div class="dist-bar" style="width:50px; background:var(--purple); opacity:0.3;">0 &middot; 0%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p style="font-size:12px; color:var(--text2); margin-top:16px;">
+    两组分布几乎一致：90%+ 用户仅邀1人，与历史值（83%）相比更集中。弹层提升的是「分享人数」，而非「分享深度」——更多人愿意分享，但每人邀请数未变。
+  </p>
+</div>
+
+<!-- Section 6: 结论 -->
+<div class="section">
+  <div class="conclusion">
+    <h3>核心结论</h3>
+    <ul>
+      <li><strong>弹层正向提升分享率 +11.7%</strong>（1.62% vs 1.45%），实验组多出 9 位分享者。弹层的价值是「提醒」而非「说服」—— 把已有分享意愿但未行动的用户推了一把。</li>
+      <li><strong>裂变系数提升 +17.7%</strong>（0.0113 vs 0.0096），每万人多带来约 1.7 个新注册用户。弹层组的被邀请人 D0 转化率也更高（58.4% vs 54.3%），可能是弹层吸引了更高质量的分享者。</li>
+      <li><strong>分享深度未被改变</strong>：两组人均邀请 1.10~1.11 人，90%+ 用户仅邀 1 人。弹层只增加了「分享宽度」（更多人参与），不影响「分享深度」（每人邀请数）。</li>
+      <li><strong>统计显著性不足</strong>：分享率 z=0.75, p=0.46，远未达 p&lt;0.05。分享者绝对数小（92 vs 83），日间波动大（03-14 对照组反超）。建议至少再跑 2 周，积累至少 200+ 分享者/组。</li>
+    </ul>
+  </div>
+
+  <div style="margin-top:20px; padding:16px; background:rgba(74,222,128,0.05); border:1px solid rgba(74,222,128,0.15); border-radius:8px;">
+    <h3 style="font-size:14px; color:var(--green); margin-bottom:8px;">建议</h3>
+    <ol style="font-size:13px; line-height:1.8; padding-left:20px;">
+      <li><strong>继续跑实验</strong>：当前 5 天数据不足以做决策，建议至少跑到 03-26（2 周）再评估。</li>
+      <li><strong>关注下周工作日数据</strong>：周中（03-12、03-13）弹层效果最明显，可能与用户活跃模式有关。</li>
+      <li><strong>如最终显著</strong>：弹层低成本高效，可全量推；同时考虑弹层内容优化（如加入阶梯奖励提示）以提升分享深度。</li>
+      <li><strong>分享深度是更大杠杆</strong>：90%+ 仅邀 1 人是核心瓶颈，弹层解决不了这个问题，需要在奖励机制/社交场景上做文章。</li>
+    </ol>
+  </div>
+</div>
+
+<div class="footer">
+  Lucky US Growth &middot; 0312 分享有礼弹层实验 &middot; Auto-generated 2026-03-17
+</div>
+
+</div>
+</body>
+</html>

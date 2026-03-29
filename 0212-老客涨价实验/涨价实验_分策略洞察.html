@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2月老客涨价策略实验月报</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0d13;
+            --bg-card: #14171f;
+            --bg-card-alt: #191d28;
+            --border: rgba(255,255,255,0.06);
+            --border-hi: rgba(255,255,255,0.12);
+            --text: #eef0f6;
+            --text2: #8b90a5;
+            --text3: #555a70;
+            --blue: #5b9aff;
+            --blue-dim: rgba(91,154,255,0.12);
+            --green: #34d399;
+            --green-dim: rgba(52,211,153,0.1);
+            --red: #f87171;
+            --red-dim: rgba(248,113,113,0.1);
+            --yellow: #fbbf24;
+            --yellow-dim: rgba(251,191,36,0.1);
+            --orange: #fb923c;
+
+            --font: 'Inter', -apple-system, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            height: 100%;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            height: 100%;
+        }
+
+        /* ===========================================
+           SLIDE BASE
+           =========================================== */
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            padding: clamp(1.2rem, 3vw, 2.8rem);
+            position: relative;
+        }
+        .slide::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+
+        /* ===========================================
+           COMMON ELEMENTS
+           =========================================== */
+        .slide-header {
+            display: flex;
+            align-items: baseline;
+            gap: clamp(0.4rem, 1vw, 0.8rem);
+            margin-bottom: clamp(0.15rem, 0.5vh, 0.3rem);
+            flex-shrink: 0;
+            position: relative; z-index: 1;
+        }
+        .slide-num {
+            font-family: var(--mono);
+            font-size: clamp(0.65rem, 1vw, 0.8rem);
+            font-weight: 600;
+            color: var(--blue);
+        }
+        .slide-header h1 {
+            font-size: clamp(1.1rem, 2.6vw, 1.65rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .slide-sub {
+            font-size: clamp(0.6rem, 1vw, 0.75rem);
+            color: var(--text3);
+            margin-bottom: clamp(0.5rem, 1.2vh, 0.8rem);
+            flex-shrink: 0;
+            position: relative; z-index: 1;
+        }
+        .slide-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            position: relative; z-index: 1;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: clamp(0.5rem, 0.7vw, 0.6rem);
+            font-weight: 600;
+            padding: 0.15em 0.5em;
+            border-radius: 3px;
+            vertical-align: middle;
+        }
+        .tag-g { background: var(--green-dim); color: var(--green); }
+        .tag-r { background: var(--red-dim); color: var(--red); }
+        .tag-y { background: var(--yellow-dim); color: var(--yellow); }
+        .tag-b { background: var(--blue-dim); color: var(--blue); }
+
+        .up { color: var(--green); }
+        .dn { color: var(--red); }
+
+        .footer-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            padding-top: clamp(0.3rem, 0.6vh, 0.5rem);
+            font-size: clamp(0.48rem, 0.65vw, 0.55rem);
+            color: var(--text3);
+            position: relative; z-index: 1;
+        }
+        .footer-bar .page {
+            font-family: var(--mono);
+        }
+
+        /* ===========================================
+           SLIDE 1 — 实验概述与整体效果
+           =========================================== */
+        .s1-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 280fr 720fr;
+            gap: clamp(0.5rem, 1.2vw, 1rem);
+            min-height: 0;
+        }
+
+        /* Left: experiment setup */
+        .s1-left {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.4rem, 0.8vh, 0.6rem);
+        }
+        .group-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: clamp(0.5rem, 1vw, 0.8rem);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .group-card .gc-name {
+            font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+            font-weight: 700;
+            margin-bottom: 0.2em;
+        }
+        .group-card .gc-detail {
+            font-size: clamp(0.55rem, 0.8vw, 0.65rem);
+            color: var(--text2);
+            line-height: 1.5;
+        }
+        .gc-highlight { border-color: rgba(91,154,255,0.2); background: linear-gradient(135deg, rgba(91,154,255,0.05), var(--bg-card)); }
+
+        /* Right: KPIs + table */
+        .s1-right {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.4rem, 0.8vh, 0.6rem);
+            min-height: 0;
+        }
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: clamp(0.3rem, 0.6vw, 0.5rem);
+            flex-shrink: 0;
+        }
+        .kpi {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: clamp(0.4rem, 0.7vw, 0.6rem);
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: clamp(0.48rem, 0.7vw, 0.58rem);
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.2em;
+        }
+        .kpi-val {
+            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+            font-weight: 800;
+            font-family: var(--mono);
+            line-height: 1.2;
+        }
+        .kpi-diff {
+            font-size: clamp(0.5rem, 0.7vw, 0.6rem);
+            font-weight: 600;
+            margin-top: 0.15em;
+        }
+
+        .compare-label {
+            font-size: clamp(0.55rem, 0.8vw, 0.68rem);
+            font-weight: 600;
+            color: var(--text2);
+            flex-shrink: 0;
+        }
+
+        /* Table */
+        .data-table-wrap {
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: clamp(0.55rem, 0.8vw, 0.68rem);
+        }
+        .data-table th {
+            background: var(--bg-card-alt);
+            font-weight: 600;
+            color: var(--text2);
+            text-align: center;
+            padding: clamp(0.3rem, 0.5vw, 0.45rem) clamp(0.3rem, 0.5vw, 0.4rem);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+            position: sticky; top: 0;
+        }
+        .data-table td {
+            padding: clamp(0.3rem, 0.5vw, 0.45rem) clamp(0.3rem, 0.5vw, 0.4rem);
+            border-bottom: 1px solid var(--border);
+            text-align: right;
+            white-space: nowrap;
+            font-family: var(--mono);
+            font-size: clamp(0.52rem, 0.75vw, 0.63rem);
+        }
+        .data-table td:first-child {
+            text-align: left;
+            font-family: var(--font);
+            font-weight: 600;
+        }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table .row-hi { background: rgba(91,154,255,0.04); }
+        .data-table small {
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        .sig { color: var(--green); font-weight: 600; }
+        .nsig { color: var(--text3); }
+
+        /* ===========================================
+           SLIDE 2 — 分群洞察
+           =========================================== */
+        .s2-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: 1fr;
+            gap: clamp(0.35rem, 0.7vw, 0.55rem);
+            min-height: 0;
+        }
+        .seg-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: clamp(0.5rem, 1vw, 0.75rem);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+        .seg-card.seg-hi {
+            border-color: rgba(91,154,255,0.25);
+            background: linear-gradient(160deg, rgba(91,154,255,0.06), var(--bg-card));
+        }
+        .seg-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: clamp(0.15rem, 0.3vh, 0.25rem);
+            flex-shrink: 0;
+        }
+        .seg-name {
+            font-size: clamp(0.72rem, 1.1vw, 0.88rem);
+            font-weight: 700;
+        }
+        .seg-meta {
+            font-size: clamp(0.5rem, 0.7vw, 0.58rem);
+            color: var(--text3);
+            font-family: var(--mono);
+            margin-bottom: clamp(0.2rem, 0.4vh, 0.3rem);
+            flex-shrink: 0;
+        }
+        .seg-strategy {
+            font-size: clamp(0.48rem, 0.68vw, 0.56rem);
+            color: var(--text3);
+            line-height: 1.4;
+            padding: clamp(0.2rem, 0.35vh, 0.25rem) 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: clamp(0.2rem, 0.4vh, 0.3rem);
+            flex-shrink: 0;
+        }
+        .seg-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: clamp(0.2rem, 0.4vw, 0.35rem);
+            flex: 1;
+            min-height: 0;
+        }
+        .sm {
+            background: rgba(255,255,255,0.02);
+            border-radius: 4px;
+            padding: clamp(0.25rem, 0.5vw, 0.4rem);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .sm-label {
+            font-size: clamp(0.45rem, 0.62vw, 0.52rem);
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .sm-val {
+            font-size: clamp(0.8rem, 1.3vw, 1.05rem);
+            font-weight: 700;
+            font-family: var(--mono);
+            line-height: 1.2;
+        }
+        .sm-diff {
+            font-size: clamp(0.48rem, 0.65vw, 0.55rem);
+            font-weight: 500;
+        }
+        .seg-insight {
+            font-size: clamp(0.52rem, 0.75vw, 0.62rem);
+            color: var(--text2);
+            line-height: 1.4;
+            margin-top: clamp(0.2rem, 0.4vh, 0.3rem);
+            padding-top: clamp(0.2rem, 0.35vh, 0.25rem);
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .seg-insight strong { color: var(--text); font-weight: 600; }
+
+        /* ===========================================
+           SLIDE 3 — 结论与建议
+           =========================================== */
+        .s3-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(0.5rem, 1vw, 0.8rem);
+            min-height: 0;
+        }
+        .s3-col {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.4rem, 0.7vh, 0.5rem);
+            min-height: 0;
+        }
+        .s3-block {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: clamp(0.5rem, 1vw, 0.8rem);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .s3-block-title {
+            font-size: clamp(0.65rem, 1vw, 0.8rem);
+            font-weight: 700;
+            margin-bottom: clamp(0.25rem, 0.5vh, 0.4rem);
+            display: flex;
+            align-items: center;
+            gap: 0.4em;
+            flex-shrink: 0;
+        }
+        .s3-block-title .dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .dot-blue { background: var(--blue); }
+        .dot-green { background: var(--green); }
+        .dot-orange { background: var(--orange); }
+        .dot-yellow { background: var(--yellow); }
+
+        .s3-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.2rem, 0.4vh, 0.3rem);
+            flex: 1;
+        }
+        .s3-list li {
+            font-size: clamp(0.55rem, 0.82vw, 0.68rem);
+            color: var(--text2);
+            line-height: 1.45;
+            padding-left: 0.8em;
+            position: relative;
+        }
+        .s3-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.55em;
+            width: 3px; height: 3px;
+            border-radius: 50%;
+            background: var(--text3);
+        }
+        .s3-list li strong { color: var(--text); font-weight: 600; }
+
+        /* Pricing table */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: clamp(0.2rem, 0.35vh, 0.25rem);
+            flex: 1;
+        }
+        .price-row {
+            display: grid;
+            grid-template-columns: 100px 1fr 1fr;
+            gap: clamp(0.3rem, 0.5vw, 0.4rem);
+            background: rgba(255,255,255,0.015);
+            border-radius: 4px;
+            padding: clamp(0.25rem, 0.45vw, 0.35rem) clamp(0.3rem, 0.5vw, 0.4rem);
+            align-items: center;
+            font-size: clamp(0.52rem, 0.75vw, 0.62rem);
+        }
+        .price-row.price-header {
+            background: var(--bg-card-alt);
+            font-weight: 600;
+            color: var(--text2);
+        }
+        .pr-seg {
+            font-weight: 600;
+            color: var(--text);
+        }
+        .pr-now {
+            color: var(--text2);
+        }
+        .pr-next {
+            color: var(--blue);
+            font-weight: 500;
+        }
+
+        /* Next steps */
+        .next-steps {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.2rem, 0.35vh, 0.25rem);
+            flex: 1;
+        }
+        .ns-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.4em;
+            font-size: clamp(0.55rem, 0.82vw, 0.68rem);
+            color: var(--text2);
+            line-height: 1.45;
+        }
+        .ns-num {
+            font-family: var(--mono);
+            font-size: clamp(0.5rem, 0.7vw, 0.58rem);
+            font-weight: 600;
+            color: var(--blue);
+            flex-shrink: 0;
+            min-width: 1.2em;
+        }
+        .ns-item strong { color: var(--text); font-weight: 600; }
+
+        /* ===========================================
+           NAV DOTS
+           =========================================== */
+        .nav-dots {
+            position: fixed;
+            right: clamp(0.5rem, 1.2vw, 1rem);
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 100;
+        }
+        .nav-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--text3);
+            opacity: 0.4;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            padding: 0;
+        }
+        .nav-dot.active {
+            opacity: 1;
+            background: var(--blue);
+            transform: scale(1.4);
+        }
+
+        /* ===========================================
+           ANIMATIONS
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.45s cubic-bezier(0.16,1,0.3,1),
+                        transform 0.45s cubic-bezier(0.16,1,0.3,1);
+        }
+        .slide.visible .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .slide.visible .reveal:nth-child(1) { transition-delay: 0.04s; }
+        .slide.visible .reveal:nth-child(2) { transition-delay: 0.08s; }
+        .slide.visible .reveal:nth-child(3) { transition-delay: 0.12s; }
+        .slide.visible .reveal:nth-child(4) { transition-delay: 0.16s; }
+        .slide.visible .reveal:nth-child(5) { transition-delay: 0.2s; }
+
+        /* ===========================================
+           RESPONSIVE
+           =========================================== */
+        @media (max-height: 650px) {
+            .seg-strategy { display: none; }
+            .s1-content { grid-template-columns: 240fr 760fr; }
+        }
+        @media (max-height: 500px) {
+            .nav-dots { display: none; }
+        }
+        @media (max-width: 900px) {
+            .s2-content { grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; }
+            .s1-content { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+            .s1-left { flex-direction: row; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .reveal { opacity: 1; transform: none; transition: none; }
+            html { scroll-behavior: auto; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV DOTS -->
+<nav class="nav-dots">
+    <button class="nav-dot active" data-slide="0"></button>
+    <button class="nav-dot" data-slide="1"></button>
+    <button class="nav-dot" data-slide="2"></button>
+</nav>
+
+<!-- =============================================
+     SLIDE 1 — 实验概述与整体效果
+     ============================================= -->
+<section class="slide" id="slide-0">
+    <div class="slide-header reveal">
+        <span class="slide-num">01</span>
+        <h1>2月老客涨价策略实验 — 整体效果</h1>
+    </div>
+    <div class="slide-sub reveal">实验周期 2026.02.12 – 02.28 · 总样本 126,446 人 · 涨价组1(75折系) vs 对照组</div>
+
+    <div class="slide-body s1-content">
+        <!-- Left: Groups -->
+        <div class="s1-left reveal">
+            <div class="group-card gc-highlight">
+                <div class="gc-name" style="color:var(--blue)">涨价组1 <span class="tag tag-b">推荐</span></div>
+                <div class="gc-detail">75折系 · 38,093人 (30%)<br>整体折扣力度最小</div>
+            </div>
+            <div class="group-card">
+                <div class="gc-name">涨价组2</div>
+                <div class="gc-detail">7折系 · 38,058人 (30%)<br>折扣介于组1和对照之间</div>
+            </div>
+            <div class="group-card">
+                <div class="gc-name">对照组3</div>
+                <div class="gc-detail">原价策略 · 50,295人 (40%)<br>维持现有折扣水平</div>
+            </div>
+        </div>
+
+        <!-- Right: KPIs + Table -->
+        <div class="s1-right">
+            <div class="compare-label reveal">涨价组1 vs 对照组 — 核心 KPI</div>
+            <div class="kpi-row reveal">
+                <div class="kpi">
+                    <div class="kpi-label">单杯实收</div>
+                    <div class="kpi-val">$3.61</div>
+                    <div class="kpi-diff up">+9.39%</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-label">转化率</div>
+                    <div class="kpi-val">10.79%</div>
+                    <div class="kpi-diff dn">-0.83pp</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-label">7日复购</div>
+                    <div class="kpi-val">50.73%</div>
+                    <div class="kpi-diff dn">-0.91pp</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-label">LTV 7天</div>
+                    <div class="kpi-val">$0.491</div>
+                    <div class="kpi-diff dn">-2.96%</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-label">LTV 14天</div>
+                    <div class="kpi-val">$0.864</div>
+                    <div class="kpi-diff dn">-2.26%</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-label">拉齐实收</div>
+                    <div class="kpi-val">$54.7K</div>
+                    <div class="kpi-diff dn">-1.94%</div>
+                </div>
+            </div>
+
+            <div class="compare-label reveal" style="margin-top:clamp(0.2rem,0.4vh,0.3rem)">三组核心指标全景对比</div>
+            <div class="data-table-wrap reveal">
+                <table class="data-table">
+                    <thead>
+                        <tr><th style="text-align:left">组别</th><th>人数</th><th>下单</th><th>转化率</th><th>杯量</th><th>单杯实收</th><th>3日复购</th><th>7日复购</th><th>ARPU</th><th>LTV 7天</th><th>LTV 14天</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="row-hi">
+                            <td><strong>涨价组1</strong></td><td>38,093</td><td>4,112</td>
+                            <td>10.79% <small class="dn">-0.83</small></td><td>10,556</td>
+                            <td>$3.61 <small class="up">+9.4%</small></td>
+                            <td>31.54% <small class="up">+0.46</small></td>
+                            <td>50.73% <small class="dn">-0.91</small></td>
+                            <td>$1.088 <small class="dn">-2.0%</small></td>
+                            <td>$0.491 <small class="dn">-3.0%</small></td>
+                            <td>$0.864 <small class="dn">-2.3%</small></td>
+                        </tr>
+                        <tr>
+                            <td><strong>涨价组2</strong></td><td>38,058</td><td>4,043</td>
+                            <td>10.62% <small class="dn">-1.00</small></td><td>10,430</td>
+                            <td>$3.56 <small class="up">+7.9%</small></td>
+                            <td>30.44% <small class="dn">-0.64</small></td>
+                            <td>49.39% <small class="dn">-2.25</small></td>
+                            <td>$1.062 <small class="dn">-4.3%</small></td>
+                            <td>$0.483 <small class="dn">-4.6%</small></td>
+                            <td>$0.849 <small class="dn">-4.0%</small></td>
+                        </tr>
+                        <tr>
+                            <td><strong>对照组3</strong></td><td>50,295</td><td>5,843</td>
+                            <td>11.62%</td><td>15,508</td><td>$3.30</td>
+                            <td>31.08%</td><td>51.64%</td><td>$1.110</td><td>$0.506</td><td>$0.884</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="compare-label reveal" style="margin-top:clamp(0.2rem,0.4vh,0.3rem)">显著性检验</div>
+            <div class="data-table-wrap reveal">
+                <table class="data-table">
+                    <thead><tr><th style="text-align:left">对比</th><th>转化率</th><th>单杯实收</th><th>7日复购</th><th>ARPU</th></tr></thead>
+                    <tbody>
+                        <tr class="row-hi"><td><strong>组1 vs 对照</strong></td><td class="sig">显著 p=0.000</td><td class="sig">显著 p=0.000</td><td class="nsig">不显著 p=0.374</td><td class="nsig">不显著 p=0.148</td></tr>
+                        <tr><td><strong>组2 vs 对照</strong></td><td class="sig">显著 p=0.000</td><td class="sig">显著 p=0.000</td><td class="sig">显著 p=0.027</td><td class="sig">显著 p=0.001</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bar">
+        <span>涨价收益：单杯+9.39% | 涨价代价：转化-0.83pp、总实收-1.94%、LTV14天-2.26% — 代价可控</span>
+        <span class="page">1 / 3</span>
+    </div>
+</section>
+
+<!-- =============================================
+     SLIDE 2 — 分群策略洞察
+     ============================================= -->
+<section class="slide" id="slide-1">
+    <div class="slide-header reveal">
+        <span class="slide-num">02</span>
+        <h1>用户分群洞察 — 价格弹性与策略效果</h1>
+    </div>
+    <div class="slide-sub reveal">涨价组1（75折系）vs 对照组 · 按生命周期分段对比</div>
+
+    <div class="slide-body s2-content">
+        <!-- 0-15天 -->
+        <div class="seg-card reveal">
+            <div class="seg-top">
+                <span class="seg-name">0–15天</span>
+                <span class="tag tag-r">谨慎</span>
+            </div>
+            <div class="seg-meta">新客破冰 · 0.4%</div>
+            <div class="seg-strategy">组1: 75折全品×2<br>对照: 6折限品+7折全品</div>
+            <div class="seg-metrics">
+                <div class="sm"><div class="sm-label">转化率</div><div class="sm-val">23.4%</div><div class="sm-diff dn">-6.00pp</div></div>
+                <div class="sm"><div class="sm-label">单杯实收</div><div class="sm-val">$3.69</div><div class="sm-diff dn">-2.38%</div></div>
+                <div class="sm"><div class="sm-label">7日复购</div><div class="sm-val">34.8%</div><div class="sm-diff dn">-12.72pp</div></div>
+                <div class="sm"><div class="sm-label">弹性</div><div class="sm-val dn">2.52</div><div class="sm-diff" style="color:var(--text3)">高弹性</div></div>
+            </div>
+            <div class="seg-insight">仅128人，75折偏贵。<strong>维持深折扣</strong>，首单锚点影响大</div>
+        </div>
+
+        <!-- 16-30天 -->
+        <div class="seg-card reveal">
+            <div class="seg-top">
+                <span class="seg-name">16–30天</span>
+                <span class="tag tag-g">可涨</span>
+            </div>
+            <div class="seg-meta">培养期 · 5.0%</div>
+            <div class="seg-strategy">组1&2: 5折<br>对照: 4折</div>
+            <div class="seg-metrics">
+                <div class="sm"><div class="sm-label">转化率</div><div class="sm-val">16.2%</div><div class="sm-diff dn">-0.85pp</div></div>
+                <div class="sm"><div class="sm-label">单杯实收</div><div class="sm-val">$3.67</div><div class="sm-diff up">+5.76%</div></div>
+                <div class="sm"><div class="sm-label">7日复购</div><div class="sm-val">39.9%</div><div class="sm-diff dn">-4.89pp</div></div>
+                <div class="sm"><div class="sm-label">弹性</div><div class="sm-val up">0.15</div><div class="sm-diff" style="color:var(--text3)">低弹性</div></div>
+            </div>
+            <div class="seg-insight"><strong>4折→5折可接受</strong>，可小幅测试55折</div>
+        </div>
+
+        <!-- 31天+ -->
+        <div class="seg-card seg-hi reveal">
+            <div class="seg-top">
+                <span class="seg-name">31天+</span>
+                <span class="tag tag-b">核心</span>
+            </div>
+            <div class="seg-meta">成熟期 · 94.6%</div>
+            <div class="seg-strategy">组1: 4折+$2.99+7折(t7)<br>对照: 3折+$2.99+5折(t7)</div>
+            <div class="seg-metrics">
+                <div class="sm"><div class="sm-label">转化率</div><div class="sm-val">10.5%</div><div class="sm-diff dn">-0.79pp</div></div>
+                <div class="sm"><div class="sm-label">单杯实收</div><div class="sm-val">$3.60</div><div class="sm-diff up">+9.76%</div></div>
+                <div class="sm"><div class="sm-label">7日复购</div><div class="sm-val">38.7%</div><div class="sm-diff dn">-0.59pp</div></div>
+                <div class="sm"><div class="sm-label">弹性</div><div class="sm-val up">0.08</div><div class="sm-diff" style="color:var(--text3)">低弹性</div></div>
+            </div>
+            <div class="seg-insight"><strong>涨价效率最优</strong>，转化仅降0.8pp单杯升近10%，可试探45折</div>
+        </div>
+
+        <!-- 来访未购 -->
+        <div class="seg-card reveal">
+            <div class="seg-top">
+                <span class="seg-name">来访未购</span>
+                <span class="tag tag-y">适度</span>
+            </div>
+            <div class="seg-meta">沉默唤醒 · 2.2%</div>
+            <div class="seg-strategy">组1: 6折<br>对照: 5折</div>
+            <div class="seg-metrics">
+                <div class="sm"><div class="sm-label">转化率</div><div class="sm-val">50.4%</div><div class="sm-diff dn">-4.42pp</div></div>
+                <div class="sm"><div class="sm-label">单杯实收</div><div class="sm-val">$3.65</div><div class="sm-diff up">+8.31%</div></div>
+                <div class="sm"><div class="sm-label">3日复购</div><div class="sm-val">25.3%</div><div class="sm-diff up">+3.90pp</div></div>
+                <div class="sm"><div class="sm-label">弹性</div><div class="sm-val" style="color:var(--yellow)">0.53</div><div class="sm-diff" style="color:var(--text3)">中弹性</div></div>
+            </div>
+            <div class="seg-insight">价格驱动型，转化降幅大。<strong>维持5折或更低</strong></div>
+        </div>
+
+        <!-- 周六日 -->
+        <div class="seg-card reveal">
+            <div class="seg-top">
+                <span class="seg-name">周六日</span>
+                <span class="tag tag-g">最优</span>
+            </div>
+            <div class="seg-meta">周末高频 · 4.1%</div>
+            <div class="seg-strategy">组1: 6折<br>对照: 5折</div>
+            <div class="seg-metrics">
+                <div class="sm"><div class="sm-label">转化率</div><div class="sm-val">91.8%</div><div class="sm-diff dn">-0.53pp</div></div>
+                <div class="sm"><div class="sm-label">单杯实收</div><div class="sm-val">$3.65</div><div class="sm-diff up">+9.28%</div></div>
+                <div class="sm"><div class="sm-label">3日复购</div><div class="sm-val">38.1%</div><div class="sm-diff up">+1.09pp</div></div>
+                <div class="sm"><div class="sm-label">弹性</div><div class="sm-val up">0.06</div><div class="sm-diff" style="color:var(--text3)">低弹性</div></div>
+            </div>
+            <div class="seg-insight">90%+转化，<strong>靠习惯非折扣</strong>，最适涨价，可测7折</div>
+        </div>
+    </div>
+
+    <div class="footer-bar">
+        <span>弹性系数 = |转化率变化pp ÷ 单杯变化%| · 周六日&31天+用户为涨价核心基本盘</span>
+        <span class="page">2 / 3</span>
+    </div>
+</section>
+
+<!-- =============================================
+     SLIDE 3 — 结论与建议
+     ============================================= -->
+<section class="slide" id="slide-2">
+    <div class="slide-header reveal">
+        <span class="slide-num">03</span>
+        <h1>结论与定价建议</h1>
+    </div>
+    <div class="slide-sub reveal">基于价格弹性和分群策略效果的下一轮实验方向</div>
+
+    <div class="slide-body s3-content">
+        <!-- Left column -->
+        <div class="s3-col">
+            <!-- Core conclusions -->
+            <div class="s3-block reveal">
+                <div class="s3-block-title"><span class="dot dot-blue"></span>核心结论</div>
+                <ul class="s3-list">
+                    <li><strong>可以涨价</strong>，涨价组1（75折系）是更优方案：单杯+9.39%，总实收仅损失1.94%</li>
+                    <li><strong>折扣越深 ≠ 效果越好</strong>：组2折扣更深但实收损失更大(-4.30%)，边际收益递减</li>
+                    <li><strong>差异化定价是关键</strong>：成熟&习惯型用户可涨价，新客&沉默用户需维持深折扣</li>
+                    <li><strong>LTV趋势收窄</strong>：组1的7天LTV -2.96% → 14天LTV -2.26%，涨价对长期价值影响有限</li>
+                </ul>
+            </div>
+
+            <!-- Pricing recommendations -->
+            <div class="s3-block reveal">
+                <div class="s3-block-title"><span class="dot dot-green"></span>分段定价建议</div>
+                <div class="pricing-grid">
+                    <div class="price-row price-header">
+                        <span>分段</span><span>当前策略(组1)</span><span>建议调整</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="pr-seg">31天+ <span class="tag tag-b" style="margin-left:0.2em">94%</span></span>
+                        <span class="pr-now">4折+$2.99+7折</span>
+                        <span class="pr-next">维持，试探45折替代4折</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="pr-seg">周六日 <span class="tag tag-g" style="margin-left:0.2em">4%</span></span>
+                        <span class="pr-now">6折</span>
+                        <span class="pr-next">激进涨至65折或7折</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="pr-seg">16-30天 <span class="tag tag-g" style="margin-left:0.2em">5%</span></span>
+                        <span class="pr-now">5折</span>
+                        <span class="pr-next">小幅测试55折</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="pr-seg">来访未购 <span class="tag tag-y" style="margin-left:0.2em">2%</span></span>
+                        <span class="pr-now">6折</span>
+                        <span class="pr-next">回调至5折或更低</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="pr-seg">0-15天 <span class="tag tag-r" style="margin-left:0.2em">0.4%</span></span>
+                        <span class="pr-now">75折×2</span>
+                        <span class="pr-next">维持6折+深折扣</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right column -->
+        <div class="s3-col">
+            <!-- Key findings -->
+            <div class="s3-block reveal">
+                <div class="s3-block-title"><span class="dot dot-orange"></span>关键发现</div>
+                <ul class="s3-list">
+                    <li><strong>涨价组1定价更高但表现更好</strong> — 在单杯提升、转化损失控制、留存维护三个维度均优于组2</li>
+                    <li><strong>周六日用户最适合涨价</strong>：转化91%+，弹性仅0.06，购买靠习惯而非折扣</li>
+                    <li><strong>成熟用户(94.6%)耐受度高</strong>：每涨$0.10单杯仅损失0.25pp转化率</li>
+                    <li><strong>来访未购是价格驱动型</strong>：弹性0.53，涨价后转化降幅达4.42pp</li>
+                    <li><strong>新客首单锚点影响大</strong>：0-15天用户涨价后LTV -31.65%，需谨慎</li>
+                </ul>
+            </div>
+
+            <!-- Next steps -->
+            <div class="s3-block reveal">
+                <div class="s3-block-title"><span class="dot dot-yellow"></span>下一步计划</div>
+                <div class="next-steps">
+                    <div class="ns-item"><span class="ns-num">①</span><span><strong>延长观察期至30天+</strong>，追踪长期留存和LTV趋势</span></div>
+                    <div class="ns-item"><span class="ns-num">②</span><span><strong>分段微调</strong>：31天+试探45折、周六日试探65-7折</span></div>
+                    <div class="ns-item"><span class="ns-num">③</span><span><strong>扩大新客样本</strong>：0-15天仅128人，需独立验证</span></div>
+                    <div class="ns-item"><span class="ns-num">④</span><span><strong>监控券核销率</strong>：涨价后Weekday Deals核销从34.6%降至~23%</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bar">
+        <span>Lucky US · 2月老客涨价策略实验月报 · 2026-03-01</span>
+        <span class="page">3 / 3</span>
+    </div>
+</section>
+
+<script>
+    /* ===========================================
+       SLIDE CONTROLLER
+       =========================================== */
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.nav-dot');
+
+    // Intersection Observer for animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                const idx = [...slides].indexOf(entry.target);
+                dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+            }
+        });
+    }, { threshold: 0.3 });
+
+    slides.forEach(s => observer.observe(s));
+
+    // Nav dots click
+    dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const idx = parseInt(dot.dataset.slide);
+            slides[idx].scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
+    // Keyboard navigation
+    let current = 0;
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            current = Math.min(current + 1, slides.length - 1);
+            slides[current].scrollIntoView({ behavior: 'smooth' });
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            current = Math.max(current - 1, 0);
+            slides[current].scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+
+    // Update current on scroll
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const viewportH = window.innerHeight;
+        current = Math.round(scrollTop / viewportH);
+    }, { passive: true });
+
+    // First slide visible
+    slides[0].classList.add('visible');
+</script>
+</body>
+</html>

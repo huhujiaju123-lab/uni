@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>周易第十五卦 · 谦卦（地山谦）深度解读</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ========== CSS 变量 ========== */
+:root {
+  --ink-black: #1a1a1a;
+  --ink-dark: #2d2d2d;
+  --ink-medium: #555;
+  --ink-light: #888;
+  --paper: #f5f0e8;
+  --paper-light: #faf7f0;
+  --paper-dark: #e8e0d0;
+  --gold: #b8860b;
+  --gold-light: #d4a843;
+  --gold-bright: #e6c453;
+  --vermilion: #c23a2b;
+  --vermilion-light: #d4554a;
+  --cloud-white: rgba(255,255,255,0.6);
+  --shadow-ink: rgba(26,26,26,0.08);
+  --radius: 4px;
+  --font-main: 'Noto Serif SC', 'Songti SC', 'SimSun', serif;
+  --font-body: 'Noto Serif SC', -apple-system, 'PingFang SC', serif;
+}
+
+/* ========== 全局重置 ========== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink-black);
+  background-color: var(--paper);
+  line-height: 1.9;
+  overflow-x: hidden;
+  /* 宣纸纹理背景 */
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+/* ========== 宣纸纹理覆盖层 ========== */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(200,190,170,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 50%, rgba(200,190,170,0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ========== 通用容器 ========== */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+section {
+  padding: 5rem 0;
+  position: relative;
+}
+
+/* ========== 淡入动画 ========== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-in-delay-1 { transition-delay: 0.15s; }
+.fade-in-delay-2 { transition-delay: 0.3s; }
+.fade-in-delay-3 { transition-delay: 0.45s; }
+.fade-in-delay-4 { transition-delay: 0.6s; }
+
+/* ========== 云纹装饰 ========== */
+.cloud-decoration {
+  position: absolute;
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+/* ========== 分隔线 ========== */
+.divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ink-light), transparent);
+  margin: 2rem auto;
+}
+.divider-gold {
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.divider-wide {
+  width: 120px;
+}
+
+/* ========== A. 首屏 Hero ========== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg,
+    #f5f0e8 0%,
+    #ece5d8 30%,
+    #ddd5c4 60%,
+    #c5baa6 80%,
+    #a89b84 100%
+  );
+}
+
+/* 山在地下的意境 —— 山形遮罩 */
+.hero-mountains {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  z-index: 1;
+}
+
+/* 地平线 */
+.hero-horizon {
+  position: absolute;
+  bottom: 45%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 5%, var(--ink-light) 30%, var(--ink-medium) 50%, var(--ink-light) 70%, transparent 95%);
+  opacity: 0.4;
+  z-index: 3;
+}
+
+/* 地平线标注 */
+.horizon-label {
+  position: absolute;
+  bottom: calc(45% + 8px);
+  right: 8%;
+  font-size: 0.7rem;
+  color: var(--ink-light);
+  letter-spacing: 0.3em;
+  opacity: 0.5;
+  z-index: 3;
+}
+
+/* 地层（半透明覆盖，模拟"地下"） */
+.hero-ground {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background: linear-gradient(180deg,
+    rgba(168,155,132,0.3) 0%,
+    rgba(120,108,88,0.5) 30%,
+    rgba(80,72,58,0.7) 70%,
+    rgba(50,44,36,0.85) 100%
+  );
+  z-index: 2;
+}
+
+.hero-content {
+  text-align: center;
+  position: relative;
+  z-index: 5;
+  padding: 2rem;
+}
+
+.hero-title {
+  font-size: clamp(5rem, 15vw, 10rem);
+  font-weight: 900;
+  color: var(--ink-black);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.05);
+  opacity: 0;
+  animation: brushReveal 1.5s ease forwards 0.3s;
+}
+
+@keyframes brushReveal {
+  0% { opacity: 0; transform: scale(0.8); filter: blur(4px); }
+  60% { opacity: 0.8; transform: scale(1.02); filter: blur(0); }
+  100% { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  color: var(--ink-medium);
+  letter-spacing: 0.5em;
+  margin-bottom: 2.5rem;
+  font-weight: 400;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 0.8s;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 卦象 SVG */
+.hero-hexagram {
+  margin: 0 auto 2rem;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 1.1s;
+}
+
+.hero-guaci {
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: var(--ink-dark);
+  margin-bottom: 1rem;
+  font-weight: 600;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 1.4s;
+}
+
+.hero-intro {
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  color: var(--vermilion);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 1.7s;
+}
+
+/* 下滑提示 */
+.scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  text-align: center;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 2.2s;
+}
+.scroll-hint span {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--ink-light);
+  letter-spacing: 0.3em;
+  margin-bottom: 0.5rem;
+}
+.scroll-arrow {
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+  border-right: 1.5px solid var(--ink-light);
+  border-bottom: 1.5px solid var(--ink-light);
+  transform: rotate(45deg);
+  animation: scrollBounce 2s ease infinite;
+}
+@keyframes scrollBounce {
+  0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: 0.5; }
+  50% { transform: rotate(45deg) translate(5px, 5px); opacity: 1; }
+}
+
+/* ========== B. 卦象解读 ========== */
+.section-imagery {
+  background: var(--paper-light);
+  border-top: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.section-title {
+  text-align: center;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--ink-black);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.15em;
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--ink-light);
+  letter-spacing: 0.3em;
+  margin-bottom: 3rem;
+}
+
+.imagery-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+
+.imagery-svg-wrap {
+  flex-shrink: 0;
+}
+
+.imagery-text {
+  max-width: 400px;
+}
+
+.imagery-text p {
+  margin-bottom: 1.2rem;
+  font-size: 1rem;
+  color: var(--ink-dark);
+  text-align: justify;
+}
+
+.imagery-text .highlight-text {
+  font-weight: 600;
+  color: var(--ink-black);
+}
+
+.three-dao {
+  text-align: center;
+  padding: 2.5rem 2rem;
+  background: linear-gradient(135deg, rgba(184,134,11,0.04), rgba(184,134,11,0.08));
+  border: 1px solid rgba(184,134,11,0.15);
+  border-radius: var(--radius);
+  margin-top: 2rem;
+}
+.three-dao p {
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+  color: var(--ink-dark);
+  line-height: 2.2;
+  font-weight: 500;
+}
+.three-dao .dao-source {
+  display: block;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--ink-light);
+  font-weight: 400;
+}
+
+/* ========== C. 六爻逐爻分析 ========== */
+.section-yao {
+  padding-bottom: 3rem;
+}
+
+.yao-card {
+  margin-bottom: 3rem;
+  padding: 2.5rem;
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius);
+  position: relative;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.yao-card:hover {
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  transform: translateY(-2px);
+}
+
+/* 九三特别样式 */
+.yao-card.yao-highlight {
+  background: linear-gradient(135deg, #fdf8ef, #faf0db);
+  border: 2px solid var(--gold);
+  box-shadow: 0 4px 20px rgba(184,134,11,0.1);
+}
+.yao-card.yao-highlight::before {
+  content: '全卦唯一阳爻';
+  position: absolute;
+  top: -12px;
+  right: 24px;
+  background: linear-gradient(135deg, var(--vermilion), var(--vermilion-light));
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.8rem;
+  border-radius: 2px;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+}
+
+.yao-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.yao-tag {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background: var(--ink-black);
+  color: var(--paper);
+  font-size: 0.8rem;
+  border-radius: 2px;
+  letter-spacing: 0.15em;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.yao-highlight .yao-tag {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--ink-black);
+}
+
+.yao-keyword {
+  font-size: 0.85rem;
+  color: var(--ink-light);
+  letter-spacing: 0.1em;
+}
+
+.yao-text {
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  font-weight: 600;
+  color: var(--ink-black);
+  margin-bottom: 1.2rem;
+  line-height: 1.8;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.yao-highlight .yao-text {
+  color: var(--vermilion);
+}
+
+.yao-interpretation {
+  font-size: 0.95rem;
+  color: var(--ink-dark);
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+.yao-rhythm {
+  font-size: 0.9rem;
+  color: var(--ink-medium);
+  padding-left: 1rem;
+  border-left: 2px solid var(--paper-dark);
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+.yao-highlight .yao-rhythm {
+  border-left-color: var(--gold);
+}
+
+.yao-history {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 1rem 1.2rem;
+  background: rgba(0,0,0,0.02);
+  border-radius: var(--radius);
+  margin-top: 0.5rem;
+}
+.yao-highlight .yao-history {
+  background: rgba(184,134,11,0.06);
+}
+
+.yao-history-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+}
+
+.yao-history-text {
+  font-size: 0.85rem;
+  color: var(--ink-medium);
+}
+.yao-history-label {
+  font-weight: 600;
+  color: var(--ink-dark);
+  margin-right: 0.3rem;
+}
+
+/* ========== D. 走势图 ========== */
+.section-chart {
+  background: var(--paper-light);
+  border-top: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  padding: 1rem 0;
+}
+
+.chart-svg-container {
+  width: 100%;
+  overflow: visible;
+}
+
+.chart-tooltip {
+  position: absolute;
+  padding: 0.6rem 1rem;
+  background: var(--ink-black);
+  color: var(--paper);
+  font-size: 0.8rem;
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+  z-index: 10;
+  font-family: var(--font-body);
+}
+
+.chart-phases {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.chart-phase {
+  text-align: center;
+  padding: 0.8rem 1.5rem;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: var(--radius);
+  background: rgba(255,255,255,0.5);
+}
+.chart-phase-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink-black);
+  margin-bottom: 0.2rem;
+}
+.chart-phase-sub {
+  font-size: 0.75rem;
+  color: var(--ink-light);
+}
+
+/* ========== E. 郭子仪时间线 ========== */
+.section-timeline {
+  padding-bottom: 4rem;
+}
+
+.timeline-intro {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  font-size: 0.95rem;
+  color: var(--ink-medium);
+}
+
+.timeline {
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto;
+  padding-left: 40px;
+}
+
+/* 竖线 */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg,
+    transparent,
+    var(--ink-light) 5%,
+    var(--ink-light) 95%,
+    transparent
+  );
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 2.5rem;
+  padding-left: 2rem;
+}
+
+/* 时间线节点圆点 */
+.timeline-dot {
+  position: absolute;
+  left: -33px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2px solid var(--ink-light);
+  z-index: 2;
+}
+
+.timeline-item.timeline-highlight .timeline-dot {
+  width: 16px;
+  height: 16px;
+  left: -35px;
+  top: 4px;
+  background: var(--gold);
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px rgba(184,134,11,0.2);
+}
+
+.timeline-era {
+  font-size: 0.8rem;
+  color: var(--ink-light);
+  letter-spacing: 0.15em;
+  margin-bottom: 0.2rem;
+}
+
+.timeline-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink-black);
+  margin-bottom: 0.5rem;
+}
+.timeline-highlight .timeline-title {
+  color: var(--vermilion);
+}
+
+.timeline-desc {
+  font-size: 0.9rem;
+  color: var(--ink-medium);
+  line-height: 1.8;
+}
+
+/* ========== F. 核心启示 ========== */
+.section-insight {
+  background: linear-gradient(180deg, var(--paper), #eae3d5);
+  text-align: center;
+  padding: 6rem 0;
+}
+
+.insight-quote {
+  max-width: 650px;
+  margin: 0 auto;
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  color: var(--ink-dark);
+  line-height: 2.2;
+  font-weight: 500;
+  position: relative;
+  padding: 2rem 0;
+}
+
+.insight-quote::before,
+.insight-quote::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+  margin: 0 auto 2rem;
+}
+.insight-quote::after {
+  margin: 2rem auto 0;
+}
+
+.insight-highlight {
+  display: block;
+  margin-top: 1.5rem;
+  font-size: clamp(1rem, 1.8vw, 1.15rem);
+  color: var(--vermilion);
+  font-weight: 600;
+}
+
+/* ========== G. 页脚 ========== */
+footer {
+  text-align: center;
+  padding: 2.5rem 0;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  background: var(--paper);
+}
+footer p {
+  font-size: 0.8rem;
+  color: var(--ink-light);
+  letter-spacing: 0.4em;
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 768px) {
+  section {
+    padding: 3.5rem 0;
+  }
+  .container {
+    padding: 0 1.2rem;
+  }
+  .yao-card {
+    padding: 1.8rem 1.5rem;
+  }
+  .imagery-visual {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .imagery-text {
+    max-width: 100%;
+  }
+  .timeline {
+    padding-left: 30px;
+  }
+  .timeline-item {
+    padding-left: 1.5rem;
+  }
+  .timeline-dot {
+    left: -23px;
+  }
+  .timeline-item.timeline-highlight .timeline-dot {
+    left: -25px;
+  }
+  .chart-phases {
+    gap: 1rem;
+  }
+  .hero-title {
+    font-size: clamp(4rem, 20vw, 8rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .yao-card {
+    padding: 1.5rem 1.2rem;
+  }
+  .yao-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .three-dao p {
+    font-size: 0.9rem;
+  }
+}
+
+/* ========== 走势图路径动画 ========== */
+.chart-path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 2s ease;
+}
+.chart-path.animated {
+  stroke-dashoffset: 0;
+}
+
+/* 走势图点动画 */
+.chart-dot {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.chart-dot.animated {
+  opacity: 1;
+}
+.chart-dot-glow {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.chart-dot-glow.animated {
+  opacity: 0.3;
+}
+
+/* ========== 云纹 SVG 装饰 ========== */
+.deco-cloud {
+  position: absolute;
+  opacity: 0.04;
+  pointer-events: none;
+}
+.deco-cloud-1 {
+  top: 5%;
+  right: -5%;
+  width: 200px;
+  transform: rotate(15deg);
+}
+.deco-cloud-2 {
+  bottom: 10%;
+  left: -3%;
+  width: 150px;
+  transform: rotate(-10deg) scaleX(-1);
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== A. 首屏 Hero ==================== -->
+<section class="hero" id="hero">
+  <!-- 山形 SVG -->
+  <svg class="hero-mountains" viewBox="0 0 1200 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- 远山（更淡） -->
+    <path d="M0,180 Q150,80 300,160 Q400,100 500,140 Q600,60 750,150 Q850,90 950,130 Q1050,70 1200,160 L1200,400 L0,400 Z"
+          fill="rgba(100,90,75,0.15)" />
+    <!-- 主山 -->
+    <path d="M200,250 Q350,60 500,200 Q580,100 700,180 Q800,30 950,220 L1200,300 L1200,400 L0,400 L0,300 Z"
+          fill="rgba(80,72,58,0.25)" />
+    <!-- 近山 -->
+    <path d="M0,320 Q200,180 400,300 Q500,220 650,290 Q800,200 1000,310 Q1100,260 1200,320 L1200,400 L0,400 Z"
+          fill="rgba(60,54,42,0.3)" />
+  </svg>
+
+  <div class="hero-horizon"></div>
+  <span class="horizon-label">-- 地平线 --</span>
+
+  <div class="hero-ground"></div>
+
+  <div class="hero-content">
+    <h1 class="hero-title">谦</h1>
+    <p class="hero-subtitle">周易第十五卦 &middot; 地山谦</p>
+
+    <!-- 卦象 SVG：六爻图 -->
+    <div class="hero-hexagram">
+      <svg width="100" height="140" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+        <!-- 从上到下：上六、六五、六四、九三、六二、初六 -->
+        <!-- 上六（阴爻） -->
+        <rect x="10" y="5" width="34" height="6" rx="1" fill="#555"/>
+        <rect x="56" y="5" width="34" height="6" rx="1" fill="#555"/>
+        <!-- 六五（阴爻） -->
+        <rect x="10" y="27" width="34" height="6" rx="1" fill="#555"/>
+        <rect x="56" y="27" width="34" height="6" rx="1" fill="#555"/>
+        <!-- 六四（阴爻） -->
+        <rect x="10" y="49" width="34" height="6" rx="1" fill="#555"/>
+        <rect x="56" y="49" width="34" height="6" rx="1" fill="#555"/>
+        <!-- 九三（阳爻）—— 金色突出 -->
+        <rect x="10" y="71" width="80" height="7" rx="1" fill="url(#goldGrad)"/>
+        <!-- 发光效果 -->
+        <rect x="8" y="69" width="84" height="11" rx="2" fill="none" stroke="rgba(184,134,11,0.3)" stroke-width="1"/>
+        <!-- 六二（阴爻） -->
+        <rect x="10" y="96" width="34" height="6" rx="1" fill="#555"/>
+        <rect x="56" y="96" width="34" height="6" rx="1" fill="#555"/>
+        <!-- 初六（阴爻） -->
+        <rect x="10" y="118" width="34" height="6" rx="1" fill="#555"/>
+        <rect x="56" y="118" width="34" height="6" rx="1" fill="#555"/>
+
+        <!-- 爻位标签 -->
+        <text x="-2" y="80" font-size="7" fill="#b8860b" font-family="'Noto Serif SC', serif" text-anchor="end" transform="translate(4,0)">九三</text>
+
+        <defs>
+          <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#b8860b"/>
+            <stop offset="50%" stop-color="#d4a843"/>
+            <stop offset="100%" stop-color="#b8860b"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <p class="hero-guaci">谦：亨，君子有终。</p>
+    <p class="hero-intro">六十四卦中，唯一六爻皆吉之卦</p>
+  </div>
+
+  <div class="scroll-hint">
+    <span>向下探索</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ==================== B. 卦象解读 ==================== -->
+<section class="section-imagery" id="imagery">
+  <div class="container">
+    <h2 class="section-title fade-in">地山谦</h2>
+    <p class="section-subtitle fade-in fade-in-delay-1">山在地下之象</p>
+
+    <div class="imagery-visual fade-in fade-in-delay-2">
+      <div class="imagery-svg-wrap">
+        <!-- 地山谦意象图 -->
+        <svg width="260" height="220" viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg">
+          <!-- 天空 -->
+          <rect x="0" y="0" width="260" height="110" fill="#f5f0e8"/>
+
+          <!-- 地平面 -->
+          <line x1="10" y1="110" x2="250" y2="110" stroke="#888" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="248" y="106" font-size="9" fill="#aaa" font-family="'Noto Serif SC', serif" text-anchor="end">地</text>
+
+          <!-- 地下区域 -->
+          <rect x="0" y="110" width="260" height="110" fill="#ebe5d8"/>
+
+          <!-- 山（在地下） -->
+          <path d="M60,200 L130,130 L200,200 Z" fill="none" stroke="#555" stroke-width="2"/>
+          <path d="M80,200 L130,145 L180,200 Z" fill="rgba(80,72,58,0.15)"/>
+
+          <!-- 山尖刚好到地面的线 -->
+          <circle cx="130" cy="130" r="3" fill="#b8860b"/>
+          <line x1="130" y1="110" x2="130" y2="130" stroke="#b8860b" stroke-width="1" stroke-dasharray="3,2"/>
+
+          <!-- 标注 -->
+          <text x="130" y="170" font-size="11" fill="#555" font-family="'Noto Serif SC', serif" text-anchor="middle">山</text>
+          <text x="130" y="80" font-size="10" fill="#aaa" font-family="'Noto Serif SC', serif" text-anchor="middle">坤（地）</text>
+          <text x="130" y="205" font-size="10" fill="#888" font-family="'Noto Serif SC', serif" text-anchor="middle">艮（山）</text>
+
+          <!-- 向下的箭头，表示山甘居地下 -->
+          <path d="M215,85 L215,145" stroke="#b8860b" stroke-width="1" marker-end="url(#arrowGold)"/>
+          <text x="230" y="118" font-size="8" fill="#b8860b" font-family="'Noto Serif SC', serif" text-anchor="start">高者</text>
+          <text x="230" y="130" font-size="8" fill="#b8860b" font-family="'Noto Serif SC', serif" text-anchor="start">自卑</text>
+
+          <defs>
+            <marker id="arrowGold" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#b8860b"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+
+      <div class="imagery-text">
+        <p>
+          <span class="highlight-text">上坤下艮，地在山上。</span>山本高大峻峭，却甘愿处于大地之下——这便是谦的核心意象。
+        </p>
+        <p>
+          不是山不够高，恰恰因为它足够高，所以才能选择低处。<span class="highlight-text">高者自甘卑下，有而不居</span>，这是谦的真义。
+        </p>
+        <p>
+          君子观此卦象，效法山藏于地下之德：有才能而不自夸，有功劳而不自居，有智慧而不自矜。
+        </p>
+      </div>
+    </div>
+
+    <div class="three-dao fade-in fade-in-delay-3">
+      <p>
+        天道亏盈而益谦<br/>
+        地道变盈而流谦<br/>
+        鬼神害盈而福谦<br/>
+        人道恶盈而好谦
+        <span class="dao-source">——《彖传》</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== C. 六爻逐爻分析 ==================== -->
+<section class="section-yao" id="yao">
+  <div class="container">
+    <h2 class="section-title fade-in">六爻详解</h2>
+    <p class="section-subtitle fade-in fade-in-delay-1">谦之六境，层层递进</p>
+
+    <!-- 初六 -->
+    <div class="yao-card fade-in">
+      <div class="yao-header">
+        <span class="yao-tag">初六 &middot; 自谦</span>
+        <span class="yao-keyword">向内修养，蓄势待发</span>
+      </div>
+      <p class="yao-text">谦谦君子，用涉大川，吉。</p>
+      <p class="yao-interpretation">
+        位于最底层，以阴柔处卑位，谦而又谦。"谦谦"叠用，强调谦到极致、发自内心。这种彻底的低姿态反而赋予了巨大的行动力——连"涉大川"这样的危险之事都可以做，因为没有傲慢就没有轻敌。
+      </p>
+      <p class="yao-rhythm">静默蓄势。如同一个人刚入世，身份最低，但正因不矜不伐，反而获得了最大的自由度。</p>
+      <div class="yao-history">
+        <svg class="yao-history-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="10" r="8" stroke="#888" stroke-width="1.5"/>
+          <path d="M10,5 L10,10 L14,12" stroke="#888" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <p class="yao-history-text">
+          <span class="yao-history-label">郭子仪：</span>边疆默默服役三十年，以最低姿态积累实力。从武举出身到中层军职，无人知其大才。
+        </p>
+      </div>
+    </div>
+
+    <!-- 六二 -->
+    <div class="yao-card fade-in">
+      <div class="yao-header">
+        <span class="yao-tag">六二 &middot; 鸣谦</span>
+        <span class="yao-keyword">由内而外，声名初显</span>
+      </div>
+      <p class="yao-text">鸣谦，贞吉。</p>
+      <p class="yao-interpretation">
+        "鸣"即声音传出，谦德已经不仅仅是内在修养，而是被他人感知、传颂。六二居中得正，是中正之德的体现。"贞吉"——守正则吉，说明这种名声是自然流露而非刻意经营。
+      </p>
+      <p class="yao-rhythm">由内而外。从初六的"自谦"发展到"人知其谦"，谦德开始产生社会影响力。</p>
+      <div class="yao-history">
+        <svg class="yao-history-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="10" r="8" stroke="#888" stroke-width="1.5"/>
+          <path d="M10,5 L10,10 L14,12" stroke="#888" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <p class="yao-history-text">
+          <span class="yao-history-label">郭子仪：</span>安史之乱起，出任朔方节度使，战功初显。声名自然外传。
+        </p>
+      </div>
+    </div>
+
+    <!-- 九三（高亮） -->
+    <div class="yao-card yao-highlight fade-in">
+      <div class="yao-header">
+        <span class="yao-tag">九三 &middot; 劳谦</span>
+        <span class="yao-keyword">有功不居，全卦高潮</span>
+      </div>
+      <p class="yao-text">劳谦，君子有终，吉。</p>
+      <p class="yao-interpretation">
+        全卦唯一的阳爻，是实际做事、建立功劳的人。"劳谦"——有功劳而仍保持谦逊，这是最难的。九三是全卦的关键转折点：山的主体就是这一阳爻，山之所以甘居地下，就是九三以阳刚之才甘处卑位。再次出现"君子有终"，与卦辞呼应，说明这是谦道的完满体现。
+      </p>
+      <p class="yao-rhythm">全卦高潮。能力最强、贡献最大、却最为谦虚——这是谦道的最高表达。</p>
+      <div class="yao-history">
+        <svg class="yao-history-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="10" r="8" stroke="#b8860b" stroke-width="1.5"/>
+          <path d="M10,5 L10,10 L14,12" stroke="#b8860b" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <p class="yao-history-text">
+          <span class="yao-history-label">郭子仪：</span>收复长安、洛阳两京，再造唐室，功高而不自居。肃宗言"虽吾之家国，实由卿再造"。
+        </p>
+      </div>
+    </div>
+
+    <!-- 六四 -->
+    <div class="yao-card fade-in">
+      <div class="yao-header">
+        <span class="yao-tag">六四 &middot; 撝谦</span>
+        <span class="yao-keyword">行动中的谦，稳步展开</span>
+      </div>
+      <p class="yao-text">无不利，撝谦。</p>
+      <p class="yao-interpretation">
+        "撝"意为挥动、施展。在一切行动中都贯彻谦逊之道。"无不利"——处处无碍。从个人修养推广到做事处世，谦德成为行动准则。六四进入上卦，从修身领域进入治世领域。
+      </p>
+      <p class="yao-rhythm">平稳展开。从个人修养推广到做事处世，谦不再是内心独白，而是行为方式。</p>
+      <div class="yao-history">
+        <svg class="yao-history-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="10" r="8" stroke="#888" stroke-width="1.5"/>
+          <path d="M10,5 L10,10 L14,12" stroke="#888" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <p class="yao-history-text">
+          <span class="yao-history-label">郭子仪：</span>被掘祖坟不报复，被夺兵权不怨怼。以行动践行谦道。
+        </p>
+      </div>
+    </div>
+
+    <!-- 六五 -->
+    <div class="yao-card fade-in">
+      <div class="yao-header">
+        <span class="yao-tag">六五 &middot; 权谦</span>
+        <span class="yao-keyword">刚柔并济，以德御权</span>
+      </div>
+      <p class="yao-text">不富以其邻，利用侵伐，无不利。</p>
+      <p class="yao-interpretation">
+        六五是君位，以阴柔居之，是谦虚的领导者。"不富以其邻"——不以财富笼络人，以谦德使人归附。"利用侵伐"——谦不是软弱，该出手时出手。真正的谦恭者，在必要时有决断力。
+      </p>
+      <p class="yao-rhythm">刚柔并济。谦德到了权力层面，既要柔以待人，也要刚以御乱。</p>
+      <div class="yao-history">
+        <svg class="yao-history-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="10" r="8" stroke="#888" stroke-width="1.5"/>
+          <path d="M10,5 L10,10 L14,12" stroke="#888" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <p class="yao-history-text">
+          <span class="yao-history-label">郭子仪：</span>单骑退回纥，以人格感召退三十万大军，不费一兵一卒。果敢与谦逊并存。
+        </p>
+      </div>
+    </div>
+
+    <!-- 上六 -->
+    <div class="yao-card fade-in">
+      <div class="yao-header">
+        <span class="yao-tag">上六 &middot; 归谦</span>
+        <span class="yao-keyword">名实兼备，收束圆满</span>
+      </div>
+      <p class="yao-text">鸣谦，利用行师，征邑国。</p>
+      <p class="yao-interpretation">
+        再次出现"鸣谦"，与六二呼应。但此处已是谦名远播的境界。"征邑国"——仅限自己的属地，是整顿内部。谦到终极，仍不忘自省自律。功成名就之后，回归自我整理，这是谦道的完满闭环。
+      </p>
+      <p class="yao-rhythm">收束归内。谦德已圆满，最终回到自我整理，与初六的"谦谦"遥相呼应。</p>
+      <div class="yao-history">
+        <svg class="yao-history-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="10" r="8" stroke="#888" stroke-width="1.5"/>
+          <path d="M10,5 L10,10 L14,12" stroke="#888" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <p class="yao-history-text">
+          <span class="yao-history-label">郭子仪：</span>大开府门、自我约束，善终于八十五岁，谥号"忠武"。圆满收束。
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==================== D. 走势图 ==================== -->
+<section class="section-chart" id="chart">
+  <div class="container">
+    <h2 class="section-title fade-in">谦德走势</h2>
+    <p class="section-subtitle fade-in fade-in-delay-1">六爻境界演进</p>
+
+    <div class="chart-wrapper fade-in fade-in-delay-2">
+      <div class="chart-svg-container" id="chartContainer">
+        <svg id="trendChart" viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+          <defs>
+            <!-- 水墨渐变 -->
+            <linearGradient id="inkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#555"/>
+              <stop offset="40%" stop-color="#333"/>
+              <stop offset="60%" stop-color="#b8860b"/>
+              <stop offset="100%" stop-color="#555"/>
+            </linearGradient>
+            <!-- 区域填充渐变 -->
+            <linearGradient id="areaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="rgba(184,134,11,0.15)"/>
+              <stop offset="100%" stop-color="rgba(184,134,11,0)"/>
+            </linearGradient>
+            <!-- 高斯模糊 -->
+            <filter id="blur1">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
+            </filter>
+          </defs>
+
+          <!-- 网格线 -->
+          <line x1="80" y1="310" x2="740" y2="310" stroke="#ccc" stroke-width="0.5"/>
+          <line x1="80" y1="250" x2="740" y2="250" stroke="#ddd" stroke-width="0.5" stroke-dasharray="4,4"/>
+          <line x1="80" y1="190" x2="740" y2="190" stroke="#ddd" stroke-width="0.5" stroke-dasharray="4,4"/>
+          <line x1="80" y1="130" x2="740" y2="130" stroke="#ddd" stroke-width="0.5" stroke-dasharray="4,4"/>
+          <line x1="80" y1="70" x2="740" y2="70" stroke="#ddd" stroke-width="0.5" stroke-dasharray="4,4"/>
+
+          <!-- Y轴标签 -->
+          <text x="70" y="314" font-size="10" fill="#aaa" text-anchor="end" font-family="'Noto Serif SC', serif">始</text>
+          <text x="70" y="194" font-size="10" fill="#aaa" text-anchor="end" font-family="'Noto Serif SC', serif">中</text>
+          <text x="70" y="74" font-size="10" fill="#aaa" text-anchor="end" font-family="'Noto Serif SC', serif">极</text>
+
+          <!-- 区域填充 -->
+          <path class="chart-path" id="chartArea"
+                d="M130,280 C190,250 230,210 300,180 C350,100 370,75 410,60 C450,75 490,130 520,150 C560,120 600,110 630,100 C670,140 700,160 720,180 L720,310 L130,310 Z"
+                fill="url(#areaGrad)" opacity="0"/>
+
+          <!-- 墨迹阴影线 -->
+          <path class="chart-path" id="chartShadow"
+                d="M130,280 C190,250 230,210 300,180 C350,100 370,75 410,60 C450,75 490,130 520,150 C560,120 600,110 630,100 C670,140 700,160 720,180"
+                fill="none" stroke="rgba(100,90,75,0.15)" stroke-width="8" stroke-linecap="round" filter="url(#blur1)"/>
+
+          <!-- 主线条 -->
+          <path class="chart-path" id="chartLine"
+                d="M130,280 C190,250 230,210 300,180 C350,100 370,75 410,60 C450,75 490,130 520,150 C560,120 600,110 630,100 C670,140 700,160 720,180"
+                fill="none" stroke="url(#inkGrad)" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- 数据点 -->
+          <!-- 初六 -->
+          <circle class="chart-dot" cx="130" cy="280" r="5" fill="#555" stroke="#f5f0e8" stroke-width="2" data-label="初六 · 自谦" data-desc="谦谦君子"/>
+          <!-- 六二 -->
+          <circle class="chart-dot" cx="250" cy="200" r="5" fill="#555" stroke="#f5f0e8" stroke-width="2" data-label="六二 · 鸣谦" data-desc="声名初显"/>
+          <!-- 九三（金色大点） -->
+          <circle class="chart-dot-glow" cx="410" cy="60" r="18" fill="#b8860b"/>
+          <circle class="chart-dot" cx="410" cy="60" r="7" fill="#b8860b" stroke="#f5f0e8" stroke-width="2.5" data-label="九三 · 劳谦" data-desc="有功不居 · 全卦高潮"/>
+          <!-- 六四 -->
+          <circle class="chart-dot" cx="520" cy="150" r="5" fill="#555" stroke="#f5f0e8" stroke-width="2" data-label="六四 · 撝谦" data-desc="行动中的谦"/>
+          <!-- 六五 -->
+          <circle class="chart-dot" cx="630" cy="100" r="5" fill="#555" stroke="#f5f0e8" stroke-width="2" data-label="六五 · 权谦" data-desc="以德御权"/>
+          <!-- 上六 -->
+          <circle class="chart-dot" cx="720" cy="180" r="5" fill="#555" stroke="#f5f0e8" stroke-width="2" data-label="上六 · 归谦" data-desc="收束圆满"/>
+
+          <!-- X轴标签 -->
+          <text x="130" y="340" font-size="12" fill="#555" text-anchor="middle" font-family="'Noto Serif SC', serif" font-weight="500">初六</text>
+          <text x="250" y="340" font-size="12" fill="#555" text-anchor="middle" font-family="'Noto Serif SC', serif" font-weight="500">六二</text>
+          <text x="410" y="340" font-size="13" fill="#b8860b" text-anchor="middle" font-family="'Noto Serif SC', serif" font-weight="700">九三</text>
+          <text x="520" y="340" font-size="12" fill="#555" text-anchor="middle" font-family="'Noto Serif SC', serif" font-weight="500">六四</text>
+          <text x="630" y="340" font-size="12" fill="#555" text-anchor="middle" font-family="'Noto Serif SC', serif" font-weight="500">六五</text>
+          <text x="720" y="340" font-size="12" fill="#555" text-anchor="middle" font-family="'Noto Serif SC', serif" font-weight="500">上六</text>
+
+          <!-- 阶段标注 -->
+          <line x1="460" y1="315" x2="460" y2="360" stroke="#ccc" stroke-width="0.5" stroke-dasharray="3,3"/>
+          <text x="270" y="370" font-size="11" fill="#888" text-anchor="middle" font-family="'Noto Serif SC', serif" letter-spacing="0.15em">下卦 · 修身</text>
+          <text x="620" y="370" font-size="11" fill="#888" text-anchor="middle" font-family="'Noto Serif SC', serif" letter-spacing="0.15em">上卦 · 治世</text>
+        </svg>
+      </div>
+      <!-- 工具提示 -->
+      <div class="chart-tooltip" id="chartTooltip"></div>
+    </div>
+
+    <div class="chart-phases fade-in fade-in-delay-3">
+      <div class="chart-phase">
+        <p class="chart-phase-title">下卦 &middot; 艮（山）</p>
+        <p class="chart-phase-sub">修身养德，由内而外</p>
+      </div>
+      <div class="chart-phase">
+        <p class="chart-phase-title">上卦 &middot; 坤（地）</p>
+        <p class="chart-phase-sub">治世行道，刚柔并济</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== E. 郭子仪时间线 ==================== -->
+<section class="section-timeline" id="timeline">
+  <div class="container">
+    <h2 class="section-title fade-in">郭子仪：谦卦的历史活注</h2>
+    <p class="section-subtitle fade-in fade-in-delay-1">唐 · 697 - 781</p>
+
+    <p class="timeline-intro fade-in fade-in-delay-2">
+      历经玄宗、肃宗、代宗、德宗四朝，位极人臣而善终。其一生恰如谦卦六爻之递进，是谦道在历史中最完整的映射。
+    </p>
+
+    <div class="timeline">
+      <!-- 初六 -->
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <p class="timeline-era">697 - 755 &middot; 初六</p>
+        <p class="timeline-title">自谦 —— 边疆三十年</p>
+        <p class="timeline-desc">武举出身，默默服役于边疆，从基层军官一步步升至中层军职。无人知其韬略，无人识其大才。三十年蛰伏，以最低姿态积累了全面的军事经验。</p>
+      </div>
+
+      <!-- 六二 -->
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <p class="timeline-era">755 - 756 &middot; 六二</p>
+        <p class="timeline-title">鸣谦 —— 战功初显</p>
+        <p class="timeline-desc">安史之乱爆发，出任朔方节度使。连战连捷，声名开始外传。但此时的声名是自然流露——守正持重，非刻意经营。</p>
+      </div>
+
+      <!-- 九三（高亮） -->
+      <div class="timeline-item timeline-highlight fade-in">
+        <div class="timeline-dot"></div>
+        <p class="timeline-era">757 &middot; 九三</p>
+        <p class="timeline-title">劳谦 —— 收复两京，再造唐室</p>
+        <p class="timeline-desc">收复长安、洛阳两京，功高盖世。肃宗亲言："虽吾之家国，实由卿再造。"然而郭子仪功高而不自居，始终保持臣子本分。这正是"劳谦，君子有终"的最佳注解。</p>
+      </div>
+
+      <!-- 六四 -->
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <p class="timeline-era">758 - 764 &middot; 六四</p>
+        <p class="timeline-title">撝谦 —— 不怨不怼</p>
+        <p class="timeline-desc">鱼朝恩掘其父墓，他不报复；朝廷夺其兵权，他不怨怼。在一切行动中贯彻谦逊之道，"无不利"——处处无碍。</p>
+      </div>
+
+      <!-- 六五 -->
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <p class="timeline-era">765 &middot; 六五</p>
+        <p class="timeline-title">权谦 —— 单骑退回纥</p>
+        <p class="timeline-desc">回纥、吐蕃联军三十万兵临城下。郭子仪不费一兵，单骑入回纥营帐，以人格感召退敌。谦不是软弱，该出手时有决断力——"利用侵伐，无不利"。</p>
+      </div>
+
+      <!-- 上六 -->
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <p class="timeline-era">766 - 781 &middot; 上六</p>
+        <p class="timeline-title">归谦 —— 大开府门，善终</p>
+        <p class="timeline-desc">晚年大开府门，任人出入，以绝猜忌。自我约束，谨慎收束。善终于八十五岁，追赠太师，谥号"忠武"。谦德圆满，名实俱全。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== F. 核心启示 ==================== -->
+<section class="section-insight" id="insight">
+  <div class="container">
+    <div class="fade-in">
+      <h2 class="section-title">谦之道</h2>
+      <div class="divider divider-gold divider-wide"></div>
+    </div>
+
+    <div class="insight-quote fade-in fade-in-delay-2">
+      谦不是无能者的遮羞布，<br/>
+      而是有绝对实力者的自我选择。<br/><br/>
+      山甘居地下，<br/>
+      不是因为它不够高，<br/>
+      恰恰因为它足够高。
+      <span class="insight-highlight">
+        满招损，谦受益。<br/>
+        唯谦卦六爻皆吉，盖天地人鬼神之所共予也。
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== G. 页脚 ==================== -->
+<footer>
+  <p>周易六十四卦 &middot; 第十五卦 &middot; 谦</p>
+</footer>
+
+<!-- ==================== JavaScript ==================== -->
+<script>
+(function() {
+  'use strict';
+
+  /* ========== Intersection Observer：淡入动画 ========== */
+  var observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -60px 0px',
+    threshold: 0.1
+  };
+
+  var fadeObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        fadeObserver.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.fade-in').forEach(function(el) {
+    fadeObserver.observe(el);
+  });
+
+  /* ========== 走势图动画 ========== */
+  var chartAnimated = false;
+  var chartObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting && !chartAnimated) {
+        chartAnimated = true;
+        animateChart();
+        chartObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  var chartEl = document.getElementById('chartContainer');
+  if (chartEl) {
+    chartObserver.observe(chartEl);
+  }
+
+  function animateChart() {
+    // 计算路径长度并设置动画
+    var paths = document.querySelectorAll('.chart-path');
+    paths.forEach(function(path) {
+      if (path.getTotalLength) {
+        var length = path.getTotalLength();
+        path.style.strokeDasharray = length;
+        path.style.strokeDashoffset = length;
+        // 触发动画
+        requestAnimationFrame(function() {
+          path.classList.add('animated');
+          path.style.strokeDashoffset = '0';
+        });
+      }
+    });
+
+    // 区域填充淡入
+    var area = document.getElementById('chartArea');
+    if (area) {
+      setTimeout(function() {
+        area.style.transition = 'opacity 1.5s ease';
+        area.style.opacity = '1';
+      }, 800);
+    }
+
+    // 数据点依次出现
+    var dots = document.querySelectorAll('.chart-dot');
+    var glows = document.querySelectorAll('.chart-dot-glow');
+    dots.forEach(function(dot, i) {
+      setTimeout(function() {
+        dot.classList.add('animated');
+      }, 400 + i * 250);
+    });
+    glows.forEach(function(glow, i) {
+      setTimeout(function() {
+        glow.classList.add('animated');
+      }, 400 + 2 * 250); // 九三的光晕
+    });
+  }
+
+  /* ========== 走势图工具提示 ========== */
+  var tooltip = document.getElementById('chartTooltip');
+  var chartContainer = document.getElementById('chartContainer');
+  var dots = document.querySelectorAll('.chart-dot[data-label]');
+
+  dots.forEach(function(dot) {
+    dot.style.cursor = 'pointer';
+
+    dot.addEventListener('mouseenter', function(e) {
+      var label = this.getAttribute('data-label');
+      var desc = this.getAttribute('data-desc');
+      tooltip.innerHTML = '<strong>' + label + '</strong><br/>' + desc;
+      tooltip.style.opacity = '1';
+      positionTooltip(e);
+    });
+
+    dot.addEventListener('mousemove', function(e) {
+      positionTooltip(e);
+    });
+
+    dot.addEventListener('mouseleave', function() {
+      tooltip.style.opacity = '0';
+    });
+
+    // 移动端点击
+    dot.addEventListener('click', function(e) {
+      var label = this.getAttribute('data-label');
+      var desc = this.getAttribute('data-desc');
+      tooltip.innerHTML = '<strong>' + label + '</strong><br/>' + desc;
+      tooltip.style.opacity = '1';
+      positionTooltip(e);
+      setTimeout(function() {
+        tooltip.style.opacity = '0';
+      }, 2500);
+    });
+  });
+
+  function positionTooltip(e) {
+    if (!chartContainer || !tooltip) return;
+    var rect = chartContainer.getBoundingClientRect();
+    var x = e.clientX - rect.left + 15;
+    var y = e.clientY - rect.top - 10;
+    // 防止溢出右侧
+    if (x + 150 > rect.width) {
+      x = e.clientX - rect.left - 160;
+    }
+    tooltip.style.left = x + 'px';
+    tooltip.style.top = y + 'px';
+  }
+
+  /* ========== 平滑滚动 ========== */
+  document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>

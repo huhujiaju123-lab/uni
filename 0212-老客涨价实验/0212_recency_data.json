@@ -1,0 +1,312 @@
+{
+  "R1: 距上一单天数分布": [
+    {
+      "grp": "对照组3",
+      "recency_bucket": "0-7天",
+      "user_cnt": "3383",
+      "pct": "6.7"
+    },
+    {
+      "grp": "对照组3",
+      "recency_bucket": "8-14天",
+      "user_cnt": "1915",
+      "pct": "3.8"
+    },
+    {
+      "grp": "对照组3",
+      "recency_bucket": "15-21天",
+      "user_cnt": "1584",
+      "pct": "3.1"
+    },
+    {
+      "grp": "对照组3",
+      "recency_bucket": "22-30天",
+      "user_cnt": "1505",
+      "pct": "3.0"
+    },
+    {
+      "grp": "对照组3",
+      "recency_bucket": "31天+",
+      "user_cnt": "41908",
+      "pct": "83.3"
+    },
+    {
+      "grp": "对照组3",
+      "recency_bucket": "无订单",
+      "user_cnt": "7",
+      "pct": "0.0"
+    },
+    {
+      "grp": "涨价组1",
+      "recency_bucket": "0-7天",
+      "user_cnt": "2287",
+      "pct": "6.0"
+    },
+    {
+      "grp": "涨价组1",
+      "recency_bucket": "8-14天",
+      "user_cnt": "1417",
+      "pct": "3.7"
+    },
+    {
+      "grp": "涨价组1",
+      "recency_bucket": "15-21天",
+      "user_cnt": "1141",
+      "pct": "3.0"
+    },
+    {
+      "grp": "涨价组1",
+      "recency_bucket": "22-30天",
+      "user_cnt": "1179",
+      "pct": "3.1"
+    },
+    {
+      "grp": "涨价组1",
+      "recency_bucket": "31天+",
+      "user_cnt": "32069",
+      "pct": "84.2"
+    },
+    {
+      "grp": "涨价组1",
+      "recency_bucket": "无订单",
+      "user_cnt": "2",
+      "pct": "0.0"
+    },
+    {
+      "grp": "涨价组2",
+      "recency_bucket": "0-7天",
+      "user_cnt": "2202",
+      "pct": "5.8"
+    },
+    {
+      "grp": "涨价组2",
+      "recency_bucket": "8-14天",
+      "user_cnt": "1433",
+      "pct": "3.8"
+    },
+    {
+      "grp": "涨价组2",
+      "recency_bucket": "15-21天",
+      "user_cnt": "1224",
+      "pct": "3.2"
+    },
+    {
+      "grp": "涨价组2",
+      "recency_bucket": "22-30天",
+      "user_cnt": "1229",
+      "pct": "3.2"
+    },
+    {
+      "grp": "涨价组2",
+      "recency_bucket": "31天+",
+      "user_cnt": "31970",
+      "pct": "84.0"
+    },
+    {
+      "grp": "涨价组2",
+      "recency_bucket": "无订单",
+      "user_cnt": "4",
+      "pct": "0.0"
+    }
+  ],
+  "R2: 距上一单×消费指标": [
+    {
+      "grp": "对照组3",
+      "recency_bucket": "0-7天",
+      "total_users": "3383",
+      "buyers": "3383",
+      "conversion_rate": "100.0",
+      "total_cups": "11082",
+      "total_revenue": "37537.74",
+      "unit_price": "3.39",
+      "cups_per_buyer": "3.28"
+    },
+    {
+      "grp": "对照组3",
+      "recency_bucket": "8-14天",
+      "total_users": "1915",
+      "buyers": "1915",
+      "conversion_rate": "100.0",
+      "total_cups": "3597",
+      "total_revenue": "11135.47",
+      "unit_price": "3.10",
+      "cups_per_buyer": "1.88"
+    },
+    {
+      "grp": "对照组3",
+      "recency_bucket": "15-21天",
+      "total_users": "1584",
+      "buyers": "545",
+      "conversion_rate": "34.4",
+      "total_cups": "829",
+      "total_revenue": "2565.38",
+      "unit_price": "3.09",
+      "cups_per_buyer": "1.52"
+    },
+    {
+      "grp": "对照组3",
+      "recency_bucket": "22-30天",
+      "total_users": "1505",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "total_cups": "0",
+      "total_revenue": "0.00",
+      "unit_price": null,
+      "cups_per_buyer": null
+    },
+    {
+      "grp": "对照组3",
+      "recency_bucket": "31天+",
+      "total_users": "41908",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "total_cups": "0",
+      "total_revenue": "0.00",
+      "unit_price": null,
+      "cups_per_buyer": null
+    },
+    {
+      "grp": "对照组3",
+      "recency_bucket": "无订单",
+      "total_users": "7",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "total_cups": "0",
+      "total_revenue": "0.00",
+      "unit_price": null,
+      "cups_per_buyer": null
+    },
+    {
+      "grp": "涨价组1",
+      "recency_bucket": "0-7天",
+      "total_users": "2287",
+      "buyers": "2287",
+      "conversion_rate": "100.0",
+      "total_cups": "7406",
+      "total_revenue": "27146.09",
+      "unit_price": "3.67",
+      "cups_per_buyer": "3.24"
+    },
+    {
+      "grp": "涨价组1",
+      "recency_bucket": "8-14天",
+      "total_users": "1417",
+      "buyers": "1417",
+      "conversion_rate": "100.0",
+      "total_cups": "2554",
+      "total_revenue": "8935.33",
+      "unit_price": "3.50",
+      "cups_per_buyer": "1.80"
+    },
+    {
+      "grp": "涨价组1",
+      "recency_bucket": "15-21天",
+      "total_users": "1141",
+      "buyers": "408",
+      "conversion_rate": "35.8",
+      "total_cups": "596",
+      "total_revenue": "1981.38",
+      "unit_price": "3.32",
+      "cups_per_buyer": "1.46"
+    },
+    {
+      "grp": "涨价组1",
+      "recency_bucket": "22-30天",
+      "total_users": "1179",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "total_cups": "0",
+      "total_revenue": "0.00",
+      "unit_price": null,
+      "cups_per_buyer": null
+    },
+    {
+      "grp": "涨价组1",
+      "recency_bucket": "31天+",
+      "total_users": "32069",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "total_cups": "0",
+      "total_revenue": "0.00",
+      "unit_price": null,
+      "cups_per_buyer": null
+    },
+    {
+      "grp": "涨价组1",
+      "recency_bucket": "无订单",
+      "total_users": "2",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "total_cups": "0",
+      "total_revenue": "0.00",
+      "unit_price": null,
+      "cups_per_buyer": null
+    },
+    {
+      "grp": "涨价组2",
+      "recency_bucket": "0-7天",
+      "total_users": "2202",
+      "buyers": "2202",
+      "conversion_rate": "100.0",
+      "total_cups": "7321",
+      "total_revenue": "26478.66",
+      "unit_price": "3.62",
+      "cups_per_buyer": "3.32"
+    },
+    {
+      "grp": "涨价组2",
+      "recency_bucket": "8-14天",
+      "total_users": "1433",
+      "buyers": "1433",
+      "conversion_rate": "100.0",
+      "total_cups": "2550",
+      "total_revenue": "8794.04",
+      "unit_price": "3.45",
+      "cups_per_buyer": "1.78"
+    },
+    {
+      "grp": "涨价组2",
+      "recency_bucket": "15-21天",
+      "total_users": "1224",
+      "buyers": "408",
+      "conversion_rate": "33.3",
+      "total_cups": "559",
+      "total_revenue": "1842.17",
+      "unit_price": "3.30",
+      "cups_per_buyer": "1.37"
+    },
+    {
+      "grp": "涨价组2",
+      "recency_bucket": "22-30天",
+      "total_users": "1229",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "total_cups": "0",
+      "total_revenue": "0.00",
+      "unit_price": null,
+      "cups_per_buyer": null
+    },
+    {
+      "grp": "涨价组2",
+      "recency_bucket": "31天+",
+      "total_users": "31970",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "total_cups": "0",
+      "total_revenue": "0.00",
+      "unit_price": null,
+      "cups_per_buyer": null
+    },
+    {
+      "grp": "涨价组2",
+      "recency_bucket": "无订单",
+      "total_users": "4",
+      "buyers": "0",
+      "conversion_rate": "0.0",
+      "total_cups": "0",
+      "total_revenue": "0.00",
+      "unit_price": null,
+      "cups_per_buyer": null
+    }
+  ]
+}

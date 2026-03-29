@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>分享有礼活动数据报告 2026年2月</title>
+<style>
+body { font-family: -apple-system, 'Helvetica Neue', sans-serif; margin: 0; padding: 20px 32px; font-size: 13px; color: #333; background: #f8f9fa; line-height: 1.6; }
+.container { max-width: 1400px; margin: 0 auto; }
+h1 { font-size: 22px; margin-bottom: 2px; color: #1a1a1a; }
+p.subtitle { color: #888; margin-top: 0; font-size: 12px; }
+h2 { font-size: 15px; margin-top: 32px; color: #1565C0; border-bottom: 2px solid #1565C0; padding-bottom: 4px; }
+h3 { font-size: 13px; margin-top: 16px; color: #333; margin-bottom: 6px; }
+
+/* 执行摘要卡片 */
+.exec-summary {
+  background: linear-gradient(135deg, #1565C0 0%, #0D47A1 100%);
+  color: white; border-radius: 12px; padding: 24px 28px; margin: 16px 0 24px;
+}
+.exec-summary h2 { color: white; border-bottom: 1px solid rgba(255,255,255,0.3); margin-top: 0; }
+.exec-summary .verdict { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+.exec-summary .verdict em { font-style: normal; color: #FFD54F; }
+.exec-summary ul { margin: 8px 0; padding-left: 20px; }
+.exec-summary li { margin-bottom: 6px; font-size: 13px; line-height: 1.5; }
+.exec-summary .stat-highlight { color: #FFD54F; font-weight: 600; }
+
+/* 增长漏斗 */
+.funnel-section { background: white; border-radius: 10px; padding: 20px 24px; margin: 16px 0; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.funnel-bar-container { display: flex; flex-direction: column; gap: 4px; margin: 12px 0; }
+.funnel-row { display: flex; align-items: center; gap: 8px; }
+.funnel-label { width: 140px; text-align: right; font-size: 11px; font-weight: 500; color: #555; flex-shrink: 0; }
+.funnel-bar-wrap { flex: 1; position: relative; height: 32px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
+.funnel-bar { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 11px; font-weight: 600; color: white; min-width: 60px; transition: width 0.6s ease; }
+.funnel-conv { width: 110px; text-align: center; font-size: 11px; color: #999; flex-shrink: 0; }
+.funnel-conv strong { color: #E65100; font-size: 12px; }
+
+/* 洞察卡片 */
+.insight-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin: 12px 0; }
+.insight-card { background: white; border-radius: 8px; padding: 16px; border-left: 4px solid #1565C0; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.insight-card.warning { border-left-color: #E65100; }
+.insight-card.success { border-left-color: #2E7D32; }
+.insight-card.info { border-left-color: #7B1FA2; }
+.insight-card h4 { margin: 0 0 6px; font-size: 13px; }
+.insight-card p { margin: 0; font-size: 12px; color: #555; }
+
+/* 建议 */
+.reco-section { background: white; border-radius: 10px; padding: 20px 24px; margin: 16px 0; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.reco-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+.reco-item:last-child { border-bottom: none; }
+.reco-priority { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; margin-top: 2px; }
+.reco-priority.p1 { background: #C62828; }
+.reco-priority.p2 { background: #E65100; }
+.reco-priority.p3 { background: #F9A825; color: #333; }
+.reco-content { flex: 1; }
+.reco-content .title { font-weight: 600; font-size: 13px; margin-bottom: 2px; }
+.reco-content .desc { font-size: 12px; color: #666; }
+.reco-content .impact { font-size: 11px; color: #1565C0; margin-top: 4px; font-weight: 500; }
+
+/* 数据表 */
+.data-section { background: white; border-radius: 10px; padding: 20px 24px; margin: 16px 0; box-shadow: 0 1px 4px rgba(0,0,0,0.08); overflow-x: auto; }
+.analysis-text { font-size: 12px; color: #555; margin: 8px 0 12px; padding: 8px 12px; background: #FFF8E1; border-radius: 6px; border-left: 3px solid #FFB300; }
+table { border-collapse: collapse; margin: 8px 0; font-size: 11px; width: 100%; }
+th, td { border: 1px solid #e0e0e0; padding: 4px 7px; text-align: right; white-space: nowrap; }
+th { background: #ECEFF1; font-weight: 600; text-align: center; position: sticky; top: 0; }
+td:first-child { text-align: left; font-weight: 500; min-width: 180px; background: #fafafa; }
+.rate { background: #E3F2FD; }
+th:last-child, td:last-child { background: #FFF9C4; font-weight: 600; }
+td:first-child { background: #fafafa; font-weight: 500; }
+
+/* 周度对比 */
+.week-compare { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 12px 0; }
+.week-box { background: #f5f5f5; border-radius: 8px; padding: 12px; text-align: center; }
+.week-box .wk-label { font-size: 11px; color: #888; margin-bottom: 4px; }
+.week-box .wk-value { font-size: 20px; font-weight: 700; color: #1565C0; }
+.week-box .wk-sub { font-size: 10px; color: #999; margin-top: 2px; }
+
+/* KPI卡片 */
+.kpi-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin: 12px 0; }
+.kpi-card { background: white; border-radius: 8px; padding: 14px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.kpi-card .kpi-val { font-size: 22px; font-weight: 700; color: #1565C0; }
+.kpi-card .kpi-label { font-size: 11px; color: #888; margin-top: 2px; }
+.kpi-card .kpi-sub { font-size: 10px; color: #bbb; }
+
+.note { color: #999; font-size: 10px; margin-top: 4px; }
+</style></head><body>
+<div class="container">
+
+<h1>Share The Luck 2月数据分析报告</h1>
+<p class="subtitle">统计周期: 2026-02-01 ~ 2026-02-28 | 生成时间: 2026-03-02</p>
+
+<!-- ==================== 执行摘要 ==================== -->
+<div class="exec-summary">
+<h2>Executive Summary</h2>
+<div class="verdict">
+分享有礼作为增长工具，2月贡献大盘新客 <em>5.9%</em>，注册 <em>1,356</em> 人、下单转化 <em>837</em> 人。
+漏斗后半段（注册→下单 61%）健康，但前半段流量获取效率偏低，<em>弹窗是最大未释放杠杆</em>。
+</div>
+<ul>
+<li><span class="stat-highlight">获客贡献</span>：分享有礼当日下单新客占大盘 5.9%（排除数据异常日），日均拉新 ~33 人下单</li>
+<li><span class="stat-highlight">漏斗瓶颈</span>：资源位 CTR 仅 3.3%，其中 Icon 金刚位 CTR 1.7% 是最大流量入口但效率最低；弹窗 CTR 7.0% 是 Icon 的 <b>4.1 倍</b>，但仅投放 4 天（14%的天数）</li>
+<li><span class="stat-highlight">分享意愿</span>：分享率 55.5%，进入分享页后超过一半用户会分享，说明产品体验到位、激励机制有效</li>
+<li><span class="stat-highlight">转化健康</span>：注册→当日下单 50.3%，14 天内提升至 61.3%；人均邀请 1.1 人，成功 0.55 人</li>
+<li><span class="stat-highlight">时间差异</span>：工作日日均注册 52.8 人，周末仅 37.5 人（低 29%）；峰值 02-26 达 92 人（当天资源位全开）</li>
+</ul>
+</div>
+
+<!-- ==================== 增长漏斗 ==================== -->
+<div class="funnel-section">
+<h2 style="margin-top:0;">增长全链路漏斗</h2>
+<p style="font-size:12px;color:#666;margin:4px 0 12px;">从资源位曝光到新客下单的完整转化链路，识别每一步的流失和优化空间。</p>
+
+<div class="funnel-bar-container">
+  <div class="funnel-row">
+    <div class="funnel-label">资源位曝光</div>
+    <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;background:#1565C0;">124,656 UV</div></div>
+    <div class="funnel-conv"></div>
+  </div>
+  <div class="funnel-row">
+    <div class="funnel-label">资源位点击</div>
+    <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:33%;background:#1976D2;">4,142 UV</div></div>
+    <div class="funnel-conv">CTR <strong>3.3%</strong></div>
+  </div>
+  <div class="funnel-row">
+    <div class="funnel-label">进入分享页</div>
+    <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:65%;background:#2196F3;">8,190 UV</div></div>
+    <div class="funnel-conv" style="color:#2E7D32;">含其他入口</div>
+  </div>
+  <div class="funnel-row">
+    <div class="funnel-label">点击分享按钮</div>
+    <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:36%;background:#42A5F5;">4,549 UV</div></div>
+    <div class="funnel-conv">分享率 <strong>55.5%</strong></div>
+  </div>
+  <div class="funnel-row">
+    <div class="funnel-label">被邀请人注册</div>
+    <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:11%;background:#FF9800;">1,356 人</div></div>
+    <div class="funnel-conv">分享→注册 <strong>29.8%</strong></div>
+  </div>
+  <div class="funnel-row">
+    <div class="funnel-label">当日下单(D0)</div>
+    <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:5.5%;background:#E65100;">682 人</div></div>
+    <div class="funnel-conv">注册→D0 <strong>50.3%</strong></div>
+  </div>
+  <div class="funnel-row">
+    <div class="funnel-label">14天内下单(D14)</div>
+    <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:6.7%;background:#BF360C;">831 人</div></div>
+    <div class="funnel-conv">注册→D14 <strong>61.3%</strong></div>
+  </div>
+</div>
+
+<div class="analysis-text">
+<b>漏斗诊断：</b>最大流失发生在「曝光→点击」环节（CTR 3.3%），12.5 万曝光仅转化 4,100 点击。
+分享页 UV（8,190）大于资源位点击（4,142），说明约 49% 的分享页流量来自非资源位入口（如直接链接、Push 等），这是一个被低估的流量渠道。
+漏斗后半段转化率健康：分享率 55.5%、注册→D0 下单 50.3%、D14 下单 61.3%，无需大幅优化。
+<b>核心结论：增量空间在漏斗前端——提升资源位效率和扩大分享页入口。</b>
+</div>
+</div>
+
+<!-- ==================== KPI 概览 ==================== -->
+<div class="kpi-row">
+<div class="kpi-card"><div class="kpi-val">1,356</div><div class="kpi-label">注册人数</div><div class="kpi-sub">日均 48.4</div></div>
+<div class="kpi-card"><div class="kpi-val">837</div><div class="kpi-label">成功下单(全窗口)</div><div class="kpi-sub">日均 29.9</div></div>
+<div class="kpi-card"><div class="kpi-val">5.9%</div><div class="kpi-label">大盘拉新占比</div><div class="kpi-sub">排除异常日</div></div>
+<div class="kpi-card"><div class="kpi-val">55.5%</div><div class="kpi-label">分享率</div><div class="kpi-sub">点击/进入</div></div>
+<div class="kpi-card"><div class="kpi-val">61.3%</div><div class="kpi-label">D14转化率</div><div class="kpi-sub">注册→下单</div></div>
+<div class="kpi-card"><div class="kpi-val">1.10</div><div class="kpi-label">人均邀请注册</div><div class="kpi-sub">含未转化</div></div>
+</div>
+
+<!-- ==================== 关键洞察 ==================== -->
+<h2>关键洞察</h2>
+<div class="insight-cards">
+
+<div class="insight-card warning">
+<h4>1. 弹窗是最大增长杠杆，但严重闲置</h4>
+<p>弹窗 CTR 7.0%，是 Icon（1.7%）的 <b>4.1 倍</b>、Banner（4.5%）的 <b>1.6 倍</b>。但 2 月仅投放 4 天（02-05/06、02-19/20），占总天数 14%。投放弹窗的 4 天，日均注册 60 人 vs 不投放的 24 天日均 46 人，高出 30%。如果弹窗覆盖至每周 3 天（12 天），预估可增加 ~170 注册/月（+13%）。</p>
+</div>
+
+<div class="insight-card warning">
+<h4>2. Icon 金刚位 CTR 偏低，需优化创意</h4>
+<p>Icon 是最大流量入口（12.4 万曝光 UV），但 CTR 仅 1.7%。作为首页固定位，用户已产生视觉疲劳。参考同类活动 Icon CTR 通常在 2.5~3.5%，当前存在至少 50% 的提升空间。优化方向：动效增强、文案轮换（"Share The Luck" → "Free Coffee"）、位置调整。</p>
+</div>
+
+<div class="insight-card success">
+<h4>3. 漏斗后半段转化率健康</h4>
+<p>分享率 55.5%（进入页 → 点击分享），注册→D0 下单 50.3%，D14 提升至 61.3%。说明分享激励设计和新客券面额合理，无需大幅调整。D0 到 D14 提升 11pp，意味着约 20% 的新客在注册 2~14 天后完成首单，Push/短信唤醒机制在发挥作用。</p>
+</div>
+
+<div class="insight-card info">
+<h4>4. 非资源位入口贡献显著但不可控</h4>
+<p>分享页 UV（8,190）约为资源位点击 UV（4,142）的 <b>2 倍</b>，说明约 49% 流量来自直接分享链接、社交传播等有机渠道。这部分增长免费但不可控——资源位投放是保底，有机传播是增量。</p>
+</div>
+
+<div class="insight-card">
+<h4>5. 周末效率显著下降</h4>
+<p>工作日日均注册 52.8 人，周末 37.5 人（<b>低 29%</b>）。周末门店客流可能更分散，且弹窗未在周末投放。02-23（周日）仅 8 人注册为全月最低。</p>
+</div>
+
+<div class="insight-card">
+<h4>6. 裂变系数偏低，1:1 单链传播</h4>
+<p>人均邀请注册 1.10 人，绝大多数邀请人只成功邀请了 1 个人。对比行业优秀水平（拼多多砍价 1:3+，滴滴邀请 1:2），当前没有形成裂变网络效应，增长完全依赖邀请人数量而非质量。</p>
+</div>
+
+</div>
+
+<!-- ==================== 行动建议 ==================== -->
+<div class="reco-section">
+<h2 style="margin-top:0;">下一步行动建议</h2>
+
+<div class="reco-item">
+<div class="reco-priority p1">1</div>
+<div class="reco-content">
+<div class="title">提升弹窗投放频率：从每月 4 天 → 每周 2~3 天</div>
+<div class="desc">弹窗 CTR 7.0% 是所有渠道最高。当前仅在月初和月中各投放 2 天，远未达到饱和。建议每周三/五固定投放，周末加投一天。注意控制弹窗频控（同一用户 3 天内不重复弹）以避免体验损伤。</div>
+<div class="impact">预估影响：月注册 +170~250 人（+13%~18%），对应新增下单 +100~150 人</div>
+</div>
+</div>
+
+<div class="reco-item">
+<div class="reco-priority p1">2</div>
+<div class="reco-content">
+<div class="title">Icon 金刚位 A/B 测试：动效 + 文案优化</div>
+<div class="desc">Icon 承载 78% 的资源位曝光但 CTR 仅 1.7%。建议测试：(A) 带红点/动效的 Icon，(B) 文案从"Share The Luck"改为"Free Coffee"/"Earn $5"，(C) 位置从 #2 调整到 #1。目标 CTR 提升至 2.5%+。</div>
+<div class="impact">预估影响：CTR 每提升 0.5pp，月增 ~630 点击 UV，经漏斗转化可新增 ~50 下单</div>
+</div>
+</div>
+
+<div class="reco-item">
+<div class="reco-priority p2">3</div>
+<div class="reco-content">
+<div class="title">Banner 投放标准化：保持每日在线</div>
+<div class="desc">2 月 Banner 有 10 天几乎无曝光（&lt; 20 UV）。Banner CTR 4.5% 优于 Icon，应作为常规曝光位保持每日在线。与运营协调固定 Banner 排期，避免被其他活动挤占。</div>
+<div class="impact">预估影响：补齐空档 10 天，月增 ~400 点击 UV</div>
+</div>
+</div>
+
+<div class="reco-item">
+<div class="reco-priority p2">4</div>
+<div class="reco-content">
+<div class="title">引入阶梯奖励，突破 1:1 裂变瓶颈</div>
+<div class="desc">当前人均邀请 1.10 人，几乎是 1:1。建议设计阶梯奖励（邀 1 人得 $3，邀 3 人得 $10，邀 5 人得 $20），让 10% 的高分享力用户贡献 50% 的邀请量，打破单链传播模式。</div>
+<div class="impact">预估影响：若人均提升至 1.5，同等邀请人数下月增 ~470 注册</div>
+</div>
+</div>
+
+<div class="reco-item">
+<div class="reco-priority p2">5</div>
+<div class="reco-content">
+<div class="title">周末针对性策略：Push + 限时奖励</div>
+<div class="desc">周末注册量低 29%。建议周六上午推送"周末邀好友，双倍奖励"Push 通知；或在周末提高邀请奖励（$5 → $7），测试能否拉平工作日差距。</div>
+<div class="impact">预估影响：若周末提升至工作日水平，月增 ~120 注册</div>
+</div>
+</div>
+
+<div class="reco-item">
+<div class="reco-priority p3">6</div>
+<div class="reco-content">
+<div class="title">D1~D3 未下单用户自动唤醒</div>
+<div class="desc">D0→D3 转化率提升 5pp（50.3%→55.2%），是最大增量窗口。建议对 D0 未下单用户，注册 24h 后自动推送"你的新客券即将过期"Push + 短信提醒，加速首单转化。</div>
+<div class="impact">预估影响：D3 转化率提升 3~5pp，月增 ~40~70 下单</div>
+</div>
+</div>
+
+<div class="reco-item">
+<div class="reco-priority p3">7</div>
+<div class="reco-content">
+<div class="title">探索非资源位入口来源</div>
+<div class="desc">49% 的分享页流量非资源位来源。建议埋点追踪具体来源（订单完成页入口、Push 跳转、社交回流等），找到高效渠道后加大投入。可在订单完成页新增"邀请好友"卡片。</div>
+<div class="impact">预估影响：明确来源后可针对性放大，潜力 +20% 分享页流量</div>
+</div>
+</div>
+
+</div>
+
+<!-- ==================== 周度趋势 ==================== -->
+<div class="funnel-section">
+<h2 style="margin-top:0;">周度趋势对比</h2>
+<div class="week-compare">
+<div class="week-box"><div class="wk-label">W1 (02-01~07)</div><div class="wk-value">355</div><div class="wk-sub">注册 | D0下单 186</div></div>
+<div class="week-box"><div class="wk-label">W2 (02-08~14)</div><div class="wk-value">348</div><div class="wk-sub">注册 | D0下单 182</div></div>
+<div class="week-box"><div class="wk-label">W3 (02-15~21)</div><div class="wk-value">333</div><div class="wk-sub">注册 | D0下单 206</div></div>
+<div class="week-box"><div class="wk-label">W4 (02-22~28)</div><div class="wk-value">320</div><div class="wk-sub">注册 | D0下单 108*</div></div>
+</div>
+<div class="analysis-text">
+<b>周度分析：</b>注册量 W1→W4 缓慢下降（355→320，-10%），但 W3 的 D0 下单（206）反超 W1/W2，说明 W3 用户质量更高。
+W4 的 D0 下单偏低（108）主要因 02-27/28 数据未回刷（这两天注册 118 人但下单显示 0）。
+W1/W3 有弹窗投放，注册量和点击UV明显高于 W2/W4（无弹窗周），再次验证弹窗的拉动效果。
+</div>
+</div>
+
+<!-- ==================== 一、获客结果 ==================== -->
+<div class="data-section">
+<h2 style="margin-top:0;">一、获客结果</h2>
+<div class="analysis-text">
+<b>模块分析：</b>2 月分享有礼贡献大盘新客下单 <b>5.9%</b>（排除 02-23 大盘数据异常和 02-27/28 未回刷）。
+日均注册 48.4 人、下单 29.9 人。峰值 02-26 注册 92 人（当天资源位全开 + 周三工作日）。
+02-14/15 情人节期间大盘新客激增（863/818 人），但分享有礼注册未同比增长，占比被稀释至 4.3~4.7%。
+<b>结论：分享有礼是稳定的基础获客渠道，但在大盘爆发期缺乏弹性放大能力。</b>
+</div>
+<table><tr><th>指标</th><th>02-01</th><th>02-02</th><th>02-03</th><th>02-04</th><th>02-05</th><th>02-06</th><th>02-07</th><th>02-08</th><th>02-09</th><th>02-10</th><th>02-11</th><th>02-12</th><th>02-13</th><th>02-14</th><th>02-15</th><th>02-16</th><th>02-17</th><th>02-18</th><th>02-19</th><th>02-20</th><th>02-21</th><th>02-22</th><th>02-23</th><th>02-24</th><th>02-25</th><th>02-26</th><th>02-27</th><th>02-28</th><th>汇总</th></tr>
+<tr><td>分享有礼注册人数</td><td>42</td><td>51</td><td>40</td><td>43</td><td>63</td><td>63</td><td>53</td><td>32</td><td>47</td><td>50</td><td>54</td><td>60</td><td>57</td><td>48</td><td>44</td><td>42</td><td>43</td><td>49</td><td>51</td><td>49</td><td>55</td><td>34</td><td>8</td><td>25</td><td>43</td><td>92</td><td>56</td><td>62</td><td><b>1,356</b></td></tr>
+<tr><td>当日下单新客数</td><td>24</td><td>27</td><td>25</td><td>22</td><td>31</td><td>30</td><td>27</td><td>21</td><td>21</td><td>24</td><td>23</td><td>35</td><td>24</td><td>34</td><td>33</td><td>27</td><td>30</td><td>31</td><td>26</td><td>25</td><td>34</td><td>15</td><td>0</td><td>11</td><td>25</td><td>57</td><td>0</td><td>0</td><td><b>682</b></td></tr>
+<tr><td>大盘拉新下单人数</td><td>457</td><td>396</td><td>487</td><td>514</td><td>496</td><td>659</td><td>516</td><td>356</td><td>441</td><td>579</td><td>607</td><td>622</td><td>647</td><td>863</td><td>818</td><td>615</td><td>692</td><td>555</td><td>610</td><td>515</td><td>860</td><td>269</td><td>0</td><td>397</td><td>452</td><td>810</td><td>757</td><td>1,009</td><td><b>15,573</b></td></tr>
+<tr class="rate"><td>占大盘拉新占比</td><td>5.3%</td><td>6.8%</td><td>5.1%</td><td>4.3%</td><td>6.3%</td><td>4.6%</td><td>5.2%</td><td>5.9%</td><td>4.8%</td><td>4.1%</td><td>3.8%</td><td>5.6%</td><td>3.7%</td><td>3.9%</td><td>4.0%</td><td>4.4%</td><td>4.3%</td><td>5.6%</td><td>4.3%</td><td>4.9%</td><td>4.0%</td><td>5.6%</td><td>-</td><td>2.8%</td><td>5.5%</td><td>7.0%</td><td>0.0%</td><td>0.0%</td><td><b>5.9%*</b></td></tr>
+</table>
+<p class="note">* 汇总占比排除 02-23（大盘数据为0）和 02-27/28（下单未回刷）计算。口径 = 分享有礼当日下单新客 / 大盘当日首单新客。</p>
+</div>
+
+<!-- ==================== 二、流量获取 ==================== -->
+<div class="data-section">
+<h2 style="margin-top:0;">二、流量获取（资源位）</h2>
+<div class="analysis-text">
+<b>模块分析：</b>三个资源位效率差异显著——弹窗 CTR <b>7.0%</b> > Banner <b>4.5%</b> > Icon <b>1.7%</b>。
+Icon 贡献 78% 曝光但 CTR 最低，存在视觉疲劳；弹窗效率最高但仅投放 4 天（02-05/06、02-19/20）；Banner 投放不稳定，10 天近乎空白。
+<b>渠道效率排序：弹窗 >> Banner > Icon。当前资源配置与效率倒挂——应大幅提升弹窗频次。</b>
+</div>
+<table><tr><th>指标</th><th>02-01</th><th>02-02</th><th>02-03</th><th>02-04</th><th>02-05</th><th>02-06</th><th>02-07</th><th>02-08</th><th>02-09</th><th>02-10</th><th>02-11</th><th>02-12</th><th>02-13</th><th>02-14</th><th>02-15</th><th>02-16</th><th>02-17</th><th>02-18</th><th>02-19</th><th>02-20</th><th>02-21</th><th>02-22</th><th>02-23</th><th>02-24</th><th>02-25</th><th>02-26</th><th>02-27</th><th>02-28</th><th>汇总</th></tr>
+<tr><td>Icon 曝光UV</td><td>2,945</td><td>4,518</td><td>5,040</td><td>5,308</td><td>4,887</td><td>5,461</td><td>3,055</td><td>2,796</td><td>5,522</td><td>5,609</td><td>6,286</td><td>5,292</td><td>4,712</td><td>4,971</td><td>3,504</td><td>3,683</td><td>5,131</td><td>5,085</td><td>5,126</td><td>3,818</td><td>3,854</td><td>2,289</td><td>1,900</td><td>4,232</td><td>4,913</td><td>5,597</td><td>5,019</td><td>3,751</td><td><b>124,283</b></td></tr>
+<tr><td>Icon 点击UV</td><td>60</td><td>92</td><td>89</td><td>93</td><td>78</td><td>97</td><td>64</td><td>51</td><td>92</td><td>97</td><td>107</td><td>72</td><td>79</td><td>73</td><td>75</td><td>63</td><td>95</td><td>89</td><td>67</td><td>49</td><td>59</td><td>45</td><td>25</td><td>60</td><td>75</td><td>101</td><td>94</td><td>70</td><td><b>2,136</b></td></tr>
+<tr class="rate"><td>Icon CTR</td><td>2.0%</td><td>2.0%</td><td>1.8%</td><td>1.8%</td><td>1.6%</td><td>1.8%</td><td>2.1%</td><td>1.8%</td><td>1.7%</td><td>1.7%</td><td>1.7%</td><td>1.4%</td><td>1.7%</td><td>1.5%</td><td>2.1%</td><td>1.7%</td><td>1.9%</td><td>1.8%</td><td>1.3%</td><td>1.3%</td><td>1.5%</td><td>2.0%</td><td>1.3%</td><td>1.4%</td><td>1.5%</td><td>1.8%</td><td>1.9%</td><td>1.9%</td><td><b>1.7%</b></td></tr>
+<tr><td>弹窗 曝光UV</td><td>0</td><td>1</td><td>0</td><td>0</td><td>3,254</td><td>3,776</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>3,525</td><td>2,549</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td><b>13,105</b></td></tr>
+<tr><td>弹窗 点击UV</td><td>0</td><td>0</td><td>0</td><td>0</td><td>234</td><td>272</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>247</td><td>159</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td><b>912</b></td></tr>
+<tr class="rate"><td>弹窗 CTR</td><td>-</td><td>-</td><td>-</td><td>-</td><td>7.2%</td><td>7.2%</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>7.0%</td><td>6.2%</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td><b>7.0%</b></td></tr>
+<tr><td>Banner 曝光UV</td><td>1,040</td><td>1,586</td><td>1,630</td><td>4,723</td><td>1,737</td><td>79</td><td>10</td><td>67</td><td>16</td><td>14</td><td>6</td><td>6</td><td>7</td><td>11</td><td>4</td><td>1,253</td><td>1,830</td><td>4,484</td><td>1,768</td><td>1,222</td><td>1,266</td><td>727</td><td>605</td><td>847</td><td>1,054</td><td>1,209</td><td>1,039</td><td>751</td><td><b>29,014</b></td></tr>
+<tr><td>Banner 点击UV</td><td>31</td><td>65</td><td>91</td><td>185</td><td>91</td><td>2</td><td>0</td><td>2</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>52</td><td>97</td><td>178</td><td>92</td><td>42</td><td>44</td><td>30</td><td>21</td><td>38</td><td>99</td><td>65</td><td>37</td><td>33</td><td><b>1,296</b></td></tr>
+<tr class="rate"><td>Banner CTR</td><td>3.0%</td><td>4.1%</td><td>5.6%</td><td>3.9%</td><td>5.2%</td><td>2.5%</td><td>-</td><td>3.0%</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>4.2%</td><td>5.3%</td><td>4.0%</td><td>5.2%</td><td>3.4%</td><td>3.5%</td><td>4.1%</td><td>3.5%</td><td>4.5%</td><td>9.4%</td><td>5.4%</td><td>3.6%</td><td>4.4%</td><td><b>4.5%</b></td></tr>
+<tr><td>总曝光UV</td><td>2,950</td><td>4,529</td><td>5,046</td><td>5,323</td><td>4,956</td><td>5,518</td><td>3,055</td><td>2,796</td><td>5,522</td><td>5,609</td><td>6,286</td><td>5,292</td><td>4,712</td><td>4,972</td><td>3,505</td><td>3,685</td><td>5,141</td><td>5,092</td><td>5,191</td><td>3,867</td><td>3,865</td><td>2,294</td><td>1,905</td><td>4,237</td><td>4,917</td><td>5,601</td><td>5,027</td><td>3,763</td><td><b>124,656</b></td></tr>
+<tr><td>总点击UV</td><td>91</td><td>151</td><td>172</td><td>269</td><td>369</td><td>356</td><td>64</td><td>53</td><td>93</td><td>97</td><td>107</td><td>73</td><td>79</td><td>73</td><td>75</td><td>109</td><td>181</td><td>256</td><td>383</td><td>233</td><td>100</td><td>73</td><td>42</td><td>95</td><td>170</td><td>158</td><td>122</td><td>98</td><td><b>4,142</b></td></tr>
+<tr class="rate"><td>总CTR</td><td>3.1%</td><td>3.3%</td><td>3.4%</td><td>5.1%</td><td>7.4%</td><td>6.5%</td><td>2.1%</td><td>1.9%</td><td>1.7%</td><td>1.7%</td><td>1.7%</td><td>1.4%</td><td>1.7%</td><td>1.5%</td><td>2.1%</td><td>3.0%</td><td>3.5%</td><td>5.0%</td><td>7.4%</td><td>6.0%</td><td>2.6%</td><td>3.2%</td><td>2.2%</td><td>2.2%</td><td>3.5%</td><td>2.8%</td><td>2.4%</td><td>2.6%</td><td><b>3.3%</b></td></tr>
+</table>
+<p class="note">注: 总CTR 在弹窗投放日（02-05/06、02-19/20）飙升至 6~7.4%，验证弹窗的拉动效果。</p>
+</div>
+
+<!-- ==================== 三、分享意愿 ==================== -->
+<div class="data-section">
+<h2 style="margin-top:0;">三、分享意愿</h2>
+<div class="analysis-text">
+<b>模块分析：</b>分享率整体 55.5%，高于行业裂变活动均值（40~50%）。
+弹窗投放日分享页 UV 显著上升（02-05/06 达 533/573，02-19/20 达 537/391），但分享率无明显波动，说明分享意愿与流量来源无关，主要取决于页面体验。
+02-23 分享页 UV 骤降至 55（全月最低），与当天注册量骤降一致，可能是技术故障或活动配置异常。
+<b>结论：分享页转化已接近优化天花板，重点应放在扩大分享页入口流量。</b>
+</div>
+<table><tr><th>指标</th><th>02-01</th><th>02-02</th><th>02-03</th><th>02-04</th><th>02-05</th><th>02-06</th><th>02-07</th><th>02-08</th><th>02-09</th><th>02-10</th><th>02-11</th><th>02-12</th><th>02-13</th><th>02-14</th><th>02-15</th><th>02-16</th><th>02-17</th><th>02-18</th><th>02-19</th><th>02-20</th><th>02-21</th><th>02-22</th><th>02-23</th><th>02-24</th><th>02-25</th><th>02-26</th><th>02-27</th><th>02-28</th><th>汇总</th></tr>
+<tr><td>进入分享页UV</td><td>188</td><td>277</td><td>322</td><td>309</td><td>533</td><td>573</td><td>203</td><td>130</td><td>251</td><td>322</td><td>336</td><td>303</td><td>285</td><td>228</td><td>226</td><td>236</td><td>338</td><td>300</td><td>537</td><td>391</td><td>288</td><td>134</td><td>55</td><td>196</td><td>267</td><td>381</td><td>310</td><td>271</td><td><b>8,190</b></td></tr>
+<tr><td>点击分享按钮UV</td><td>114</td><td>148</td><td>164</td><td>180</td><td>249</td><td>298</td><td>124</td><td>72</td><td>147</td><td>183</td><td>180</td><td>182</td><td>172</td><td>146</td><td>143</td><td>132</td><td>188</td><td>168</td><td>243</td><td>186</td><td>180</td><td>70</td><td>21</td><td>114</td><td>155</td><td>237</td><td>186</td><td>167</td><td><b>4,549</b></td></tr>
+<tr class="rate"><td>分享率</td><td>60.6%</td><td>53.4%</td><td>50.9%</td><td>58.3%</td><td>46.7%</td><td>52.0%</td><td>61.1%</td><td>55.4%</td><td>58.6%</td><td>56.8%</td><td>53.6%</td><td>60.1%</td><td>60.4%</td><td>64.0%</td><td>63.3%</td><td>55.9%</td><td>55.6%</td><td>56.0%</td><td>45.3%</td><td>47.6%</td><td>62.5%</td><td>52.2%</td><td>38.2%</td><td>58.2%</td><td>58.1%</td><td>62.2%</td><td>60.0%</td><td>61.6%</td><td><b>55.5%</b></td></tr>
+</table>
+</div>
+
+<!-- ==================== 四、分享效率 ==================== -->
+<div class="data-section">
+<h2 style="margin-top:0;">四、分享效率（邀请人维度）</h2>
+<div class="analysis-text">
+<b>模块分析：</b>2月共 1,236 位老客参与邀请，当天成功率 ~48%，14天窗口提升至 ~61%。
+02-15 邀请成功率全月最高（D0 71.4%），35 位邀请人中 25 位当天就带来了下单——可能与周六促销叠加有关。
+人均邀请注册 1.10 人（接近 1:1），说明大多数邀请人只邀请了 1 个人，<b>裂变系数偏低</b>，未形成社交传播链。
+<b>结论：需要设计阶梯奖励刺激人均邀请量突破 1.5。</b>
+</div>
+<table><tr><th>指标</th><th>02-01</th><th>02-02</th><th>02-03</th><th>02-04</th><th>02-05</th><th>02-06</th><th>02-07</th><th>02-08</th><th>02-09</th><th>02-10</th><th>02-11</th><th>02-12</th><th>02-13</th><th>02-14</th><th>02-15</th><th>02-16</th><th>02-17</th><th>02-18</th><th>02-19</th><th>02-20</th><th>02-21</th><th>02-22</th><th>02-23</th><th>02-24</th><th>02-25</th><th>02-26</th><th>02-27</th><th>02-28</th><th>汇总</th></tr>
+<tr><td>邀请人数（带来注册）</td><td>40</td><td>46</td><td>34</td><td>42</td><td>59</td><td>60</td><td>49</td><td>31</td><td>41</td><td>46</td><td>51</td><td>57</td><td>53</td><td>42</td><td>35</td><td>34</td><td>42</td><td>46</td><td>45</td><td>47</td><td>51</td><td>31</td><td>8</td><td>25</td><td>41</td><td>78</td><td>50</td><td>52</td><td><b>1,236</b></td></tr>
+<tr><td>成功邀请人数（当天）</td><td>22</td><td>24</td><td>23</td><td>22</td><td>30</td><td>29</td><td>23</td><td>20</td><td>17</td><td>22</td><td>22</td><td>33</td><td>23</td><td>30</td><td>25</td><td>22</td><td>30</td><td>28</td><td>25</td><td>24</td><td>33</td><td>15</td><td>0</td><td>11</td><td>23</td><td>47</td><td>0</td><td>0</td><td><b>594</b></td></tr>
+<tr><td>成功邀请人数（7天内）</td><td>28</td><td>29</td><td>28</td><td>26</td><td>37</td><td>35</td><td>28</td><td>24</td><td>28</td><td>28</td><td>31</td><td>36</td><td>30</td><td>33</td><td>29</td><td>24</td><td>30</td><td>30</td><td>32</td><td>29</td><td>39</td><td>18</td><td>3</td><td>13</td><td>24</td><td>47</td><td>0</td><td>0</td><td><b>723</b></td></tr>
+<tr><td>成功邀请人数（14天内）</td><td>29</td><td>29</td><td>28</td><td>32</td><td>39</td><td>38</td><td>30</td><td>24</td><td>30</td><td>28</td><td>32</td><td>40</td><td>33</td><td>33</td><td>29</td><td>24</td><td>31</td><td>31</td><td>33</td><td>29</td><td>39</td><td>18</td><td>3</td><td>13</td><td>24</td><td>47</td><td>0</td><td>0</td><td><b>751</b></td></tr>
+<tr class="rate"><td>邀请成功率（当天）</td><td>55.0%</td><td>52.2%</td><td>67.6%</td><td>52.4%</td><td>50.8%</td><td>48.3%</td><td>46.9%</td><td>64.5%</td><td>41.5%</td><td>47.8%</td><td>43.1%</td><td>57.9%</td><td>43.4%</td><td>71.4%</td><td>71.4%</td><td>64.7%</td><td>71.4%</td><td>60.9%</td><td>55.6%</td><td>51.1%</td><td>64.7%</td><td>48.4%</td><td>0.0%</td><td>44.0%</td><td>56.1%</td><td>60.3%</td><td>0.0%</td><td>0.0%</td><td><b>48.1%</b></td></tr>
+<tr class="rate"><td>邀请成功率（14天内）</td><td>72.5%</td><td>63.0%</td><td>82.4%</td><td>76.2%</td><td>66.1%</td><td>63.3%</td><td>61.2%</td><td>77.4%</td><td>73.2%</td><td>60.9%</td><td>62.7%</td><td>70.2%</td><td>62.3%</td><td>78.6%</td><td>82.9%</td><td>70.6%</td><td>73.8%</td><td>67.4%</td><td>73.3%</td><td>61.7%</td><td>76.5%</td><td>58.1%</td><td>37.5%</td><td>52.0%</td><td>58.5%</td><td>60.3%</td><td>0.0%</td><td>0.0%</td><td><b>60.8%</b></td></tr>
+</table>
+</div>
+
+<!-- ==================== 五、被邀请人 ==================== -->
+<div class="data-section">
+<h2 style="margin-top:0;">五、被邀请人（被分享人维度）</h2>
+<div class="analysis-text">
+<b>模块分析：</b>注册→D0 下单 50.3%，D3 提升至 55.2%（+5pp），D7 提升至 58.8%（+8.5pp），D14 达 61.3%（+11pp）。
+D0 到 D3 的增量最大（+5pp），说明被邀请人在注册后 3 天内有较强的下单意愿。D7 到 D14 仅增 2.5pp，边际递减明显。
+<b>核心策略：对 D0 未下单用户，D1~D3 是最佳唤醒窗口。建议在注册 24 小时后推送"你的咖啡券即将过期"提醒。</b>
+</div>
+<table><tr><th>指标</th><th>02-01</th><th>02-02</th><th>02-03</th><th>02-04</th><th>02-05</th><th>02-06</th><th>02-07</th><th>02-08</th><th>02-09</th><th>02-10</th><th>02-11</th><th>02-12</th><th>02-13</th><th>02-14</th><th>02-15</th><th>02-16</th><th>02-17</th><th>02-18</th><th>02-19</th><th>02-20</th><th>02-21</th><th>02-22</th><th>02-23</th><th>02-24</th><th>02-25</th><th>02-26</th><th>02-27</th><th>02-28</th><th>汇总</th></tr>
+<tr><td>注册人数</td><td>42</td><td>51</td><td>40</td><td>43</td><td>63</td><td>63</td><td>53</td><td>32</td><td>47</td><td>50</td><td>54</td><td>60</td><td>57</td><td>48</td><td>44</td><td>42</td><td>43</td><td>49</td><td>51</td><td>49</td><td>55</td><td>34</td><td>8</td><td>25</td><td>43</td><td>92</td><td>56</td><td>62</td><td><b>1,356</b></td></tr>
+<tr><td>下单人数（当天）</td><td>24</td><td>27</td><td>25</td><td>22</td><td>31</td><td>30</td><td>27</td><td>21</td><td>21</td><td>24</td><td>23</td><td>35</td><td>24</td><td>34</td><td>33</td><td>27</td><td>30</td><td>31</td><td>26</td><td>25</td><td>34</td><td>15</td><td>0</td><td>11</td><td>25</td><td>57</td><td>0</td><td>0</td><td><b>682</b></td></tr>
+<tr><td>下单人数（3天内）</td><td>28</td><td>31</td><td>29</td><td>24</td><td>37</td><td>32</td><td>31</td><td>21</td><td>29</td><td>26</td><td>29</td><td>37</td><td>26</td><td>36</td><td>35</td><td>27</td><td>30</td><td>33</td><td>31</td><td>28</td><td>34</td><td>17</td><td>2</td><td>13</td><td>26</td><td>57</td><td>0</td><td>0</td><td><b>749</b></td></tr>
+<tr><td>下单人数（7天内）</td><td>30</td><td>33</td><td>31</td><td>26</td><td>38</td><td>36</td><td>32</td><td>25</td><td>32</td><td>30</td><td>32</td><td>39</td><td>31</td><td>37</td><td>37</td><td>30</td><td>30</td><td>33</td><td>33</td><td>30</td><td>40</td><td>19</td><td>3</td><td>13</td><td>26</td><td>57</td><td>0</td><td>0</td><td><b>798</b></td></tr>
+<tr><td>下单人数（14天内）</td><td>31</td><td>33</td><td>31</td><td>32</td><td>40</td><td>39</td><td>34</td><td>25</td><td>34</td><td>30</td><td>33</td><td>43</td><td>34</td><td>37</td><td>38</td><td>30</td><td>31</td><td>34</td><td>34</td><td>30</td><td>40</td><td>19</td><td>3</td><td>13</td><td>26</td><td>57</td><td>0</td><td>0</td><td><b>831</b></td></tr>
+<tr class="rate"><td>下单转化率（当天）</td><td>57.1%</td><td>52.9%</td><td>62.5%</td><td>51.2%</td><td>49.2%</td><td>47.6%</td><td>50.9%</td><td>65.6%</td><td>44.7%</td><td>48.0%</td><td>42.6%</td><td>58.3%</td><td>42.1%</td><td>70.8%</td><td>75.0%</td><td>64.3%</td><td>69.8%</td><td>63.3%</td><td>51.0%</td><td>51.0%</td><td>61.8%</td><td>44.1%</td><td>0.0%</td><td>44.0%</td><td>58.1%</td><td>62.0%</td><td>0.0%</td><td>0.0%</td><td><b>50.3%</b></td></tr>
+<tr class="rate"><td>下单转化率（7天内）</td><td>71.4%</td><td>64.7%</td><td>77.5%</td><td>60.5%</td><td>60.3%</td><td>57.1%</td><td>60.4%</td><td>78.1%</td><td>68.1%</td><td>60.0%</td><td>59.3%</td><td>65.0%</td><td>54.4%</td><td>77.1%</td><td>84.1%</td><td>71.4%</td><td>69.8%</td><td>67.3%</td><td>64.7%</td><td>61.2%</td><td>72.7%</td><td>55.9%</td><td>37.5%</td><td>52.0%</td><td>60.5%</td><td>62.0%</td><td>0.0%</td><td>0.0%</td><td><b>58.8%</b></td></tr>
+<tr class="rate"><td>下单转化率（14天内）</td><td>73.8%</td><td>64.7%</td><td>77.5%</td><td>74.4%</td><td>63.5%</td><td>61.9%</td><td>64.2%</td><td>78.1%</td><td>72.3%</td><td>60.0%</td><td>61.1%</td><td>71.7%</td><td>59.6%</td><td>77.1%</td><td>86.4%</td><td>71.4%</td><td>72.1%</td><td>69.4%</td><td>66.7%</td><td>61.2%</td><td>72.7%</td><td>55.9%</td><td>37.5%</td><td>52.0%</td><td>60.5%</td><td>62.0%</td><td>0.0%</td><td>0.0%</td><td><b>61.3%</b></td></tr>
+</table>
+<p class="note">注: 7天窗口在02-22前完整，14天窗口在02-15前完整。02-27/28下单数据未回刷。</p>
+</div>
+
+<!-- ==================== 六、人均邀请 ==================== -->
+<div class="data-section">
+<h2 style="margin-top:0;">六、人均邀请指标</h2>
+<div class="analysis-text">
+<b>模块分析：</b>人均邀请注册 1.10 人，说明绝大多数邀请人只成功邀请了 1 个人。
+这是典型的「1:1 单链传播」模式，没有形成裂变网络效应。对比行业优秀水平（拼多多砍价 1:3+，滴滴邀请 1:2），当前裂变系数偏低。
+<b>建议：引入阶梯奖励机制（邀1人得$3，邀3人得$10，邀5人得$20），让 10% 的高分享力用户贡献 50% 的邀请量。</b>
+</div>
+<table><tr><th>指标</th><th>02-01</th><th>02-02</th><th>02-03</th><th>02-04</th><th>02-05</th><th>02-06</th><th>02-07</th><th>02-08</th><th>02-09</th><th>02-10</th><th>02-11</th><th>02-12</th><th>02-13</th><th>02-14</th><th>02-15</th><th>02-16</th><th>02-17</th><th>02-18</th><th>02-19</th><th>02-20</th><th>02-21</th><th>02-22</th><th>02-23</th><th>02-24</th><th>02-25</th><th>02-26</th><th>02-27</th><th>02-28</th><th>汇总</th></tr>
+<tr><td>人均邀请注册</td><td>1.05</td><td>1.11</td><td>1.18</td><td>1.02</td><td>1.07</td><td>1.05</td><td>1.08</td><td>1.03</td><td>1.15</td><td>1.09</td><td>1.06</td><td>1.05</td><td>1.08</td><td>1.14</td><td>1.26</td><td>1.24</td><td>1.02</td><td>1.07</td><td>1.13</td><td>1.04</td><td>1.08</td><td>1.10</td><td>1.00</td><td>1.00</td><td>1.05</td><td>1.18</td><td>1.12</td><td>1.19</td><td><b>1.10</b></td></tr>
+<tr><td>人均成功邀请（当天）</td><td>0.60</td><td>0.59</td><td>0.74</td><td>0.52</td><td>0.53</td><td>0.50</td><td>0.55</td><td>0.68</td><td>0.51</td><td>0.52</td><td>0.45</td><td>0.61</td><td>0.45</td><td>0.81</td><td>0.94</td><td>0.79</td><td>0.71</td><td>0.67</td><td>0.58</td><td>0.53</td><td>0.67</td><td>0.48</td><td>0.00</td><td>0.44</td><td>0.61</td><td>0.73</td><td>0.00</td><td>0.00</td><td><b>0.55</b></td></tr>
+</table>
+</div>
+
+<!-- ==================== 数据说明 ==================== -->
+<div class="data-section">
+<h2 style="margin-top:0;">数据说明</h2>
+<ul style="font-size:11px;color:#666;">
+<li><b>数据来源</b>：邀请关系 t_user_invitation_info，埋点 v_hmonitor_track_event_rt，订单 v_order</li>
+<li><b>注册</b>：被邀请人通过分享链接注册，时间取 create_time</li>
+<li><b>下单/成功</b>：invitation_success = 1，下单时间取 modify_time</li>
+<li><b>时间窗口</b>：当天=注册当日(D0)，3天内=D0~D2，7天内=D0~D6，14天内=D0~D13</li>
+<li><b>窗口完整性</b>：3天内在02-26前完整，7天内在02-22前完整，14天内在02-15前完整</li>
+<li><b>资源位</b>：Icon=首页金刚位#2，Banner=首页腰部资源位，弹窗=开屏弹窗(LKUSCP118430296139038721)</li>
+<li><b>分享页</b>：H5sharepage 曝光=进入分享页UV，点击=点击分享按钮UV</li>
+<li><b>大盘拉新占比</b>：汇总值排除 02-23（大盘数据异常为0）和 02-27/28（下单数据未回刷）计算</li>
+<li><b>activity_no</b>：LKUSNR118429103010545664</li>
+</ul>
+</div>
+
+</div>
+</body></html>

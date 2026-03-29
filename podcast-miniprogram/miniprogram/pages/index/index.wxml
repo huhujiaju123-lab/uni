@@ -1,0 +1,91 @@
+<view class="page-index">
+  <!-- Header -->
+  <view class="header">
+    <view class="header-title">播客可视化</view>
+    <view class="header-subtitle">一集播客，30 秒读懂</view>
+  </view>
+
+  <!-- 新建入口 -->
+  <view class="add-section">
+    <view class="add-btn" bindtap="toggleInput" wx:if="{{!showInput}}">
+      <text class="add-icon">+</text>
+      <text>粘贴小宇宙链接</text>
+    </view>
+
+    <view class="input-panel" wx:if="{{showInput}}">
+      <view class="input-row">
+        <input
+          class="url-input"
+          placeholder="粘贴小宇宙单集链接"
+          placeholder-class="input-placeholder"
+          value="{{inputUrl}}"
+          bindinput="onInputChange"
+          confirm-type="send"
+          bindconfirm="onSubmit"
+        />
+        <view class="paste-btn" bindtap="onPaste">粘贴</view>
+      </view>
+      <view class="error-text" wx:if="{{error}}">{{error}}</view>
+      <view class="input-actions">
+        <view class="cancel-btn" bindtap="toggleInput">取消</view>
+        <view class="submit-btn {{submitting ? 'disabled' : ''}}" bindtap="onSubmit">
+          <text wx:if="{{!submitting}}">开始生成</text>
+          <text wx:else>处理中...</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 集列表 -->
+  <view class="section-title" wx:if="{{episodes.length > 0}}">
+    <text>精选内容</text>
+    <text class="section-count">{{episodes.length}} 集</text>
+  </view>
+
+  <view class="episode-grid">
+    <view
+      class="episode-card fade-in"
+      wx:for="{{episodes}}"
+      wx:key="_id"
+      data-id="{{item._id}}"
+      bindtap="onTapEpisode"
+    >
+      <image
+        class="episode-cover"
+        src="{{item.meta.cover_url}}"
+        mode="aspectFill"
+        lazy-load
+      />
+      <view class="episode-info">
+        <view class="episode-podcast-name">{{item.podcastName}}</view>
+        <view class="episode-title">{{item.titleShort}}</view>
+        <view class="episode-meta-row">
+          <text class="episode-duration" wx:if="{{item.meta.total_duration_sec}}">
+            {{item.durationText}}
+          </text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && episodes.length === 0}}">
+    <view class="empty-icon">🎙️</view>
+    <view class="empty-text">还没有内容</view>
+    <view class="empty-hint">粘贴一个小宇宙链接开始体验</view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-dot"></view>
+    <text class="text-dim">加载中...</text>
+  </view>
+
+  <!-- 调试面板 -->
+  <view class="debug-panel" wx:if="{{debugMode}}">
+    <view class="debug-title">🛠 调试面板</view>
+    <view class="debug-btn" bindtap="onInitDB">1. 初始化数据库 + 灌测试数据</view>
+    <view class="debug-btn" bindtap="onTestGetEpisode">2. 测试读取 Episode</view>
+    <view class="debug-btn" bindtap="onTestNavToEpisode">3. 跳转内容页（测试渲染）</view>
+  </view>
+</view>

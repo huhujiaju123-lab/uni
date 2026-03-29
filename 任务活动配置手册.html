@@ -1,0 +1,2389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>任务活动配置操作手册 | 250323-250329</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ===== CSS 变量 ===== */
+:root {
+  --luckin-blue: #0022AB;
+  --luckin-blue-light: #A2B7FF;
+  --luckin-blue-dark: #001580;
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #111827;
+  --bg-card: #1a2236;
+  --bg-card-hover: #1f2a42;
+  --bg-section: #151d30;
+  --text-primary: #f0f4ff;
+  --text-secondary: #8b99b8;
+  --text-muted: #5a6785;
+  --border-color: #2a3550;
+  --border-light: #1e2b45;
+  --activity-a: #3b82f6;
+  --activity-b: #10b981;
+  --activity-c: #8b5cf6;
+  --pending-color: #f59e0b;
+  --pending-bg: rgba(245, 158, 11, 0.1);
+  --diff-color: #ef4444;
+  --diff-bg: rgba(239, 68, 68, 0.08);
+  --shared-color: #6b7a96;
+  --success-color: #10b981;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --font-stack: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+/* ===== 基础样式 ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-stack);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ===== 滚动条 ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ===== 布局 ===== */
+.page-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 40px 100px;
+  transition: margin-right 0.3s;
+}
+
+.main-content.sidebar-open {
+  margin-right: 340px;
+}
+
+/* ===== 顶部标题 ===== */
+.page-header {
+  text-align: center;
+  padding: 40px 0 30px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 30px;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--luckin-blue-light), #fff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.page-header .subtitle {
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+.page-header .period-badge {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 18px;
+  background: rgba(0, 34, 171, 0.2);
+  border: 1px solid var(--luckin-blue);
+  border-radius: 20px;
+  color: var(--luckin-blue-light);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* ===== 快捷填充区域 ===== */
+.quick-fill-section {
+  background: var(--bg-card);
+  border: 1px solid var(--pending-color);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 30px;
+}
+
+.quick-fill-section h2 {
+  font-size: 16px;
+  color: var(--pending-color);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quick-fill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.quick-fill-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quick-fill-item label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  min-width: 130px;
+}
+
+.quick-fill-item input {
+  flex: 1;
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-family: var(--font-mono);
+  transition: border-color 0.2s;
+}
+
+.quick-fill-item input:focus {
+  outline: none;
+  border-color: var(--pending-color);
+}
+
+.quick-fill-item input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ===== 概览对比区域 ===== */
+.overview-section {
+  margin-bottom: 30px;
+}
+
+.overview-section h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.overview-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.overview-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.overview-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-light);
+}
+
+.overview-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.overview-card.card-a::before { background: var(--activity-a); }
+.overview-card.card-b::before { background: var(--activity-b); }
+.overview-card.card-c::before { background: var(--activity-c); }
+
+.overview-card .card-label {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.card-a .card-label { background: rgba(59, 130, 246, 0.15); color: var(--activity-a); }
+.card-b .card-label { background: rgba(16, 185, 129, 0.15); color: var(--activity-b); }
+.card-c .card-label { background: rgba(139, 92, 246, 0.15); color: var(--activity-c); }
+
+.overview-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.overview-card .card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
+.overview-card .card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.overview-card .detail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.overview-card .detail-row .label {
+  color: var(--text-muted);
+}
+
+.overview-card .detail-row .value {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* ===== 对比表格 ===== */
+.comparison-table-wrapper {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.comparison-table-wrapper h3 {
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.comparison-table th {
+  padding: 10px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.comparison-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-primary);
+}
+
+.comparison-table tr:last-child td { border-bottom: none; }
+
+.comparison-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.comparison-table .diff-row td {
+  background: var(--diff-bg);
+}
+
+.comparison-table .diff-row td:first-child {
+  position: relative;
+}
+
+.comparison-table .diff-row td:first-child::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--diff-color);
+}
+
+/* ===== 进度条预览 ===== */
+.progress-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--bg-section);
+  border-radius: var(--radius-sm);
+  margin: 10px 0;
+}
+
+.progress-bar-demo {
+  flex: 1;
+  height: 10px;
+  background: var(--luckin-blue-light);
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 60%;
+  background: var(--luckin-blue);
+  border-radius: 5px;
+  transition: width 1s ease;
+}
+
+.progress-colors {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.color-swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.color-swatch .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+/* ===== Tab 系统 ===== */
+.tab-container {
+  margin-bottom: 30px;
+}
+
+.tab-nav {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 0;
+}
+
+.tab-btn {
+  padding: 12px 24px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+  font-family: var(--font-stack);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-btn:hover { color: var(--text-secondary); }
+
+.tab-btn.active { color: var(--text-primary); }
+
+.tab-btn::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 2px 2px 0 0;
+  transition: background 0.2s;
+}
+
+.tab-btn.active.tab-a::after { background: var(--activity-a); }
+.tab-btn.active.tab-b::after { background: var(--activity-b); }
+.tab-btn.active.tab-c::after { background: var(--activity-c); }
+
+.tab-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.tab-a .tab-dot { background: var(--activity-a); }
+.tab-b .tab-dot { background: var(--activity-b); }
+.tab-c .tab-dot { background: var(--activity-c); }
+
+.tab-panel {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.tab-panel.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== 配置分节 ===== */
+.config-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.config-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: var(--bg-section);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.config-section-header:hover {
+  background: rgba(21, 29, 48, 0.8);
+}
+
+.config-section-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--luckin-blue);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.config-section-header .toggle-icon {
+  transition: transform 0.3s;
+  color: var(--text-muted);
+}
+
+.config-section.collapsed .toggle-icon {
+  transform: rotate(-90deg);
+}
+
+.config-section-body {
+  padding: 0;
+  max-height: 2000px;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s;
+}
+
+.config-section.collapsed .config-section-body {
+  max-height: 0;
+  padding: 0;
+}
+
+/* ===== 配置行 ===== */
+.config-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-light);
+  gap: 12px;
+}
+
+.config-row:last-child { border-bottom: none; }
+
+.config-row:hover { background: rgba(255, 255, 255, 0.015); }
+
+.config-label {
+  min-width: 160px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.config-value {
+  flex: 1;
+  font-size: 13px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  word-break: break-all;
+}
+
+.config-value .text {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 4px 10px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+}
+
+.config-value .text-plain {
+  flex: 1;
+  padding: 4px 0;
+}
+
+/* ===== 徽章 ===== */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badge-shared {
+  background: rgba(107, 122, 150, 0.15);
+  color: var(--shared-color);
+  border: 1px solid rgba(107, 122, 150, 0.2);
+}
+
+.badge-diff {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--diff-color);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.badge-pending {
+  background: var(--pending-bg);
+  color: var(--pending-color);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.badge-a { background: rgba(59, 130, 246, 0.1); color: var(--activity-a); }
+.badge-b { background: rgba(16, 185, 129, 0.1); color: var(--activity-b); }
+.badge-c { background: rgba(139, 92, 246, 0.1); color: var(--activity-c); }
+
+/* ===== 复制按钮 ===== */
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+}
+
+.copy-btn.copied {
+  color: var(--success-color);
+}
+
+.copy-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  background: var(--success-color);
+  color: #fff;
+  font-size: 11px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.copy-btn.copied .copy-tooltip { opacity: 1; }
+
+/* ===== 待填写输入 ===== */
+.pending-input-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pending-input {
+  flex: 1;
+  padding: 6px 10px;
+  background: var(--pending-bg);
+  border: 1px dashed var(--pending-color);
+  border-radius: var(--radius-sm);
+  color: var(--pending-color);
+  font-size: 13px;
+  font-family: var(--font-mono);
+  transition: all 0.2s;
+}
+
+.pending-input:focus {
+  outline: none;
+  border-style: solid;
+  background: rgba(245, 158, 11, 0.15);
+}
+
+.pending-input::placeholder {
+  color: rgba(245, 158, 11, 0.5);
+}
+
+.pending-input.filled {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: var(--success-color);
+  color: var(--success-color);
+  border-style: solid;
+}
+
+/* ===== 侧边栏 ===== */
+.sidebar-toggle {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: var(--luckin-blue);
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 34, 171, 0.4);
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.sidebar-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 34, 171, 0.5);
+}
+
+.sidebar-toggle .count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--pending-color);
+  color: #000;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 320px;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border-color);
+  z-index: 1000;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  padding: 24px 20px;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebar .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.sidebar .close-btn:hover { color: var(--text-primary); }
+
+.checklist-group {
+  margin-bottom: 20px;
+}
+
+.checklist-group h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 13px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.checklist-item:hover { color: var(--text-primary); }
+
+.checklist-item input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.checklist-item input[type="checkbox"]:checked {
+  background: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.checklist-item input[type="checkbox"]:checked::after {
+  content: '\f00c';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  color: #fff;
+}
+
+.checklist-item.checked {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.sidebar-progress {
+  margin-top: 20px;
+  padding: 14px;
+  background: var(--bg-section);
+  border-radius: var(--radius-sm);
+}
+
+.sidebar-progress .progress-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.sidebar-progress-bar {
+  height: 6px;
+  background: var(--border-color);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.sidebar-progress-fill {
+  height: 100%;
+  background: var(--success-color);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+  width: 0;
+}
+
+/* ===== 打印模式 ===== */
+.print-btn {
+  position: fixed;
+  right: 80px;
+  bottom: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.print-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+@media print {
+  body { background: #fff; color: #000; font-size: 11px; }
+  .page-wrapper { display: block; }
+  .main-content { max-width: 100%; padding: 10px; margin: 0; }
+  .sidebar, .sidebar-toggle, .print-btn, .copy-btn, .quick-fill-section { display: none !important; }
+  .page-header { padding: 10px 0; }
+  .page-header h1 { -webkit-text-fill-color: var(--luckin-blue); font-size: 20px; }
+  .config-section, .overview-card, .comparison-table-wrapper {
+    border-color: #ddd;
+    background: #fff;
+    break-inside: avoid;
+  }
+  .config-section-body { max-height: none !important; }
+  .config-section.collapsed .config-section-body { max-height: none !important; display: block !important; }
+  .config-row { border-color: #eee; }
+  .config-value .text { background: #f5f5f5; border-color: #ddd; color: #000; }
+  .config-section-header { background: #f0f0f0; }
+  .tab-panel { display: block !important; page-break-before: always; }
+  .tab-nav { display: none; }
+  .badge { border-color: #ccc; }
+  .text-primary, .text-secondary, .text-muted { color: #000 !important; }
+  .section-number { background: #333; }
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 900px) {
+  .overview-cards { grid-template-columns: 1fr; }
+  .main-content { padding: 16px; }
+  .main-content.sidebar-open { margin-right: 0; }
+  .config-label { min-width: 120px; }
+  .quick-fill-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .config-row { flex-direction: column; gap: 4px; }
+  .config-label { min-width: auto; }
+  .comparison-table { font-size: 11px; }
+  .comparison-table th, .comparison-table td { padding: 6px 8px; }
+}
+
+/* ===== 杂项 ===== */
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 30px 0;
+}
+
+.note-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 0 20px 12px;
+}
+
+.emoji-text {
+  font-style: normal;
+}
+</style>
+</head>
+<body>
+
+<!-- 主体 -->
+<div class="page-wrapper">
+<div class="main-content" id="mainContent">
+
+  <!-- 标题 -->
+  <header class="page-header">
+    <h1>任务活动配置操作手册</h1>
+    <div class="subtitle">下单奖励活动 (Order Reward Task) -- 3 组互斥 AB 实验</div>
+    <div class="period-badge">
+      <i class="fas fa-calendar-alt"></i>&nbsp;
+      2025-03-23 00:00 ~ 2025-03-29 23:59 (UTC+8) &middot; 共 7 天
+    </div>
+  </header>
+
+  <!-- 快捷填充 -->
+  <section class="quick-fill-section" id="quickFill">
+    <h2><i class="fas fa-bolt"></i> 待填写项 -- 快捷填充</h2>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">
+      填入后将自动更新页面中所有对应字段。数据保存在浏览器本地。
+    </p>
+    <div class="quick-fill-grid">
+      <div class="quick-fill-item">
+        <label>券编号 (50% off)</label>
+        <input type="text" id="qf-coupon-50" placeholder="如 CPN00123456" data-key="coupon50">
+      </div>
+      <div class="quick-fill-item">
+        <label>券编号 (100% off / Free)</label>
+        <input type="text" id="qf-coupon-100" placeholder="如 CPN00789012" data-key="coupon100">
+      </div>
+      <div class="quick-fill-item">
+        <label>人群包 A (Buy3-50off)</label>
+        <input type="text" id="qf-group-a" placeholder="人群包ID" data-key="groupA">
+      </div>
+      <div class="quick-fill-item">
+        <label>人群包 B (Buy5-50off)</label>
+        <input type="text" id="qf-group-b" placeholder="人群包ID" data-key="groupB">
+      </div>
+      <div class="quick-fill-item">
+        <label>人群包 C (Buy5-Free)</label>
+        <input type="text" id="qf-group-c" placeholder="人群包ID" data-key="groupC">
+      </div>
+    </div>
+  </section>
+
+  <!-- 概览卡片 -->
+  <section class="overview-section">
+    <h2>活动概览</h2>
+    <div class="overview-cards">
+      <!-- Activity A -->
+      <div class="overview-card card-a">
+        <span class="card-label">Activity A</span>
+        <h3>Buy 3, Get 50% Off</h3>
+        <div class="card-desc">下单 3 杯饮品，送 50% off 优惠券</div>
+        <div class="card-details">
+          <div class="detail-row">
+            <span class="label">活动名称</span>
+            <span class="value">250323-250329-Buy3-50off</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">达成杯数</span>
+            <span class="value" style="color:var(--activity-a);font-weight:700">3 杯</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">奖励</span>
+            <span class="value">50% off 优惠券</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">券编号</span>
+            <span class="value pending-ref" data-ref="coupon50" style="color:var(--pending-color)">待填写</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">人群包</span>
+            <span class="value pending-ref" data-ref="groupA" style="color:var(--pending-color)">待填写</span>
+          </div>
+        </div>
+      </div>
+      <!-- Activity B -->
+      <div class="overview-card card-b">
+        <span class="card-label">Activity B</span>
+        <h3>Buy 5, Get 50% Off</h3>
+        <div class="card-desc">下单 5 杯饮品，送 50% off 优惠券</div>
+        <div class="card-details">
+          <div class="detail-row">
+            <span class="label">活动名称</span>
+            <span class="value">250323-250329-Buy5-50off</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">达成杯数</span>
+            <span class="value" style="color:var(--activity-b);font-weight:700">5 杯</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">奖励</span>
+            <span class="value">50% off 优惠券</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">券编号</span>
+            <span class="value pending-ref" data-ref="coupon50" style="color:var(--pending-color)">待填写</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">人群包</span>
+            <span class="value pending-ref" data-ref="groupB" style="color:var(--pending-color)">待填写</span>
+          </div>
+        </div>
+      </div>
+      <!-- Activity C -->
+      <div class="overview-card card-c">
+        <span class="card-label">Activity C</span>
+        <h3>Buy 5, Get 1 Free</h3>
+        <div class="card-desc">下单 5 杯饮品，送 1 杯免费 (100% off)</div>
+        <div class="card-details">
+          <div class="detail-row">
+            <span class="label">活动名称</span>
+            <span class="value">250323-250329-Buy5-Free</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">达成杯数</span>
+            <span class="value" style="color:var(--activity-c);font-weight:700">5 杯</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">奖励</span>
+            <span class="value">100% off (Free) 优惠券</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">券编号</span>
+            <span class="value pending-ref" data-ref="coupon100" style="color:var(--pending-color)">待填写</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">人群包</span>
+            <span class="value pending-ref" data-ref="groupC" style="color:var(--pending-color)">待填写</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 差异对比表 -->
+    <div class="comparison-table-wrapper">
+      <h3><i class="fas fa-exchange-alt" style="margin-right:6px;"></i> 三组差异对比 (仅列出不同字段)</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th style="width:25%">配置字段</th>
+            <th style="width:25%"><span style="color:var(--activity-a)">A</span> Buy3-50off</th>
+            <th style="width:25%"><span style="color:var(--activity-b)">B</span> Buy5-50off</th>
+            <th style="width:25%"><span style="color:var(--activity-c)">C</span> Buy5-Free</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="diff-row">
+            <td>活动名称</td>
+            <td>250323-250329-Buy3-50off</td>
+            <td>250323-250329-Buy5-50off</td>
+            <td>250323-250329-Buy5-Free</td>
+          </tr>
+          <tr class="diff-row">
+            <td>卡片标题</td>
+            <td>Buy 3 Drinks, Get 50% Off!</td>
+            <td>Buy 5 Drinks, Get 50% Off!</td>
+            <td>Buy 5 Drinks, Get 1 Free!</td>
+          </tr>
+          <tr class="diff-row">
+            <td>落地页标题</td>
+            <td>Buy 3, Get 50% Off</td>
+            <td>Buy 5, Get 50% Off</td>
+            <td>Buy 5, Get 1 Free</td>
+          </tr>
+          <tr class="diff-row">
+            <td>达成条件 (杯数)</td>
+            <td style="font-weight:700;color:var(--activity-a)">3 杯</td>
+            <td style="font-weight:700;color:var(--activity-b)">5 杯</td>
+            <td style="font-weight:700;color:var(--activity-c)">5 杯</td>
+          </tr>
+          <tr class="diff-row">
+            <td>奖励类型</td>
+            <td>50% off 券</td>
+            <td>50% off 券</td>
+            <td>100% off 券 (Free)</td>
+          </tr>
+          <tr class="diff-row">
+            <td>券编号</td>
+            <td><span class="pending-ref" data-ref="coupon50" style="color:var(--pending-color)">待填写</span></td>
+            <td><span class="pending-ref" data-ref="coupon50" style="color:var(--pending-color)">待填写</span></td>
+            <td><span class="pending-ref" data-ref="coupon100" style="color:var(--pending-color)">待填写</span></td>
+          </tr>
+          <tr class="diff-row">
+            <td>人群包</td>
+            <td><span class="pending-ref" data-ref="groupA" style="color:var(--pending-color)">待填写</span></td>
+            <td><span class="pending-ref" data-ref="groupB" style="color:var(--pending-color)">待填写</span></td>
+            <td><span class="pending-ref" data-ref="groupC" style="color:var(--pending-color)">待填写</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 进度条预览 -->
+    <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--text-secondary);">
+        <i class="fas fa-palette" style="margin-right:6px;"></i>进度条颜色预览
+      </div>
+      <div class="progress-preview">
+        <div class="progress-bar-demo">
+          <div class="progress-bar-fill" id="progressDemo"></div>
+        </div>
+        <div class="progress-colors">
+          <span class="color-swatch"><span class="dot" style="background:#A2B7FF"></span> #A2B7FF 未激活</span>
+          <span class="color-swatch"><span class="dot" style="background:#0022AB"></span> #0022AB 已激活</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:8px;">
+        <button onclick="animateProgress(20)" style="padding:4px 12px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-secondary);border-radius:4px;cursor:pointer;font-size:12px;">1/5</button>
+        <button onclick="animateProgress(60)" style="padding:4px 12px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-secondary);border-radius:4px;cursor:pointer;font-size:12px;">3/5</button>
+        <button onclick="animateProgress(100)" style="padding:4px 12px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-secondary);border-radius:4px;cursor:pointer;font-size:12px;">5/5</button>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- Tab 导航 -->
+  <section class="tab-container">
+    <div class="tab-nav" role="tablist">
+      <button class="tab-btn tab-a active" data-tab="a" role="tab">
+        <span class="tab-dot"></span> Activity A: Buy 3 &rarr; 50% off
+      </button>
+      <button class="tab-btn tab-b" data-tab="b" role="tab">
+        <span class="tab-dot"></span> Activity B: Buy 5 &rarr; 50% off
+      </button>
+      <button class="tab-btn tab-c" data-tab="c" role="tab">
+        <span class="tab-dot"></span> Activity C: Buy 5 &rarr; Free
+      </button>
+    </div>
+
+    <!-- ===================== Activity A ===================== -->
+    <div class="tab-panel active" id="panel-a" role="tabpanel">
+      <!-- S1 基本信息 -->
+      <div class="config-section" data-section="s1">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">1</span> 基本信息</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">活动名称 <span class="badge badge-diff">不同</span></div>
+            <div class="config-value">
+              <span class="text">250323-250329-Buy3-50off</span>
+              <button class="copy-btn" onclick="copyText(this, '250323-250329-Buy3-50off')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">有效期 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">2025-03-23 00:00:00 ~ 2025-03-29 23:59:59 (+08)</span>
+              <button class="copy-btn" onclick="copyText(this, '2025-03-23 00:00:00')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">投放方式 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">直接投放</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">是否循环奖励 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">否</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">奖励方式 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">奖励全部</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">优先级 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text">0</span>
+              <button class="copy-btn" onclick="copyText(this, '0')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">是否阶梯奖励 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">否</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S2 限定条件 -->
+      <div class="config-section" data-section="s2">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">2</span> 限定条件</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">限定频次 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">每次触发</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">限定每人参与总次数 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">限定 &rarr; 1 次</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">限定会员等级 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">不限</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">限定任务完成日期 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">有效期内</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">奖励发放时间 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">完成任务后立即分发</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">奖励领取截止时间 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">2035-10-01 00:00:00</span>
+              <button class="copy-btn" onclick="copyText(this, '2035-10-01 00:00:00')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">人群包 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value">
+              <div class="pending-input-wrapper">
+                <input type="text" class="pending-input pending-field" data-ref="groupA" placeholder="填入人群包 A 的 ID...">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S3 规则策略 -->
+      <div class="config-section" data-section="s3">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">3</span> 规则策略</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">策略类型 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">消费次数</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">达成定义 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">完成指定商品数量</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">指定商品 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">全部 Drink 类目</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">达成条件 (数量) <span class="badge badge-diff">不同</span></div>
+            <div class="config-value">
+              <span class="text" style="color:var(--activity-a);font-weight:600;">3 杯</span>
+              <button class="copy-btn" onclick="copyText(this, '3')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S4 任务组件设计 — 入口卡片 -->
+      <div class="config-section" data-section="s4">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">4</span> 任务组件设计 -- 入口卡片</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">背景图 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">ICON 图 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">标题 (title) <span class="badge badge-diff">不同</span></div>
+            <div class="config-value">
+              <span class="text">Buy 3 Drinks, Get 50% Off!</span>
+              <button class="copy-btn" onclick="copyText(this, 'Buy 3 Drinks, Get 50% Off!')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">小标题 (subtitle) <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">One redemption per customer</span>
+              <button class="copy-btn" onclick="copyText(this, 'One redemption per customer')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">按钮文案 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">Order Now</span>
+              <button class="copy-btn" onclick="copyText(this, 'Order Now')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">跳转链接 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">菜单页 / 自提(类目)</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">交互动作 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">点击跳转</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">尾部 ICON <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S5 任务详情页设计 -->
+      <div class="config-section" data-section="s5">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">5</span> 任务详情页设计</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">背景图 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">主图 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">标题 <span class="badge badge-diff">不同</span></div>
+            <div class="config-value">
+              <span class="text">Buy 3, Get 50% Off</span>
+              <button class="copy-btn" onclick="copyText(this, 'Buy 3, Get 50% Off')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">按钮图片 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">跳转 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">菜单页 / 自提(类目)</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">进度/奖励/规则标题图片 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">进度条颜色 (未激活) <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text"><span style="display:inline-block;width:12px;height:12px;background:#A2B7FF;border-radius:2px;vertical-align:middle;margin-right:6px;"></span>#A2B7FF</span>
+              <button class="copy-btn" onclick="copyText(this, '#A2B7FF')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">进度条颜色 (已激活) <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text"><span style="display:inline-block;width:12px;height:12px;background:#0022AB;border-radius:2px;vertical-align:middle;margin-right:6px;"></span>#0022AB</span>
+              <button class="copy-btn" onclick="copyText(this, '#0022AB')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">进度 ICON <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">达成 ICON <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S6 任务激励文案 -->
+      <div class="config-section" data-section="s6">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">6</span> 任务激励文案</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">未达成文案 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">${taskProgress} drinks checked! Keep sipping to unlock this reward<span class="emoji-text">&#x1f381;</span></span>
+              <button class="copy-btn" onclick="copyText(this, '${taskProgress} drinks checked! Keep sipping to unlock this reward\ud83c\udf81')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">已达成文案 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">${taskProgress} drinks checked! You've unlocked this reward!</span>
+              <button class="copy-btn" onclick="copyText(this, '${taskProgress} drinks checked! You\\\'ve unlocked this reward!')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">奖励弹窗标题 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">Reward</span>
+              <button class="copy-btn" onclick="copyText(this, 'Reward')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S7 奖励配置 -->
+      <div class="config-section" data-section="s7">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">7</span> 奖励配置</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">奖励类型 <span class="badge badge-diff">不同</span></div>
+            <div class="config-value"><span class="text-plain">优惠券 (50% off)</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">券编号 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value">
+              <div class="pending-input-wrapper">
+                <input type="text" class="pending-input pending-field" data-ref="coupon50" placeholder="填入 50% off 券编号...">
+              </div>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">奖励弹窗图片 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">领券方式 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">系统发放</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">跳转 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">菜单页 / 自提(类目)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S8 活动规则文案 -->
+      <div class="config-section" data-section="s8">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">8</span> 活动规则文案</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">英文法律条款 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供活动规则文案 (英文法律条款)</span></div>
+          </div>
+          <p class="note-text">通常包含: 活动有效期、参与条件、优惠券使用规则、免责条款等。三组活动的规则文案可能不同 (因奖励不同)，需确认。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== Activity B ===================== -->
+    <div class="tab-panel" id="panel-b" role="tabpanel">
+      <!-- S1 基本信息 -->
+      <div class="config-section" data-section="s1">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">1</span> 基本信息</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">活动名称 <span class="badge badge-diff">不同</span></div>
+            <div class="config-value">
+              <span class="text">250323-250329-Buy5-50off</span>
+              <button class="copy-btn" onclick="copyText(this, '250323-250329-Buy5-50off')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">有效期 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">2025-03-23 00:00:00 ~ 2025-03-29 23:59:59 (+08)</span>
+              <button class="copy-btn" onclick="copyText(this, '2025-03-23 00:00:00')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">投放方式 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">直接投放</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">是否循环奖励 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">否</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">奖励方式 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">奖励全部</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">优先级 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text">0</span>
+              <button class="copy-btn" onclick="copyText(this, '0')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">是否阶梯奖励 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">否</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S2 限定条件 -->
+      <div class="config-section" data-section="s2">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">2</span> 限定条件</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">限定频次 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">每次触发</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">限定每人参与总次数 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">限定 &rarr; 1 次</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">限定会员等级 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">不限</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">限定任务完成日期 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">有效期内</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">奖励发放时间 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">完成任务后立即分发</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">奖励领取截止时间 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">2035-10-01 00:00:00</span>
+              <button class="copy-btn" onclick="copyText(this, '2035-10-01 00:00:00')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">人群包 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value">
+              <div class="pending-input-wrapper">
+                <input type="text" class="pending-input pending-field" data-ref="groupB" placeholder="填入人群包 B 的 ID...">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S3 规则策略 -->
+      <div class="config-section" data-section="s3">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">3</span> 规则策略</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">策略类型 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">消费次数</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">达成定义 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">完成指定商品数量</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">指定商品 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">全部 Drink 类目</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">达成条件 (数量) <span class="badge badge-diff">不同</span></div>
+            <div class="config-value">
+              <span class="text" style="color:var(--activity-b);font-weight:600;">5 杯</span>
+              <button class="copy-btn" onclick="copyText(this, '5')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S4 卡片设计 -->
+      <div class="config-section" data-section="s4">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">4</span> 任务组件设计 -- 入口卡片</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">背景图 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">ICON 图 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">标题 (title) <span class="badge badge-diff">不同</span></div>
+            <div class="config-value">
+              <span class="text">Buy 5 Drinks, Get 50% Off!</span>
+              <button class="copy-btn" onclick="copyText(this, 'Buy 5 Drinks, Get 50% Off!')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">小标题 (subtitle) <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">One redemption per customer</span>
+              <button class="copy-btn" onclick="copyText(this, 'One redemption per customer')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">按钮文案 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">Order Now</span>
+              <button class="copy-btn" onclick="copyText(this, 'Order Now')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">跳转链接 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">菜单页 / 自提(类目)</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">交互动作 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">点击跳转</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">尾部 ICON <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S5 详情页设计 -->
+      <div class="config-section" data-section="s5">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">5</span> 任务详情页设计</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">背景图 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">主图 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">标题 <span class="badge badge-diff">不同</span></div>
+            <div class="config-value">
+              <span class="text">Buy 5, Get 50% Off</span>
+              <button class="copy-btn" onclick="copyText(this, 'Buy 5, Get 50% Off')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">按钮图片 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">跳转 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">菜单页 / 自提(类目)</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">进度/奖励/规则标题图片 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">进度条颜色 (未激活) <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text"><span style="display:inline-block;width:12px;height:12px;background:#A2B7FF;border-radius:2px;vertical-align:middle;margin-right:6px;"></span>#A2B7FF</span>
+              <button class="copy-btn" onclick="copyText(this, '#A2B7FF')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">进度条颜色 (已激活) <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text"><span style="display:inline-block;width:12px;height:12px;background:#0022AB;border-radius:2px;vertical-align:middle;margin-right:6px;"></span>#0022AB</span>
+              <button class="copy-btn" onclick="copyText(this, '#0022AB')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">进度 ICON <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">达成 ICON <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S6 激励文案 -->
+      <div class="config-section" data-section="s6">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">6</span> 任务激励文案</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">未达成文案 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">${taskProgress} drinks checked! Keep sipping to unlock this reward<span class="emoji-text">&#x1f381;</span></span>
+              <button class="copy-btn" onclick="copyText(this, '${taskProgress} drinks checked! Keep sipping to unlock this reward\ud83c\udf81')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">已达成文案 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">${taskProgress} drinks checked! You've unlocked this reward!</span>
+              <button class="copy-btn" onclick="copyText(this, '${taskProgress} drinks checked! You\\\'ve unlocked this reward!')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">奖励弹窗标题 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">Reward</span>
+              <button class="copy-btn" onclick="copyText(this, 'Reward')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S7 奖励配置 -->
+      <div class="config-section" data-section="s7">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">7</span> 奖励配置</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">奖励类型 <span class="badge badge-diff">不同</span></div>
+            <div class="config-value"><span class="text-plain">优惠券 (50% off)</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">券编号 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value">
+              <div class="pending-input-wrapper">
+                <input type="text" class="pending-input pending-field" data-ref="coupon50" placeholder="填入 50% off 券编号...">
+              </div>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">奖励弹窗图片 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">领券方式 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">系统发放</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">跳转 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">菜单页 / 自提(类目)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S8 规则文案 -->
+      <div class="config-section" data-section="s8">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">8</span> 活动规则文案</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">英文法律条款 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供活动规则文案 (英文法律条款)</span></div>
+          </div>
+          <p class="note-text">通常包含: 活动有效期、参与条件、优惠券使用规则、免责条款等。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== Activity C ===================== -->
+    <div class="tab-panel" id="panel-c" role="tabpanel">
+      <!-- S1 基本信息 -->
+      <div class="config-section" data-section="s1">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">1</span> 基本信息</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">活动名称 <span class="badge badge-diff">不同</span></div>
+            <div class="config-value">
+              <span class="text">250323-250329-Buy5-Free</span>
+              <button class="copy-btn" onclick="copyText(this, '250323-250329-Buy5-Free')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">有效期 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">2025-03-23 00:00:00 ~ 2025-03-29 23:59:59 (+08)</span>
+              <button class="copy-btn" onclick="copyText(this, '2025-03-23 00:00:00')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">投放方式 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">直接投放</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">是否循环奖励 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">否</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">奖励方式 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">奖励全部</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">优先级 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text">0</span>
+              <button class="copy-btn" onclick="copyText(this, '0')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">是否阶梯奖励 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">否</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S2 限定条件 -->
+      <div class="config-section" data-section="s2">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">2</span> 限定条件</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">限定频次 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">每次触发</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">限定每人参与总次数 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">限定 &rarr; 1 次</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">限定会员等级 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">不限</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">限定任务完成日期 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">有效期内</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">奖励发放时间 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">完成任务后立即分发</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">奖励领取截止时间 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">2035-10-01 00:00:00</span>
+              <button class="copy-btn" onclick="copyText(this, '2035-10-01 00:00:00')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">人群包 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value">
+              <div class="pending-input-wrapper">
+                <input type="text" class="pending-input pending-field" data-ref="groupC" placeholder="填入人群包 C 的 ID...">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S3 规则策略 -->
+      <div class="config-section" data-section="s3">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">3</span> 规则策略</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">策略类型 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">消费次数</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">达成定义 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">完成指定商品数量</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">指定商品 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">全部 Drink 类目</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">达成条件 (数量) <span class="badge badge-diff">不同</span></div>
+            <div class="config-value">
+              <span class="text" style="color:var(--activity-c);font-weight:600;">5 杯</span>
+              <button class="copy-btn" onclick="copyText(this, '5')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S4 卡片设计 -->
+      <div class="config-section" data-section="s4">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">4</span> 任务组件设计 -- 入口卡片</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">背景图 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">ICON 图 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">标题 (title) <span class="badge badge-diff">不同</span></div>
+            <div class="config-value">
+              <span class="text">Buy 5 Drinks, Get 1 Free!</span>
+              <button class="copy-btn" onclick="copyText(this, 'Buy 5 Drinks, Get 1 Free!')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">小标题 (subtitle) <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">One redemption per customer</span>
+              <button class="copy-btn" onclick="copyText(this, 'One redemption per customer')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">按钮文案 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">Order Now</span>
+              <button class="copy-btn" onclick="copyText(this, 'Order Now')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">跳转链接 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">菜单页 / 自提(类目)</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">交互动作 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">点击跳转</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">尾部 ICON <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S5 详情页设计 -->
+      <div class="config-section" data-section="s5">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">5</span> 任务详情页设计</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">背景图 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">主图 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">标题 <span class="badge badge-diff">不同</span></div>
+            <div class="config-value">
+              <span class="text">Buy 5, Get 1 Free</span>
+              <button class="copy-btn" onclick="copyText(this, 'Buy 5, Get 1 Free')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">按钮图片 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">跳转 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">菜单页 / 自提(类目)</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">进度/奖励/规则标题图片 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">进度条颜色 (未激活) <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text"><span style="display:inline-block;width:12px;height:12px;background:#A2B7FF;border-radius:2px;vertical-align:middle;margin-right:6px;"></span>#A2B7FF</span>
+              <button class="copy-btn" onclick="copyText(this, '#A2B7FF')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">进度条颜色 (已激活) <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text"><span style="display:inline-block;width:12px;height:12px;background:#0022AB;border-radius:2px;vertical-align:middle;margin-right:6px;"></span>#0022AB</span>
+              <button class="copy-btn" onclick="copyText(this, '#0022AB')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">进度 ICON <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">达成 ICON <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S6 激励文案 -->
+      <div class="config-section" data-section="s6">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">6</span> 任务激励文案</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">未达成文案 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">${taskProgress} drinks checked! Keep sipping to unlock this reward<span class="emoji-text">&#x1f381;</span></span>
+              <button class="copy-btn" onclick="copyText(this, '${taskProgress} drinks checked! Keep sipping to unlock this reward\ud83c\udf81')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">已达成文案 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">${taskProgress} drinks checked! You've unlocked this reward!</span>
+              <button class="copy-btn" onclick="copyText(this, '${taskProgress} drinks checked! You\\\'ve unlocked this reward!')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">奖励弹窗标题 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value">
+              <span class="text">Reward</span>
+              <button class="copy-btn" onclick="copyText(this, 'Reward')"><i class="fas fa-copy"></i><span class="copy-tooltip">Copied!</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S7 奖励配置 -->
+      <div class="config-section" data-section="s7">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">7</span> 奖励配置</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">奖励类型 <span class="badge badge-diff">不同</span></div>
+            <div class="config-value"><span class="text-plain" style="font-weight:600;color:var(--activity-c);">优惠券 (100% off / Free)</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">券编号 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value">
+              <div class="pending-input-wrapper">
+                <input type="text" class="pending-input pending-field" data-ref="coupon100" placeholder="填入 100% off (Free) 券编号...">
+              </div>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">奖励弹窗图片 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供设计素材</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">领券方式 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">系统发放</span></div>
+          </div>
+          <div class="config-row">
+            <div class="config-label">跳转 <span class="badge badge-shared">通用</span></div>
+            <div class="config-value"><span class="text-plain">菜单页 / 自提(类目)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S8 规则文案 -->
+      <div class="config-section" data-section="s8">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3><span class="section-number">8</span> 活动规则文案</h3>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="config-section-body">
+          <div class="config-row">
+            <div class="config-label">英文法律条款 <span class="badge badge-pending">待填</span></div>
+            <div class="config-value"><span class="text-plain" style="color:var(--pending-color)">待提供活动规则文案 (英文法律条款)</span></div>
+          </div>
+          <p class="note-text">注意: Activity C 的规则文案可能与 A/B 不同，因为奖励是 Free (100% off) 而非 50% off。需确认是否需要单独版本。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /main-content -->
+</div><!-- /page-wrapper -->
+
+<!-- 侧边栏 Checklist -->
+<div class="sidebar" id="sidebar">
+  <button class="close-btn" onclick="toggleSidebar()"><i class="fas fa-times"></i></button>
+  <h2><i class="fas fa-clipboard-check"></i> 配置清单</h2>
+
+  <div class="sidebar-progress">
+    <div class="progress-text">
+      <span>完成进度</span>
+      <span id="progressPercent">0%</span>
+    </div>
+    <div class="sidebar-progress-bar">
+      <div class="sidebar-progress-fill" id="sidebarProgressFill"></div>
+    </div>
+  </div>
+
+  <div class="checklist-group">
+    <h4><i class="fas fa-exclamation-triangle" style="color:var(--pending-color);margin-right:4px;"></i> 前置依赖 (需外部提供)</h4>
+    <label class="checklist-item" data-check="prereq-coupon50">
+      <input type="checkbox"> 券编号 (50% off)
+    </label>
+    <label class="checklist-item" data-check="prereq-coupon100">
+      <input type="checkbox"> 券编号 (100% off / Free)
+    </label>
+    <label class="checklist-item" data-check="prereq-groups">
+      <input type="checkbox"> 人群包 A / B / C
+    </label>
+    <label class="checklist-item" data-check="prereq-design">
+      <input type="checkbox"> 设计素材 (卡片背景图、落地页主图、进度条ICON、达成ICON、奖励弹窗图)
+    </label>
+    <label class="checklist-item" data-check="prereq-rules">
+      <input type="checkbox"> 活动规则文案 (英文法律条款)
+    </label>
+  </div>
+
+  <div class="checklist-group">
+    <h4><i class="fas fa-cog" style="color:var(--activity-a);margin-right:4px;"></i> Activity A 配置步骤</h4>
+    <label class="checklist-item" data-check="a-s1"><input type="checkbox"> 1. 基本信息</label>
+    <label class="checklist-item" data-check="a-s2"><input type="checkbox"> 2. 限定条件</label>
+    <label class="checklist-item" data-check="a-s3"><input type="checkbox"> 3. 规则策略</label>
+    <label class="checklist-item" data-check="a-s4"><input type="checkbox"> 4. 卡片设计</label>
+    <label class="checklist-item" data-check="a-s5"><input type="checkbox"> 5. 详情页设计</label>
+    <label class="checklist-item" data-check="a-s6"><input type="checkbox"> 6. 激励文案</label>
+    <label class="checklist-item" data-check="a-s7"><input type="checkbox"> 7. 奖励配置</label>
+    <label class="checklist-item" data-check="a-s8"><input type="checkbox"> 8. 规则文案</label>
+  </div>
+
+  <div class="checklist-group">
+    <h4><i class="fas fa-cog" style="color:var(--activity-b);margin-right:4px;"></i> Activity B 配置步骤</h4>
+    <label class="checklist-item" data-check="b-s1"><input type="checkbox"> 1. 基本信息</label>
+    <label class="checklist-item" data-check="b-s2"><input type="checkbox"> 2. 限定条件</label>
+    <label class="checklist-item" data-check="b-s3"><input type="checkbox"> 3. 规则策略</label>
+    <label class="checklist-item" data-check="b-s4"><input type="checkbox"> 4. 卡片设计</label>
+    <label class="checklist-item" data-check="b-s5"><input type="checkbox"> 5. 详情页设计</label>
+    <label class="checklist-item" data-check="b-s6"><input type="checkbox"> 6. 激励文案</label>
+    <label class="checklist-item" data-check="b-s7"><input type="checkbox"> 7. 奖励配置</label>
+    <label class="checklist-item" data-check="b-s8"><input type="checkbox"> 8. 规则文案</label>
+  </div>
+
+  <div class="checklist-group">
+    <h4><i class="fas fa-cog" style="color:var(--activity-c);margin-right:4px;"></i> Activity C 配置步骤</h4>
+    <label class="checklist-item" data-check="c-s1"><input type="checkbox"> 1. 基本信息</label>
+    <label class="checklist-item" data-check="c-s2"><input type="checkbox"> 2. 限定条件</label>
+    <label class="checklist-item" data-check="c-s3"><input type="checkbox"> 3. 规则策略</label>
+    <label class="checklist-item" data-check="c-s4"><input type="checkbox"> 4. 卡片设计</label>
+    <label class="checklist-item" data-check="c-s5"><input type="checkbox"> 5. 详情页设计</label>
+    <label class="checklist-item" data-check="c-s6"><input type="checkbox"> 6. 激励文案</label>
+    <label class="checklist-item" data-check="c-s7"><input type="checkbox"> 7. 奖励配置</label>
+    <label class="checklist-item" data-check="c-s8"><input type="checkbox"> 8. 规则文案</label>
+  </div>
+</div>
+
+<!-- 固定按钮 -->
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" title="配置清单">
+  <i class="fas fa-clipboard-check"></i>
+  <span class="count" id="remainingCount">29</span>
+</button>
+
+<button class="print-btn" onclick="window.print()" title="打印 / 导出 PDF">
+  <i class="fas fa-print"></i>
+</button>
+
+<script>
+/* ===== 全局状态 ===== */
+const STORAGE_KEY = 'task-config-250323';
+
+/* ===== Tab 切换 ===== */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tabId = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + tabId).classList.add('active');
+  });
+});
+
+/* ===== 折叠/展开 ===== */
+function toggleSection(header) {
+  header.parentElement.classList.toggle('collapsed');
+}
+
+/* ===== 复制功能 ===== */
+function copyText(btn, text) {
+  /* 处理转义 */
+  const decoded = text.replace(/\\'/g, "'");
+  navigator.clipboard.writeText(decoded).then(() => {
+    btn.classList.add('copied');
+    btn.querySelector('i').className = 'fas fa-check';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.querySelector('i').className = 'fas fa-copy';
+    }, 1500);
+  }).catch(() => {
+    /* fallback */
+    const ta = document.createElement('textarea');
+    ta.value = decoded;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.classList.add('copied');
+    btn.querySelector('i').className = 'fas fa-check';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.querySelector('i').className = 'fas fa-copy';
+    }, 1500);
+  });
+}
+
+/* ===== 进度条演示 ===== */
+function animateProgress(pct) {
+  document.getElementById('progressDemo').style.width = pct + '%';
+}
+
+/* ===== 侧边栏 ===== */
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const main = document.getElementById('mainContent');
+  sidebar.classList.toggle('open');
+  main.classList.toggle('sidebar-open');
+}
+
+/* ===== Checklist 持久化 ===== */
+function loadChecklist() {
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY + '-checklist') || '{}');
+  document.querySelectorAll('.checklist-item').forEach(item => {
+    const key = item.dataset.check;
+    const cb = item.querySelector('input[type="checkbox"]');
+    if (saved[key]) {
+      cb.checked = true;
+      item.classList.add('checked');
+    }
+  });
+  updateChecklistProgress();
+}
+
+function saveChecklist() {
+  const data = {};
+  document.querySelectorAll('.checklist-item').forEach(item => {
+    const key = item.dataset.check;
+    const cb = item.querySelector('input[type="checkbox"]');
+    data[key] = cb.checked;
+  });
+  localStorage.setItem(STORAGE_KEY + '-checklist', JSON.stringify(data));
+  updateChecklistProgress();
+}
+
+function updateChecklistProgress() {
+  const items = document.querySelectorAll('.checklist-item');
+  const checked = document.querySelectorAll('.checklist-item input:checked');
+  const total = items.length;
+  const done = checked.length;
+  const remaining = total - done;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+  document.getElementById('remainingCount').textContent = remaining;
+  document.getElementById('progressPercent').textContent = pct + '%';
+  document.getElementById('sidebarProgressFill').style.width = pct + '%';
+
+  /* 更新 item 样式 */
+  items.forEach(item => {
+    const cb = item.querySelector('input[type="checkbox"]');
+    if (cb.checked) {
+      item.classList.add('checked');
+    } else {
+      item.classList.remove('checked');
+    }
+  });
+
+  /* 隐藏 badge 当全部完成 */
+  const badge = document.getElementById('remainingCount');
+  badge.style.display = remaining === 0 ? 'none' : 'flex';
+}
+
+document.querySelectorAll('.checklist-item input[type="checkbox"]').forEach(cb => {
+  cb.addEventListener('change', saveChecklist);
+});
+
+/* ===== 快捷填充 + 同步 ===== */
+function loadQuickFill() {
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY + '-quickfill') || '{}');
+  document.querySelectorAll('#quickFill input').forEach(input => {
+    const key = input.dataset.key;
+    if (saved[key]) {
+      input.value = saved[key];
+      syncFieldValue(key, saved[key]);
+    }
+  });
+}
+
+function saveQuickFill() {
+  const data = {};
+  document.querySelectorAll('#quickFill input').forEach(input => {
+    data[input.dataset.key] = input.value;
+  });
+  localStorage.setItem(STORAGE_KEY + '-quickfill', JSON.stringify(data));
+}
+
+function syncFieldValue(key, value) {
+  /* 更新所有 pending-ref 引用 */
+  document.querySelectorAll('.pending-ref[data-ref="' + key + '"]').forEach(el => {
+    if (value && value.trim()) {
+      el.textContent = value;
+      el.style.color = 'var(--success-color)';
+    } else {
+      el.textContent = '待填写';
+      el.style.color = 'var(--pending-color)';
+    }
+  });
+
+  /* 更新所有 pending-field 输入框 */
+  document.querySelectorAll('.pending-field[data-ref="' + key + '"]').forEach(input => {
+    if (input !== document.activeElement) {
+      input.value = value || '';
+      if (value && value.trim()) {
+        input.classList.add('filled');
+      } else {
+        input.classList.remove('filled');
+      }
+    }
+  });
+}
+
+/* 快捷填充区域的 input 事件 */
+document.querySelectorAll('#quickFill input').forEach(input => {
+  input.addEventListener('input', () => {
+    const key = input.dataset.key;
+    const value = input.value;
+    syncFieldValue(key, value);
+    saveQuickFill();
+  });
+});
+
+/* 内联 pending-field 的 input 事件 -- 也要反向同步 */
+document.querySelectorAll('.pending-field').forEach(input => {
+  input.addEventListener('input', () => {
+    const key = input.dataset.ref;
+    const value = input.value;
+    /* 同步到快捷填充 */
+    const qfInput = document.querySelector('#quickFill input[data-key="' + key + '"]');
+    if (qfInput) {
+      qfInput.value = value;
+    }
+    syncFieldValue(key, value);
+    saveQuickFill();
+  });
+});
+
+/* ===== 初始化 ===== */
+document.addEventListener('DOMContentLoaded', () => {
+  loadChecklist();
+  loadQuickFill();
+  /* 进度条动画启动 */
+  setTimeout(() => animateProgress(60), 500);
+});
+</script>
+</body>
+</html>

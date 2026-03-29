@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucky US 业务日报 | 2026.03.05-03.11</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  /* ===== 全局样式 ===== */
+  :root {
+    --primary: #1a73e8;
+    --primary-light: #e8f0fe;
+    --green: #0d9b52;
+    --green-bg: #e6f4ea;
+    --red: #d93025;
+    --red-bg: #fce8e6;
+    --gray-50: #f8f9fa;
+    --gray-100: #f1f3f4;
+    --gray-200: #e8eaed;
+    --gray-300: #dadce0;
+    --gray-500: #80868b;
+    --gray-700: #5f6368;
+    --gray-900: #202124;
+    --orange: #e8710a;
+    --purple: #7b1fa2;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+    --radius: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+    background: #fff;
+    color: var(--gray-900);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ===== Header ===== */
+  .report-header {
+    background: linear-gradient(135deg, var(--primary) 0%, #1557b0 100%);
+    color: #fff;
+    padding: 32px 0;
+    margin-bottom: 32px;
+  }
+  .report-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .report-header .subtitle {
+    font-size: 15px;
+    opacity: 0.85;
+  }
+  .report-header .date-range {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+
+  /* ===== Section ===== */
+  .section {
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .section:last-child { border-bottom: none; }
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 20px;
+    padding-left: 12px;
+    border-left: 4px solid var(--primary);
+  }
+  .section-subtitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin: 20px 0 12px;
+  }
+
+  /* ===== KPI Cards ===== */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .kpi-card {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+  }
+  .kpi-card .label {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-bottom: 6px;
+  }
+  .kpi-card .value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gray-900);
+    line-height: 1.2;
+  }
+  .kpi-card .change {
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 6px;
+  }
+  .change.up { color: var(--green); }
+  .change.down { color: var(--red); }
+
+  /* ===== Chart Container ===== */
+  .chart-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .chart-box {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .chart-box h4 {
+    font-size: 14px;
+    color: var(--gray-700);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .chart-box canvas { width: 100% !important; }
+
+  .chart-full {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+  .chart-full h4 {
+    font-size: 14px;
+    color: var(--gray-700);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  /* ===== Tables ===== */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  .data-table th {
+    background: var(--gray-100);
+    color: var(--gray-700);
+    font-weight: 600;
+    padding: 10px 12px;
+    text-align: right;
+    border-bottom: 2px solid var(--gray-300);
+    white-space: nowrap;
+  }
+  .data-table th:first-child { text-align: left; }
+  .data-table td {
+    padding: 8px 12px;
+    text-align: right;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .data-table td:first-child { text-align: left; font-weight: 500; }
+  .data-table tbody tr:hover { background: var(--primary-light); }
+  .data-table .total-row {
+    font-weight: 700;
+    background: var(--gray-100);
+  }
+  .data-table .total-row td { border-top: 2px solid var(--gray-300); }
+
+  /* ===== Insight Box ===== */
+  .insight-box {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .insight-box strong { color: var(--orange); }
+
+  /* ===== Summary Box ===== */
+  .summary-box {
+    background: var(--primary-light);
+    border: 1px solid #c6dafc;
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin: 16px 0;
+  }
+  .summary-box h3 {
+    color: var(--primary);
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+  .summary-box ol {
+    padding-left: 20px;
+    font-size: 14px;
+    line-height: 2;
+  }
+  .summary-box li { color: var(--gray-900); }
+
+  /* ===== Part Header ===== */
+  .part-header {
+    background: var(--gray-100);
+    border-radius: var(--radius);
+    padding: 12px 20px;
+    margin: 32px 0 24px;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--primary);
+    border-left: 4px solid var(--primary);
+  }
+
+  /* ===== Footer ===== */
+  .report-footer {
+    text-align: center;
+    padding: 24px 0 40px;
+    color: var(--gray-500);
+    font-size: 12px;
+    border-top: 1px solid var(--gray-200);
+    margin-top: 20px;
+  }
+  .report-footer .footnote {
+    max-width: 800px;
+    margin: 0 auto 12px;
+    line-height: 1.6;
+  }
+
+  /* ===== Badge ===== */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-green { background: var(--green-bg); color: var(--green); }
+  .badge-red { background: var(--red-bg); color: var(--red); }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 768px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .chart-row { grid-template-columns: 1fr; }
+    .kpi-card .value { font-size: 22px; }
+    .report-header h1 { font-size: 22px; }
+    .data-table { font-size: 12px; }
+    .data-table th, .data-table td { padding: 6px 8px; }
+  }
+
+  /* ===== Print ===== */
+  @media print {
+    .report-header { background: var(--primary) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .section { page-break-inside: avoid; }
+    .chart-box, .chart-full { page-break-inside: avoid; }
+    body { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== HEADER ==================== -->
+<header class="report-header">
+  <div class="container">
+    <h1>Lucky US 业务日报</h1>
+    <div class="subtitle">Weekly Daily Report &mdash; New York City</div>
+    <div class="date-range">2026.03.05 (Wed) - 03.11 (Tue) | 对比上周 02.26 - 03.04</div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- ==================== PART 1 ==================== -->
+<div class="part-header">Part 1: 核心业务指标</div>
+
+<!-- ===== 模块1: 业务结果 ===== -->
+<div class="section" id="biz">
+  <div class="section-title">模块1: 业务结果</div>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="label">周杯量 (Drink)</div>
+      <div class="value">28,553</div>
+      <div class="change up">+8.0% WoW</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">周收入</div>
+      <div class="value">$95,283</div>
+      <div class="change up">+6.7% WoW</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">日均杯量</div>
+      <div class="value">4,079</div>
+      <div class="change up">+8.0%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">单杯均价</div>
+      <div class="value">$3.34</div>
+      <div class="change down">-1.2%</div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="chart-row">
+    <div class="chart-box">
+      <h4>Daily Cups Trend (This Week vs Last Week)</h4>
+      <canvas id="chartCups"></canvas>
+    </div>
+    <div class="chart-box">
+      <h4>Daily Revenue Trend (This Week vs Last Week)</h4>
+      <canvas id="chartRevenue"></canvas>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Date</th><th>Day</th><th>Shops</th><th>Cups</th><th>Orders</th><th>Revenue</th><th>Avg Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>03-05</td><td>Wed</td><td>11</td><td>3,395</td><td>3,264</td><td>$11,566</td><td>$3.41</td></tr>
+      <tr><td>03-06</td><td>Thu</td><td>11</td><td>3,810</td><td>3,634</td><td>$13,135</td><td>$3.45</td></tr>
+      <tr><td>03-07</td><td>Fri</td><td>11</td><td>3,536</td><td>3,392</td><td>$11,606</td><td>$3.28</td></tr>
+      <tr><td>03-08</td><td>Sat</td><td>11</td><td>3,443</td><td>3,320</td><td>$11,073</td><td>$3.22</td></tr>
+      <tr><td>03-09</td><td>Sun</td><td>11</td><td>4,471</td><td>4,297</td><td>$14,768</td><td>$3.30</td></tr>
+      <tr><td>03-10</td><td>Mon</td><td>11</td><td>4,746</td><td>4,603</td><td>$15,629</td><td>$3.29</td></tr>
+      <tr><td>03-11</td><td>Tue</td><td>11</td><td>5,152</td><td>4,878</td><td>$17,505</td><td>$3.40</td></tr>
+      <tr class="total-row"><td>合计</td><td></td><td>11</td><td>28,553</td><td>27,388</td><td>$95,283</td><td>$3.34</td></tr>
+    </tbody>
+  </table>
+
+  <div class="insight-box">
+    <strong>Insight:</strong> 本周杯量 28,553 杯，环比上周 +8.0%（上周 26,428 杯）。走势呈明显「低开高走」：前两天受降雨+低温（5-6 C）影响仅 3,395-3,810 杯/天；周六起气温骤升至 20 C+，后四天快速拉升至 4,471-5,152 杯/天。周二（3/11）创本周最高 5,152 杯。单杯均价 $3.34 略低于上周的 $3.38（-1.2%）。
+  </div>
+</div>
+
+<!-- ===== 模块2: 用户（新老客） ===== -->
+<div class="section" id="user">
+  <div class="section-title">模块2: 用户（新客 vs 老客）</div>
+
+  <div class="chart-full">
+    <h4>Daily Cups: New vs Returning Customers</h4>
+    <canvas id="chartUserCups" height="280"></canvas>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>Date</th><th>Type</th><th>Users</th><th>Cups</th><th>Revenue</th><th>Avg Price</th><th>New %</th></tr>
+    </thead>
+    <tbody>
+      <tr><td rowspan="2">03-05</td><td>新客</td><td>427</td><td>502</td><td>$1,283</td><td>$2.56</td><td rowspan="2">14.8%</td></tr>
+      <tr><td>老客</td><td>2,399</td><td>2,893</td><td>$10,283</td><td>$3.55</td></tr>
+      <tr><td rowspan="2">03-06</td><td>新客</td><td>566</td><td>674</td><td>$1,737</td><td>$2.58</td><td rowspan="2">17.7%</td></tr>
+      <tr><td>老客</td><td>2,521</td><td>3,136</td><td>$11,399</td><td>$3.63</td></tr>
+      <tr><td rowspan="2">03-07</td><td>新客</td><td>888</td><td>1,083</td><td>$2,804</td><td>$2.59</td><td rowspan="2">30.6%</td></tr>
+      <tr><td>老客</td><td>1,829</td><td>2,453</td><td>$8,803</td><td>$3.59</td></tr>
+      <tr><td rowspan="2">03-08</td><td>新客</td><td>955</td><td>1,147</td><td>$2,950</td><td>$2.57</td><td rowspan="2">33.3%</td></tr>
+      <tr><td>老客</td><td>1,721</td><td>2,296</td><td>$8,123</td><td>$3.54</td></tr>
+      <tr><td rowspan="2">03-09</td><td>新客</td><td>673</td><td>808</td><td>$2,059</td><td>$2.55</td><td rowspan="2">18.1%</td></tr>
+      <tr><td>老客</td><td>3,052</td><td>3,663</td><td>$12,709</td><td>$3.47</td></tr>
+      <tr><td rowspan="2">03-10</td><td>新客</td><td>710</td><td>824</td><td>$2,083</td><td>$2.53</td><td rowspan="2">17.4%</td></tr>
+      <tr><td>老客</td><td>3,237</td><td>3,922</td><td>$13,546</td><td>$3.45</td></tr>
+      <tr><td rowspan="2">03-11</td><td>新客</td><td>690</td><td>834</td><td>$2,167</td><td>$2.60</td><td rowspan="2">16.2%</td></tr>
+      <tr><td>老客</td><td>3,407</td><td>4,318</td><td>$15,338</td><td>$3.55</td></tr>
+      <tr class="total-row"><td rowspan="2">合计</td><td>新客</td><td>4,909</td><td>5,872</td><td>$15,084</td><td>$2.57</td><td rowspan="2">20.6%</td></tr>
+      <tr class="total-row"><td>老客</td><td>18,166</td><td>22,681</td><td>$80,199</td><td>$3.54</td></tr>
+    </tbody>
+  </table>
+
+  <div class="insight-box">
+    <strong>Insight:</strong> 新客占比波动大（14.8%-33.3%），周五/六新客占比高达 30%+（疑似周末拉新活动或自然流量高峰）。新客均价 $2.57 vs 老客 $3.54，价差 $0.97/杯（-27%），反映新客券折扣较深。
+  </div>
+</div>
+
+<!-- ===== 模块3: 品类/折扣/漏斗 ===== -->
+<div class="section" id="category">
+  <div class="section-title">模块3: 品类 / 折扣 / 漏斗</div>
+
+  <!-- 品类 -->
+  <div class="section-subtitle">3a. 品类分布 (Category)</div>
+  <div class="chart-row">
+    <div class="chart-box">
+      <h4>Daily Items: Drink vs Food</h4>
+      <canvas id="chartCategory"></canvas>
+    </div>
+    <div>
+      <table class="data-table">
+        <thead><tr><th>Date</th><th>Drink Items</th><th>Drink Rev</th><th>Food Items</th><th>Food Rev</th><th>Food %</th></tr></thead>
+        <tbody>
+          <tr><td>03-05</td><td>3,395</td><td>$11,566</td><td>414</td><td>$1,663</td><td>10.9%</td></tr>
+          <tr><td>03-06</td><td>3,810</td><td>$13,135</td><td>454</td><td>$1,805</td><td>10.6%</td></tr>
+          <tr><td>03-07</td><td>3,536</td><td>$11,606</td><td>293</td><td>$1,192</td><td>7.7%</td></tr>
+          <tr><td>03-08</td><td>3,443</td><td>$11,073</td><td>277</td><td>$1,128</td><td>7.4%</td></tr>
+          <tr><td>03-09</td><td>4,471</td><td>$14,768</td><td>415</td><td>$1,640</td><td>8.5%</td></tr>
+          <tr><td>03-10</td><td>4,746</td><td>$15,629</td><td>384</td><td>$1,515</td><td>7.5%</td></tr>
+          <tr><td>03-11</td><td>5,152</td><td>$17,505</td><td>489</td><td>$1,958</td><td>8.7%</td></tr>
+          <tr class="total-row"><td>合计</td><td>28,553</td><td>$95,283</td><td>2,726</td><td>$10,901</td><td>8.7%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 折扣 -->
+  <div class="section-subtitle">3b. 折扣分布 (Discount Tiers)</div>
+  <div class="chart-row">
+    <div class="chart-box">
+      <h4>Weekly Cups by Discount Tier</h4>
+      <canvas id="chartDiscount"></canvas>
+    </div>
+    <div>
+      <table class="data-table">
+        <thead><tr><th>Tier</th><th>Cups</th><th>Cup %</th><th>Revenue</th><th>Rev %</th><th>Avg Price</th></tr></thead>
+        <tbody>
+          <tr><td>A: &le;3折</td><td>1,727</td><td>6.0%</td><td>$2,599</td><td>2.7%</td><td>$1.50</td></tr>
+          <tr><td>B: 3-5折</td><td>8,189</td><td>28.7%</td><td>$19,941</td><td>20.9%</td><td>$2.44</td></tr>
+          <tr><td>C: 5-7折</td><td>12,445</td><td>43.6%</td><td>$41,560</td><td>43.6%</td><td>$3.34</td></tr>
+          <tr><td>D: 7折+</td><td>6,192</td><td>21.7%</td><td>$31,183</td><td>32.7%</td><td>$5.04</td></tr>
+          <tr class="total-row"><td>合计</td><td>28,553</td><td>100%</td><td>$95,283</td><td>100%</td><td>$3.34</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 漏斗 -->
+  <div class="section-subtitle">3c. APP 漏斗 (Funnel)</div>
+  <div class="chart-full">
+    <h4>Average Daily Funnel Conversion (Weekly Avg UV)</h4>
+    <canvas id="chartFunnel" height="200"></canvas>
+  </div>
+  <table class="data-table">
+    <thead><tr><th>Date</th><th>UV Total</th><th>Home</th><th>Menu</th><th>Detail</th><th>Confirm</th><th>Order</th><th>Total-to-Order</th></tr></thead>
+    <tbody>
+      <tr><td>03-05</td><td>5,144</td><td>5,088</td><td>4,892</td><td>2,794</td><td>2,744</td><td>2,443</td><td>47.5%</td></tr>
+      <tr><td>03-06</td><td>5,320</td><td>5,271</td><td>5,093</td><td>3,012</td><td>2,949</td><td>2,647</td><td>49.8%</td></tr>
+      <tr><td>03-07</td><td>4,427</td><td>4,396</td><td>4,222</td><td>2,680</td><td>2,543</td><td>2,273</td><td>51.3%</td></tr>
+      <tr><td>03-08</td><td>4,280</td><td>4,247</td><td>4,069</td><td>2,613</td><td>2,488</td><td>2,179</td><td>50.9%</td></tr>
+      <tr><td>03-09</td><td>6,052</td><td>5,986</td><td>5,805</td><td>3,625</td><td>3,601</td><td>3,239</td><td>53.5%</td></tr>
+      <tr><td>03-10</td><td>6,830</td><td>6,757</td><td>6,562</td><td>4,224</td><td>3,996</td><td>3,484</td><td>51.0%</td></tr>
+      <tr><td>03-11</td><td>6,680</td><td>6,609</td><td>6,408</td><td>4,082</td><td>3,995</td><td>3,621</td><td>54.2%</td></tr>
+      <tr class="total-row"><td>周均</td><td>5,533</td><td>5,479</td><td>5,293</td><td>3,290</td><td>3,188</td><td>2,841</td><td>51.3%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===== 模块4: TOP10 商品 ===== -->
+<div class="section" id="products">
+  <div class="section-title">模块4: TOP 10 商品</div>
+
+  <div class="chart-full">
+    <h4>TOP 10 Products by Cups (Weekly)</h4>
+    <canvas id="chartProducts" height="320"></canvas>
+  </div>
+
+  <table class="data-table">
+    <thead><tr><th>#</th><th>Product</th><th>Cups</th><th>Revenue</th><th>Avg Price</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Reg/Cold/Reg Ice/Med Roast/Espresso(2)/Coconut Milk</td><td>1,368</td><td>$4,229</td><td>$3.09</td></tr>
+      <tr><td>2</td><td>Reg/Cold/Regular Ice</td><td>1,033</td><td>$3,043</td><td>$2.95</td></tr>
+      <tr><td>3</td><td>Large/Cold/Regular Ice</td><td>680</td><td>$2,372</td><td>$3.49</td></tr>
+      <tr><td>4</td><td>Lg/Cold/Reg Ice/Med Roast/Espresso(3)/Coconut Milk</td><td>577</td><td>$2,134</td><td>$3.70</td></tr>
+      <tr><td>5</td><td>Reg/Cold/Light Ice/Med Roast/Espresso(2)/Coconut Milk</td><td>534</td><td>$1,593</td><td>$2.98</td></tr>
+      <tr><td>6</td><td>Reg/Hot/Drip Coffee Beans</td><td>491</td><td>$913</td><td>$1.86</td></tr>
+      <tr><td>7</td><td>Reg/Cold/Reg Ice/Whole Milk/Matcha Sauce/Matcha Powder</td><td>456</td><td>$1,427</td><td>$3.13</td></tr>
+      <tr><td>8</td><td>Reg/Cold/Reg Ice/Coconut Milk/Matcha Sauce</td><td>419</td><td>$1,377</td><td>$3.29</td></tr>
+      <tr><td>9</td><td>Reg/Hot/Dark Roast/Espresso(2)/2% Milk</td><td>376</td><td>$1,153</td><td>$3.07</td></tr>
+      <tr><td>10</td><td>Reg/Cold/Reg Ice/Med Roast/Espresso(2)/Chocolate</td><td>371</td><td>$1,214</td><td>$3.27</td></tr>
+    </tbody>
+  </table>
+
+  <div class="insight-box">
+    <strong>Insight:</strong> Coconut Milk 系列继续领先（#1, #4, #5 均为椰奶咖啡），合计 2,479 杯占 TOP10 的 40%。Matcha 产品出现两款（#7, #8），合计 875 杯，抹茶品类值得关注。Drip Coffee（#6）均价仅 $1.86，属于低价引流品。
+  </div>
+</div>
+
+<!-- ===== 模块5: 分时分布 ===== -->
+<div class="section" id="hourly">
+  <div class="section-title">模块5: 分时分布</div>
+
+  <div class="chart-full">
+    <h4>Weekly Orders by Hour (EST)</h4>
+    <canvas id="chartHourly" height="260"></canvas>
+  </div>
+
+  <table class="data-table">
+    <thead><tr><th>Hour</th><th>Orders</th><th>Users</th><th>Avg Orders/Day</th><th>Share %</th></tr></thead>
+    <tbody>
+      <tr><td>7:00</td><td>1,213</td><td>884</td><td>173</td><td>4.9%</td></tr>
+      <tr style="background:#e8f0fe"><td>8:00</td><td>2,878</td><td>2,188</td><td>411</td><td>11.6%</td></tr>
+      <tr style="background:#e8f0fe"><td>9:00</td><td>2,981</td><td>2,405</td><td>426</td><td>12.0%</td></tr>
+      <tr style="background:#e8f0fe"><td>10:00</td><td>2,217</td><td>1,889</td><td>317</td><td>8.9%</td></tr>
+      <tr style="background:#e8f0fe"><td>11:00</td><td>1,985</td><td>1,787</td><td>284</td><td>8.0%</td></tr>
+      <tr><td>12:00</td><td>2,267</td><td>2,069</td><td>324</td><td>9.1%</td></tr>
+      <tr><td>13:00</td><td>2,561</td><td>2,336</td><td>366</td><td>10.3%</td></tr>
+      <tr><td>14:00</td><td>2,336</td><td>2,169</td><td>334</td><td>9.4%</td></tr>
+      <tr><td>15:00</td><td>1,973</td><td>1,823</td><td>282</td><td>7.9%</td></tr>
+      <tr><td>16:00</td><td>1,464</td><td>1,393</td><td>209</td><td>5.9%</td></tr>
+      <tr><td>17:00</td><td>1,066</td><td>1,005</td><td>152</td><td>4.3%</td></tr>
+      <tr><td>18:00</td><td>701</td><td>654</td><td>100</td><td>2.8%</td></tr>
+      <tr><td>19:00</td><td>444</td><td>417</td><td>63</td><td>1.8%</td></tr>
+      <tr><td>20:00</td><td>57</td><td>56</td><td>8</td><td>0.2%</td></tr>
+      <tr class="total-row"><td>Total</td><td>24,143</td><td>21,075</td><td>3,449</td><td>100%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="insight-box">
+    <strong>Insight:</strong> 8-11 AM 高峰时段占全天订单 41.7%，其中 9:00 为绝对峰值（2,981 单/周）。午后 13:00 出现第二个小高峰（2,561 单），说明午后咖啡需求依然旺盛。
+  </div>
+</div>
+
+<!-- ==================== PART 2 ==================== -->
+<div class="part-header">Part 2: 运营深度分析</div>
+
+<!-- ===== 模块A: 天气 ===== -->
+<div class="section" id="weather">
+  <div class="section-title">模块A: 天气与销量关联</div>
+
+  <div class="chart-full">
+    <h4>NYC Weather vs Daily Cups</h4>
+    <canvas id="chartWeather" height="280"></canvas>
+  </div>
+
+  <table class="data-table">
+    <thead><tr><th>Date</th><th>Day</th><th>Max Temp</th><th>Min Temp</th><th>Precip (mm)</th><th>Cups</th><th>Trend</th></tr></thead>
+    <tbody>
+      <tr><td>03-05</td><td>Wed</td><td>5.8 C</td><td>2.4 C</td><td>14.9</td><td>3,395</td><td><span class="badge badge-red">Rain+Cold</span></td></tr>
+      <tr><td>03-06</td><td>Thu</td><td>5.9 C</td><td>2.5 C</td><td>13.5</td><td>3,810</td><td><span class="badge badge-red">Rain+Cold</span></td></tr>
+      <tr><td>03-07</td><td>Fri</td><td>9.6 C</td><td>2.7 C</td><td>0.0</td><td>3,536</td><td><span class="badge badge-green">Dry</span></td></tr>
+      <tr><td>03-08</td><td>Sat</td><td>20.5 C</td><td>9.2 C</td><td>0.9</td><td>3,443</td><td><span class="badge badge-green">Warm</span></td></tr>
+      <tr><td>03-09</td><td>Sun</td><td>21.0 C</td><td>4.2 C</td><td>0.0</td><td>4,471</td><td><span class="badge badge-green">Warm+Dry</span></td></tr>
+      <tr><td>03-10</td><td>Mon</td><td>24.4 C</td><td>6.5 C</td><td>0.0</td><td>4,746</td><td><span class="badge badge-green">Warm+Dry</span></td></tr>
+      <tr><td>03-11</td><td>Tue</td><td>22.3 C</td><td>11.3 C</td><td>0.5</td><td>5,152</td><td><span class="badge badge-green">Warm</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="insight-box">
+    <strong>Insight:</strong> 天气驱动明显 -- 3/5-3/6 连续降雨（14-15mm）+低温（5-6 C）压制杯量在 3,400-3,800 区间；3/8 起气温骤升至 20 C+，3/9-3/11 杯量快速拉升到 4,400-5,100。升温效应在工作日（3/10-3/11）表现更强，叠加通勤需求。
+  </div>
+</div>
+
+<!-- ===== 模块B: 门店 ===== -->
+<div class="section" id="shop">
+  <div class="section-title">模块B: 门店表现</div>
+
+  <div class="chart-full">
+    <h4>Weekly Cups by Shop</h4>
+    <canvas id="chartShop" height="300"></canvas>
+  </div>
+
+  <table class="data-table" id="shopTable">
+    <thead>
+      <tr><th>Shop</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th><th>Mon</th><th>Tue</th><th>Total</th><th>Daily Avg</th></tr>
+    </thead>
+    <tbody>
+      <!-- 按 Total 降序排列 -->
+      <tr><td>8th & Broadway</td><td>635</td><td>594</td><td>579</td><td>527</td><td>810</td><td>316</td><td>800</td><td>4,261</td><td>609</td></tr>
+      <tr><td>221 Grand</td><td>278</td><td>477</td><td>640</td><td>683</td><td>496</td><td>477</td><td>499</td><td>3,550</td><td>507</td></tr>
+      <tr><td>37th & Broadway</td><td>480</td><td>436</td><td>317</td><td>289</td><td>544</td><td>742</td><td>699</td><td>3,507</td><td>501</td></tr>
+      <tr><td>52nd & Madison</td><td>376</td><td>296</td><td>151</td><td>150</td><td>379</td><td>538</td><td>551</td><td>2,441</td><td>349</td></tr>
+      <tr><td>54th & 8th</td><td>239</td><td>341</td><td>413</td><td>389</td><td>376</td><td>429</td><td>400</td><td>2,587</td><td>370</td></tr>
+      <tr><td>28th & 6th</td><td>242</td><td>351</td><td>337</td><td>338</td><td>348</td><td>390</td><td>421</td><td>2,427</td><td>347</td></tr>
+      <tr><td>102 Fulton</td><td>374</td><td>349</td><td>333</td><td>260</td><td>397</td><td>500</td><td>507</td><td>2,720</td><td>389</td></tr>
+      <tr><td>33rd & 10th</td><td>279</td><td>266</td><td>122</td><td>155</td><td>361</td><td>455</td><td>463</td><td>2,101</td><td>300</td></tr>
+      <tr><td>21st & 3rd</td><td>56</td><td>271</td><td>308</td><td>239</td><td>313</td><td>313</td><td>306</td><td>1,806</td><td>258</td></tr>
+      <tr><td>100 Maiden Ln</td><td>234</td><td>221</td><td>113</td><td>194</td><td>233</td><td>303</td><td>282</td><td>1,580</td><td>226</td></tr>
+      <tr><td>15th & 3rd</td><td>202</td><td>208</td><td>223</td><td>219</td><td>214</td><td>283</td><td>224</td><td>1,573</td><td>225</td></tr>
+      <tr class="total-row"><td>Total</td><td>3,395</td><td>3,810</td><td>3,536</td><td>3,443</td><td>4,471</td><td>4,746</td><td>5,152</td><td>28,553</td><td>4,079</td></tr>
+    </tbody>
+  </table>
+
+  <div class="insight-box">
+    <strong>Insight:</strong> 8th & Broadway 以 4,261 杯领跑（日均 609 杯），是唯一日均 600+ 的门店。221 Grand 和 37th & Broadway 紧随其后（3,550 / 3,507 杯）。21st & 3rd 周三仅 56 杯，但后续恢复至 270-310/天（疑似当天设备或开店异常）。
+  </div>
+</div>
+
+<!-- ===== 模块C: 渠道 ===== -->
+<div class="section" id="channel">
+  <div class="section-title">模块C: 渠道分布</div>
+
+  <div class="chart-row">
+    <div class="chart-box">
+      <h4>Weekly Channel Mix (by Cups)</h4>
+      <canvas id="chartChannel"></canvas>
+    </div>
+    <div>
+      <table class="data-table">
+        <thead><tr><th>Channel</th><th>Week Cups</th><th>Cup %</th><th>Week Rev</th><th>Rev %</th></tr></thead>
+        <tbody>
+          <tr><td>iOS</td><td>23,640</td><td>82.8%</td><td>$75,108</td><td>78.8%</td></tr>
+          <tr><td>Android</td><td>2,540</td><td>8.9%</td><td>$8,275</td><td>8.7%</td></tr>
+          <tr><td>H5</td><td>1,864</td><td>6.5%</td><td>$8,317</td><td>8.7%</td></tr>
+          <tr><td>UberEats</td><td>232</td><td>0.8%</td><td>$1,650</td><td>1.7%</td></tr>
+          <tr><td>DoorDash</td><td>158</td><td>0.6%</td><td>$1,092</td><td>1.1%</td></tr>
+          <tr><td>GrubHub</td><td>119</td><td>0.4%</td><td>$842</td><td>0.9%</td></tr>
+          <tr class="total-row"><td>Total</td><td>28,553</td><td>100%</td><td>$95,283</td><td>100%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <strong>Insight:</strong> iOS 占比 82.8%，仍为绝对主力。外卖三渠道合计仅 509 杯（1.8%），但客单价较高（UberEats $7.11/杯, DoorDash $6.91/杯, GrubHub $7.08/杯），外卖用户付费意愿明显更高。H5 渠道占比 6.5%，均价 $4.46 也高于 APP 端。
+  </div>
+</div>
+
+<!-- ===== 综合归因 ===== -->
+<div class="section" id="attribution">
+  <div class="section-title">综合归因 & 本周要点</div>
+
+  <div class="summary-box">
+    <h3>Key Takeaways</h3>
+    <ol>
+      <li><strong>周杯量 28,553 杯（+8.0% WoW），周收入 $95,283（+6.7% WoW）</strong> -- 整体增长由后半周拉动</li>
+      <li><strong>天气驱动明显</strong>：前两天降雨（14-15mm）+低温（5-6 C）压制销量至 3,400-3,800/天；后半周升温至 20 C+ 带动杯量拉升至 4,400-5,100/天</li>
+      <li><strong>新客占比周均 20.6%</strong>（基于注册日期），新客均价 $2.57 vs 老客 $3.54，价差 27%。周五/六新客占比异常高（30%+），需确认是否有拉新活动</li>
+      <li><strong>折扣结构</strong>：5-7折区间是主力（43.6% 杯量，43.6% 收入），&le;3折深折占比仅 6%，折扣结构健康</li>
+      <li><strong>iOS 渠道占比 82.8%</strong>，外卖渠道极小（1.8%）但客单价是自有渠道的 2 倍</li>
+      <li><strong>高峰时段 8-11 AM</strong>，占全天订单 41.7%；13:00 出现午后第二高峰（2,561 单/周）</li>
+      <li><strong>Coconut Milk 系列产品继续领先</strong>（TOP10 中占 3 席，合计 2,479 杯），Matcha 品类崛起（2 款进入 TOP10）</li>
+      <li><strong>8th & Broadway 门店最强</strong>（4,261 杯，日均 609），21st & 3rd 周三异常低（56 杯）需排查</li>
+    </ol>
+  </div>
+</div>
+
+</div><!-- /.container -->
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="report-footer">
+  <div class="container">
+    <div class="footnote">
+      <strong>数据说明：</strong>新客定义 = 注册日=下单日（基于 t_user 注册日期）；杯量 = Drink 品类 item 数；收入 = 实付金额；漏斗 UV = APP 端页面访问去重用户数；时区 = America/New_York (EST)
+    </div>
+    <div>Lucky US Data Team | 生成时间: 2026-03-12</div>
+  </div>
+</footer>
+
+<!-- ==================== CHARTS ==================== -->
+<script>
+// 通用配置
+Chart.defaults.font.family = "-apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#5f6368';
+
+const PRIMARY = '#1a73e8';
+const PRIMARY_LIGHT = 'rgba(26,115,232,0.15)';
+const GREEN = '#0d9b52';
+const RED = '#d93025';
+const ORANGE = '#e8710a';
+const PURPLE = '#7b1fa2';
+const GRAY = '#80868b';
+
+const dayLabels = ['Wed 3/5','Thu 3/6','Fri 3/7','Sat 3/8','Sun 3/9','Mon 3/10','Tue 3/11'];
+
+// ===== 模块1: 杯量趋势 =====
+new Chart(document.getElementById('chartCups'), {
+  type: 'line',
+  data: {
+    labels: ['Wed','Thu','Fri','Sat','Sun','Mon','Tue'],
+    datasets: [{
+      label: 'This Week',
+      data: [3395, 3810, 3536, 3443, 4471, 4746, 5152],
+      borderColor: PRIMARY,
+      backgroundColor: PRIMARY_LIGHT,
+      fill: true,
+      tension: 0.3,
+      pointRadius: 5,
+      pointBackgroundColor: PRIMARY,
+      borderWidth: 2.5
+    },{
+      label: 'Last Week',
+      data: [4346, 3961, 3593, 2846, 3617, 3507, 4558], // LW: Wed 2/26 - Tue 3/4
+      borderColor: GRAY,
+      backgroundColor: 'rgba(128,134,139,0.08)',
+      fill: true,
+      tension: 0.3,
+      pointRadius: 4,
+      pointBackgroundColor: GRAY,
+      borderWidth: 2,
+      borderDash: [5, 3]
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'bottom' } },
+    scales: {
+      y: { beginAtZero: false, grid: { color: 'rgba(0,0,0,0.06)' } },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// ===== 模块1: 收入趋势 =====
+new Chart(document.getElementById('chartRevenue'), {
+  type: 'line',
+  data: {
+    labels: ['Wed','Thu','Fri','Sat','Sun','Mon','Tue'],
+    datasets: [{
+      label: 'This Week ($)',
+      data: [11566, 13135, 11606, 11073, 14768, 15629, 17505],
+      borderColor: GREEN,
+      backgroundColor: 'rgba(13,155,82,0.12)',
+      fill: true,
+      tension: 0.3,
+      pointRadius: 5,
+      pointBackgroundColor: GREEN,
+      borderWidth: 2.5
+    },{
+      label: 'Last Week ($)',
+      data: [14655, 13521, 12106, 9354, 12225, 11964, 15501], // LW revenue
+      borderColor: GRAY,
+      backgroundColor: 'rgba(128,134,139,0.08)',
+      fill: true,
+      tension: 0.3,
+      pointRadius: 4,
+      pointBackgroundColor: GRAY,
+      borderWidth: 2,
+      borderDash: [5, 3]
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'bottom' } },
+    scales: {
+      y: {
+        beginAtZero: false,
+        grid: { color: 'rgba(0,0,0,0.06)' },
+        ticks: { callback: v => '$' + (v/1000).toFixed(0) + 'K' }
+      },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// ===== 模块2: 新老客堆叠 =====
+new Chart(document.getElementById('chartUserCups'), {
+  type: 'bar',
+  data: {
+    labels: dayLabels,
+    datasets: [{
+      label: 'New Customers',
+      data: [502, 674, 1083, 1147, 808, 824, 834],
+      backgroundColor: ORANGE,
+      borderRadius: 3
+    },{
+      label: 'Returning Customers',
+      data: [2893, 3136, 2453, 2296, 3663, 3922, 4318],
+      backgroundColor: PRIMARY,
+      borderRadius: 3
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: {
+        callbacks: {
+          afterBody: function(context) {
+            const idx = context[0].dataIndex;
+            const newC = [502,674,1083,1147,808,824,834][idx];
+            const total = [3395,3810,3536,3443,4471,4746,5152][idx];
+            return 'New %: ' + (newC/total*100).toFixed(1) + '%';
+          }
+        }
+      }
+    },
+    scales: {
+      x: { stacked: true, grid: { display: false } },
+      y: { stacked: true, grid: { color: 'rgba(0,0,0,0.06)' } }
+    }
+  }
+});
+
+// ===== 品类堆叠 =====
+new Chart(document.getElementById('chartCategory'), {
+  type: 'bar',
+  data: {
+    labels: dayLabels,
+    datasets: [{
+      label: 'Drink',
+      data: [3395, 3810, 3536, 3443, 4471, 4746, 5152],
+      backgroundColor: PRIMARY,
+      borderRadius: 3
+    },{
+      label: 'Food',
+      data: [414, 454, 293, 277, 415, 384, 489],
+      backgroundColor: ORANGE,
+      borderRadius: 3
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'bottom' } },
+    scales: {
+      x: { stacked: true, grid: { display: false } },
+      y: { stacked: true, grid: { color: 'rgba(0,0,0,0.06)' } }
+    }
+  }
+});
+
+// ===== 折扣分布饼图 =====
+new Chart(document.getElementById('chartDiscount'), {
+  type: 'doughnut',
+  data: {
+    labels: ['A: <=3折 (6.0%)', 'B: 3-5折 (28.7%)', 'C: 5-7折 (43.6%)', 'D: 7折+ (21.7%)'],
+    datasets: [{
+      data: [1727, 8189, 12445, 6192],
+      backgroundColor: [RED, ORANGE, PRIMARY, GREEN],
+      borderWidth: 2,
+      borderColor: '#fff'
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'bottom', labels: { padding: 16 } }
+    }
+  }
+});
+
+// ===== 漏斗 =====
+(function(){
+  const avgData = [5533, 5479, 5293, 3290, 3188, 2841];
+  const labels = ['Total UV', 'Home', 'Menu', 'Detail', 'Confirm', 'Order'];
+  const pcts = avgData.map((v,i) => i===0 ? '100%' : (v/avgData[0]*100).toFixed(1)+'%');
+
+  new Chart(document.getElementById('chartFunnel'), {
+    type: 'bar',
+    data: {
+      labels: labels.map((l,i) => l + ' (' + pcts[i] + ')'),
+      datasets: [{
+        data: avgData,
+        backgroundColor: [
+          'rgba(26,115,232,1)',
+          'rgba(26,115,232,0.85)',
+          'rgba(26,115,232,0.7)',
+          'rgba(26,115,232,0.55)',
+          'rgba(26,115,232,0.4)',
+          'rgba(26,115,232,0.3)'
+        ],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: 'rgba(0,0,0,0.06)' } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+})();
+
+// ===== TOP10 商品 =====
+(function(){
+  const prods = [
+    'Coconut Milk Latte (Reg)',
+    'Cold Brew (Reg)',
+    'Cold Brew (Large)',
+    'Coconut Milk Latte (Lg)',
+    'Coconut Milk Latte (Light)',
+    'Drip Coffee (Hot)',
+    'Matcha Whole Milk',
+    'Matcha Coconut Milk',
+    'Dark Roast Latte (Hot)',
+    'Mocha Chocolate'
+  ];
+  const cups = [1368, 1033, 680, 577, 534, 491, 456, 419, 376, 371];
+
+  new Chart(document.getElementById('chartProducts'), {
+    type: 'bar',
+    data: {
+      labels: prods,
+      datasets: [{
+        data: cups,
+        backgroundColor: cups.map((v,i) => {
+          if (i < 3) return PRIMARY;
+          if (i < 6) return 'rgba(26,115,232,0.65)';
+          return 'rgba(26,115,232,0.4)';
+        }),
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.parsed.x + ' cups'
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(0,0,0,0.06)' }, beginAtZero: true },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+})();
+
+// ===== 分时分布 =====
+(function(){
+  const hours = [7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+  const orders = [1213,2878,2981,2217,1985,2267,2561,2336,1973,1464,1066,701,444,57];
+  const peak = [false,true,true,true,true,false,true,true,false,false,false,false,false,false];
+
+  new Chart(document.getElementById('chartHourly'), {
+    type: 'bar',
+    data: {
+      labels: hours.map(h => h + ':00'),
+      datasets: [{
+        data: orders,
+        backgroundColor: orders.map((v,i) => peak[i] ? PRIMARY : 'rgba(26,115,232,0.35)'),
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.parsed.y.toLocaleString() + ' orders (' + (ctx.parsed.y/24143*100).toFixed(1) + '%)'
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { grid: { color: 'rgba(0,0,0,0.06)' }, beginAtZero: true }
+      }
+    }
+  });
+})();
+
+// ===== 天气 + 杯量 =====
+new Chart(document.getElementById('chartWeather'), {
+  type: 'bar',
+  data: {
+    labels: dayLabels,
+    datasets: [{
+      label: 'Precip (mm)',
+      data: [14.9, 13.5, 0, 0.9, 0, 0, 0.5],
+      backgroundColor: 'rgba(26,115,232,0.3)',
+      borderColor: PRIMARY,
+      borderWidth: 1,
+      borderRadius: 3,
+      yAxisID: 'yPrecip',
+      order: 2
+    },{
+      label: 'Max Temp (C)',
+      data: [5.8, 5.9, 9.6, 20.5, 21.0, 24.4, 22.3],
+      type: 'line',
+      borderColor: RED,
+      backgroundColor: 'rgba(217,48,37,0.1)',
+      fill: false,
+      tension: 0.3,
+      pointRadius: 5,
+      pointBackgroundColor: RED,
+      borderWidth: 2.5,
+      yAxisID: 'yTemp',
+      order: 1
+    },{
+      label: 'Cups',
+      data: [3395, 3810, 3536, 3443, 4471, 4746, 5152],
+      type: 'line',
+      borderColor: GREEN,
+      fill: false,
+      tension: 0.3,
+      pointRadius: 5,
+      pointBackgroundColor: GREEN,
+      borderWidth: 2.5,
+      yAxisID: 'yCups',
+      order: 0
+    }]
+  },
+  options: {
+    responsive: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: { legend: { position: 'bottom' } },
+    scales: {
+      yTemp: {
+        type: 'linear', position: 'left',
+        title: { display: true, text: 'Temp (C)' },
+        grid: { color: 'rgba(0,0,0,0.06)' },
+        min: 0, max: 30
+      },
+      yPrecip: {
+        type: 'linear', position: 'right',
+        title: { display: true, text: 'Precip (mm)' },
+        grid: { display: false },
+        min: 0, max: 20
+      },
+      yCups: {
+        type: 'linear', position: 'right',
+        title: { display: true, text: 'Cups' },
+        grid: { display: false },
+        min: 2500, max: 5500,
+        ticks: { display: false }
+      },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// ===== 门店横向柱图 =====
+(function(){
+  const shops = ['8th & Broadway','221 Grand','37th & Broadway','102 Fulton','54th & 8th','52nd & Madison','28th & 6th','33rd & 10th','21st & 3rd','100 Maiden Ln','15th & 3rd'];
+  const totals = [4261, 3550, 3507, 2720, 2587, 2441, 2427, 2101, 1806, 1580, 1573];
+
+  new Chart(document.getElementById('chartShop'), {
+    type: 'bar',
+    data: {
+      labels: shops,
+      datasets: [{
+        data: totals,
+        backgroundColor: totals.map((v,i) => i < 3 ? PRIMARY : 'rgba(26,115,232,0.45)'),
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.parsed.x.toLocaleString() + ' cups (avg ' + Math.round(ctx.parsed.x/7) + '/day)'
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(0,0,0,0.06)' }, beginAtZero: true },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+})();
+
+// ===== 渠道饼图 =====
+new Chart(document.getElementById('chartChannel'), {
+  type: 'doughnut',
+  data: {
+    labels: ['iOS (82.8%)', 'Android (8.9%)', 'H5 (6.5%)', 'UberEats (0.8%)', 'DoorDash (0.6%)', 'GrubHub (0.4%)'],
+    datasets: [{
+      data: [23640, 2540, 1864, 232, 158, 119],
+      backgroundColor: [PRIMARY, GREEN, ORANGE, PURPLE, RED, GRAY],
+      borderWidth: 2,
+      borderColor: '#fff'
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'bottom', labels: { padding: 14 } }
+    }
+  }
+});
+</script>
+
+</body>
+</html>

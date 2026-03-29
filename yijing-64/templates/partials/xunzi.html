@@ -1,0 +1,47 @@
+<!-- 训字内容 — 卡片式 + 象形可视化 -->
+<div class="xunzi-cards">
+  {% for item in gua.steps.xunzi %}
+  <div class="xunzi-card fade-in fade-in-delay-{{ loop.index0 % 4 + 1 }}">
+    <div class="xunzi-card-top">
+      <!-- 现代字 -->
+      <div class="xunzi-modern">
+        <span class="xunzi-char">{{ item.char }}</span>
+        <span class="source-tag source-{{ item.source }}">
+          {% if item.source == 'classic' %}经典{% elif item.source == 'youan' %}佑安{% else %}AI{% endif %}
+        </span>
+      </div>
+      <!-- 象形图解 -->
+      {% if item.pictograph %}
+      <div class="xunzi-pictograph">
+        <svg viewBox="0 0 120 120" class="pictograph-svg">
+          {{ item.pictograph.svg }}
+        </svg>
+        <p class="pictograph-label">{{ item.pictograph.label }}</p>
+      </div>
+      {% endif %}
+    </div>
+    <!-- 字形结构拆解 -->
+    {% if item.pictograph and item.pictograph.components %}
+    <div class="xunzi-components">
+      {% for comp in item.pictograph.components %}
+      <div class="xunzi-comp">
+        <span class="comp-part">{{ comp.part }}</span>
+        <span class="comp-arrow">&rarr;</span>
+        <span class="comp-meaning">{{ comp.meaning }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <!-- 说文解字引用 -->
+    {% if item.shuowenRef %}
+    <div class="xunzi-shuowen">
+      {{ item.shuowenRef }}
+    </div>
+    {% endif %}
+    <!-- 本卦引申 -->
+    <div class="xunzi-extension">
+      {{ item.extension }}
+    </div>
+  </div>
+  {% endfor %}
+</div>

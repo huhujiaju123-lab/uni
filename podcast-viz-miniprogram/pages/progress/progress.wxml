@@ -1,0 +1,38 @@
+<view class="container">
+  <!-- 标题 -->
+  <view class="header">
+    <text class="title gold-text">正在解析</text>
+    <view class="meta-info" wx:if="{{metadata}}">
+      <text class="podcast-name">{{metadata.podcast_name}}</text>
+      <text class="ep-title">{{metadata.title}}</text>
+    </view>
+  </view>
+
+  <!-- 步骤列表 -->
+  <view class="steps">
+    <view class="step {{item.status}}" wx:for="{{steps}}" wx:key="name">
+      <view class="step-icon">
+        <text wx:if="{{item.status === 'done'}}">✅</text>
+        <text wx:elif="{{item.status === 'error'}}">❌</text>
+        <text wx:elif="{{item.status === 'running'}}">⏳</text>
+        <text wx:else>{{item.icon}}</text>
+      </view>
+      <view class="step-content">
+        <text class="step-name">{{item.name}}</text>
+        <text class="step-detail dim-text" wx:if="{{item.detail}}">{{item.detail}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 错误提示 -->
+  <view class="error-box" wx:if="{{error}}">
+    <text class="error-text">{{error}}</text>
+    <button class="back-btn" bindtap="onBack">返回重试</button>
+  </view>
+
+  <!-- 等待提示 -->
+  <view class="tips" wx:if="{{!done && !error}}">
+    <text class="dim-text">转录和分析可能需要几分钟，请耐心等待</text>
+    <text class="dim-text">可以先切到其他应用，回来会自动更新</text>
+  </view>
+</view>

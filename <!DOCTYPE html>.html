@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>炫酷时钟</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f2027, #2c5364 60%, #1c92d2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+      overflow: hidden;
+    }
+    .clock {
+      background: rgba(30, 30, 60, 0.85);
+      box-shadow: 0 0 40px #00eaff99, 0 4px 30px #0004;
+      border-radius: 24px;
+      padding: 40px 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: box-shadow 0.3s;
+    }
+    .time {
+      font-size: 4em;
+      letter-spacing: 0.06em;
+      color: #00ffc8;
+      text-shadow: 0 0 16px #00fffb, 0 0 40px #81ecec;
+      font-weight: bold;
+      margin-bottom: 24px;
+      animation: glow-pulse 2s infinite alternate linear;
+    }
+    .date {
+      font-size: 1.6em;
+      color: #eaf6fb;
+      letter-spacing: 0.1em;
+      text-shadow: 0 1px 3px #005ecb99;
+    }
+    @keyframes glow-pulse {
+      from {
+        text-shadow: 0 0 16px #00fffb, 0 0 40px #81ecec;
+      }
+      to {
+        text-shadow: 0 0 32px #00e0ff, 0 0 60px #91fff7;
+      }
+    }
+    .dots {
+      color: #bcf1ff;
+      animation: dots-blink 1s steps(1) infinite;
+    }
+    @keyframes dots-blink {
+      50% { opacity: 0.2; }
+    }
+    /* Neon border effect */
+    .clock {
+      border: 3px solid #00ffe7;
+      box-shadow: 0 0 25px #61e6ff, 0 0 6px #05fff3 inset;
+      transition: border .4s;
+    }
+    .clock:hover {
+      border: 3px solid #18faff;
+      box-shadow: 0 0 45px #0fffc7, 0 0 12px #00e0c7 inset;
+    }
+  </style>
+</head>
+<body>
+  <div class="clock">
+    <div class="time" id="clockTime">
+      00<span class="dots">:</span>00<span class="dots">:</span>00
+    </div>
+    <div class="date" id="clockDate">
+      1970-01-01 星期四
+    </div>
+  </div>
+  <script>
+    const weekDays = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+    function pad(num) {
+      return num.toString().padStart(2, '0');
+    }
+    function updateClock() {
+      const now = new Date();
+      let h = pad(now.getHours());
+      let m = pad(now.getMinutes());
+      let s = pad(now.getSeconds());
+      let yyyy = now.getFullYear();
+      let mm = pad(now.getMonth() + 1);
+      let dd = pad(now.getDate());
+      let day = weekDays[now.getDay()];
+      document.getElementById('clockTime').innerHTML = 
+        `${h}<span class="dots">:</span>${m}<span class="dots">:</span>${s}`;
+      document.getElementById('clockDate').textContent = 
+        `${yyyy}-${mm}-${dd} ${day}`;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>

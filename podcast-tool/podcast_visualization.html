@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一生之敌 | 播客可视化</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --bg2: #0f0f18;
+  --bg3: #13131f;
+  --gold: #d4a017;
+  --gold-light: #f0c040;
+  --amber: #c07830;
+  --text: #e8e0d0;
+  --text-dim: #8a8070;
+  --text-muted: #5a5248;
+  --accent: #e8b830;
+  --danger: #c04040;
+  --radius: 12px;
+  --font: 'Hiragino Mincho ProN', 'Source Han Serif CN', 'Noto Serif CJK SC', Georgia, serif;
+  --sans: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  line-height: 1.9;
+  overflow-x: hidden;
+}
+
+/* Progress bar */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  width: 0%;
+  z-index: 1000;
+  transition: width 0.1s ease;
+}
+
+/* Dot nav */
+#dot-nav {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.dot-nav-item {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+.dot-nav-item:hover, .dot-nav-item.active {
+  background: var(--gold);
+  transform: scale(1.5);
+}
+.dot-nav-item::before {
+  content: attr(data-label);
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.dot-nav-item:hover::before { opacity: 1; }
+
+/* Sections */
+section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 5vw;
+  position: relative;
+}
+
+/* Fade-in animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  will-change: transform, opacity;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); will-change: auto; }
+.reveal-delay-1 { transition-delay: 0.15s; }
+.reveal-delay-2 { transition-delay: 0.3s; }
+.reveal-delay-3 { transition-delay: 0.45s; }
+.reveal-delay-4 { transition-delay: 0.6s; }
+
+/* ===== HERO ===== */
+#hero {
+  align-items: center;
+  text-align: center;
+  background: radial-gradient(ellipse at center, #1a1020 0%, var(--bg) 70%);
+  overflow: hidden;
+}
+#hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(212,160,23,0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(192,120,48,0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+.hero-ep {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+.hero-title {
+  font-size: clamp(56px, 12vw, 120px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #f0d060, #d4a017, #c07830);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+.hero-subtitle {
+  font-family: var(--sans);
+  font-size: clamp(13px, 2vw, 17px);
+  color: var(--text-dim);
+  max-width: 600px;
+  line-height: 1.7;
+  margin-bottom: 56px;
+}
+.hero-quote {
+  max-width: 680px;
+  font-size: clamp(16px, 2.5vw, 22px);
+  color: var(--text);
+  line-height: 1.9;
+  position: relative;
+  padding: 32px 40px;
+  border-left: 3px solid var(--gold);
+  text-align: left;
+  background: rgba(212,160,23,0.04);
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.hero-quote:hover { background: rgba(212,160,23,0.08); }
+.hero-quote.highlighted { background: rgba(212,160,23,0.15); }
+.hero-quote::before {
+  content: '"';
+  position: absolute;
+  top: -10px; left: 20px;
+  font-size: 80px;
+  color: var(--gold);
+  opacity: 0.3;
+  line-height: 1;
+}
+.scroll-hint {
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 2px;
+  animation: bounce 2s infinite;
+}
+.scroll-arrow {
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+/* ===== AUTHOR ===== */
+#author { background: var(--bg2); }
+.section-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.section-title {
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+.section-sub {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--text-dim);
+  margin-bottom: 48px;
+}
+.author-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  max-width: 900px;
+}
+.author-card {
+  background: var(--bg3);
+  border: 1px solid rgba(212,160,23,0.15);
+  border-radius: var(--radius);
+  padding: 32px;
+}
+.author-card h3 {
+  font-size: 20px;
+  color: var(--gold);
+  margin-bottom: 12px;
+  font-family: var(--sans);
+}
+.author-card p {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+.timeline {
+  max-width: 700px;
+  position: relative;
+  padding-left: 32px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 32px;
+  font-family: var(--sans);
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -28px; top: 6px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212,160,23,0.2);
+}
+.timeline-year {
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+.timeline-text {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+/* ===== RESISTANCE NATURE ===== */
+#resistance-nature { background: var(--bg); }
+.big-quote {
+  font-size: clamp(20px, 3.5vw, 36px);
+  line-height: 1.8;
+  max-width: 800px;
+  position: relative;
+  padding: 40px;
+  background: linear-gradient(135deg, rgba(212,160,23,0.06), rgba(192,120,48,0.02));
+  border-radius: var(--radius);
+  border: 1px solid rgba(212,160,23,0.12);
+  margin-bottom: 48px;
+  cursor: pointer;
+  transition: border-color 0.3s, background 0.3s;
+}
+.big-quote:hover { border-color: rgba(212,160,23,0.3); background: rgba(212,160,23,0.08); }
+.big-quote.highlighted { border-color: var(--gold); background: rgba(212,160,23,0.12); }
+.highlight-text { color: var(--gold-light); font-style: italic; }
+
+/* Slope visualization */
+.slope-viz {
+  width: 100%;
+  max-width: 500px;
+  height: 200px;
+  position: relative;
+  margin: 32px 0;
+}
+.slope-viz svg { width: 100%; height: 100%; }
+
+/* Feature cards */
+.feature-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 960px;
+  margin-top: 40px;
+}
+.feature-card {
+  background: var(--bg3);
+  border: 1px solid rgba(212,160,23,0.1);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.feature-card:hover {
+  border-color: rgba(212,160,23,0.35);
+  transform: translateY(-4px);
+}
+.feature-icon {
+  font-size: 32px;
+  margin-bottom: 16px;
+  display: block;
+}
+.feature-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 8px;
+  font-family: var(--sans);
+}
+.feature-desc {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+.feature-quote {
+  font-size: 13px;
+  color: var(--text-dim);
+  border-left: 2px solid var(--gold);
+  padding-left: 12px;
+  font-style: italic;
+  line-height: 1.7;
+}
+
+/* ===== ALLIES ===== */
+#allies { background: var(--bg2); }
+.ally-quote-big {
+  font-size: clamp(22px, 4vw, 42px);
+  line-height: 1.7;
+  font-weight: 700;
+  max-width: 800px;
+  color: var(--text);
+  margin-bottom: 48px;
+}
+.ally-quote-big em {
+  color: var(--gold);
+  font-style: normal;
+}
+.story-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 900px;
+}
+.story-card {
+  background: var(--bg3);
+  border-radius: var(--radius);
+  padding: 28px;
+  border-left: 3px solid var(--amber);
+}
+.story-card .narrator {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--amber);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.story-card p {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+
+/* ===== SYMPTOMS ===== */
+#symptoms { background: var(--bg); }
+#symptoms2 { background: var(--bg2); }
+.symptoms-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 900px;
+  margin-top: 40px;
+}
+.symptom-card {
+  background: var(--bg3);
+  border-radius: var(--radius);
+  padding: 24px;
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: border-color 0.3s, transform 0.3s;
+  cursor: default;
+}
+.symptom-card:hover {
+  border-color: rgba(212,160,23,0.25);
+  transform: translateY(-2px);
+}
+.symptom-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.symptom-icon { font-size: 24px; }
+.symptom-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gold);
+  font-family: var(--sans);
+}
+.symptom-desc {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+.symptom-quote {
+  font-size: 12px;
+  color: var(--gold);
+  border-left: 2px solid var(--gold);
+  padding-left: 10px;
+  font-style: italic;
+  line-height: 1.6;
+}
+.highlight-card {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba(212,160,23,0.08), rgba(192,120,48,0.04));
+  border-color: rgba(212,160,23,0.25);
+  padding: 32px;
+}
+.highlight-card .story-title {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--amber);
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+.highlight-card .story-text {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.8;
+}
+
+/* ===== PROFESSIONAL ===== */
+#professional { background: var(--bg); }
+.vs-table {
+  width: 100%;
+  max-width: 800px;
+  border-collapse: collapse;
+  margin: 40px 0;
+  font-family: var(--sans);
+}
+.vs-table th {
+  padding: 16px 24px;
+  text-align: left;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.vs-table th:first-child { color: var(--text-muted); }
+.vs-table th:last-child { color: var(--gold); }
+.vs-table td {
+  padding: 14px 24px;
+  font-size: 14px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  line-height: 1.6;
+  vertical-align: top;
+}
+.vs-table td:first-child { color: var(--text-muted); }
+.vs-table td:last-child { color: var(--text); }
+.vs-table tr:hover td { background: rgba(212,160,23,0.04); }
+
+.action-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 700px;
+  margin-bottom: 48px;
+}
+.action-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 16px 20px;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.6;
+}
+.action-num {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--bg);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.mega-quote {
+  font-size: clamp(20px, 3.5vw, 36px);
+  line-height: 1.7;
+  max-width: 800px;
+  font-weight: 700;
+  color: var(--text);
+  padding: 48px 0;
+  border-top: 1px solid rgba(212,160,23,0.2);
+}
+.mega-quote span { color: var(--gold); }
+
+/* ===== FEAR ===== */
+#fear-success {
+  background: radial-gradient(ellipse at center, #180a0a 0%, var(--bg) 70%);
+  align-items: center;
+  text-align: center;
+}
+.fear-quote {
+  font-size: clamp(20px, 3.5vw, 36px);
+  line-height: 1.9;
+  max-width: 800px;
+  padding: 60px 40px;
+  background: rgba(192,64,64,0.06);
+  border: 1px solid rgba(192,64,64,0.15);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-bottom: 40px;
+}
+.fear-quote:hover, .fear-quote.highlighted { background: rgba(192,64,64,0.1); border-color: rgba(192,64,64,0.3); }
+.fear-quote em { color: #e88080; font-style: normal; }
+
+.compensation-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 800px;
+}
+.comp-card {
+  background: var(--bg3);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  border: 1px solid rgba(192,64,64,0.12);
+}
+.comp-icon { font-size: 32px; margin-bottom: 12px; }
+.comp-title {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: #e88080;
+  margin-bottom: 8px;
+}
+.comp-desc {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+/* ===== QUIZ ===== */
+#quiz { background: var(--bg2); }
+.quiz-container {
+  max-width: 700px;
+  width: 100%;
+}
+.quiz-intro {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--text-dim);
+  margin-bottom: 40px;
+  line-height: 1.8;
+}
+.quiz-question {
+  margin-bottom: 32px;
+}
+.quiz-q-text {
+  font-size: 16px;
+  margin-bottom: 16px;
+  line-height: 1.7;
+  font-family: var(--sans);
+}
+.quiz-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.quiz-opt {
+  padding: 8px 18px;
+  border: 1px solid rgba(212,160,23,0.25);
+  border-radius: 100px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  user-select: none;
+}
+.quiz-opt:hover { border-color: var(--gold); color: var(--gold); }
+.quiz-opt.selected { background: var(--gold); border-color: var(--gold); color: var(--bg); font-weight: 600; }
+
+.quiz-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 4px;
+  background: linear-gradient(to right, #d4a017 0%, #d4a017 33%, #5a5248 33%, #5a5248 100%);
+  border-radius: 2px;
+  outline: none;
+}
+.quiz-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+  box-shadow: 0 0 0 4px rgba(212,160,23,0.2);
+}
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+.quiz-btn {
+  margin-top: 32px;
+  padding: 14px 40px;
+  background: var(--gold);
+  color: var(--bg);
+  border: none;
+  border-radius: 100px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.quiz-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,160,23,0.3); }
+
+.quiz-result {
+  display: none;
+  margin-top: 40px;
+  padding: 32px;
+  background: linear-gradient(135deg, rgba(212,160,23,0.08), rgba(192,120,48,0.04));
+  border: 1px solid rgba(212,160,23,0.25);
+  border-radius: var(--radius);
+}
+.quiz-result-level {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--gold);
+  margin-bottom: 8px;
+  font-family: var(--sans);
+}
+.quiz-result-desc {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.8;
+}
+
+/* ===== ENDING ===== */
+#ending { background: var(--bg); }
+.book-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 800px;
+  margin-bottom: 64px;
+}
+.book-card {
+  background: var(--bg3);
+  border-radius: var(--radius);
+  padding: 28px;
+  border: 1px solid rgba(212,160,23,0.12);
+  transition: border-color 0.3s;
+}
+.book-card:hover { border-color: rgba(212,160,23,0.35); }
+.book-tag {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.book-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.book-author {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+.book-quote {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  border-left: 2px solid var(--amber);
+  padding-left: 12px;
+  font-style: italic;
+}
+.podcast-card {
+  max-width: 600px;
+  background: linear-gradient(135deg, rgba(212,160,23,0.08), rgba(192,120,48,0.04));
+  border: 1px solid rgba(212,160,23,0.2);
+  border-radius: var(--radius);
+  padding: 36px;
+  margin-bottom: 64px;
+  text-align: center;
+}
+.podcast-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.podcast-hosts {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+.podcast-slogan {
+  font-size: 18px;
+  color: var(--text);
+  font-style: italic;
+}
+.final-slogan {
+  font-size: clamp(32px, 7vw, 72px);
+  font-weight: 900;
+  text-align: center;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.3;
+  max-width: 700px;
+  text-align: center;
+}
+
+/* Clickable quotes */
+.clickable-quote {
+  cursor: pointer;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+.clickable-quote::after {
+  content: ' 点击收藏';
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-muted);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.clickable-quote:hover::after { opacity: 1; }
+.clickable-quote.highlighted::after {
+  content: ' ✓ 已收藏';
+  color: var(--gold);
+  opacity: 1;
+}
+
+/* Saved quotes panel */
+#saved-panel {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  background: var(--bg3);
+  border: 1px solid rgba(212,160,23,0.3);
+  border-radius: var(--radius);
+  padding: 20px;
+  max-width: 320px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 900;
+  display: none;
+  font-family: var(--sans);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+}
+#saved-panel h4 { color: var(--gold); font-size: 13px; margin-bottom: 12px; letter-spacing: 2px; }
+.saved-quote-item { font-size: 12px; color: var(--text-dim); line-height: 1.7; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+#saved-toggle {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--bg);
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 901;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(212,160,23,0.4);
+  transition: transform 0.2s;
+}
+#saved-toggle:hover { transform: scale(1.1); }
+#saved-count {
+  position: absolute;
+  top: -4px; right: -4px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--danger);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Divider */
+.section-divider {
+  width: 60px; height: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin: 24px 0 48px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  section { padding: 60px 5vw; }
+  .feature-cards, .story-cards, .book-cards, .compensation-grid { grid-template-columns: 1fr; }
+  .symptoms-grid { grid-template-columns: 1fr; }
+  .author-grid { grid-template-columns: 1fr; }
+  #dot-nav { display: none; }
+  .highlight-card { grid-column: 1; }
+  .vs-table { font-size: 12px; }
+  .vs-table td, .vs-table th { padding: 10px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<nav id="dot-nav">
+  <div class="dot-nav-item active" data-section="hero" data-label="开场"></div>
+  <div class="dot-nav-item" data-section="author" data-label="作者"></div>
+  <div class="dot-nav-item" data-section="resistance-nature" data-label="内阻力"></div>
+  <div class="dot-nav-item" data-section="allies" data-label="盟友"></div>
+  <div class="dot-nav-item" data-section="symptoms" data-label="症状上"></div>
+  <div class="dot-nav-item" data-section="symptoms2" data-label="症状下"></div>
+  <div class="dot-nav-item" data-section="professional" data-label="职业选手"></div>
+  <div class="dot-nav-item" data-section="fear-success" data-label="最深恐惧"></div>
+  <div class="dot-nav-item" data-section="quiz" data-label="自测"></div>
+  <div class="dot-nav-item" data-section="ending" data-label="结尾"></div>
+</nav>
+
+<!-- SAVED QUOTES BUTTON -->
+<button id="saved-toggle" title="查看已收藏">★<span id="saved-count">0</span></button>
+<div id="saved-panel">
+  <h4>⭐ 我的金句收藏</h4>
+  <div id="saved-list"></div>
+</div>
+
+<!-- ===== 1. HERO ===== -->
+<section id="hero">
+  <div class="hero-ep reveal">EP.59 · 一生之敌</div>
+  <h1 class="hero-title reveal reveal-delay-1">一生之敌</h1>
+  <p class="hero-subtitle reveal reveal-delay-2">
+    没有天赋、不谈热爱<br>凡人的突围只有与自我的持久厮杀<br>
+    <span style="color:var(--text-muted);font-size:12px;">维亚 × 股心 · 进步是一件性感的事</span>
+  </p>
+  <blockquote class="hero-quote reveal reveal-delay-3 clickable-quote" data-quote="我们中的大多数人都有两个人生——我们正在活的，和从来没有活过的。那两个人生之间，就是内阻力">
+    我们中的大多数人都有两个人生——<br>
+    我们<span class="highlight-text">正在活的</span>，和<span class="highlight-text">从来没有活过的</span>。<br>
+    那两个人生之间，就是内阻力。
+  </blockquote>
+  <div class="scroll-hint reveal reveal-delay-4">
+    <span>向下探索</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ===== 2. AUTHOR ===== -->
+<section id="author">
+  <div class="section-label reveal">作者生平</div>
+  <h2 class="section-title reveal">Steven Pressfield</h2>
+  <p class="section-sub reveal">史蒂文·普雷斯菲尔德｜《一生之敌》（The War of Art）</p>
+  <div class="section-divider reveal"></div>
+
+  <div class="author-grid reveal">
+    <div class="author-card">
+      <h3>简介</h3>
+      <p>1943年生。杜克大学毕业后服役海军陆战队，此后数十年辗转于各种职业之间——广告、卡车司机、学校教师——却始终在写。</p>
+      <p style="margin-top:12px;color:var(--gold);font-size:16px;font-weight:700;">52 岁</p>
+      <p>才出版了让他一鸣惊人的第一本书</p>
+    </div>
+    <div class="author-card">
+      <h3>关于这本书</h3>
+      <p>《一生之敌》言简意赅，只讲一件事：内阻力（Resistance）。</p>
+      <p style="margin-top:10px;">书评：<em style="color:var(--text);">将个人对抗拖延与自我怀疑的血泪，炼成普世方法论。</em></p>
+      <p style="margin-top:10px;color:var(--text-muted);font-size:13px;">结构：什么是内阻力 → 它有哪些症状 → 怎么克服</p>
+    </div>
+  </div>
+
+  <div class="timeline reveal" style="margin-top:48px;">
+    <div class="timeline-item">
+      <div class="timeline-year">1943</div>
+      <div class="timeline-text">生于美国，后就读杜克大学</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">毕业后</div>
+      <div class="timeline-text">服役美国海军陆战队，培养了极度自律的执行力</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">数十年间</div>
+      <div class="timeline-text">辗转广告人、卡车司机、学校老师等职业，坚持写作，几乎所有稿子都被退稿或自行销毁</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">52 岁</div>
+      <div class="timeline-text">出版《Legend of Bagger Vance》，一鸣惊人</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">此后</div>
+      <div class="timeline-text">写出《一生之敌》，成为无数创作者的圣经级读本</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 3. RESISTANCE NATURE ===== -->
+<section id="resistance-nature">
+  <div class="section-label reveal">什么是内阻力</div>
+  <h2 class="section-title reveal">Resistance</h2>
+  <div class="section-divider reveal"></div>
+
+  <blockquote class="big-quote reveal clickable-quote" data-quote="有一个秘密，真正的作家知道，想成为作家的人不知道：不是写作，而是坐下来开始写">
+    有一个秘密，<br>
+    <span class="highlight-text">真正的作家知道</span>，想成为作家的人不知道。<br>
+    这个秘密不是写作，<br>
+    而是<span class="highlight-text">坐下来开始写</span>。
+  </blockquote>
+
+  <!-- CSS slope visualization -->
+  <div class="slope-viz reveal" style="margin-bottom:24px;">
+    <svg viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="pathGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#d4a017" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#d4a017" stop-opacity="0.8"/>
+        </linearGradient>
+      </defs>
+      <!-- Slope path -->
+      <path d="M 50 170 L 400 50" stroke="url(#pathGrad)" stroke-width="3" fill="none" stroke-dasharray="6,3"/>
+      <!-- Arrow indicating uphill -->
+      <polygon points="400,50 388,58 394,45" fill="#d4a017"/>
+      <!-- Person icon (simple) -->
+      <circle cx="140" cy="128" r="8" fill="#d4a017" opacity="0.8"/>
+      <line x1="140" y1="136" x2="140" y2="155" stroke="#d4a017" stroke-width="2" opacity="0.8"/>
+      <!-- Resistance arrow (opposing) -->
+      <line x1="165" y1="122" x2="115" y2="145" stroke="#c04040" stroke-width="2.5"/>
+      <polygon points="115,145 127,140 120,152" fill="#c04040"/>
+      <!-- Label -->
+      <text x="180" y="118" fill="#c04040" font-family="system-ui,sans-serif" font-size="13">内阻力</text>
+      <text x="350" y="42" fill="#d4a017" font-family="system-ui,sans-serif" font-size="13">进步方向</text>
+      <!-- Ground (level area) -->
+      <path d="M 50 170 L 50 180 L 430 180" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none"/>
+      <text x="60" y="175" fill="rgba(255,255,255,0.2)" font-family="system-ui,sans-serif" font-size="11">顺势而为时感受不到阻力</text>
+    </svg>
+  </div>
+  <p class="reveal" style="font-family:var(--sans);font-size:13px;color:var(--text-muted);margin-bottom:40px;">
+    ↑ 内阻力是重力——只有往上坡走时才感受到它
+  </p>
+
+  <div class="feature-cards">
+    <div class="feature-card reveal">
+      <span class="feature-icon">↑</span>
+      <div class="feature-name">单向性</div>
+      <div class="feature-desc">内阻力只在往上坡走时出现。顺势下坡、及时行乐时，感受不到任何阻力。</div>
+      <div class="feature-quote">
+        维亚：像静摩擦力，开始前最大；股心：像滑动摩擦力，一旦开始就小了
+      </div>
+    </div>
+    <div class="feature-card reveal reveal-delay-1">
+      <span class="feature-icon">😱</span>
+      <div class="feature-name">恐惧是它的食粮</div>
+      <div class="feature-desc">内阻力本身没有力量，我们的每一次恐惧都在喂养它。长期停留在恐惧中，就是在续命。</div>
+      <div class="feature-quote clickable-quote" data-quote="恐惧是内阻力的食粮——你每一次害怕，都在壮大它">
+        恐惧是内阻力的食粮——你每一次害怕，都在壮大它
+      </div>
+    </div>
+    <div class="feature-card reveal reveal-delay-2">
+      <span class="feature-icon">🏁</span>
+      <div class="feature-name">终点前最强大</div>
+      <div class="feature-desc">越接近完成，内阻力越大。很多人不是不敢开始，而是永远不敢完成，因为完成意味着被评判。</div>
+      <div class="feature-quote clickable-quote" data-quote="完成是需要勇气的——最后那1%需要的勇气，可能与之前80%的权重完全不一样">
+        完成是需要勇气的——最后那1%需要的勇气，可能与之前80%的权重完全不一样
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4. ALLIES ===== -->
+<section id="allies">
+  <div class="section-label reveal">内阻力招募盟友</div>
+  <h2 class="section-title reveal">你身边的人，也可能成为你的阻力</h2>
+  <div class="section-divider reveal"></div>
+
+  <div class="ally-quote-big reveal clickable-quote" data-quote="每个人都会尽力确保自己和亲朋好友困在同一个坑里">
+    每个人都会<em>尽力确保</em><br>
+    自己和亲朋好友<em>困在同一个坑里</em>
+  </div>
+
+  <div class="story-cards reveal">
+    <div class="story-card">
+      <div class="narrator">维亚</div>
+      <p>大家一起嚷嚷要减肥，形成了一种默契——谁都不真的去减。突然有一个人真的自律了，其他人就会感到很不舒服。</p>
+    </div>
+    <div class="story-card">
+      <div class="narrator">股心 引用《乡下人的悲歌》</div>
+      <p>美国铁锈带的人互相拽着对方沉在泥潭——既然都万劫不复了，你就不要突围。</p>
+    </div>
+  </div>
+
+  <div style="margin-top:40px;max-width:700px;" class="reveal">
+    <div style="font-family:var(--sans);font-size:14px;color:var(--gold);letter-spacing:0.05em;padding:16px 20px;background:rgba(212,160,23,0.06);border-radius:8px;margin-bottom:24px;">
+      ✦ 你的成功会成为对他们的责备
+    </div>
+    <blockquote class="big-quote clickable-quote" data-quote="如果你是一个觉醒的人，那你必须是无情的。一旦突破了内阻力的重围，你就不能再回头" style="font-size:clamp(16px,2.5vw,22px);margin-bottom:0;">
+      如果你是一个觉醒的人，那你必须是<span class="highlight-text">无情的</span>。<br>
+      一旦突破了内阻力的重围，你就不能再回头。<br>
+      <span style="font-size:13px;color:var(--text-muted);">如果他真的是你的朋友，你能为他做的最好的事，就是继续朝前走。</span>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ===== 5. SYMPTOMS PART 1 ===== -->
+<section id="symptoms">
+  <div class="section-label reveal">内阻力的症状（上）</div>
+  <h2 class="section-title reveal">当内阻力出现，它的面具</h2>
+  <div class="section-divider reveal"></div>
+
+  <div class="symptoms-grid">
+    <div class="symptom-card reveal">
+      <div class="symptom-header">
+        <span class="symptom-icon">⏰</span>
+        <div class="symptom-name">拖延</div>
+      </div>
+      <div class="symptom-desc">内阻力最常见也最容易被合理化的症状。"我明天再开始"——拖成了习惯，就是失去。</div>
+      <div class="symptom-quote clickable-quote" data-quote="你说我不运动，这话割自己都过不去。但你说我明天再开始——拖延就是内阻力最容易被合理化的症状">
+        "明天再开始"是内阻力最温柔的谎言
+      </div>
+    </div>
+
+    <div class="symptom-card reveal reveal-delay-1">
+      <div class="symptom-header">
+        <span class="symptom-icon">📱</span>
+        <div class="symptom-name">沉迷</div>
+      </div>
+      <div class="symptom-desc">转而沉迷于某种及时有力的东西——食物、追星、刷手机。判断是真爱好还是逃避，看事后是否空虚。</div>
+      <div class="symptom-quote">
+        警惕：跑步、健身、阅读这些"好事"，也可能是在逃避真实生活
+      </div>
+    </div>
+
+    <div class="symptom-card highlight-card reveal reveal-delay-2">
+      <div class="story-title">🏃 真实故事 · 沉迷的陷阱</div>
+      <div class="story-text">
+        维亚有个跑步极度自律的朋友，永远不请假、不找借口。但另一个朋友揭露了真相：他工作无比懒散、借钱不还、对老婆孩子极不负责。<br><br>
+        <span style="color:var(--gold);">他用跑步的沉迷，来逃避真正的生活责任。</span>
+      </div>
+    </div>
+
+    <div class="symptom-card reveal">
+      <div class="symptom-header">
+        <span class="symptom-icon">🌀</span>
+        <div class="symptom-name">制造麻烦</div>
+      </div>
+      <div class="symptom-desc">让自己陷入麻烦，是吸引注意力的廉价方式。麻烦创造一种虚假的重要感。</div>
+      <div class="symptom-quote clickable-quote" data-quote="麻烦是一种虚假的名声">
+        麻烦是一种虚假的名声
+      </div>
+    </div>
+
+    <div class="symptom-card reveal reveal-delay-1">
+      <div class="symptom-header">
+        <span class="symptom-icon">🤒</span>
+        <div class="symptom-name">生病（躯体化恐惧）</div>
+      </div>
+      <div class="symptom-desc">每次大事前生病，是身体在帮你找借口。维亚有个精英跑者朋友，比赛前必定生病，一次没有例外。</div>
+      <div class="symptom-quote">
+        恐惧转化为身体症状——不是意志力薄弱，而是内阻力最狡猾的伪装
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 6. SYMPTOMS PART 2 ===== -->
+<section id="symptoms2">
+  <div class="section-label reveal">内阻力的症状（下）</div>
+  <h2 class="section-title reveal">更隐蔽的伪装</h2>
+  <div class="section-divider reveal"></div>
+
+  <div class="symptoms-grid">
+    <div class="symptom-card reveal">
+      <div class="symptom-header">
+        <span class="symptom-icon">⚔️</span>
+        <div class="symptom-name">对他人残忍</div>
+      </div>
+      <div class="symptom-desc">我吃了苦，你也得吃苦——否则我无法面对自己。越野跑老手带新手刻意走最难的路，因为"我从难路走来"。</div>
+      <div class="symptom-quote clickable-quote" data-quote="对他人残忍是内阻力的表现形式；甘愿忍受他人的残忍，也是">
+        对他人残忍是内阻力的表现形式；甘愿忍受他人的残忍，也是
+      </div>
+    </div>
+
+    <div class="symptom-card reveal reveal-delay-1">
+      <div class="symptom-header">
+        <span class="symptom-icon">🎭</span>
+        <div class="symptom-name">受害者情节</div>
+      </div>
+      <div class="symptom-desc">受害者花费大量心血培养自己的病症，从而规避从事真正的工作。将自己塑造成受害者，和投入工作是对立的。</div>
+      <div class="symptom-quote clickable-quote" data-quote="受害者花费大量的心血来培养他的病症，从而规避从事真正的工作">
+        受害者花费大量的心血来培养他的病症，从而规避从事真正的工作
+      </div>
+    </div>
+
+    <div class="symptom-card reveal">
+      <div class="symptom-header">
+        <span class="symptom-icon">🗣️</span>
+        <div class="symptom-name">批评他人</div>
+      </div>
+      <div class="symptom-desc">当你发现自己热衷于批评别人，可能是内阻力在作祟——他人的成功让你开始"发疯"。</div>
+      <div class="symptom-quote clickable-quote" data-quote="恶意的批评不是在批评你，是在批评一个他讨厌的自己">
+        恶意的批评不是在批评你，是在批评一个他讨厌的自己
+      </div>
+    </div>
+
+    <div class="symptom-card reveal reveal-delay-1">
+      <div class="symptom-header">
+        <span class="symptom-icon">🔍</span>
+        <div class="symptom-name">自我怀疑</div>
+      </div>
+      <div class="symptom-desc">自我怀疑不是敌人，而是罗盘。越自我怀疑，越说明这件事对你重要——它应该通向肯定而非否定。</div>
+      <div class="symptom-quote clickable-quote" data-quote="冒牌者总是极度自信，而真正的创新者却心虚得要命">
+        冒牌者总是极度自信，而真正的创新者却心虚得要命
+      </div>
+    </div>
+
+    <div class="symptom-card reveal">
+      <div class="symptom-header">
+        <span class="symptom-icon">🧭</span>
+        <div class="symptom-name">恐惧</div>
+      </div>
+      <div class="symptom-desc">恐惧是信息，是探测针。哪里让你感到恐惧，哪里就是你真正在意、应该前进的方向。</div>
+      <div class="symptom-quote clickable-quote" data-quote="恐惧和自我怀疑就像探测针：哪里让你感到恐惧，哪里就是你应该走的方向">
+        哪里让你感到恐惧，哪里就是你应该走的方向
+      </div>
+    </div>
+
+    <div class="symptom-card reveal reveal-delay-1">
+      <div class="symptom-header">
+        <span class="symptom-icon">⏳</span>
+        <div class="symptom-name">等待治愈</div>
+      </div>
+      <div class="symptom-desc">等待那个"完美的开始时机"。但运动员知道，永远不会有那么一天你醒来没有疼痛。</div>
+      <div class="symptom-quote clickable-quote" data-quote="如果你没有被你的梦想震慑，说明你的梦做得不够大">
+        如果你没有被你的梦想震慑，说明你的梦做得不够大
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7. PROFESSIONAL ===== -->
+<section id="professional">
+  <div class="section-label reveal">如何克服内阻力</div>
+  <h2 class="section-title reveal">职业选手思维</h2>
+  <div class="section-divider reveal"></div>
+
+  <table class="vs-table reveal">
+    <thead>
+      <tr>
+        <th>业余爱好者</th>
+        <th>职业选手</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>等待灵感降临</td><td>每天准时出摊，灵感是习惯的产物</td></tr>
+      <tr><td>心情好才干活</td><td>无论天气心情，都要完成当天的工作</td></tr>
+      <tr><td>把工作当成自我认同的全部</td><td>工作中的你不等于全部的你</td></tr>
+      <tr><td>谈论热爱，谈论天赋</td><td>只管做手头的事</td></tr>
+      <tr><td>追求艺术，害怕不完美</td><td>先打磨手艺，艺术在长期练习中涌现</td></tr>
+      <tr><td>永远在准备中</td><td>完成比完美更重要</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label reveal" style="margin-top:16px;">关键行动项</div>
+  <div class="action-items reveal">
+    <div class="action-item"><div class="action-num">1</div>把需要克服内阻力的事，当成上班——准时出摊，无论感受</div>
+    <div class="action-item"><div class="action-num">2</div>策略性轻视：把飘渺的大目标拆解成每天可执行的小动作，让大脑觉得"没啥大不了"</div>
+    <div class="action-item"><div class="action-num">3</div>去神秘化：毛姆说"我知道我的灵感会在每天早上9点准时到来"——因为他每天9点准时写</div>
+    <div class="action-item"><div class="action-num">4</div>先说手艺，别说艺术。手艺配的动词是"练"，艺术在长期重复中自然涌现</div>
+    <div class="action-item"><div class="action-num">5</div>接受审美与创作之间的鸿沟——你知道好作品是什么样，但你的输出还达不到。能接受鸿沟，才能进步</div>
+  </div>
+
+  <div class="mega-quote reveal clickable-quote" data-quote="职业选手不谈论灵感与天赋，他只管做他的工作">
+    <span>职业选手不谈论灵感与天赋，</span><br>他只管做他的工作。
+  </div>
+
+  <div class="mega-quote reveal clickable-quote" data-quote="创作不是天才的特权，而是凡人与自我厮杀的战场" style="border-top:none;padding-top:0;font-size:clamp(18px,3vw,30px);">
+    <span>创作不是天才的特权，</span><br>而是凡人与自我厮杀的战场。
+  </div>
+</section>
+
+<!-- ===== 8. FEAR OF SUCCESS ===== -->
+<section id="fear-success">
+  <div class="section-label reveal" style="text-align:center;">最深的恐惧</div>
+  <h2 class="section-title reveal" style="text-align:center;font-size:clamp(28px,5vw,52px);">不是失败，而是成功</h2>
+  <div class="section-divider reveal" style="margin:24px auto 48px;background:linear-gradient(90deg,transparent,var(--gold),transparent);width:120px;"></div>
+
+  <blockquote class="fear-quote reveal clickable-quote" data-quote="我们最大的恐惧不是失败，而是害怕我们会成功——害怕发现自己比自己以为的更强大">
+    我们认为我们害怕贫穷、无力还债、死亡。<br>
+    但其实，我们<em>最大的恐惧</em>是害怕我们会成功。<br><br>
+    <em>害怕发现我们比自己以为的更强大，</em><br>
+    害怕我们真的拥有天赋。
+  </blockquote>
+
+  <p class="reveal" style="font-family:var(--sans);font-size:15px;color:var(--text-dim);max-width:640px;text-align:center;margin-bottom:40px;line-height:1.9;">
+    因为如果这一切成真，我们就会远离我们熟悉的一切，穿过那层膜，变成一个<em style="color:#e88080;">怪物</em>
+  </p>
+
+  <div class="compensation-grid reveal">
+    <div class="comp-card">
+      <div class="comp-icon">🏆</div>
+      <div class="comp-title">崇拜运动员</div>
+      <div class="comp-desc">基普乔格吃了我们吃不了的苦，所以我们让他成神——他替我们实现了我们逃避的那份执行力</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-icon">💑</div>
+      <div class="comp-title">伴侣代偿</div>
+      <div class="comp-desc">把力量投射给配偶，让他/她代替自己实现梦想。内心向往运动员，却找运动员男友来代偿</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-icon">💰</div>
+      <div class="comp-title">投资代偿</div>
+      <div class="comp-desc">投资人偏爱"苦哈哈"的创业者，因为他们把苦难授权给创业者，在精神上代偿了自己没有创业的遗憾</div>
+    </div>
+  </div>
+
+  <blockquote class="big-quote reveal clickable-quote" data-quote="只要每天都坐下来磨，神秘的事情就会开始发生，齿轮就会开始转动，看不见的力量会加入我们" style="margin-top:48px;max-width:700px;text-align:center;border-left:none;background:none;border:none;font-size:clamp(16px,2.5vw,22px);">
+    只要每天都坐下来磨，<br>
+    神秘的事情就会开始发生，<br>
+    齿轮就会开始转动，<br>
+    <span class="highlight-text">看不见的力量会加入我们</span>。
+  </blockquote>
+</section>
+
+<!-- ===== 9. QUIZ ===== -->
+<section id="quiz">
+  <div class="section-label reveal">互动自测</div>
+  <h2 class="section-title reveal">你的内阻力水平？</h2>
+  <div class="section-divider reveal"></div>
+
+  <div class="quiz-container reveal">
+    <p class="quiz-intro">诚实地回答下面几个问题，看看内阻力在你生命中的存在感有多强（不评判，纯好奇）</p>
+
+    <div id="quiz-form">
+      <div class="quiz-question">
+        <div class="quiz-q-text">1. 你有多少个"明天就开始"的计划？</div>
+        <div class="quiz-options">
+          <div class="quiz-opt" data-q="1" data-v="0">0个，我都做了</div>
+          <div class="quiz-opt" data-q="1" data-v="1">1-2个</div>
+          <div class="quiz-opt" data-q="1" data-v="2">3-5个</div>
+          <div class="quiz-opt" data-q="1" data-v="3">太多了数不清</div>
+        </div>
+      </div>
+
+      <div class="quiz-question">
+        <div class="quiz-q-text">2. 当你接近完成一件重要的事，你通常会……</div>
+        <div class="quiz-options">
+          <div class="quiz-opt" data-q="2" data-v="0">冲刺完成它</div>
+          <div class="quiz-opt" data-q="2" data-v="1">拖慢节奏</div>
+          <div class="quiz-opt" data-q="2" data-v="2">找借口暂停</div>
+          <div class="quiz-opt" data-q="2" data-v="3">永远差那么一步</div>
+        </div>
+      </div>
+
+      <div class="quiz-question">
+        <div class="quiz-q-text">3. 身边有人进步时，你的第一反应是？</div>
+        <div class="quiz-options">
+          <div class="quiz-opt" data-q="3" data-v="0">真心为他开心并受激励</div>
+          <div class="quiz-opt" data-q="3" data-v="1">开心但略感焦虑</div>
+          <div class="quiz-opt" data-q="3" data-v="2">有点不舒服</div>
+          <div class="quiz-opt" data-q="3" data-v="3">开始挑他的毛病</div>
+        </div>
+      </div>
+
+      <div class="quiz-question">
+        <div class="quiz-q-text">4. 你对"灵感"的依赖程度？</div>
+        <input type="range" class="quiz-slider" min="0" max="3" value="1" id="slider-inspiration">
+        <div class="slider-labels">
+          <span>从不等灵感</span>
+          <span>偶尔</span>
+          <span>经常等</span>
+          <span>没灵感就不干</span>
+        </div>
+      </div>
+
+      <div class="quiz-question">
+        <div class="quiz-q-text">5. 当你害怕一件事时，你倾向于？</div>
+        <div class="quiz-options">
+          <div class="quiz-opt" data-q="5" data-v="0">把恐惧当信号，冲过去</div>
+          <div class="quiz-opt" data-q="5" data-v="1">鼓励自己试试</div>
+          <div class="quiz-opt" data-q="5" data-v="2">想很久但还是不做</div>
+          <div class="quiz-opt" data-q="5" data-v="3">合理化回避理由</div>
+        </div>
+      </div>
+
+      <button class="quiz-btn" id="quiz-submit">查看我的内阻力报告 →</button>
+    </div>
+
+    <div class="quiz-result" id="quiz-result">
+      <div class="quiz-result-level" id="result-level"></div>
+      <div class="quiz-result-desc" id="result-desc"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 10. ENDING ===== -->
+<section id="ending">
+  <div class="section-label reveal">延伸阅读</div>
+  <h2 class="section-title reveal">书单推荐</h2>
+  <div class="section-divider reveal"></div>
+
+  <div class="book-cards">
+    <div class="book-card reveal">
+      <div class="book-tag">本期主书</div>
+      <div class="book-title">《一生之敌》<br>The War of Art</div>
+      <div class="book-author">Steven Pressfield · 2002</div>
+      <div class="book-quote clickable-quote" data-quote="创作不是天才的特权，而是凡人与自我厮杀的战场">
+        "创作不是天才的特权，而是凡人与自我厮杀的战场"
+      </div>
+    </div>
+
+    <div class="book-card reveal reveal-delay-1">
+      <div class="book-tag">延伸推荐 · 股心</div>
+      <div class="book-title">《On Writing》<br>谈写作</div>
+      <div class="book-author">Stephen King · 斯蒂芬·金</div>
+      <div class="book-quote clickable-quote" data-quote="通往地狱的路是副词铺就的（Stephen King）">
+        "通往地狱的路是副词铺就的"<br>
+        "创作就像发掘恐龙化石——故事早就存在了，我们只需要把它挖掘出来"
+      </div>
+    </div>
+
+    <div class="book-card reveal reveal-delay-2">
+      <div class="book-tag">延伸推荐 · 维亚</div>
+      <div class="book-title">《52种出门行走的方式》</div>
+      <div class="book-author">英国女作家</div>
+      <div class="book-quote">行走作为一种创作方式——关于身体与意识的延伸</div>
+    </div>
+
+    <div class="book-card reveal reveal-delay-3">
+      <div class="book-tag">人文延伸</div>
+      <div class="book-title">《乡下人的悲歌》</div>
+      <div class="book-author">J.D. Vance</div>
+      <div class="book-quote">关于阶层固化与内阻力的社会形态——当整个社群都在互相拽着沉下去</div>
+    </div>
+  </div>
+
+  <div class="podcast-card reveal">
+    <div class="podcast-name">进步是一件性感的事</div>
+    <div class="podcast-hosts">维亚（孕中，4月8日临近预产期）× 股心（写作者）</div>
+    <div class="podcast-slogan" style="margin-bottom:16px;">EP.59 · 一生之敌</div>
+    <div style="font-family:var(--sans);font-size:13px;color:var(--text-muted);">
+      维亚预告：孙维一即将于4月8日上午11点出生，播客将暂停更新 🌟
+    </div>
+  </div>
+
+  <div class="final-slogan reveal">
+    进步<br>是一件<br>性感的事
+  </div>
+
+  <div class="reveal" style="margin-top:48px;text-align:center;">
+    <blockquote class="big-quote clickable-quote" data-quote="如果不遵从自己，才是真正字面意义上的一生之敌；可孩子又是你这一生从此以后最迷人的羁绊与牵挂" style="text-align:left;max-width:600px;margin:0 auto;font-size:clamp(14px,2vw,18px);">
+      如果不遵从自己，才是真正字面意义上的一生之敌；<br>可孩子又是你这一生从此以后最迷人的羁绊与牵挂。<br>
+      <span style="font-size:12px;color:var(--text-muted);">—— 股心</span>
+    </blockquote>
+  </div>
+
+  <div style="height:80px;"></div>
+</section>
+
+<script>
+// === Progress bar ===
+const progressBar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.width = (scrollTop / docHeight * 100) + '%';
+});
+
+// === Intersection Observer for reveal animations ===
+const reveals = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+reveals.forEach(el => revealObs.observe(el));
+
+// === Dot navigation ===
+const sections = document.querySelectorAll('section[id]');
+const dots = document.querySelectorAll('.dot-nav-item');
+
+const sectionObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      dots.forEach(d => d.classList.toggle('active', d.dataset.section === id));
+    }
+  });
+}, { threshold: 0.4 });
+sections.forEach(s => sectionObs.observe(s));
+
+dots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    const target = document.getElementById(dot.dataset.section);
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// === Clickable quotes (save/highlight) ===
+const savedQuotes = [];
+const savedList = document.getElementById('saved-list');
+const savedToggle = document.getElementById('saved-toggle');
+const savedPanel = document.getElementById('saved-panel');
+const savedCount = document.getElementById('saved-count');
+let panelOpen = false;
+
+document.querySelectorAll('.clickable-quote').forEach(el => {
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const quote = this.dataset.quote || this.textContent.trim().slice(0, 60);
+    if (this.classList.contains('highlighted')) {
+      this.classList.remove('highlighted');
+      const idx = savedQuotes.indexOf(quote);
+      if (idx > -1) savedQuotes.splice(idx, 1);
+    } else {
+      this.classList.add('highlighted');
+      if (!savedQuotes.includes(quote)) savedQuotes.push(quote);
+    }
+    updateSavedPanel();
+  });
+});
+
+function updateSavedPanel() {
+  savedCount.textContent = savedQuotes.length;
+  savedList.innerHTML = savedQuotes.map(q => `<div class="saved-quote-item">${q}</div>`).join('');
+  if (savedQuotes.length > 0) {
+    savedToggle.style.display = 'flex';
+  } else {
+    savedToggle.style.display = 'none';
+    savedPanel.style.display = 'none';
+    panelOpen = false;
+  }
+}
+
+savedToggle.addEventListener('click', () => {
+  panelOpen = !panelOpen;
+  savedPanel.style.display = panelOpen ? 'block' : 'none';
+  // position panel above button
+  if (panelOpen) {
+    savedPanel.style.bottom = '80px';
+    savedPanel.style.right = '24px';
+  }
+});
+
+document.addEventListener('click', (e) => {
+  if (!savedPanel.contains(e.target) && e.target !== savedToggle) {
+    savedPanel.style.display = 'none';
+    panelOpen = false;
+  }
+});
+
+// === Quiz ===
+const quizAnswers = {};
+document.querySelectorAll('.quiz-opt').forEach(opt => {
+  opt.addEventListener('click', function() {
+    const q = this.dataset.q;
+    document.querySelectorAll(`[data-q="${q}"]`).forEach(o => o.classList.remove('selected'));
+    this.classList.add('selected');
+    quizAnswers[q] = parseInt(this.dataset.v);
+  });
+});
+
+document.getElementById('quiz-submit').addEventListener('click', () => {
+  const required = ['1','2','3','5'];
+  const missing = required.filter(q => !Object.prototype.hasOwnProperty.call(quizAnswers, q));
+  if (missing.length > 0) {
+    const btn = document.getElementById('quiz-submit');
+    btn.textContent = '请先回答所有问题 ✗';
+    btn.style.background = '#c04040';
+    setTimeout(() => { btn.textContent = '查看我的内阻力报告 →'; btn.style.background = ''; }, 2000);
+    return;
+  }
+
+  const sliderVal = parseInt(document.getElementById('slider-inspiration').value);
+  quizAnswers['4'] = sliderVal;
+
+  let total = 0;
+  let count = 0;
+  for (const v of Object.values(quizAnswers)) {
+    total += v;
+    count++;
+  }
+
+  const avgScore = count > 0 ? total / count : 0;
+  const resultEl = document.getElementById('quiz-result');
+  const levelEl = document.getElementById('result-level');
+  const descEl = document.getElementById('result-desc');
+
+  let level, desc;
+  if (avgScore < 0.8) {
+    level = '🏆 职业选手级';
+    desc = '你对内阻力有高度的觉察，并且已经建立了克服它的习惯。继续保持——职业选手的本质是持续出摊，而不是偶尔爆发。';
+  } else if (avgScore < 1.5) {
+    level = '✨ 觉醒中的业余选手';
+    desc = '你已经开始意识到内阻力的存在，这是最关键的一步。试试把你最想做的那件事，安排在明天的固定时间——就当上班，不管感受。';
+  } else if (avgScore < 2.2) {
+    level = '😅 内阻力的常客';
+    desc = '内阻力在你生活中很活跃。它最喜欢的伪装之一是"等时机成熟"。今天选一件小事，花10分钟开始——不是完成，只是开始。';
+  } else {
+    level = '🔥 内阻力重度患者（但这很正常）';
+    desc = '内阻力在你这里过得很滋润。但记住：你越害怕一件事，说明那件事对你越重要。Pressfield写了99%的稿子都被扔掉——但他坚持坐下来写了52年。';
+  }
+
+  levelEl.textContent = level;
+  descEl.textContent = desc;
+  resultEl.style.display = 'block';
+  resultEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+
+// === Slider gradient update ===
+const slider = document.getElementById('slider-inspiration');
+slider.addEventListener('input', function() {
+  const pct = (this.value / 3) * 100;
+  this.style.background = `linear-gradient(to right, #d4a017 0%, #d4a017 ${pct}%, #5a5248 ${pct}%, #5a5248 100%)`;
+});
+</script>
+</body>
+</html>

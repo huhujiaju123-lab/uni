@@ -1,0 +1,75 @@
+<view class="section-card" wx:if="{{section}}">
+  <!-- 章节头 -->
+  <view class="section-header" bindtap="toggleExpand">
+    <view class="section-number">{{timeLabel}}</view>
+    <view class="section-title-wrap">
+      <view class="section-title">{{section.title}}</view>
+      <view class="section-subtitle" wx:if="{{section.subtitle}}">{{section.subtitle}}</view>
+    </view>
+    <text class="section-arrow {{expanded ? 'expanded' : ''}}">›</text>
+  </view>
+
+  <!-- 展开内容 -->
+  <view class="section-body" wx:if="{{expanded}}">
+    <!-- 核心金句 -->
+    <view class="section-quote" wx:if="{{section.quotes[0]}}">
+      <quote-card
+        quote="{{section.quotes[0]}}"
+        index="{{sectionIndex * 100}}"
+        isFavorite="{{favorites[sectionIndex * 100]}}"
+        bind:toggleFavorite="onTapQuote"
+      />
+    </view>
+
+    <!-- 分组要点 -->
+    <view class="key-points" wx:if="{{section.key_points_grouped}}">
+      <view
+        class="point-group"
+        wx:for="{{section.key_points_grouped}}"
+        wx:key="group_title"
+      >
+        <view class="group-title" wx:if="{{item.group_title}}">{{item.group_title}}</view>
+        <view class="point-item" wx:for="{{item.points}}" wx:for-item="point" wx:key="*this">
+          <text class="point-bullet">·</text>
+          <text class="point-text">{{point}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 简单要点（无分组时） -->
+    <view class="key-points" wx:elif="{{section.key_points.length > 0}}">
+      <view class="point-item" wx:for="{{section.key_points}}" wx:key="*this">
+        <text class="point-bullet">·</text>
+        <text class="point-text">{{item}}</text>
+      </view>
+    </view>
+
+    <!-- 内联图表 -->
+    <diagram
+      data="{{section.diagram}}"
+      wx:if="{{section.diagram}}"
+    />
+
+    <!-- 故事/案例 -->
+    <view class="stories" wx:if="{{section.stories.length > 0}}">
+      <view class="story-item" wx:for="{{section.stories}}" wx:key="index">
+        <view class="story-icon">📖</view>
+        <view class="story-content">
+          <view class="story-text">{{item.text || item}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 更多金句 -->
+    <view wx:if="{{section.quotes.length > 1}}">
+      <view wx:for="{{section.quotes}}" wx:key="*this" wx:if="{{index > 0}}">
+        <quote-card
+          quote="{{item}}"
+          index="{{sectionIndex * 100 + index}}"
+          isFavorite="{{favorites[sectionIndex * 100 + index]}}"
+          bind:toggleFavorite="onTapQuote"
+        />
+      </view>
+    </view>
+  </view>
+</view>

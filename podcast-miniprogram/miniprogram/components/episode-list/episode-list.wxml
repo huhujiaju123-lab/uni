@@ -1,0 +1,15 @@
+<view class="ep-list">
+  <view
+    class="ep-item"
+    wx:for="{{episodes}}"
+    wx:key="_id"
+    data-id="{{item._id}}"
+    bindtap="onTap"
+  >
+    <image class="ep-cover" src="{{item.meta.cover_url}}" mode="aspectFill" lazy-load />
+    <view class="ep-info">
+      <text class="ep-podcast">{{item.meta.podcast_name}}</text>
+      <text class="ep-title">{{item.meta.title}}</text>
+    </view>
+  </view>
+</view>

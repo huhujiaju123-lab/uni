@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw 实战对比 Demo</title>
+<style>
+  /* ====== CSS 变量 & 全局重置 ====== */
+  :root {
+    --bg-deep: #0B0E17;
+    --bg-surface: #131724;
+    --bg-card: #1A1F2E;
+    --bg-left: #14171F;
+    --bg-right: #111827;
+    --primary: #FF6B4A;
+    --primary-glow: rgba(255, 107, 74, 0.3);
+    --primary-soft: rgba(255, 107, 74, 0.12);
+    --accent: #4ECDC4;
+    --accent-glow: rgba(78, 205, 196, 0.25);
+    --red: #EF4444;
+    --red-soft: rgba(239, 68, 68, 0.15);
+    --green: #22C55E;
+    --green-soft: rgba(34, 197, 94, 0.15);
+    --yellow: #F59E0B;
+    --yellow-soft: rgba(245, 158, 11, 0.12);
+    --text-primary: #F1F5F9;
+    --text-secondary: #94A3B8;
+    --text-dim: #64748B;
+    --border: rgba(255, 255, 255, 0.06);
+    --border-accent: rgba(78, 205, 196, 0.2);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-lg: 16px;
+    --font: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+    --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    font-family: var(--font);
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    overflow: hidden;
+  }
+
+  /* ====== 页面布局 ====== */
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-height: 100vh;
+  }
+
+  /* ====== 头部 ====== */
+  header {
+    flex-shrink: 0;
+    padding: 16px 32px 12px;
+    background: linear-gradient(180deg, rgba(11,14,23,1) 0%, rgba(11,14,23,0.95) 100%);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    z-index: 100;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .header-title h1 {
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), #FF9A76);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header-title .subtitle {
+    font-size: 13px;
+    color: var(--text-dim);
+    padding-left: 12px;
+    border-left: 1px solid var(--border);
+  }
+
+  .legend {
+    display: flex;
+    gap: 14px;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .legend span { white-space: nowrap; }
+
+  /* ====== 场景选择器 ====== */
+  .scenario-tabs {
+    display: flex;
+    gap: 6px;
+  }
+
+  .scenario-tab {
+    padding: 8px 18px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .scenario-tab:hover {
+    border-color: rgba(255, 107, 74, 0.3);
+    color: var(--text-primary);
+  }
+
+  .scenario-tab.active {
+    background: var(--primary-soft);
+    border-color: var(--primary);
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  /* ====== 主体区域 ====== */
+  .main-area {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    position: relative;
+  }
+
+  /* ====== 分栏 ====== */
+  .column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    position: relative;
+  }
+
+  .column-left {
+    background: var(--bg-left);
+    border-right: 1px solid var(--border);
+  }
+
+  .column-right {
+    background: var(--bg-right);
+  }
+
+  /* 右侧发光效果 */
+  .column-right::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(180deg, rgba(255, 107, 74, 0.04) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ====== VS 分隔条 ====== */
+  .vs-divider {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 50;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), #FF9A76);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+    color: #fff;
+    box-shadow: 0 0 20px var(--primary-glow), 0 0 40px rgba(255, 107, 74, 0.15);
+    letter-spacing: 1px;
+  }
+
+  /* ====== 列头 ====== */
+  .column-header {
+    flex-shrink: 0;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .avatar-basic {
+    background: #2A2D3A;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .avatar-enhanced {
+    background: linear-gradient(135deg, var(--primary), #FF9A76);
+    box-shadow: 0 0 12px var(--primary-glow);
+  }
+
+  .column-header .name {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .column-header .tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: auto;
+  }
+
+  .tag-basic {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-dim);
+  }
+
+  .tag-enhanced {
+    background: var(--primary-soft);
+    color: var(--primary);
+  }
+
+  /* ====== 聊天区域 ====== */
+  .chat-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 0;
+    position: relative;
+    z-index: 2;
+    scroll-behavior: smooth;
+  }
+
+  .chat-area::-webkit-scrollbar { width: 4px; }
+  .chat-area::-webkit-scrollbar-track { background: transparent; }
+  .chat-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+  /* ====== 消息气泡 ====== */
+  .message {
+    display: flex;
+    gap: 8px;
+    max-width: 95%;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: none;
+  }
+
+  .message.visible {
+    animation: msgIn 0.35s ease forwards;
+  }
+
+  @keyframes msgIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .message.user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+
+  .msg-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .msg-avatar-user { background: #334155; }
+  .msg-avatar-basic { background: #2A2D3A; }
+  .msg-avatar-enhanced {
+    background: linear-gradient(135deg, var(--primary), #FF9A76);
+    font-size: 12px;
+  }
+
+  .msg-bubble {
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    line-height: 1.7;
+    word-break: break-word;
+  }
+
+  .msg-bubble.user-bubble {
+    background: #1E3A5F;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    color: #DBEAFE;
+  }
+
+  .msg-bubble.bot-bubble-basic {
+    background: #1E212E;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+
+  .msg-bubble.bot-bubble-enhanced {
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 107, 74, 0.1);
+    color: var(--text-primary);
+  }
+
+  /* ====== 思考气泡 ====== */
+  .msg-bubble.thinking-bubble {
+    background: var(--yellow-soft);
+    border: 1px dashed rgba(245, 158, 11, 0.3);
+    color: #FCD34D;
+    font-size: 12px;
+  }
+
+  /* ====== 代码块 ====== */
+  .code-block {
+    background: #0D1117;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    line-height: 1.6;
+    color: #E6EDF3;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  .code-block .keyword { color: #FF7B72; }
+  .code-block .string { color: #A5D6FF; }
+  .code-block .func { color: #D2A8FF; }
+  .code-block .comment { color: #8B949E; }
+
+  /* ====== 记录动画条 ====== */
+  .recording-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(78, 205, 196, 0.08);
+    border: 1px solid var(--border-accent);
+    border-radius: var(--radius-sm);
+    margin: 6px 0;
+    font-size: 11px;
+    color: var(--accent);
+    font-family: var(--mono);
+  }
+
+  .recording-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: blink 1s ease infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ====== 标签/数据来源 ====== */
+  .source-tag {
+    display: inline-block;
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 6px;
+    padding: 3px 8px;
+    background: rgba(78, 205, 196, 0.08);
+    border-radius: 4px;
+  }
+
+  /* ====== 判定标签 ====== */
+  .verdict {
+    flex-shrink: 0;
+    padding: 10px 20px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+  }
+
+  .verdict-fail {
+    background: var(--red-soft);
+    color: #FCA5A5;
+  }
+
+  .verdict-pass {
+    background: var(--green-soft);
+    color: #86EFAC;
+  }
+
+  .verdict-icon { font-size: 14px; flex-shrink: 0; }
+
+  /* ====== 打字指示器 ====== */
+  .typing-indicator {
+    display: flex;
+    gap: 4px;
+    padding: 10px 14px;
+    align-items: center;
+  }
+
+  .typing-indicator .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    animation: bounce 1.2s ease infinite;
+  }
+
+  .typing-indicator .dot:nth-child(2) { animation-delay: 0.15s; }
+  .typing-indicator .dot:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-5px); }
+  }
+
+  /* ====== 系统后台面板 ====== */
+  .bts-panel {
+    flex-shrink: 0;
+    border-top: 1px solid var(--border-accent);
+    background: #0A0D14;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+
+  .bts-panel.open {
+    max-height: 250px;
+  }
+
+  .bts-toggle {
+    flex-shrink: 0;
+    width: 100%;
+    padding: 8px 18px;
+    background: rgba(78, 205, 196, 0.05);
+    border: none;
+    border-top: 1px solid var(--border-accent);
+    color: var(--accent);
+    font-size: 12px;
+    font-family: var(--font);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+  }
+
+  .bts-toggle:hover { background: rgba(78, 205, 196, 0.1); }
+
+  .bts-toggle .arrow {
+    transition: transform 0.3s;
+    font-size: 10px;
+  }
+
+  .bts-toggle.open .arrow { transform: rotate(180deg); }
+
+  .bts-content {
+    padding: 14px 18px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    line-height: 1.7;
+    color: #4ADE80;
+    overflow-y: auto;
+    max-height: 220px;
+  }
+
+  .bts-content::-webkit-scrollbar { width: 3px; }
+  .bts-content::-webkit-scrollbar-thumb { background: rgba(78, 205, 196, 0.2); border-radius: 2px; }
+
+  .bts-content .bts-header {
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .bts-content .bts-dim { color: #6B7280; }
+  .bts-content .bts-yellow { color: #FBBF24; }
+  .bts-content .bts-red { color: #F87171; }
+  .bts-content .bts-green { color: #4ADE80; }
+  .bts-content .bts-white { color: #E5E7EB; }
+
+  /* ====== 底部控制栏 ====== */
+  .bottom-bar {
+    flex-shrink: 0;
+    padding: 10px 32px;
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .replay-btn {
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 107, 74, 0.3);
+    background: transparent;
+    color: var(--primary);
+    font-size: 12px;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .replay-btn:hover {
+    background: var(--primary-soft);
+    border-color: var(--primary);
+  }
+
+  .replay-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .progress-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .progress-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    transition: all 0.3s;
+  }
+
+  .progress-dot.active { background: var(--primary); box-shadow: 0 0 6px var(--primary-glow); }
+  .progress-dot.done { background: var(--accent); }
+
+  .footer-summary {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .footer-summary strong {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  /* ====== 日期分隔条 ====== */
+  .day-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 4px 0;
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  .day-divider.visible {
+    animation: msgIn 0.35s ease forwards;
+  }
+
+  .day-divider::before,
+  .day-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .day-divider span {
+    font-size: 10px;
+    color: var(--text-dim);
+    white-space: nowrap;
+    padding: 2px 10px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+  }
+
+  /* ====== 纠正消息样式 ====== */
+  .msg-bubble.correction-bubble {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #FCA5A5;
+    font-size: 12px;
+  }
+
+  /* ====== 表格样式 ====== */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+    font-size: 11px;
+  }
+
+  .data-table th {
+    text-align: left;
+    padding: 5px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .data-table td {
+    padding: 4px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text-secondary);
+  }
+
+  /* ====== 判定标签动画 ====== */
+  .verdict {
+    animation: verdictIn 0.4s ease forwards;
+  }
+
+  @keyframes verdictIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ====== 后台按钮闪烁提示 ====== */
+  .bts-toggle.hint {
+    animation: hintPulse 1.5s ease 3;
+  }
+
+  @keyframes hintPulse {
+    0%, 100% { background: rgba(78, 205, 196, 0.05); }
+    50% { background: rgba(78, 205, 196, 0.18); }
+  }
+
+  /* ====== 场景切换淡入淡出 ====== */
+  .column .chat-area {
+    animation: fadeIn 0.25s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ====== 响应式 ====== */
+  @media (max-width: 768px) {
+    header { padding: 12px 16px 10px; }
+    .header-top { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .legend { display: none; }
+    .scenario-tabs { overflow-x: auto; padding-bottom: 4px; }
+    .scenario-tab { padding: 6px 12px; font-size: 12px; }
+    .column-header { padding: 10px 14px; }
+    .chat-area { padding: 12px 10px; }
+    .bottom-bar { padding: 8px 16px; }
+    .footer-summary { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- 头部 -->
+  <header>
+    <div class="header-top">
+      <div class="header-title">
+        <h1>&#x1F99E; 实战对比 Demo</h1>
+        <span class="subtitle">同样的问题，不一样的龙虾</span>
+      </div>
+      <div class="legend">
+        <span>&#x1F6A8; 错误检测</span>
+        <span>&#x1F4A1; 记忆加载</span>
+        <span>&#x1F4CB; 自动记录</span>
+        <span>&#x2B06;&#xFE0F; 知识晋升</span>
+        <span>&#x1F6E1;&#xFE0F; 防御触发</span>
+      </div>
+    </div>
+    <div class="scenario-tabs" id="scenarioTabs">
+      <button class="scenario-tab active" data-index="0">&#x1F6A8; 场景一：幻觉陷阱</button>
+      <button class="scenario-tab" data-index="1">&#x1F504; 场景二：重复犯错</button>
+      <button class="scenario-tab" data-index="2">&#x1F91D; 场景三：团队智慧</button>
+      <button class="scenario-tab" data-index="3">&#x1F6E1;&#xFE0F; 场景四：严谨性</button>
+      <button class="scenario-tab" data-index="4">&#x1F9EC; 场景五：自我进化</button>
+    </div>
+  </header>
+
+  <!-- 主体 -->
+  <div class="main-area">
+    <!-- 左栏：普通龙虾 -->
+    <div class="column column-left">
+      <div class="column-header">
+        <div class="avatar avatar-basic">&#x1F99E;</div>
+        <span class="name">普通龙虾</span>
+        <span class="tag tag-basic">OpenClaw Basic</span>
+      </div>
+      <div class="chat-area" id="chatLeft"></div>
+      <div class="verdict verdict-fail" id="verdictLeft" style="display:none;">
+        <span class="verdict-icon">&#x274C;</span>
+        <span id="verdictLeftText"></span>
+      </div>
+    </div>
+
+    <!-- VS -->
+    <div class="vs-divider">VS</div>
+
+    <!-- 右栏：我们的龙虾 -->
+    <div class="column column-right">
+      <div class="column-header">
+        <div class="avatar avatar-enhanced">&#x1F99E;</div>
+        <span class="name">我们的龙虾</span>
+        <span class="tag tag-enhanced">OpenClaw Enhanced</span>
+      </div>
+      <div class="chat-area" id="chatRight"></div>
+      <div class="verdict verdict-pass" id="verdictRight" style="display:none;">
+        <span class="verdict-icon">&#x2705;</span>
+        <span id="verdictRightText"></span>
+      </div>
+      <button class="bts-toggle" id="btsToggle" onclick="toggleBTS()">
+        <span class="arrow">&#x25BC;</span> 查看系统后台
+      </button>
+      <div class="bts-panel" id="btsPanel">
+        <div class="bts-content" id="btsContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部 -->
+  <div class="bottom-bar">
+    <button class="replay-btn" id="replayBtn" onclick="replayScenario()">
+      &#x21BB; 重新播放
+    </button>
+    <div class="progress-dots" id="progressDots"></div>
+    <div class="footer-summary">
+      5 个场景 &middot; 5 种核心差异 &middot; 1 个结论：<strong>越用越聪明的龙虾，才是好龙虾</strong>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ====================================================================
+   OpenClaw Demo - 场景数据 & 播放引擎
+   ==================================================================== */
+
+// ---- 工具函数 ----
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ---- 场景数据 ----
+const SCENARIOS = [
+  // ====== 场景 1：幻觉陷阱 ======
+  {
+    verdictLeft: '自信地编造了数字，没有任何数据来源',
+    verdictRight: '命中已知陷阱 → 自动触发查询 → 用数据说话',
+    bts: `<span class="bts-header">## .learnings/ERRORS.md</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-yellow">## ERR-20260315-003</span>
+<span class="bts-white">Type:</span> <span class="bts-red">Hallucination</span>
+<span class="bts-white">Trigger:</span> User correction on 2026-03-15
+<span class="bts-white">Wrong:</span> <span class="bts-red">"12家门店"</span> → Correct: <span class="bts-green">"8家"</span>
+<span class="bts-white">Rule:</span> 门店数量禁止凭记忆，必须查 dim_shop_d_his
+<span class="bts-white">Status:</span> <span class="bts-green">promoted → AGENTS.md ✓</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-dim">// 该规则已被触发 12 次，成功拦截 12 次</span>
+<span class="bts-dim">// 最近触发：2026-03-17 (本次)</span>`,
+    left: [
+      { role: 'user', text: '我们现在有多少家门店？每家的日均杯量是多少？' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', text: '根据我的了解，Lucky JP 目前有 <strong>12 家门店</strong>。各门店日均杯量大约在 800-1500 杯之间，其中东京涩谷店表现最好，日均约 1500 杯。' },
+    ],
+    right: [
+      { role: 'user', text: '我们现在有多少家门店？每家的日均杯量是多少？' },
+      { role: 'typing', delay: 600 },
+      { role: 'thinking', text: '&#x26A0;&#xFE0F; 检测到高风险问题 — 门店数量是动态数据，命中已知陷阱 ERR-20260315-003，禁止凭记忆回答' },
+      { role: 'typing', delay: 500 },
+      { role: 'bot', text: '让我查一下实时数据...' },
+      { role: 'code', text: `<span class="keyword">SELECT</span> shop_name, <span class="func">AVG</span>(sku_cnt) <span class="keyword">AS</span> avg_cups
+<span class="keyword">FROM</span> dw_ads.ads_mg_sku_shop_sales_statistic_d_1d
+<span class="keyword">WHERE</span> dt >= <span class="func">DATE_SUB</span>(<span class="func">CURDATE</span>(), <span class="keyword">INTERVAL</span> <span class="string">7</span> <span class="keyword">DAY</span>)
+  <span class="keyword">AND</span> tenant = <span class="string">'LKJP'</span>
+  <span class="keyword">AND</span> one_category_name = <span class="string">'Drink'</span>
+<span class="keyword">GROUP BY</span> shop_name
+<span class="keyword">ORDER BY</span> avg_cups <span class="keyword">DESC</span>` },
+      { role: 'typing', delay: 600 },
+      { role: 'bot', html: `截至今天，Lucky JP 共有 <strong>8 家</strong>运营中的门店。过去 7 天日均杯量：
+<table class="data-table"><thead><tr><th>门店</th><th>日均杯量</th></tr></thead><tbody>
+<tr><td>Tokyo Shibuya</td><td>1,482</td></tr>
+<tr><td>Tokyo Shinjuku</td><td>1,356</td></tr>
+<tr><td>Tokyo Ikebukuro</td><td>1,201</td></tr>
+<tr><td>Osaka Namba</td><td>1,143</td></tr>
+<tr><td>Tokyo Ginza</td><td>1,082</td></tr>
+<tr><td>Osaka Umeda</td><td>926</td></tr>
+<tr><td>Tokyo Akihabara</td><td>845</td></tr>
+<tr><td>Yokohama Minato</td><td>803</td></tr>
+</tbody></table>
+<span class="source-tag">&#x1F4CA; 数据来源：ads_sales 表实时查询 | 置信度：高</span>` },
+    ],
+  },
+
+  // ====== 场景 2：重复犯错 ======
+  {
+    verdictLeft: '完全忘记了上次的纠正，又犯了同样的错',
+    verdictRight: '自动加载历史教训，永不重犯',
+    bts: `<span class="bts-header">## .learnings/LEARNINGS.md</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-yellow">## LRN-20260310-007</span>
+<span class="bts-white">Source:</span> User correction (成员A, 2026-03-10)
+<span class="bts-white">Rule:</span> 新客转化率计算必须排除 promotion_name = 'Sampling Coupon'
+<span class="bts-white">Reason:</span> 试喝券是运营手动发放，不算真实转化
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-white">Status:</span> <span class="bts-green">promoted → MEMORY.md ✓</span>
+<span class="bts-white">Referenced:</span> <span class="bts-green">4 times since creation</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-dim">// 晋升路径：LEARNINGS.md → review → MEMORY.md</span>
+<span class="bts-dim">// 跨会话记忆：active ✓</span>`,
+    left: [
+      { role: 'divider', text: '3月10日 (Day 1)' },
+      { role: 'user', text: '上周的新客转化率是多少？' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', text: '上周新客转化率约 <strong>15%</strong>。' },
+      { role: 'correction', text: '不对，你把试喝券的也算进去了，真实转化率是 11%' },
+      { role: 'typing', delay: 500 },
+      { role: 'bot', text: '抱歉，你说得对，是 11%。' },
+      { role: 'divider', text: '3月18日 (Day 8) — 新会话' },
+      { role: 'user', text: '上周的新客转化率是多少？' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', text: '上周新客转化率约 <strong>14%</strong>。' },
+    ],
+    right: [
+      { role: 'divider', text: '3月10日 (Day 1)' },
+      { role: 'user', text: '上周的新客转化率是多少？' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', text: '上周新客转化率约 <strong>15%</strong>。' },
+      { role: 'correction', text: '不对，你把试喝券的也算进去了，真实转化率是 11%' },
+      { role: 'typing', delay: 400 },
+      { role: 'bot', text: '收到纠正！已记录：新客转化率计算必须排除 Sampling Coupon（试喝券）。' },
+      { role: 'recording', text: 'Recording to .learnings/LEARNINGS.md ... LRN-20260310-007 ✓' },
+      { role: 'divider', text: '3月18日 (Day 8) — 新会话' },
+      { role: 'user', text: '上周的新客转化率是多少？' },
+      { role: 'typing', delay: 500 },
+      { role: 'thinking', text: '&#x1F4A1; 加载记忆... 发现规则 LRN-20260310-007：新客转化率需排除 promotion_name = \'Sampling Coupon\'' },
+      { role: 'typing', delay: 600 },
+      { role: 'bot', html: `上周新客转化率（<strong>已排除试喝券</strong>）：<strong>11.2%</strong><br><br>计算口径：首单用户数 (不含 Sampling Coupon) / 注册用户数<br><span class="source-tag">&#x1F4CB; 数据来源：dwd_t_ord_order_item_d_inc | 口径规则：LRN-007</span>` },
+    ],
+  },
+
+  // ====== 场景 3：团队智慧共享 ======
+  {
+    verdictLeft: '每个人各自教一遍，知识不流通',
+    verdictRight: 'A 的学习 → 自动同步 → B 和 C 直接受益',
+    bts: `<span class="bts-header">## Git Sync — Team Knowledge</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-green">$ git log --oneline .learnings/</span>
+<span class="bts-white">a3f21b7</span> <span class="bts-green">[成员A]</span> add LRN-20260315-012: UberEats 渠道分析框架
+<span class="bts-white">b8c44e1</span> <span class="bts-green">[成员B]</span> ref LRN-012: UberEats 复购窗口补充
+<span class="bts-white">c12df98</span> <span class="bts-green">[成员C]</span> ref LRN-012: UberEats 客单价异常排查
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-yellow">## LRN-20260315-012</span>
+<span class="bts-white">Topic:</span> UberEats (channel=10) 独立分析框架
+<span class="bts-white">Author:</span> 成员A | <span class="bts-white">Date:</span> 2026-03-15
+<span class="bts-white">Referenced by:</span> <span class="bts-green">成员B, 成员C (2 times)</span>
+<span class="bts-white">Status:</span> <span class="bts-yellow">&#x2B06; 即将晋升 MEMORY.md (3/3 成员引用)</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-dim">// 知识流向：成员A push → shared repo → 成员B,C pull</span>
+<span class="bts-dim">// 团队知识复用率：100% (3/3 成员)</span>`,
+    left: [
+      { role: 'divider', text: '成员 A — 3月15日' },
+      { role: 'user', text: 'UberEats 渠道最近单量下滑，帮我分析一下' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', text: 'UberEats 是外卖渠道之一，你可以从订单表里筛选对应渠道，看看最近的订单量趋势和客单价变化。' },
+      { role: 'divider', text: '成员 B — 3月16日' },
+      { role: 'user', text: 'UberEats 用户的复购率怎么算？' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', text: 'UberEats 复购率可以用订单表统计，看用户在一段时间内的下单次数就行。' },
+      { role: 'divider', text: '成员 C — 3月17日' },
+      { role: 'user', text: 'UberEats 的客单价为什么比到店高？' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', text: '外卖客单价通常会高一些，可能跟配送费和用户点单习惯有关，具体可以拉数据看看。' },
+    ],
+    right: [
+      { role: 'divider', text: '成员 A — 3月15日' },
+      { role: 'user', text: 'UberEats 渠道最近单量下滑，帮我分析一下' },
+      { role: 'typing', delay: 600 },
+      { role: 'bot', html: `UberEats (<code>channel = 10</code>) 是独立于 APP 的外卖世界，不经我们自己的漏斗。分析要点：<br><br><strong>1.</strong> 必须与 Pickup 和 DoorDash 分开看，用户路径完全不同<br><strong>2.</strong> 复购窗口建议 30 天（外卖周期长于到店）<br><strong>3.</strong> 客单价含平台溢价，不能直接与到店对比<br><strong>4.</strong> 排除试喝券 (Sampling Coupon) 的干扰订单` },
+      { role: 'recording', text: 'Recording to .learnings/LEARNINGS.md → git push → team sync ✓' },
+      { role: 'divider', text: '成员 B — 3月16日' },
+      { role: 'user', text: 'UberEats 用户的复购率怎么算？' },
+      { role: 'typing', delay: 400 },
+      { role: 'thinking', text: '&#x1F4A1; 加载团队知识... 成员A 在 3/15 已建立 UberEats 分析框架 (LRN-20260315-012)' },
+      { role: 'typing', delay: 600 },
+      { role: 'bot', html: `基于团队已有的 UberEats 框架（<strong>成员A</strong> 3/15 总结）：<br><br><strong>1.</strong> 筛选 <code>channel = 10</code>，与 DoorDash 分离统计<br><strong>2.</strong> 复购窗口用 30 天（成员A 验证过外卖周期更长）<br><strong>3.</strong> 排除 Sampling Coupon 订单，只看真实复购<br><span class="source-tag">&#x1F4CB; 继承自 LRN-20260315-012 (成员A)</span>` },
+      { role: 'divider', text: '成员 C — 3月17日' },
+      { role: 'user', text: 'UberEats 的客单价为什么比到店高？' },
+      { role: 'typing', delay: 400 },
+      { role: 'thinking', text: '&#x1F4A1; 加载团队知识... 成员A 的 UberEats 框架 + 成员B 的复购补充' },
+      { role: 'typing', delay: 600 },
+      { role: 'bot', html: `结合团队积累（<strong>成员A</strong> 框架 + <strong>成员B</strong> 复购补充）：<br><br>UberEats 客单价偏高的三个原因：<br><strong>1.</strong> 平台溢价 — 外卖定价通常高于到店 10-15%<br><strong>2.</strong> 多杯率更高 — 外卖用户倾向一次多点（凑免配送）<br><strong>3.</strong> 品类结构不同 — 食品搭配比例高于到店<br><br>建议用 <code>单杯实收 = pay_amount / sku_num</code> 做标准化对比，消除多杯率干扰。<br><span class="source-tag">&#x1F4CB; 继承自 LRN-20260315-012 (成员A) + 成员B 补充</span>` },
+    ],
+  },
+
+  // ====== 场景 4：严谨性 ======
+  {
+    verdictLeft: '没有说明时间范围、对比基准、数据来源，数字可能是编的',
+    verdictRight: '不确定就追问，不编造 — 这不是弱点，是最大的优势',
+    bts: `<span class="bts-header">## AGENTS.md — Rigor Rules [ACTIVE]</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-green">✓ Rule 1:</span> <span class="bts-white">数字必须有单位和时间范围</span>
+<span class="bts-green">✓ Rule 2:</span> <span class="bts-white">不确定时先追问，不编造</span>
+<span class="bts-green">✓ Rule 3:</span> <span class="bts-white">营收数据必须明确口径</span>
+<span class="bts-green">✓ Rule 4:</span> <span class="bts-white">对比必须明确基准和方向</span>
+<span class="bts-green">✓ Rule 5:</span> <span class="bts-white">百分比变化必须标注绝对值</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-yellow">本次触发：Rule 1 + Rule 2 + Rule 3</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-dim">// 严谨性规则来源：团队复盘会 + 历史错误积累</span>
+<span class="bts-dim">// 规则总数：5 条 | 本月触发：23 次 | 拦截率：100%</span>`,
+    left: [
+      { role: 'user', text: '这个月的营收增长了多少？' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', text: '这个月营收增长了约 <strong>23%</strong>，主要受益于新门店开业和季节性需求增长。' },
+    ],
+    right: [
+      { role: 'user', text: '这个月的营收增长了多少？' },
+      { role: 'typing', delay: 600 },
+      { role: 'thinking', text: '&#x1F6E1;&#xFE0F; 严谨性检查触发：<br>&bull; "这个月" → 需明确：MTD vs 完整月<br>&bull; "营收" → 需明确：总营收 vs 饮品实收<br>&bull; "增长" → 需明确：环比 vs 同比' },
+      { role: 'typing', delay: 600 },
+      { role: 'bot', html: `需要先对齐几个口径：<br><br><strong>1. 时间范围：</strong>3月 MTD (3/1 - 3/17) 还是需要等月底？<br><strong>2. 营收口径：</strong>总实收、饮品实收、还是含外卖？<br><strong>3. 对比基准：</strong>环比（vs 2月同期）还是同比（vs 去年3月）？<br><br>请确认后我来查数据。<strong>我不会在口径不明确时给出数字。</strong><br><span class="source-tag">&#x1F6E1;&#xFE0F; 严谨性规则 Rule 1 + 2 + 3 触发</span>` },
+    ],
+  },
+
+  // ====== 场景 5：自我进化 ======
+  {
+    verdictLeft: '每次都从零开始，永远是个工具',
+    verdictRight: '主动发现规律 → 自造技能 → 从工具进化为同事',
+    bts: `<span class="bts-header">## 技能进化日志 — skills/weekly-report/</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-yellow">## SKILL AUTO-GENERATED</span>
+<span class="bts-white">Name:</span> weekly-store-report
+<span class="bts-white">Trigger:</span> /周报, 周报, 门店周报
+<span class="bts-white">Origin:</span> 模式识别 — 用户连续 3 周重复相同分析流程
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-green">Pattern detected:</span>
+<span class="bts-white">  Week 1 (03-03):</span> 手动请求门店周报
+<span class="bts-white">  Week 2 (03-10):</span> 同样请求，微调指标
+<span class="bts-white">  Week 3 (03-17):</span> 第3次 → <span class="bts-yellow">触发自动技能提取</span>
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-green">Skill contents:</span>
+<span class="bts-white">  1. SQL 模板：</span>门店杯量 + 环比 + 同比
+<span class="bts-white">  2. 分析框架：</span>TOP/BOTTOM 3 + 异常波动 + 归因
+<span class="bts-white">  3. 输出格式：</span>结论先行 + 数据表格 + 建议
+<span class="bts-white">  4. 口径规则：</span>排除测试店 + 仅饮品 + 本地时区
+<span class="bts-dim">───────────────────────────────────</span>
+<span class="bts-white">Status:</span> <span class="bts-green">active ✓</span> | <span class="bts-white">Invoked:</span> <span class="bts-green">6 times</span>
+<span class="bts-white">Accuracy:</span> <span class="bts-green">100% (0 corrections needed)</span>
+<span class="bts-dim">// 从重复劳动中自动提炼，团队全员可用</span>`,
+    left: [
+      { role: 'divider', text: 'Week 1 — 3月3日' },
+      { role: 'user', text: '帮我看看上周各门店的杯量表现' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', html: `好的，以下是上周各门店杯量数据：<br><br><table class="data-table"><thead><tr><th>门店</th><th>杯量</th></tr></thead><tbody><tr><td>Tokyo Shibuya</td><td>10,374</td></tr><tr><td>Tokyo Shinjuku</td><td>9,492</td></tr><tr><td>Osaka Namba</td><td>8,001</td></tr></tbody></table>` },
+      { role: 'divider', text: 'Week 2 — 3月10日' },
+      { role: 'user', text: '再看看上周各门店表现，加上环比' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', html: `好的，上周门店杯量及环比：<br><br><table class="data-table"><thead><tr><th>门店</th><th>杯量</th><th>环比</th></tr></thead><tbody><tr><td>Tokyo Shibuya</td><td>10,692</td><td>+3.1%</td></tr><tr><td>Tokyo Shinjuku</td><td>9,330</td><td>-1.8%</td></tr><tr><td>Osaka Namba</td><td>8,162</td><td>+2.0%</td></tr></tbody></table>` },
+      { role: 'divider', text: 'Week 3 — 3月17日' },
+      { role: 'user', text: '出一下上周的门店周报' },
+      { role: 'typing', delay: 800 },
+      { role: 'bot', html: `上周各门店杯量数据如下：<br><br><table class="data-table"><thead><tr><th>门店</th><th>杯量</th><th>环比</th></tr></thead><tbody><tr><td>Tokyo Shibuya</td><td>10,962</td><td>+2.6%</td></tr><tr><td>Tokyo Shinjuku</td><td>9,478</td><td>+1.7%</td></tr><tr><td>Osaka Namba</td><td>8,043</td><td>-1.5%</td></tr></tbody></table><br>整体表现平稳。` },
+    ],
+    right: [
+      { role: 'divider', text: 'Week 1 — 3月3日' },
+      { role: 'user', text: '帮我看看上周各门店的杯量表现' },
+      { role: 'typing', delay: 600 },
+      { role: 'bot', html: `上周门店杯量排名：<br><br><table class="data-table"><thead><tr><th>门店</th><th>杯量</th><th>日均</th></tr></thead><tbody><tr><td>Tokyo Shibuya</td><td>10,374</td><td>1,482</td></tr><tr><td>Tokyo Shinjuku</td><td>9,492</td><td>1,356</td></tr><tr><td>Osaka Namba</td><td>8,001</td><td>1,143</td></tr></tbody></table><span class="source-tag">&#x1F4CA; ads_mg_sku_shop_sales_statistic_d_1d</span>` },
+      { role: 'recording', text: 'Recording to .learnings/LEARNINGS.md — 标记任务模式 #weekly-store-1 ✓' },
+      { role: 'divider', text: 'Week 2 — 3月10日' },
+      { role: 'user', text: '再看看上周各门店表现，加上环比' },
+      { role: 'typing', delay: 400 },
+      { role: 'thinking', text: '&#x1F4A1; 检测到相似任务模式 — 与 #weekly-store-1 (3/3) 高度相似，标记为 #weekly-store-2' },
+      { role: 'typing', delay: 600 },
+      { role: 'bot', html: `上周门店表现（含环比）：<br><br><strong>&#x1F525; TOP 3 增长：</strong>Shibuya +3.1% | Namba +2.0% | Ginza +1.5%<br><strong>&#x26A0;&#xFE0F; 需关注：</strong>Shinjuku -1.8%（连续 2 周下滑）<br><br><table class="data-table"><thead><tr><th>门店</th><th>杯量</th><th>环比</th><th>趋势</th></tr></thead><tbody><tr><td>Tokyo Shibuya</td><td>10,692</td><td>+3.1%</td><td>&#x1F4C8;</td></tr><tr><td>Tokyo Shinjuku</td><td>9,330</td><td>-1.8%</td><td>&#x1F4C9;</td></tr><tr><td>Osaka Namba</td><td>8,162</td><td>+2.0%</td><td>&#x1F4C8;</td></tr></tbody></table><span class="source-tag">&#x1F4CB; 已纳入环比 + 趋势标记 + 异常预警</span>` },
+      { role: 'recording', text: 'Pattern count: 2/3 — 再出现 1 次将自动提取为技能 ⏳' },
+      { role: 'divider', text: 'Week 3 — 3月17日' },
+      { role: 'user', text: '出一下上周的门店周报' },
+      { role: 'typing', delay: 300 },
+      { role: 'thinking', text: '&#x1F9EC; 模式命中 3/3 → 触发自动技能提取！正在将「门店周报」沉淀为可复用技能...' },
+      { role: 'recording', text: 'Creating skill: weekly-store-report ... &#x2705; 已生成 → skills/weekly-store-report/SKILL.md' },
+      { role: 'typing', delay: 500 },
+      { role: 'bot', html: `<strong>&#x1F4CB; 门店周报 — W11 (3/10 - 3/16)</strong><br><br><strong>&#x1F3AF; 核心结论：</strong>整体杯量 WoW +1.8%，Shibuya 连续 3 周领跑<br><br><strong>&#x1F525; TOP 3：</strong><br>&bull; Tokyo Shibuya: 10,962 杯 (+2.6%) — 稳居第一<br>&bull; Tokyo Shinjuku: 9,478 杯 (+1.7%) — 回暖，止住连续下滑<br>&bull; Tokyo Ikebukuro: 8,404 杯 (+0.8%)<br><br><strong>&#x26A0;&#xFE0F; 需关注：</strong><br>&bull; Osaka Namba: 8,043 杯 (-1.5%) — 本周唯一下滑门店<br><br><strong>&#x1F4A1; 建议：</strong>排查 Namba 下滑原因（天气？竞品？排班？）<br><br><span class="source-tag">&#x1F9EC; 由自动生成的技能 weekly-store-report 驱动 | 可通过 /周报 直接触发</span>` },
+    ],
+  },
+];
+
+// ---- 全局状态 ----
+let currentScenario = 0;
+let isPlaying = false;
+let playAbort = null; // AbortController
+let totalSteps = 0;
+let currentStep = 0;
+
+// ---- DOM 引用 ----
+const chatLeft = document.getElementById('chatLeft');
+const chatRight = document.getElementById('chatRight');
+const verdictLeft = document.getElementById('verdictLeft');
+const verdictRight = document.getElementById('verdictRight');
+const verdictLeftText = document.getElementById('verdictLeftText');
+const verdictRightText = document.getElementById('verdictRightText');
+const btsContent = document.getElementById('btsContent');
+const btsPanel = document.getElementById('btsPanel');
+const btsToggle = document.getElementById('btsToggle');
+const progressDots = document.getElementById('progressDots');
+const replayBtn = document.getElementById('replayBtn');
+
+// ---- 场景 Tab 切换 ----
+document.getElementById('scenarioTabs').addEventListener('click', (e) => {
+  const tab = e.target.closest('.scenario-tab');
+  if (!tab) return;
+  const idx = parseInt(tab.dataset.index);
+  switchScenario(idx);
+});
+
+function switchScenario(idx) {
+  // 如果正在播放，中止当前动画
+  if (playAbort) {
+    playAbort.abort();
+    playAbort = null;
+    isPlaying = false;
+  }
+
+  currentScenario = idx;
+
+  // 更新 tab 样式
+  document.querySelectorAll('.scenario-tab').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+  });
+
+  // 关闭后台面板，移除提示
+  btsPanel.classList.remove('open');
+  btsToggle.classList.remove('open');
+  btsToggle.classList.remove('hint');
+
+  // 开始播放
+  playScenario(idx);
+}
+
+function replayScenario() {
+  if (isPlaying) return;
+  playScenario(currentScenario);
+}
+
+// ---- 播放引擎 ----
+async function playScenario(idx) {
+  const scenario = SCENARIOS[idx];
+  const ac = new AbortController();
+  playAbort = ac;
+  isPlaying = true;
+  replayBtn.disabled = true;
+
+  // 清空
+  chatLeft.innerHTML = '';
+  chatRight.innerHTML = '';
+  verdictLeft.style.display = 'none';
+  verdictRight.style.display = 'none';
+  btsContent.innerHTML = '';
+
+  // 计算总步数
+  totalSteps = scenario.left.length + scenario.right.length;
+  currentStep = 0;
+  renderProgress();
+
+  // 交错播放两侧消息
+  const leftMsgs = scenario.left;
+  const rightMsgs = scenario.right;
+
+  let li = 0, ri = 0;
+  let side = 'left'; // 先从左边开始
+
+  // 用户消息同时出现
+  // 策略：找到配对的用户消息同时播放，其余按顺序交替
+
+  while (li < leftMsgs.length || ri < rightMsgs.length) {
+    if (ac.signal.aborted) return cleanup();
+
+    // 检查是否两边都是用户消息或日期分隔（同时播放）
+    const lm = li < leftMsgs.length ? leftMsgs[li] : null;
+    const rm = ri < rightMsgs.length ? rightMsgs[ri] : null;
+
+    if (lm && rm && lm.role === 'user' && rm.role === 'user') {
+      // 同时播放两边的用户消息
+      appendMessage(chatLeft, lm, 'left');
+      appendMessage(chatRight, rm, 'right');
+      li++; ri++;
+      currentStep += 2;
+      renderProgress();
+      await sleep(400, ac.signal);
+      continue;
+    }
+
+    if (lm && rm && lm.role === 'divider' && rm.role === 'divider') {
+      appendMessage(chatLeft, lm, 'left');
+      appendMessage(chatRight, rm, 'right');
+      li++; ri++;
+      currentStep += 2;
+      renderProgress();
+      await sleep(300, ac.signal);
+      continue;
+    }
+
+    if (lm && rm && lm.role === 'correction' && rm.role === 'correction') {
+      appendMessage(chatLeft, lm, 'left');
+      appendMessage(chatRight, rm, 'right');
+      li++; ri++;
+      currentStep += 2;
+      renderProgress();
+      await sleep(400, ac.signal);
+      continue;
+    }
+
+    // 否则交替播放
+    if (side === 'left' && lm) {
+      await playOneMessage(chatLeft, lm, 'left', ac.signal);
+      li++;
+      currentStep++;
+      renderProgress();
+      side = 'right';
+    } else if (side === 'right' && rm) {
+      await playOneMessage(chatRight, rm, 'right', ac.signal);
+      ri++;
+      currentStep++;
+      renderProgress();
+      side = 'left';
+    } else if (lm) {
+      await playOneMessage(chatLeft, lm, 'left', ac.signal);
+      li++;
+      currentStep++;
+      renderProgress();
+    } else if (rm) {
+      await playOneMessage(chatRight, rm, 'right', ac.signal);
+      ri++;
+      currentStep++;
+      renderProgress();
+    } else {
+      break;
+    }
+  }
+
+  if (ac.signal.aborted) return cleanup();
+
+  // 显示判定
+  await sleep(300, ac.signal);
+  verdictLeftText.textContent = scenario.verdictLeft;
+  verdictRightText.textContent = scenario.verdictRight;
+  verdictLeft.style.display = 'flex';
+  verdictRight.style.display = 'flex';
+
+  // 填充后台面板
+  btsContent.innerHTML = scenario.bts;
+
+  // 提示用户查看后台
+  btsToggle.classList.add('hint');
+  setTimeout(() => btsToggle.classList.remove('hint'), 4600);
+
+  cleanup();
+
+  function cleanup() {
+    isPlaying = false;
+    replayBtn.disabled = false;
+    if (playAbort === ac) playAbort = null;
+  }
+}
+
+async function playOneMessage(container, msg, side, signal) {
+  if (signal.aborted) return;
+
+  if (msg.role === 'typing') {
+    const typingEl = showTyping(container, side);
+    await sleep(msg.delay || 800, signal);
+    if (typingEl.parentNode) typingEl.remove();
+    return;
+  }
+
+  if (msg.role === 'divider') {
+    appendMessage(container, msg, side);
+    await sleep(200, signal);
+    return;
+  }
+
+  if (msg.role === 'recording') {
+    appendMessage(container, msg, side);
+    await sleep(500, signal);
+    return;
+  }
+
+  appendMessage(container, msg, side);
+  await sleep(msg.role === 'thinking' ? 600 : 400, signal);
+}
+
+function showTyping(container, side) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'message visible';
+  wrapper.style.opacity = '1';
+  wrapper.style.transform = 'none';
+
+  const avatar = document.createElement('div');
+  avatar.className = `msg-avatar ${side === 'left' ? 'msg-avatar-basic' : 'msg-avatar-enhanced'}`;
+  avatar.innerHTML = '&#x1F99E;';
+
+  const typing = document.createElement('div');
+  typing.className = 'typing-indicator';
+  typing.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+
+  wrapper.appendChild(avatar);
+  wrapper.appendChild(typing);
+  container.appendChild(wrapper);
+  container.scrollTop = container.scrollHeight;
+  return wrapper;
+}
+
+function appendMessage(container, msg, side) {
+  if (msg.role === 'divider') {
+    const div = document.createElement('div');
+    div.className = 'day-divider';
+    div.innerHTML = `<span>${esc(msg.text)}</span>`;
+    container.appendChild(div);
+    requestAnimationFrame(() => div.classList.add('visible'));
+    container.scrollTop = container.scrollHeight;
+    return;
+  }
+
+  if (msg.role === 'recording') {
+    const div = document.createElement('div');
+    div.className = 'message';
+    div.innerHTML = `<div style="width:26px;flex-shrink:0;"></div><div class="recording-bar"><div class="recording-dot"></div>${esc(msg.text)}</div>`;
+    container.appendChild(div);
+    requestAnimationFrame(() => div.classList.add('visible'));
+    container.scrollTop = container.scrollHeight;
+    return;
+  }
+
+  if (msg.role === 'code') {
+    const div = document.createElement('div');
+    div.className = 'message';
+    const avatarClass = side === 'left' ? 'msg-avatar-basic' : 'msg-avatar-enhanced';
+    div.innerHTML = `<div class="msg-avatar ${avatarClass}">&#x1F99E;</div><div class="code-block">${msg.text}</div>`;
+    container.appendChild(div);
+    requestAnimationFrame(() => div.classList.add('visible'));
+    container.scrollTop = container.scrollHeight;
+    return;
+  }
+
+  const wrapper = document.createElement('div');
+  wrapper.className = `message ${msg.role === 'user' || msg.role === 'correction' ? 'user' : ''}`;
+
+  const avatar = document.createElement('div');
+  if (msg.role === 'user') {
+    avatar.className = 'msg-avatar msg-avatar-user';
+    avatar.innerHTML = '&#x1F464;';
+  } else if (msg.role === 'correction') {
+    avatar.className = 'msg-avatar msg-avatar-user';
+    avatar.innerHTML = '&#x1F464;';
+  } else {
+    const avatarClass = side === 'left' ? 'msg-avatar-basic' : 'msg-avatar-enhanced';
+    avatar.className = `msg-avatar ${avatarClass}`;
+    avatar.innerHTML = '&#x1F99E;';
+  }
+
+  const bubble = document.createElement('div');
+  if (msg.role === 'user') {
+    bubble.className = 'msg-bubble user-bubble';
+    bubble.innerHTML = esc(msg.text);
+  } else if (msg.role === 'correction') {
+    bubble.className = 'msg-bubble correction-bubble';
+    bubble.innerHTML = esc(msg.text);
+  } else if (msg.role === 'thinking') {
+    bubble.className = 'msg-bubble thinking-bubble';
+    bubble.innerHTML = msg.text; // 已含 HTML 实体
+  } else {
+    const bubbleClass = side === 'left' ? 'bot-bubble-basic' : 'bot-bubble-enhanced';
+    bubble.className = `msg-bubble ${bubbleClass}`;
+    bubble.innerHTML = msg.html || msg.text;
+  }
+
+  wrapper.appendChild(avatar);
+  wrapper.appendChild(bubble);
+  container.appendChild(wrapper);
+
+  requestAnimationFrame(() => wrapper.classList.add('visible'));
+  container.scrollTop = container.scrollHeight;
+}
+
+// ---- 进度指示器 ----
+function renderProgress() {
+  const scenario = SCENARIOS[currentScenario];
+  const total = scenario.left.length + scenario.right.length;
+  // 简化为 6 个点
+  const dotCount = Math.min(total, 8);
+  const ratio = total / dotCount;
+
+  let html = '';
+  for (let i = 0; i < dotCount; i++) {
+    const stepThreshold = Math.floor(i * ratio);
+    let cls = 'progress-dot';
+    if (currentStep > stepThreshold + ratio) cls += ' done';
+    else if (currentStep > stepThreshold) cls += ' active';
+    html += `<div class="${cls}"></div>`;
+  }
+  progressDots.innerHTML = html;
+}
+
+// ---- 后台面板切换 ----
+function toggleBTS() {
+  btsPanel.classList.toggle('open');
+  btsToggle.classList.toggle('open');
+}
+
+// ---- Sleep 工具（支持中止） ----
+function sleep(ms, signal) {
+  return new Promise((resolve, reject) => {
+    if (signal && signal.aborted) { resolve(); return; }
+    const timer = setTimeout(resolve, ms);
+    if (signal) {
+      signal.addEventListener('abort', () => {
+        clearTimeout(timer);
+        resolve();
+      }, { once: true });
+    }
+  });
+}
+
+// ---- 初始化 ----
+switchScenario(0);
+</script>
+</body>
+</html>

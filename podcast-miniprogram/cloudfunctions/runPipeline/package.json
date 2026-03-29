@@ -1,0 +1,11 @@
+{
+  "name": "runPipeline",
+  "version": "1.0.0",
+  "description": "播客处理流水线：获取元数据 → 转录 → AI 分析 → 存入云数据库",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3",
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0"
+  }
+}

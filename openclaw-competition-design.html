@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超级龙虾：从工作流到运营大脑</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ========== CSS 变量 ========== */
+:root {
+  --primary: #FF6B4A;
+  --primary-light: #FF8A6E;
+  --primary-dark: #E5523A;
+  --accent: #4ECDC4;
+  --accent-light: #7EDDD6;
+  --accent-dark: #3BA89F;
+  --bg-deep: #0B0E17;
+  --bg-primary: #0F1423;
+  --bg-secondary: #161B2E;
+  --bg-card: #1C2237;
+  --bg-card-hover: #232A44;
+  --bg-dim: #12162399;
+  --text-primary: #F0F2F8;
+  --text-secondary: #8891AB;
+  --text-dim: #5A6380;
+  --border: #2A3050;
+  --gradient-hero: linear-gradient(160deg, #0F1423 0%, #1A1230 40%, #0F1423 100%);
+  --gradient-primary: linear-gradient(135deg, #FF6B4A, #FF8A6E);
+  --gradient-accent: linear-gradient(135deg, #4ECDC4, #7EDDD6);
+  --gradient-glow: radial-gradient(ellipse at center, rgba(255,107,74,0.15) 0%, transparent 70%);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+  --shadow-card: 0 8px 32px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.2);
+  --shadow-glow: 0 0 40px rgba(255,107,74,0.15);
+  --shadow-accent-glow: 0 0 40px rgba(78,205,196,0.15);
+  --font-cn: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+/* ========== 基础重置 ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: var(--font-cn);
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ========== 通用工具类 ========== */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+section { padding: 100px 0; position: relative; }
+.section-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--primary);
+  background: rgba(255,107,74,0.1);
+  border: 1px solid rgba(255,107,74,0.2);
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.section-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin-bottom: 60px;
+}
+
+/* ========== 滚动动画 ========== */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+
+/* ========== 浮动龙虾 ========== */
+.floating-lobster {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  font-size: 2.4rem;
+  z-index: 1000;
+  animation: lobsterFloat 3s ease-in-out infinite;
+  cursor: pointer;
+  filter: drop-shadow(0 4px 12px rgba(255,107,74,0.4));
+  transition: transform 0.3s;
+}
+.floating-lobster:hover { transform: scale(1.3) rotate(-10deg); }
+@keyframes lobsterFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-12px) rotate(3deg); }
+  66% { transform: translateY(-6px) rotate(-2deg); }
+}
+
+/* ========== 导航 ========== */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  padding: 16px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(11,14,23,0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(42,48,80,0.3);
+  transition: all 0.3s;
+}
+.nav.scrolled {
+  padding: 10px 40px;
+  background: rgba(11,14,23,0.92);
+}
+.nav-logo {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-links { display: flex; gap: 8px; }
+.nav-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.nav-links a:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
+
+/* ========== HERO ========== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  background: var(--gradient-hero);
+  padding-top: 80px;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(255,107,74,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -100px;
+  right: -100px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(78,205,196,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+/* 网格背景 */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(42,48,80,0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(42,48,80,0.15) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+}
+.hero-content { position: relative; z-index: 2; max-width: 860px; }
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,107,74,0.1);
+  border: 1px solid rgba(255,107,74,0.25);
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  color: var(--primary-light);
+  margin-bottom: 32px;
+  animation: badgePulse 3s ease-in-out infinite;
+}
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,107,74,0.2); }
+  50% { box-shadow: 0 0 0 12px rgba(255,107,74,0); }
+}
+.hero h1 {
+  font-size: 3.8rem;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  letter-spacing: -1px;
+}
+.hero h1 .highlight {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero h1 .highlight-alt {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-bottom: 48px;
+  line-height: 1.8;
+}
+.hero-meta {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 16px;
+}
+.hero-meta-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.hero-meta-item .number {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+.hero-meta-item .label {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  animation: scrollHint 2s ease-in-out infinite;
+}
+@keyframes scrollHint {
+  0%, 100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
+  50% { opacity: 0.8; transform: translateX(-50%) translateY(8px); }
+}
+
+/* ========== 对比区块 ========== */
+.comparison { background: var(--bg-primary); }
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  gap: 0;
+  align-items: stretch;
+}
+.comparison-card {
+  padding: 40px;
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+}
+.comparison-card.dim {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+}
+.comparison-card.glow {
+  background: linear-gradient(135deg, rgba(255,107,74,0.08), rgba(78,205,196,0.05));
+  border: 1px solid rgba(255,107,74,0.3);
+  box-shadow: var(--shadow-glow);
+}
+.comparison-card.glow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+}
+.comparison-vs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.comparison-vs span {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-dim);
+  background: var(--bg-primary);
+  border: 2px solid var(--border);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+.comparison-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.comparison-card-header .emoji { font-size: 2rem; }
+.comparison-card-header h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+.comparison-card.dim .comparison-card-header h3 { color: var(--text-secondary); }
+.comparison-card.glow .comparison-card-header h3 { color: var(--primary-light); }
+.comparison-item {
+  display: flex;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(42,48,80,0.3);
+  align-items: flex-start;
+}
+.comparison-item:last-child { border-bottom: none; }
+.comparison-item .icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  margin-top: 2px;
+}
+.comparison-card.dim .comparison-item .icon {
+  background: rgba(90,99,128,0.2);
+  color: var(--text-dim);
+}
+.comparison-card.glow .comparison-item .icon {
+  background: rgba(255,107,74,0.15);
+  color: var(--primary);
+}
+.comparison-item .text strong {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+.comparison-card.dim .comparison-item .text strong { color: var(--text-secondary); }
+.comparison-card.glow .comparison-item .text strong { color: var(--text-primary); }
+.comparison-item .text p {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+.comparison-card.glow .comparison-item .text p { color: var(--text-secondary); }
+
+/* ========== 架构图 ========== */
+.architecture { background: var(--bg-deep); }
+.arch-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 900px;
+  margin: 0 auto;
+  perspective: 1000px;
+}
+.arch-layer {
+  padding: 30px 36px;
+  border-radius: var(--radius-sm);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+  cursor: default;
+  border: 1px solid transparent;
+}
+.arch-layer:hover {
+  transform: translateX(8px) scale(1.01);
+  z-index: 2;
+}
+.arch-layer-5 {
+  background: linear-gradient(135deg, rgba(255,107,74,0.15), rgba(255,107,74,0.05));
+  border-color: rgba(255,107,74,0.3);
+}
+.arch-layer-5:hover { box-shadow: 0 0 30px rgba(255,107,74,0.15); }
+.arch-layer-4 {
+  background: linear-gradient(135deg, rgba(78,205,196,0.12), rgba(78,205,196,0.03));
+  border-color: rgba(78,205,196,0.25);
+}
+.arch-layer-4:hover { box-shadow: 0 0 30px rgba(78,205,196,0.12); }
+.arch-layer-3 {
+  background: linear-gradient(135deg, rgba(168,130,255,0.12), rgba(168,130,255,0.03));
+  border-color: rgba(168,130,255,0.25);
+}
+.arch-layer-3:hover { box-shadow: 0 0 30px rgba(168,130,255,0.12); }
+.arch-layer-2 {
+  background: linear-gradient(135deg, rgba(255,200,87,0.12), rgba(255,200,87,0.03));
+  border-color: rgba(255,200,87,0.25);
+}
+.arch-layer-2:hover { box-shadow: 0 0 30px rgba(255,200,87,0.12); }
+.arch-layer-1 {
+  background: linear-gradient(135deg, rgba(100,180,255,0.12), rgba(100,180,255,0.03));
+  border-color: rgba(100,180,255,0.25);
+}
+.arch-layer-1:hover { box-shadow: 0 0 30px rgba(100,180,255,0.12); }
+.arch-layer-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.arch-layer-head .emoji { font-size: 1.5rem; }
+.arch-layer-head .layer-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.arch-layer-5 .layer-label { background: rgba(255,107,74,0.2); color: var(--primary); }
+.arch-layer-4 .layer-label { background: rgba(78,205,196,0.2); color: var(--accent); }
+.arch-layer-3 .layer-label { background: rgba(168,130,255,0.2); color: #A882FF; }
+.arch-layer-2 .layer-label { background: rgba(255,200,87,0.2); color: #FFC857; }
+.arch-layer-1 .layer-label { background: rgba(100,180,255,0.2); color: #64B4FF; }
+.arch-layer-head h4 {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.arch-layer-body {
+  padding-left: 44px;
+}
+.arch-layer-body ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.arch-layer-body li {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.6;
+}
+.arch-layer-body li::before {
+  content: '>';
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.arch-connector {
+  display: flex;
+  justify-content: center;
+  height: 20px;
+  position: relative;
+}
+.arch-connector::before {
+  content: '';
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255,107,74,0.3), rgba(78,205,196,0.3));
+}
+/* 层级标注 */
+.arch-layer-number {
+  position: absolute;
+  left: -48px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 800;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-deep);
+  color: var(--text-dim);
+}
+
+/* ========== 飞轮 ========== */
+.flywheel-section { background: var(--bg-primary); overflow: hidden; }
+.flywheel-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 560px;
+  position: relative;
+}
+.flywheel-container {
+  position: relative;
+  width: 520px;
+  height: 520px;
+}
+.flywheel-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 60px rgba(255,107,74,0.3), 0 0 120px rgba(255,107,74,0.1);
+  z-index: 5;
+}
+.flywheel-center .emoji { font-size: 2rem; margin-bottom: 4px; }
+.flywheel-center .text {
+  font-size: 1rem;
+  font-weight: 800;
+  color: white;
+}
+/* 飞轮轨道 */
+.flywheel-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 420px;
+  height: 420px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 2px dashed rgba(255,107,74,0.15);
+}
+.flywheel-orbit-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 280px;
+  height: 280px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px dashed rgba(78,205,196,0.12);
+}
+/* 飞轮旋转动画 */
+.flywheel-spin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 430px;
+  height: 430px;
+  transform: translate(-50%, -50%);
+  animation: flywheelRotate 30s linear infinite;
+}
+@keyframes flywheelRotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.flywheel-arrow {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid rgba(255,107,74,0.4);
+  border-top: 2px solid rgba(255,107,74,0.4);
+  transform: rotate(45deg);
+}
+/* 飞轮节点 */
+.flywheel-node {
+  position: absolute;
+  width: 120px;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+}
+.flywheel-node-dot {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin: 0 auto 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  transition: all 0.3s;
+  position: relative;
+}
+.flywheel-node:hover .flywheel-node-dot { transform: scale(1.15); }
+.flywheel-node-dot.primary { background: var(--gradient-primary); }
+.flywheel-node-dot.accent { background: var(--gradient-accent); }
+.flywheel-node-dot.purple { background: linear-gradient(135deg, #A882FF, #C4A8FF); }
+.flywheel-node-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.flywheel-node-desc {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+/* 节点位置（6个节点，绕圆分布） */
+.flywheel-node:nth-child(1) { top: 2%; left: 50%; }
+.flywheel-node:nth-child(2) { top: 25%; left: 93%; }
+.flywheel-node:nth-child(3) { top: 75%; left: 93%; }
+.flywheel-node:nth-child(4) { top: 98%; left: 50%; }
+.flywheel-node:nth-child(5) { top: 75%; left: 7%; }
+.flywheel-node:nth-child(6) { top: 25%; left: 7%; }
+/* 连接弧线 SVG */
+.flywheel-arcs {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+/* ========== 团队协作 ========== */
+.teamwork { background: var(--bg-deep); }
+.team-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.team-members {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  width: 100%;
+}
+.team-member {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  transition: transform 0.3s;
+}
+.team-member:hover { transform: translateY(-6px); }
+.team-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  position: relative;
+}
+.team-avatar.a { background: linear-gradient(135deg, rgba(255,107,74,0.2), rgba(255,107,74,0.05)); border: 2px solid rgba(255,107,74,0.4); }
+.team-avatar.b { background: linear-gradient(135deg, rgba(78,205,196,0.2), rgba(78,205,196,0.05)); border: 2px solid rgba(78,205,196,0.4); }
+.team-avatar.c { background: linear-gradient(135deg, rgba(168,130,255,0.2), rgba(168,130,255,0.05)); border: 2px solid rgba(168,130,255,0.4); }
+.team-member-name { font-weight: 700; font-size: 1rem; }
+.team-member-role { font-size: 0.8rem; color: var(--text-dim); }
+/* 连接线 */
+.team-connections {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  height: 80px;
+}
+.team-connections svg { overflow: visible; }
+/* 中央节点 */
+.team-hub {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.team-hub-icon {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255,107,74,0.1), rgba(78,205,196,0.1));
+  border: 2px solid rgba(255,107,74,0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  box-shadow: 0 0 40px rgba(255,107,74,0.1), 0 0 80px rgba(78,205,196,0.05);
+  animation: hubPulse 4s ease-in-out infinite;
+}
+@keyframes hubPulse {
+  0%, 100% { box-shadow: 0 0 40px rgba(255,107,74,0.1), 0 0 80px rgba(78,205,196,0.05); }
+  50% { box-shadow: 0 0 60px rgba(255,107,74,0.2), 0 0 100px rgba(78,205,196,0.1); }
+}
+.team-hub-icon .emoji { font-size: 1.8rem; }
+.team-hub-icon .text { font-size: 0.65rem; font-weight: 700; color: var(--text-secondary); }
+.team-hub-label { font-size: 0.85rem; color: var(--text-dim); text-align: center; }
+/* 流程说明 */
+.team-flow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  width: 100%;
+  margin-top: 20px;
+}
+.team-flow-step {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s;
+}
+.team-flow-step:hover {
+  border-color: rgba(255,107,74,0.3);
+  background: var(--bg-card);
+}
+.team-flow-step .step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: white;
+  margin: 0 auto 12px;
+}
+.team-flow-step p {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.team-flow-arrow {
+  position: absolute;
+  right: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  z-index: 2;
+}
+
+/* ========== 时间线 ========== */
+.timeline-section { background: var(--bg-primary); }
+.timeline {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom,
+    rgba(100,180,255,0.4),
+    rgba(78,205,196,0.4),
+    rgba(168,130,255,0.4),
+    rgba(255,200,87,0.4),
+    rgba(255,107,74,0.4)
+  );
+  border-radius: 2px;
+}
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 48px;
+  position: relative;
+}
+.timeline-item:nth-child(odd) { flex-direction: row; }
+.timeline-item:nth-child(even) { flex-direction: row-reverse; }
+.timeline-item:last-child { margin-bottom: 0; }
+.timeline-marker {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  z-index: 2;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.timeline-item:nth-child(1) .timeline-marker { background: linear-gradient(135deg, #64B4FF, #4A9AE0); }
+.timeline-item:nth-child(2) .timeline-marker { background: linear-gradient(135deg, #4ECDC4, #3BA89F); }
+.timeline-item:nth-child(3) .timeline-marker { background: linear-gradient(135deg, #A882FF, #8E6AE8); }
+.timeline-item:nth-child(4) .timeline-marker { background: linear-gradient(135deg, #FFC857, #E5B040); }
+.timeline-item:nth-child(5) .timeline-marker { background: linear-gradient(135deg, #FF6B4A, #E5523A); }
+.timeline-card {
+  width: calc(50% - 52px);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  transition: all 0.4s;
+}
+.timeline-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card);
+}
+.timeline-item:nth-child(odd) .timeline-card { margin-right: auto; }
+.timeline-item:nth-child(even) .timeline-card { margin-left: auto; }
+.timeline-card .day {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.timeline-item:nth-child(1) .timeline-card .day { color: #64B4FF; }
+.timeline-item:nth-child(2) .timeline-card .day { color: #4ECDC4; }
+.timeline-item:nth-child(3) .timeline-card .day { color: #A882FF; }
+.timeline-item:nth-child(4) .timeline-card .day { color: #FFC857; }
+.timeline-item:nth-child(5) .timeline-card .day { color: #FF6B4A; }
+.timeline-card h4 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.timeline-card p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.timeline-metrics {
+  display: flex;
+  gap: 16px;
+}
+.timeline-metric {
+  flex: 1;
+  background: rgba(255,255,255,0.03);
+  border-radius: var(--radius-xs);
+  padding: 10px 12px;
+  text-align: center;
+}
+.timeline-metric .value {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+.timeline-item:nth-child(1) .timeline-metric .value { color: #64B4FF; }
+.timeline-item:nth-child(2) .timeline-metric .value { color: #4ECDC4; }
+.timeline-item:nth-child(3) .timeline-metric .value { color: #A882FF; }
+.timeline-item:nth-child(4) .timeline-metric .value { color: #FFC857; }
+.timeline-item:nth-child(5) .timeline-metric .value { color: #FF6B4A; }
+.timeline-metric .label {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+/* ========== 秘密武器 ========== */
+.weapons { background: var(--bg-deep); }
+.weapons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.weapon-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 44px 36px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.weapon-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(255,107,74,0.3);
+  box-shadow: var(--shadow-card), var(--shadow-glow);
+}
+.weapon-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+.weapon-card:nth-child(1)::before { background: var(--gradient-primary); }
+.weapon-card:nth-child(2)::before { background: var(--gradient-accent); }
+.weapon-card:nth-child(3)::before { background: linear-gradient(135deg, #A882FF, #C4A8FF); }
+.weapon-card .emoji {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  display: block;
+}
+.weapon-card h3 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+.weapon-card:nth-child(1) h3 { color: var(--primary); }
+.weapon-card:nth-child(2) h3 { color: var(--accent); }
+.weapon-card:nth-child(3) h3 { color: #A882FF; }
+.weapon-card p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.weapon-card .quote {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+/* ========== 页脚 ========== */
+.footer {
+  padding: 60px 0 40px;
+  text-align: center;
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border);
+}
+.footer-logo {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+.footer-text {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* ========== 负反馈闭环 ========== */
+.negative-feedback { background: var(--bg-primary); }
+.nf-flow {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+}
+/* 主流程：垂直管道 */
+.nf-pipeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+.nf-pipeline::before {
+  content: '';
+  position: absolute;
+  left: 35px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, #FF4444, #FF6B4A, #FFC857, #4ECDC4, #A882FF);
+  border-radius: 2px;
+  z-index: 1;
+}
+.nf-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  padding: 24px 0;
+  position: relative;
+}
+.nf-step-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  flex-shrink: 0;
+  z-index: 2;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  position: relative;
+}
+.nf-step-icon.red { background: linear-gradient(135deg, #FF4444, #FF6B4A); }
+.nf-step-icon.orange { background: linear-gradient(135deg, #FF6B4A, #FF8A6E); }
+.nf-step-icon.yellow { background: linear-gradient(135deg, #FFC857, #FFD97A); }
+.nf-step-icon.green { background: linear-gradient(135deg, #4ECDC4, #7EDDD6); }
+.nf-step-icon.purple { background: linear-gradient(135deg, #A882FF, #C4A8FF); }
+.nf-step-content {
+  flex: 1;
+  padding-top: 8px;
+}
+.nf-step-content h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.nf-step-content p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+.nf-step-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.nf-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  padding: 3px 10px;
+  border-radius: 4px;
+  border: 1px solid;
+}
+.nf-tag.red { border-color: rgba(255,68,68,0.3); color: #FF6B6B; background: rgba(255,68,68,0.08); }
+.nf-tag.orange { border-color: rgba(255,107,74,0.3); color: var(--primary-light); background: rgba(255,107,74,0.08); }
+.nf-tag.yellow { border-color: rgba(255,200,87,0.3); color: #FFC857; background: rgba(255,200,87,0.08); }
+.nf-tag.green { border-color: rgba(78,205,196,0.3); color: var(--accent); background: rgba(78,205,196,0.08); }
+.nf-tag.purple { border-color: rgba(168,130,255,0.3); color: #A882FF; background: rgba(168,130,255,0.08); }
+
+/* 负反馈案例卡片 */
+.nf-example {
+  margin-top: 48px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.nf-example::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #FF4444, #4ECDC4);
+}
+.nf-example-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-light);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nf-example-steps {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr 40px 1fr;
+  gap: 0;
+  align-items: center;
+}
+.nf-ex-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+}
+.nf-ex-card h5 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nf-ex-card h5.bad { color: #FF6B6B; }
+.nf-ex-card h5.fix { color: #FFC857; }
+.nf-ex-card h5.done { color: var(--accent); }
+.nf-ex-card p {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.nf-ex-card code {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  background: rgba(255,107,74,0.1);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--primary-light);
+}
+.nf-ex-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  font-size: 1.2rem;
+}
+
+/* 负反馈 vs 普通对比 mini */
+.nf-contrast {
+  margin-top: 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.nf-contrast-card {
+  padding: 24px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+.nf-contrast-card.bad {
+  background: rgba(255,68,68,0.04);
+  border-color: rgba(255,68,68,0.15);
+}
+.nf-contrast-card.good {
+  background: rgba(78,205,196,0.04);
+  border-color: rgba(78,205,196,0.2);
+}
+.nf-contrast-card h5 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.nf-contrast-card.bad h5 { color: #FF6B6B; }
+.nf-contrast-card.good h5 { color: var(--accent); }
+.nf-contrast-card ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.nf-contrast-card li {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.5;
+}
+.nf-contrast-card li::before {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.nf-contrast-card.bad li::before { content: '✗'; color: #FF6B6B; font-weight: 700; }
+.nf-contrast-card.good li::before { content: '✓'; color: var(--accent); font-weight: 700; }
+
+/* ========== 响应式 ========== */
+@media (max-width: 960px) {
+  .nf-example-steps { grid-template-columns: 1fr; gap: 12px; }
+  .nf-ex-arrow { transform: rotate(90deg); }
+  .nf-contrast { grid-template-columns: 1fr; }
+  .comparison-grid { grid-template-columns: 1fr; gap: 20px; }
+  .comparison-vs { display: none; }
+  .hero h1 { font-size: 2.6rem; }
+  .section-title { font-size: 2rem; }
+  .team-members { gap: 30px; }
+  .team-flow { grid-template-columns: repeat(2, 1fr); }
+  .team-flow-arrow { display: none; }
+  .weapons-grid { grid-template-columns: 1fr; }
+  .timeline::before { left: 24px; }
+  .timeline-marker { left: 24px; }
+  .timeline-item,
+  .timeline-item:nth-child(even) { flex-direction: row; }
+  .timeline-card,
+  .timeline-item:nth-child(odd) .timeline-card,
+  .timeline-item:nth-child(even) .timeline-card {
+    width: calc(100% - 70px);
+    margin-left: auto;
+    margin-right: 0;
+  }
+  .flywheel-container { width: 400px; height: 400px; }
+  .flywheel-orbit { width: 320px; height: 320px; }
+  .flywheel-orbit-inner { width: 220px; height: 220px; }
+  .flywheel-center { width: 110px; height: 110px; }
+  .flywheel-node { width: 100px; }
+  .flywheel-node-dot { width: 42px; height: 42px; font-size: 1.1rem; }
+  .flywheel-node-label { font-size: 0.75rem; }
+  .flywheel-node-desc { font-size: 0.65rem; }
+}
+@media (max-width: 640px) {
+  .container { padding: 0 20px; }
+  section { padding: 60px 0; }
+  .hero h1 { font-size: 2rem; }
+  .hero-sub { font-size: 1rem; }
+  .hero-meta { gap: 24px; }
+  .nav-links { display: none; }
+  .team-members { flex-direction: column; gap: 20px; }
+  .team-flow { grid-template-columns: 1fr; }
+  .flywheel-container { width: 320px; height: 320px; }
+  .flywheel-orbit { width: 260px; height: 260px; }
+  .flywheel-orbit-inner { width: 180px; height: 180px; }
+  .flywheel-center { width: 90px; height: 90px; }
+  .flywheel-center .emoji { font-size: 1.5rem; }
+  .flywheel-center .text { font-size: 0.8rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- 浮动龙虾 -->
+<div class="floating-lobster" title="我是超级龙虾！">🦞</div>
+
+<!-- 导航 -->
+<nav class="nav" id="nav">
+  <div class="nav-logo">🦞 超级龙虾</div>
+  <div class="nav-links">
+    <a href="#hero">首页</a>
+    <a href="#comparison">核心差异</a>
+    <a href="#architecture">五层架构</a>
+    <a href="#flywheel">进化飞轮</a>
+    <a href="#negative-feedback">负反馈</a>
+    <a href="#teamwork">团队协作</a>
+    <a href="#timeline">进化轨迹</a>
+    <a href="#weapons">秘密武器</a>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero" id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span>🦞</span> OpenClaw 内部竞赛作品
+    </div>
+    <h1>
+      别人在做<span class="highlight">工作流</span><br>
+      我们在造<span class="highlight-alt">运营大脑</span>
+    </h1>
+    <p class="hero-sub">
+      一个越用越聪明、团队共享智慧的 AI 运营系统<br>
+      3人小团队，一只能自我进化的龙虾
+    </p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="number" data-count="3">0</span>
+        <span class="label">核心成员</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="number" data-count="5">0</span>
+        <span class="label">架构层级</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="number" data-count="1">0</span>
+        <span class="label">自进化飞轮</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <i class="fas fa-chevron-down"></i>
+    向下滚动
+  </div>
+</section>
+
+<!-- ==================== 核心差异对比 ==================== -->
+<section class="comparison" id="comparison">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-tag">CORE DIFFERENCE</span>
+      <h2 class="section-title">核心差异对比</h2>
+      <p class="section-subtitle">同样是 AI Agent，底层逻辑的差异决定了天花板的高度</p>
+    </div>
+
+    <div class="comparison-grid reveal reveal-delay-2">
+      <!-- 普通龙虾 -->
+      <div class="comparison-card dim">
+        <div class="comparison-card-header">
+          <span class="emoji">🦞</span>
+          <h3>普通龙虾</h3>
+        </div>
+        <div class="comparison-item">
+          <div class="icon"><i class="fas fa-minus"></i></div>
+          <div class="text">
+            <strong>静态工作流</strong>
+            <p>写死的流程，改需求就得重写</p>
+          </div>
+        </div>
+        <div class="comparison-item">
+          <div class="icon"><i class="fas fa-minus"></i></div>
+          <div class="text">
+            <strong>个人使用</strong>
+            <p>每个人各用各的，知识不共享</p>
+          </div>
+        </div>
+        <div class="comparison-item">
+          <div class="icon"><i class="fas fa-minus"></i></div>
+          <div class="text">
+            <strong>通用助理</strong>
+            <p>什么都能做，什么都不精</p>
+          </div>
+        </div>
+        <div class="comparison-item">
+          <div class="icon"><i class="fas fa-minus"></i></div>
+          <div class="text">
+            <strong>用完就忘</strong>
+            <p>每次对话都从零开始</p>
+          </div>
+        </div>
+        <div class="comparison-item">
+          <div class="icon"><i class="fas fa-minus"></i></div>
+          <div class="text">
+            <strong>可能编造</strong>
+            <p>没有自检机制，幻觉风险高</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- VS -->
+      <div class="comparison-vs"><span>VS</span></div>
+
+      <!-- 我们的龙虾 -->
+      <div class="comparison-card glow">
+        <div class="comparison-card-header">
+          <span class="emoji">🦞✨</span>
+          <h3>我们的龙虾</h3>
+        </div>
+        <div class="comparison-item">
+          <div class="icon"><i class="fas fa-check"></i></div>
+          <div class="text">
+            <strong>自进化系统</strong>
+            <p>用的越多越聪明，自动沉淀经验</p>
+          </div>
+        </div>
+        <div class="comparison-item">
+          <div class="icon"><i class="fas fa-check"></i></div>
+          <div class="text">
+            <strong>团队共享智慧</strong>
+            <p>3人的学习成果汇入同一个知识池</p>
+          </div>
+        </div>
+        <div class="comparison-item">
+          <div class="icon"><i class="fas fa-check"></i></div>
+          <div class="text">
+            <strong>运营领域专家</strong>
+            <p>深度编码运营决策框架和业务知识</p>
+          </div>
+        </div>
+        <div class="comparison-item">
+          <div class="icon"><i class="fas fa-check"></i></div>
+          <div class="text">
+            <strong>永不遗忘</strong>
+            <p>结构化记忆，日志→精华→永久规则</p>
+          </div>
+        </div>
+        <div class="comparison-item">
+          <div class="icon"><i class="fas fa-check"></i></div>
+          <div class="text">
+            <strong>严谨自检</strong>
+            <p>输出必引用来源，不确定就说不确定</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 五层架构 ==================== -->
+<section class="architecture" id="architecture">
+  <div class="container">
+    <div class="reveal" style="text-align: center;">
+      <span class="section-tag">ARCHITECTURE</span>
+      <h2 class="section-title">五层架构图</h2>
+      <p class="section-subtitle" style="margin-left: auto; margin-right: auto;">从灵魂到防线，每一层都是精心设计的智慧结构</p>
+    </div>
+
+    <div class="arch-stack">
+      <!-- Layer 5 顶层 -->
+      <div class="arch-layer arch-layer-5 reveal reveal-delay-1">
+        <div class="arch-layer-head">
+          <span class="emoji">🛡️</span>
+          <span class="layer-label">Layer 5 · 顶层</span>
+          <h4>严谨层 Rigor Rules</h4>
+        </div>
+        <div class="arch-layer-body">
+          <ul>
+            <li>事实必须引用来源</li>
+            <li>数字必须有单位和时间范围</li>
+            <li>不确定时明确标注置信度</li>
+            <li>每次输出后自检：有没有遗漏、矛盾</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Layer 4 -->
+      <div class="arch-layer arch-layer-4 reveal reveal-delay-2">
+        <div class="arch-layer-head">
+          <span class="emoji">🤝</span>
+          <span class="layer-label">Layer 4</span>
+          <h4>协作层 Git-synced Workspace</h4>
+        </div>
+        <div class="arch-layer-body">
+          <ul>
+            <li>3人共用一个 workspace（git 同步）</li>
+            <li>A 的学习 → B 和 C 立刻可用</li>
+            <li>共享技能库：一人造技能，全团队受益</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Layer 3 -->
+      <div class="arch-layer arch-layer-3 reveal reveal-delay-3">
+        <div class="arch-layer-head">
+          <span class="emoji">📚</span>
+          <span class="layer-label">Layer 3</span>
+          <h4>学习层 .learnings/</h4>
+        </div>
+        <div class="arch-layer-body">
+          <ul>
+            <li>自动捕获：命令失败 → 记录 ERRORS.md</li>
+            <li>用户纠正 → 记录 LEARNINGS.md</li>
+            <li>缺失能力 → 记录 FEATURE_REQUESTS.md</li>
+            <li>晋升机制：同类问题 3 次 → 自动晋升为永久规则</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Layer 2 -->
+      <div class="arch-layer arch-layer-2 reveal reveal-delay-4">
+        <div class="arch-layer-head">
+          <span class="emoji">💾</span>
+          <span class="layer-label">Layer 2</span>
+          <h4>记忆层 MEMORY.md + Daily Logs</h4>
+        </div>
+        <div class="arch-layer-body">
+          <ul>
+            <li>每日自动记录：做了什么决策、发现了什么</li>
+            <li>长期精华：从日志中提炼高价值知识</li>
+            <li>不是聊天记录，是结构化的运营知识库</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Layer 1 底层 -->
+      <div class="arch-layer arch-layer-1 reveal reveal-delay-5">
+        <div class="arch-layer-head">
+          <span class="emoji">🧠</span>
+          <span class="layer-label">Layer 1 · 底层</span>
+          <h4>灵魂层 SOUL.md</h4>
+        </div>
+        <div class="arch-layer-body">
+          <ul>
+            <li>不是通用人格，是运营专家人格</li>
+            <li>内置决策框架：面对模糊需求 → 先追问 → 列假设 → 确认</li>
+            <li>领域知识：运营指标体系、分析方法论、常见陷阱</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 进化飞轮 ==================== -->
+<section class="flywheel-section" id="flywheel">
+  <div class="container">
+    <div class="reveal" style="text-align: center;">
+      <span class="section-tag">EVOLUTION FLYWHEEL</span>
+      <h2 class="section-title">进化飞轮</h2>
+      <p class="section-subtitle" style="margin-left: auto; margin-right: auto;">一个永不停止的自我进化循环，每一次使用都让系统更聪明</p>
+    </div>
+
+    <div class="flywheel-wrapper reveal reveal-delay-2">
+      <div class="flywheel-container">
+        <!-- 轨道 -->
+        <div class="flywheel-orbit"></div>
+        <div class="flywheel-orbit-inner"></div>
+
+        <!-- 旋转动画箭头 -->
+        <div class="flywheel-spin">
+          <div class="flywheel-arrow" style="top: 0; left: 50%;"></div>
+          <div class="flywheel-arrow" style="top: 50%; right: 0;"></div>
+          <div class="flywheel-arrow" style="bottom: 0; left: 50%;"></div>
+          <div class="flywheel-arrow" style="top: 50%; left: 0;"></div>
+        </div>
+
+        <!-- 中心 -->
+        <div class="flywheel-center">
+          <span class="emoji">🦞</span>
+          <span class="text">越用越聪明</span>
+        </div>
+
+        <!-- SVG 连接弧线 -->
+        <svg class="flywheel-arcs" viewBox="0 0 520 520" fill="none">
+          <defs>
+            <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="rgba(255,107,74,0.5)" />
+            </marker>
+          </defs>
+          <!-- 顺时针弧线箭头 -->
+          <path d="M 260 50 A 210 210 0 0 1 440 160" stroke="rgba(255,107,74,0.2)" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowhead)" />
+          <path d="M 450 180 A 210 210 0 0 1 450 360" stroke="rgba(78,205,196,0.2)" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowhead)" />
+          <path d="M 440 370 A 210 210 0 0 1 260 470" stroke="rgba(168,130,255,0.2)" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowhead)" />
+          <path d="M 260 470 A 210 210 0 0 1 70 360" stroke="rgba(255,200,87,0.2)" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowhead)" />
+          <path d="M 70 350 A 210 210 0 0 1 70 170" stroke="rgba(100,180,255,0.2)" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowhead)" />
+          <path d="M 80 150 A 210 210 0 0 1 260 50" stroke="rgba(255,107,74,0.2)" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowhead)" />
+        </svg>
+
+        <!-- 节点 -->
+        <div class="flywheel-node">
+          <div class="flywheel-node-dot primary">🚀</div>
+          <div class="flywheel-node-label">使用</div>
+          <div class="flywheel-node-desc">团队日常运营任务</div>
+        </div>
+        <div class="flywheel-node">
+          <div class="flywheel-node-dot accent">💡</div>
+          <div class="flywheel-node-label">产生学习</div>
+          <div class="flywheel-node-desc">纠正、错误、新发现</div>
+        </div>
+        <div class="flywheel-node">
+          <div class="flywheel-node-dot purple">📝</div>
+          <div class="flywheel-node-label">结构化记录</div>
+          <div class="flywheel-node-desc">.learnings/ 自动捕获</div>
+        </div>
+        <div class="flywheel-node">
+          <div class="flywheel-node-dot primary">🔍</div>
+          <div class="flywheel-node-label">模式识别</div>
+          <div class="flywheel-node-desc">同类问题出现 3+ 次</div>
+        </div>
+        <div class="flywheel-node">
+          <div class="flywheel-node-dot accent">⬆️</div>
+          <div class="flywheel-node-label">知识晋升</div>
+          <div class="flywheel-node-desc">learnings → memory → SOUL</div>
+        </div>
+        <div class="flywheel-node">
+          <div class="flywheel-node-dot purple">🧠</div>
+          <div class="flywheel-node-label">更聪明</div>
+          <div class="flywheel-node-desc">下次不再犯同样的错</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 负反馈闭环 ==================== -->
+<section class="negative-feedback" id="negative-feedback">
+  <div class="container">
+    <div class="reveal" style="text-align: center;">
+      <span class="section-tag">NEGATIVE FEEDBACK LOOP</span>
+      <h2 class="section-title">负反馈闭环：<span style="color:var(--primary)">犯过的错，永远不会再犯</span></h2>
+      <p class="section-subtitle" style="margin-left: auto; margin-right: auto;">普通龙虾被纠正后下次还会犯。我们的龙虾有完整的「错误免疫系统」——从发现错误到永久免疫，全自动闭环。</p>
+    </div>
+
+    <div class="nf-flow reveal reveal-delay-1">
+      <div class="nf-pipeline">
+
+        <!-- Step 1: 触发检测 -->
+        <div class="nf-step">
+          <div class="nf-step-icon red">🚨</div>
+          <div class="nf-step-content">
+            <h4>第一步：错误检测</h4>
+            <p>三种触发方式，确保任何问题都不会漏掉：</p>
+            <div class="nf-step-tags">
+              <span class="nf-tag red">用户纠正 "不对，应该是…"</span>
+              <span class="nf-tag red">自检矛盾 — 输出与已知事实冲突</span>
+              <span class="nf-tag red">命令失败 — 非零退出码</span>
+              <span class="nf-tag red">幻觉识别 — 编造了不存在的信息</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: 结构化记录 -->
+        <div class="nf-step">
+          <div class="nf-step-icon orange">📋</div>
+          <div class="nf-step-content">
+            <h4>第二步：结构化记录到 .learnings/ERRORS.md</h4>
+            <p>不是随便记个笔记。每条错误有唯一 ID、分类、根因分析、和防治规则：</p>
+            <div class="nf-step-tags">
+              <span class="nf-tag orange">ERR-20260317-001</span>
+              <span class="nf-tag orange">类型: 幻觉 / 推理错误 / 过时知识</span>
+              <span class="nf-tag orange">错误输出 vs 正确答案</span>
+              <span class="nf-tag orange">根因分析 + 防治规则</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: 模式识别 -->
+        <div class="nf-step">
+          <div class="nf-step-icon yellow">🔍</div>
+          <div class="nf-step-content">
+            <h4>第三步：模式识别</h4>
+            <p>不是每个错误都要升级为规则。系统自动追踪关联错误——同类问题出现 <strong style="color:#FFC857">2 次</strong>时预警，<strong style="color:#FFC857">3 次</strong>时触发自动晋升。</p>
+            <div class="nf-step-tags">
+              <span class="nf-tag yellow">See Also 交叉引用</span>
+              <span class="nf-tag yellow">30天滑动窗口</span>
+              <span class="nf-tag yellow">按领域聚类（运营/数据/技术）</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: 知识晋升 -->
+        <div class="nf-step">
+          <div class="nf-step-icon green">⬆️</div>
+          <div class="nf-step-content">
+            <h4>第四步：知识晋升（从临时记录 → 永久免疫）</h4>
+            <p>防治规则沿着「信任阶梯」逐级晋升，最终写入 SOUL.md 成为龙虾的 DNA：</p>
+            <div class="nf-step-tags">
+              <span class="nf-tag green">.learnings/ → 临时记录</span>
+              <span class="nf-tag green">MEMORY.md → 长期记忆</span>
+              <span class="nf-tag green">AGENTS.md → 操作硬规则</span>
+              <span class="nf-tag green">SOUL.md → 永久人格 DNA</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: 免疫验证 -->
+        <div class="nf-step">
+          <div class="nf-step-icon purple">🛡️</div>
+          <div class="nf-step-content">
+            <h4>第五步：免疫验证</h4>
+            <p>晋升后不是就完了。下次遇到同类场景时，系统会<strong style="color:#A882FF">主动触发防御</strong>——在回答前检查是否命中已知错误模式，命中则走修正路径。</p>
+            <div class="nf-step-tags">
+              <span class="nf-tag purple">已知陷阱黑名单</span>
+              <span class="nf-tag purple">回答前自动比对</span>
+              <span class="nf-tag purple">命中则走修正路径</span>
+              <span class="nf-tag purple">状态: pending → verified → promoted</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 实战案例 -->
+    <div class="nf-example reveal reveal-delay-2">
+      <div class="nf-example-title">⚡ 实战案例：幻觉免疫</div>
+      <div class="nf-example-steps">
+        <div class="nf-ex-card">
+          <h5 class="bad">❌ 第一次犯错</h5>
+          <p>龙虾回答「我们有 12 家门店」，<br>用户纠正：「不对，目前是 8 家」</p>
+          <p style="margin-top:8px"><code>→ ERRORS.md 记录 ERR-001</code></p>
+        </div>
+        <div class="nf-ex-arrow">→</div>
+        <div class="nf-ex-card">
+          <h5 class="fix">⚠️ 生成防治规则</h5>
+          <p>规则：门店数量是动态数据，禁止凭记忆回答，必须查询 <code>dim_shop_d_his</code> 实时获取</p>
+          <p style="margin-top:8px"><code>→ 晋升至 AGENTS.md</code></p>
+        </div>
+        <div class="nf-ex-arrow">→</div>
+        <div class="nf-ex-card">
+          <h5 class="done">✅ 永久免疫</h5>
+          <p>下次被问门店数时，自动触发 SQL 查询而非凭记忆回答。<strong>从此不再犯这个错。</strong></p>
+          <p style="margin-top:8px"><code>状态: promoted ✓</code></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 对比 -->
+    <div class="nf-contrast reveal reveal-delay-3">
+      <div class="nf-contrast-card bad">
+        <h5>😵 普通龙虾</h5>
+        <ul>
+          <li>被纠正后说「好的我知道了」</li>
+          <li>下一次对话完全忘记</li>
+          <li>同一个错误反复犯</li>
+          <li>没有错误追踪机制</li>
+          <li>越用越不可信</li>
+        </ul>
+      </div>
+      <div class="nf-contrast-card good">
+        <h5>🦞✨ 我们的龙虾</h5>
+        <ul>
+          <li>被纠正后结构化记录根因</li>
+          <li>同类错误自动关联聚类</li>
+          <li>防治规则自动晋升为永久 DNA</li>
+          <li>下次遇到同类场景主动防御</li>
+          <li>越用越可信，错误率递减</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==================== 团队协作 ==================== -->
+<section class="teamwork" id="teamwork">
+  <div class="container">
+    <div class="reveal" style="text-align: center;">
+      <span class="section-tag">TEAM SYNERGY</span>
+      <h2 class="section-title">团队协作示意</h2>
+      <p class="section-subtitle" style="margin-left: auto; margin-right: auto;">3个人的经验通过 Git 同步，汇入同一个知识池，像滚雪球一样增长</p>
+    </div>
+
+    <div class="team-diagram">
+      <!-- 三个成员 -->
+      <div class="team-members reveal reveal-delay-1">
+        <div class="team-member">
+          <div class="team-avatar a">👩‍💻</div>
+          <div class="team-member-name">成员 A</div>
+          <div class="team-member-role">+ 自己的 OpenClaw 实例</div>
+        </div>
+        <div class="team-member">
+          <div class="team-avatar b">👨‍💻</div>
+          <div class="team-member-name">成员 B</div>
+          <div class="team-member-role">+ 自己的 OpenClaw 实例</div>
+        </div>
+        <div class="team-member">
+          <div class="team-avatar c">🧑‍💻</div>
+          <div class="team-member-name">成员 C</div>
+          <div class="team-member-role">+ 自己的 OpenClaw 实例</div>
+        </div>
+      </div>
+
+      <!-- 连接线 SVG -->
+      <div class="team-connections reveal reveal-delay-2">
+        <svg width="600" height="80" viewBox="0 0 600 80">
+          <defs>
+            <linearGradient id="lineGradA" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="rgba(255,107,74,0.6)" />
+              <stop offset="100%" stop-color="rgba(255,107,74,0.1)" />
+            </linearGradient>
+            <linearGradient id="lineGradB" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="rgba(78,205,196,0.6)" />
+              <stop offset="100%" stop-color="rgba(78,205,196,0.1)" />
+            </linearGradient>
+            <linearGradient id="lineGradC" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="rgba(168,130,255,0.6)" />
+              <stop offset="100%" stop-color="rgba(168,130,255,0.1)" />
+            </linearGradient>
+          </defs>
+          <!-- A → Hub -->
+          <line x1="120" y1="0" x2="300" y2="70" stroke="url(#lineGradA)" stroke-width="2" stroke-dasharray="6,3">
+            <animate attributeName="stroke-dashoffset" from="0" to="-18" dur="1.5s" repeatCount="indefinite" />
+          </line>
+          <!-- B → Hub -->
+          <line x1="300" y1="0" x2="300" y2="70" stroke="url(#lineGradB)" stroke-width="2" stroke-dasharray="6,3">
+            <animate attributeName="stroke-dashoffset" from="0" to="-18" dur="1.5s" repeatCount="indefinite" />
+          </line>
+          <!-- C → Hub -->
+          <line x1="480" y1="0" x2="300" y2="70" stroke="url(#lineGradC)" stroke-width="2" stroke-dasharray="6,3">
+            <animate attributeName="stroke-dashoffset" from="0" to="-18" dur="1.5s" repeatCount="indefinite" />
+          </line>
+        </svg>
+      </div>
+
+      <!-- 中央 Hub -->
+      <div class="team-hub reveal reveal-delay-3">
+        <div class="team-hub-icon">
+          <span class="emoji">📦</span>
+          <span class="text">Git Sync</span>
+        </div>
+        <div class="team-hub-label">共享 Workspace<br>知识像滚雪球一样增长</div>
+      </div>
+
+      <!-- 流程说明 -->
+      <div class="team-flow reveal reveal-delay-4">
+        <div class="team-flow-step">
+          <div class="step-num">1</div>
+          <p><strong>成员 A</strong> 发现一个运营分析技巧，自动记录到 .learnings/</p>
+          <span class="team-flow-arrow">→</span>
+        </div>
+        <div class="team-flow-step">
+          <div class="step-num">2</div>
+          <p><strong>git push</strong> 将新知识推送到共享 workspace</p>
+          <span class="team-flow-arrow">→</span>
+        </div>
+        <div class="team-flow-step">
+          <div class="step-num">3</div>
+          <p><strong>成员 B 和 C</strong> 的龙虾下次启动时自动获取新知识</p>
+          <span class="team-flow-arrow">→</span>
+        </div>
+        <div class="team-flow-step">
+          <div class="step-num">4</div>
+          <p><strong>团队知识</strong>像滚雪球一样持续增长</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 进化时间线 ==================== -->
+<section class="timeline-section" id="timeline">
+  <div class="container">
+    <div class="reveal" style="text-align: center;">
+      <span class="section-tag">EVOLUTION TIMELINE</span>
+      <h2 class="section-title">龙虾进化轨迹</h2>
+      <p class="section-subtitle" style="margin-left: auto; margin-right: auto;">从实习生到团队大脑，看它如何一步步成长</p>
+    </div>
+
+    <div class="timeline">
+      <!-- Day 1 -->
+      <div class="timeline-item reveal">
+        <div class="timeline-marker">🐣</div>
+        <div class="timeline-card">
+          <div class="day">DAY 1</div>
+          <h4>「刚入职的实习生」</h4>
+          <p>通用能力，需要手把手教。知道基本的运营概念，但还不了解团队的具体业务。</p>
+          <div class="timeline-metrics">
+            <div class="timeline-metric">
+              <div class="value">0</div>
+              <div class="label">学习条目</div>
+            </div>
+            <div class="timeline-metric">
+              <div class="value">0</div>
+              <div class="label">永久规则</div>
+            </div>
+            <div class="timeline-metric">
+              <div class="value">5</div>
+              <div class="label">任务类型</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 7 -->
+      <div class="timeline-item reveal">
+        <div class="timeline-marker">📖</div>
+        <div class="timeline-card">
+          <div class="day">DAY 7</div>
+          <h4>「快速学习的新人」</h4>
+          <p>记住了团队的偏好和常用流程。知道谁负责什么，常用数据在哪里。</p>
+          <div class="timeline-metrics">
+            <div class="timeline-metric">
+              <div class="value">30+</div>
+              <div class="label">学习条目</div>
+            </div>
+            <div class="timeline-metric">
+              <div class="value">5</div>
+              <div class="label">永久规则</div>
+            </div>
+            <div class="timeline-metric">
+              <div class="value">12</div>
+              <div class="label">任务类型</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 14 -->
+      <div class="timeline-item reveal">
+        <div class="timeline-marker">💪</div>
+        <div class="timeline-card">
+          <div class="day">DAY 14</div>
+          <h4>「靠谱的同事」</h4>
+          <p>能独立处理常规运营任务，自动避坑。遇到类似问题会主动提醒。</p>
+          <div class="timeline-metrics">
+            <div class="timeline-metric">
+              <div class="value">80+</div>
+              <div class="label">学习条目</div>
+            </div>
+            <div class="timeline-metric">
+              <div class="value">15</div>
+              <div class="label">永久规则</div>
+            </div>
+            <div class="timeline-metric">
+              <div class="value">25</div>
+              <div class="label">任务类型</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 30 -->
+      <div class="timeline-item reveal">
+        <div class="timeline-marker">🎯</div>
+        <div class="timeline-card">
+          <div class="day">DAY 30</div>
+          <h4>「资深运营」</h4>
+          <p>深度理解业务，能给出专业建议。对常见问题已有成熟解法。</p>
+          <div class="timeline-metrics">
+            <div class="timeline-metric">
+              <div class="value">200+</div>
+              <div class="label">学习条目</div>
+            </div>
+            <div class="timeline-metric">
+              <div class="value">40</div>
+              <div class="label">永久规则</div>
+            </div>
+            <div class="timeline-metric">
+              <div class="value">50</div>
+              <div class="label">任务类型</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 90 -->
+      <div class="timeline-item reveal">
+        <div class="timeline-marker">🏆</div>
+        <div class="timeline-card">
+          <div class="day">DAY 90</div>
+          <h4>「团队大脑」</h4>
+          <p>团队的机构记忆，新人培训靠它。不仅解决问题，还能发现问题。</p>
+          <div class="timeline-metrics">
+            <div class="timeline-metric">
+              <div class="value">500+</div>
+              <div class="label">学习条目</div>
+            </div>
+            <div class="timeline-metric">
+              <div class="value">100</div>
+              <div class="label">永久规则</div>
+            </div>
+            <div class="timeline-metric">
+              <div class="value">100+</div>
+              <div class="label">任务类型</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 秘密武器 ==================== -->
+<section class="weapons" id="weapons">
+  <div class="container">
+    <div class="reveal" style="text-align: center;">
+      <span class="section-tag">SECRET WEAPONS</span>
+      <h2 class="section-title">我们的秘密武器</h2>
+      <p class="section-subtitle" style="margin-left: auto; margin-right: auto;">三个根本性的差异化优势，让我们的龙虾与众不同</p>
+    </div>
+
+    <div class="weapons-grid">
+      <div class="weapon-card reveal reveal-delay-1">
+        <span class="emoji">🧬</span>
+        <h3>自进化 DNA</h3>
+        <p>不是写死的工作流，是活的知识系统。每次使用都在进化，每次犯错都在学习。</p>
+        <div class="quote">「静态工作流是上个时代的产物，自进化系统才是未来。」</div>
+      </div>
+      <div class="weapon-card reveal reveal-delay-2">
+        <span class="emoji">🤝</span>
+        <h3>团队智慧复利</h3>
+        <p>3个人的经验不是3倍，是指数级增长。A 踩过的坑，B 和 C 永远不会再踩。</p>
+        <div class="quote">「知识共享不是加法，是乘法。」</div>
+      </div>
+      <div class="weapon-card reveal reveal-delay-3">
+        <span class="emoji">🛡️</span>
+        <h3>严谨性护城河</h3>
+        <p>别的龙虾可能编造答案，我们的龙虾会说「我不确定」。这不是弱点，是最大的优势。</p>
+        <div class="quote">「在AI时代，诚实比聪明更稀缺。」</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 页脚 ==================== -->
+<footer class="footer">
+  <div class="footer-logo">🦞✨</div>
+  <div class="footer-text">超级龙虾 &mdash; 从工作流到运营大脑 &mdash; OpenClaw 内部竞赛</div>
+</footer>
+
+<!-- ==================== JavaScript ==================== -->
+<script>
+(function() {
+  'use strict';
+
+  /* === 导航滚动效果 === */
+  const nav = document.getElementById('nav');
+  let lastScroll = 0;
+  window.addEventListener('scroll', function() {
+    const currentScroll = window.scrollY;
+    if (currentScroll > 60) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+    lastScroll = currentScroll;
+  }, { passive: true });
+
+  /* === 滚动显示动画（IntersectionObserver） === */
+  const revealElements = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  revealElements.forEach(function(el) {
+    observer.observe(el);
+  });
+
+  /* === Hero 数字计数动画 === */
+  function animateCountUp(el, target, duration) {
+    let start = 0;
+    const startTime = performance.now();
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // easeOutExpo
+      const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      const current = Math.floor(ease * target);
+      el.textContent = current;
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = target;
+      }
+    }
+    requestAnimationFrame(update);
+  }
+
+  // 观察 hero 区域内的数字
+  const heroNumbers = document.querySelectorAll('.hero-meta-item .number');
+  const heroObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        const target = parseInt(entry.target.getAttribute('data-count'));
+        animateCountUp(entry.target, target, 1200);
+        heroObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  heroNumbers.forEach(function(el) {
+    heroObserver.observe(el);
+  });
+
+  /* === 平滑滚动导航 === */
+  document.querySelectorAll('.nav-links a').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href');
+      const target = document.querySelector(targetId);
+      if (target) {
+        const offset = 70; // 导航高度
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    });
+  });
+
+  /* === 龙虾彩蛋 === */
+  const lobster = document.querySelector('.floating-lobster');
+  let clickCount = 0;
+  lobster.addEventListener('click', function() {
+    clickCount++;
+    if (clickCount >= 5) {
+      clickCount = 0;
+      // 彩蛋：龙虾飞上天
+      lobster.style.transition = 'all 1s cubic-bezier(0.16,1,0.3,1)';
+      lobster.style.transform = 'translateY(-100vh) rotate(720deg) scale(3)';
+      setTimeout(function() {
+        lobster.style.transition = 'all 0.5s';
+        lobster.style.transform = '';
+      }, 1200);
+    }
+  });
+
+  /* === 架构层悬浮动态光效 === */
+  document.querySelectorAll('.arch-layer').forEach(function(layer) {
+    layer.addEventListener('mousemove', function(e) {
+      const rect = layer.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      layer.style.setProperty('--mouse-x', x + 'px');
+      layer.style.setProperty('--mouse-y', y + 'px');
+    });
+  });
+
+})();
+</script>
+</body>
+</html>

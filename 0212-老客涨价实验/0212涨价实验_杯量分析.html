@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>0212 涨价实验 — 分层杯量贡献分析</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root { --bg: #0f172a; --card: #1e293b; --border: #334155; --text: #e2e8f0; --muted: #94a3b8; --accent: #3b82f6; --green: #22c55e; --red: #ef4444; --yellow: #eab308; --orange: #f97316; --purple: #a855f7; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'SF Pro Display', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 24px; }
+.container { max-width: 1300px; margin: 0 auto; }
+.header { text-align: center; padding: 32px 0 24px; }
+.header h1 { font-size: 26px; font-weight: 700; }
+.header .sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+.card h2 { font-size: 17px; font-weight: 600; margin-bottom: 14px; }
+.card h3 { font-size: 14px; color: var(--muted); margin: 16px 0 8px; }
+
+/* KPI */
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+.kpi { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+.kpi .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.kpi .val { font-size: 28px; font-weight: 700; margin: 2px 0; }
+.kpi .note { font-size: 12px; color: var(--muted); }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: rgba(59,130,246,0.1); color: var(--accent); font-weight: 600; padding: 8px 6px; text-align: center; white-space: nowrap; }
+td { padding: 7px 6px; text-align: center; border-bottom: 1px solid var(--border); }
+.lbl { text-align: left !important; font-weight: 600; white-space: nowrap; }
+.total-row { background: rgba(59,130,246,0.05); }
+.total-row td { border-top: 2px solid var(--accent); font-weight: 600; }
+tr:hover { background: rgba(255,255,255,0.02); }
+.pos { color: var(--green); font-weight: 600; }
+.neg { color: var(--red); font-weight: 600; }
+.warn { color: var(--yellow); font-weight: 600; }
+
+/* Charts */
+.charts-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.chart-box { position: relative; height: 280px; }
+@media (max-width: 900px) { .charts-2, .kpi-row { grid-template-columns: 1fr; } }
+
+/* Insight box */
+.insight { background: linear-gradient(135deg, rgba(234,179,8,0.08), rgba(249,115,22,0.08)); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 20px; margin-top: 16px; }
+.insight h3 { color: var(--yellow); margin: 0 0 10px; font-size: 15px; }
+.insight ul { margin-left: 18px; }
+.insight li { margin-bottom: 6px; }
+
+/* Waterfall */
+.waterfall { display: flex; align-items: flex-end; gap: 20px; justify-content: center; margin: 20px 0; height: 200px; }
+.wf-bar { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.wf-bar .bar { width: 80px; border-radius: 4px 4px 0 0; transition: height 0.3s; }
+.wf-bar .bar-label { font-size: 20px; font-weight: 700; }
+.wf-bar .bar-name { font-size: 12px; color: var(--muted); }
+
+.footer { text-align: center; color: var(--muted); font-size: 11px; padding: 20px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+    <h1>0212 涨价实验 — 分层杯量贡献分析</h1>
+    <div class="sub">实验期 02-13 ~ 03-04 (20天) | 口径: DWD + 仅饮品 + type NOT IN (3,4,5) + 门店订单</div>
+</div>
+
+<!-- KPI -->
+<div class="kpi-row">
+    <div class="kpi">
+        <div class="label">A组 每日少卖</div>
+        <div class="val" style="color: var(--red);">-40 杯</div>
+        <div class="note">相当于日均杯量的 -9.7%</div>
+    </div>
+    <div class="kpi">
+        <div class="label">B组 每日少卖</div>
+        <div class="val" style="color: var(--red);">-69 杯</div>
+        <div class="note">相当于日均杯量的 -11.9%</div>
+    </div>
+    <div class="kpi">
+        <div class="label">0-15天用户贡献杯量损失</div>
+        <div class="val" style="color: var(--orange);">60~75%</div>
+        <div class="note">A组 59.6% | B组 74.9%</div>
+    </div>
+    <div class="kpi">
+        <div class="label">全量杯量 diff 趋势</div>
+        <div class="val" style="color: var(--green);">收敛</div>
+        <div class="note">A: +0.8pp | B: +3.5pp (后半 vs 前半)</div>
+    </div>
+</div>
+
+<!-- 1. 价格弹性表 -->
+<div class="card">
+    <h2>1. 分层价格弹性</h2>
+    <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">弹性 = 杯量变化% / 单杯实收变化%。|弹性| < 1 为低弹性(可涨价)，> 1 为高弹性(涨价伤杯量)</p>
+    <table>
+        <thead>
+            <tr>
+                <th>分层</th>
+                <th>A 单杯涨幅</th><th>A 杯量变化</th><th>A 弹性</th><th>A 判定</th>
+                <th>B 单杯涨幅</th><th>B 杯量变化</th><th>B 弹性</th><th>B 判定</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="lbl">0-15天 活跃</td>
+                <td>+7.5%</td><td class="neg">-5.9%</td><td class="warn">-0.79</td><td class="pos">低弹性 ✓</td>
+                <td>+5.6%</td><td class="neg">-12.3%</td><td class="neg">-2.19</td><td class="neg">高弹性 ✗</td>
+            </tr>
+            <tr>
+                <td class="lbl">16-30天 衰退</td>
+                <td>+13.0%</td><td class="neg">-8.6%</td><td class="pos">-0.66</td><td class="pos">低弹性 ✓</td>
+                <td>+15.5%</td><td class="neg">-8.3%</td><td class="pos">-0.54</td><td class="pos">低弹性 ✓</td>
+            </tr>
+            <tr>
+                <td class="lbl">30+天 流失</td>
+                <td>+24.2%</td><td class="neg">-7.6%</td><td class="pos">-0.31</td><td class="pos">低弹性 ✓</td>
+                <td>+22.2%</td><td class="neg">-8.6%</td><td class="pos">-0.39</td><td class="pos">低弹性 ✓</td>
+            </tr>
+            <tr class="total-row">
+                <td class="lbl">全量</td>
+                <td>+10.5%</td><td class="neg">-9.7%</td><td class="warn">-0.92</td><td class="warn">临界</td>
+                <td>+9.0%</td><td class="neg">-11.9%</td><td class="neg">-1.33</td><td class="neg">高弹性 ✗</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="insight">
+        <h3>弹性解读</h3>
+        <ul>
+            <li><strong>A组对活跃用户弹性 -0.79</strong>：价格涨 7.5%，杯量只降 5.9%，说明<strong>A组的折扣力度(75折系)在活跃用户的承受范围内</strong></li>
+            <li><strong>B组对活跃用户弹性 -2.19</strong>：价格仅涨 5.6%，杯量却降 12.3%，<strong>B组折扣力度(7折系)让活跃用户大量减少购买</strong></li>
+            <li><strong>衰退/流失用户弹性都 < 0.7</strong>：这两层价格敏感度低，涨价不太影响其购买行为（本来买得就少）</li>
+        </ul>
+    </div>
+</div>
+
+<!-- 1.5 来访率与访购率 -->
+<div class="card">
+    <h2>1.5 分层来访率与访购率</h2>
+    <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">来访率 = 来访人数 / 进组人数 | 访购率 = 购买人数 / 来访人数 | 来访来源: dws_mg_log_user_screen_name_d_1d</p>
+    <table>
+        <thead>
+            <tr>
+                <th>分层</th>
+                <th colspan="3">来访率</th><th colspan="2">vs 对照</th>
+                <th colspan="3">访购率</th><th colspan="2">vs 对照</th>
+            </tr>
+            <tr>
+                <th></th><th>A组</th><th>B组</th><th>C组</th><th>A-C</th><th>B-C</th>
+                <th>A组</th><th>B组</th><th>C组</th><th>A-C</th><th>B-C</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="lbl">0-15天</td>
+                <td>84.87%</td><td>85.56%</td><td>85.33%</td>
+                <td>-0.46pp</td><td>+0.23pp</td>
+                <td>65.6%</td><td>63.6%</td><td>68.5%</td>
+                <td class="neg">-2.9pp</td><td class="neg">-4.9pp</td>
+            </tr>
+            <tr>
+                <td class="lbl">16-30天</td>
+                <td class="warn">55.74%</td><td>53.48%</td><td>54.30%</td>
+                <td class="pos">+1.44pp</td><td>-0.82pp</td>
+                <td>38.9%</td><td>38.6%</td><td>41.8%</td>
+                <td class="neg">-2.9pp</td><td class="neg">-3.2pp</td>
+            </tr>
+            <tr>
+                <td class="lbl">30+天</td>
+                <td>21.76%</td><td>21.84%</td><td>22.03%</td>
+                <td>-0.27pp</td><td>-0.19pp</td>
+                <td>21.4%</td><td>20.8%</td><td>23.0%</td>
+                <td class="neg">-1.6pp</td><td class="neg">-2.2pp</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="insight">
+        <h3>涨价如何影响用户行为链路</h3>
+        <ul>
+            <li><strong>来访率几乎不受影响</strong>：0-15天和30+天各组差异在 ±0.5pp 内，涨价不改变用户"打不打开 APP"的决定</li>
+            <li><strong>16-30天 A组是唯一例外</strong>：来访率比对照高 +1.44pp。可能原因：涨价改变了券面额，新的价格信号对正在衰退的用户起到了<strong>注意力唤醒</strong>作用</li>
+            <li><strong>访购率全面下降</strong>：所有分层涨价组访购率均低于对照（-1.6~4.9pp），说明<strong>涨价的核心影响不在"来不来"，而在"来了买不买"</strong></li>
+            <li>杯量损失 = 来访率变化(微小) × 访购率下降(主因) × 单次购买杯数变化(微小)，<strong>访购率下降是杯量损失的主驱动力</strong></li>
+        </ul>
+    </div>
+</div>
+
+<!-- 2. 杯量损失瀑布 -->
+<div class="card">
+    <h2>2. 每日杯量损失拆解</h2>
+    <p style="color: var(--muted); font-size: 13px; margin-bottom: 16px;">涨价后每天比对照组少卖多少杯？损失主要来自谁？</p>
+
+    <div class="charts-2">
+        <div>
+            <h3>A 涨价组1 — 日损失 40.3 杯</h3>
+            <table>
+                <tr><th>分层</th><th>用户数</th><th>日均杯/人差异</th><th>日损失杯数</th><th>日损失金额</th><th>占比</th></tr>
+                <tr><td class="lbl">0-15天</td><td>4,217</td><td class="neg">-0.0057</td><td class="neg">-24.1</td><td class="neg">-$84.77</td><td class="warn">59.6%</td></tr>
+                <tr><td class="lbl">16-30天</td><td>3,292</td><td class="neg">-0.0019</td><td class="neg">-6.3</td><td class="neg">-$18.62</td><td>15.5%</td></tr>
+                <tr><td class="lbl">30+天</td><td>30,445</td><td class="neg">-0.0003</td><td class="neg">-10.0</td><td class="neg">-$24.42</td><td>24.9%</td></tr>
+                <tr class="total-row"><td class="lbl">合计</td><td>37,954</td><td></td><td class="neg">-40.3</td><td class="neg">-$127.81</td><td>100%</td></tr>
+            </table>
+        </div>
+        <div>
+            <h3>B 涨价组2 — 日损失 69.1 杯</h3>
+            <table>
+                <tr><th>分层</th><th>用户数</th><th>日均杯/人差异</th><th>日损失杯数</th><th>日损失金额</th><th>占比</th></tr>
+                <tr><td class="lbl">0-15天</td><td>4,368</td><td class="neg">-0.0119</td><td class="neg">-51.7</td><td class="neg">-$182.20</td><td class="neg">74.9%</td></tr>
+                <tr><td class="lbl">16-30天</td><td>3,307</td><td class="neg">-0.0018</td><td class="neg">-6.1</td><td class="neg">-$18.12</td><td>8.8%</td></tr>
+                <tr><td class="lbl">30+天</td><td>30,247</td><td class="neg">-0.0004</td><td class="neg">-11.3</td><td class="neg">-$27.43</td><td>16.3%</td></tr>
+                <tr class="total-row"><td class="lbl">合计</td><td>37,922</td><td></td><td class="neg">-69.1</td><td class="neg">-$227.75</td><td>100%</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="insight" style="margin-top: 20px;">
+        <h3>损失结构的关键发现</h3>
+        <ul>
+            <li>虽然 0-15天用户只占 <strong>11% 人数</strong>，但贡献了 A组 <strong>60%</strong>、B组 <strong>75%</strong> 的杯量损失</li>
+            <li>30+天用户占 <strong>80% 人数</strong>，但只贡献 <strong>16~25%</strong> 杯量损失 — 因为他们本来就几乎不买</li>
+            <li>B组活跃用户日损失 51.7 杯，是 A组(24.1杯)的 <strong>2.1 倍</strong> — B组的折扣策略对活跃用户伤害远大于A组</li>
+        </ul>
+    </div>
+</div>
+
+<!-- 3. 时间趋势 -->
+<div class="card">
+    <h2>3. 前后半段趋势对比 — 杯量损失在收敛还是扩大？</h2>
+    <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">将 20 天分为前 9 天 (02-13~02-21) 和后 10 天 (02-22~03-04)，看实验组 vs 对照组的杯量 diff 变化方向</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th rowspan="2">分层</th>
+                <th colspan="4">A 涨价组1 vs 对照</th>
+                <th colspan="4">B 涨价组2 vs 对照</th>
+            </tr>
+            <tr>
+                <th>前半 diff</th><th>后半 diff</th><th>变化</th><th>趋势</th>
+                <th>前半 diff</th><th>后半 diff</th><th>变化</th><th>趋势</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="lbl">0-15天</td>
+                <td>-5.1%</td><td>-6.6%</td><td class="neg">-1.5pp</td><td class="neg">扩大</td>
+                <td>-13.5%</td><td>-11.4%</td><td class="pos">+2.1pp</td><td class="pos">收敛</td>
+            </tr>
+            <tr>
+                <td class="lbl">16-30天</td>
+                <td>-7.6%</td><td>-9.5%</td><td class="neg">-1.9pp</td><td class="neg">扩大</td>
+                <td>-9.7%</td><td>-7.0%</td><td class="pos">+2.7pp</td><td class="pos">收敛</td>
+            </tr>
+            <tr>
+                <td class="lbl">30+天</td>
+                <td>-12.6%</td><td>-2.3%</td><td class="pos">+10.3pp</td><td class="pos">收敛</td>
+                <td>-13.3%</td><td>-3.5%</td><td class="pos">+9.8pp</td><td class="pos">收敛</td>
+            </tr>
+            <tr class="total-row">
+                <td class="lbl">全量</td>
+                <td>-10.1%</td><td>-9.3%</td><td class="pos">+0.8pp</td><td class="pos">收敛</td>
+                <td>-13.8%</td><td>-10.2%</td><td class="pos">+3.5pp</td><td class="pos">收敛</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="charts-2" style="margin-top: 20px;">
+        <div>
+            <h3>0-15天活跃用户 — 每日 ITT 杯量趋势</h3>
+            <div class="chart-box"><canvas id="chart_active"></canvas></div>
+        </div>
+        <div>
+            <h3>30+天流失用户 — 每日 ITT 杯量趋势</h3>
+            <div class="chart-box"><canvas id="chart_churned"></canvas></div>
+        </div>
+        <div>
+            <h3>全量 — 每日 ITT 杯量 diff vs 对照 (%)</h3>
+            <div class="chart-box"><canvas id="chart_diff"></canvas></div>
+        </div>
+        <div>
+            <h3>分层杯量损失占比 — A vs B 对比</h3>
+            <div class="chart-box"><canvas id="chart_pie"></canvas></div>
+        </div>
+    </div>
+
+    <div class="insight">
+        <h3>趋势判断</h3>
+        <ul>
+            <li><strong>整体趋势在收敛</strong>：全量 diff A 从 -10.1%→-9.3%(+0.8pp)，B 从 -13.8%→-10.2%(+3.5pp)</li>
+            <li><strong>A组活跃用户是唯一的担忧点</strong>：diff 从 -5.1%→-6.6%，在<span class="neg">扩大</span>而非收敛，说明A组的涨价可能正在逐步侵蚀活跃用户的消费习惯</li>
+            <li><strong>30+天用户收敛最显著</strong>：A组 +10.3pp，B组 +9.8pp，前期的杯量差异在后期大幅缩小，说明对流失用户的影响只是暂时的</li>
+            <li>建议追踪更长周期(45-60天)确认活跃用户的趋势是否会反转</li>
+        </ul>
+    </div>
+</div>
+
+<!-- 4. 综合结论 -->
+<div class="card" style="background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.08)); border-color: rgba(59,130,246,0.3);">
+    <h2 style="color: var(--accent);">4. 综合结论 — 回答三个核心问题</h2>
+
+    <h3 style="color: var(--text); font-size: 15px; margin-top: 16px;">Q1: 每个分层的价格弹性各是多少？</h3>
+    <table style="max-width: 600px; margin: 8px 0 16px;">
+        <tr><th>分层</th><th>A组弹性</th><th>B组弹性</th><th>含义</th></tr>
+        <tr><td class="lbl">0-15天</td><td class="warn">-0.79</td><td class="neg">-2.19</td><td>A可承受，B严重过度</td></tr>
+        <tr><td class="lbl">16-30天</td><td class="pos">-0.66</td><td class="pos">-0.54</td><td>两组都可涨</td></tr>
+        <tr><td class="lbl">30+天</td><td class="pos">-0.31</td><td class="pos">-0.39</td><td>完全不敏感</td></tr>
+    </table>
+
+    <h3 style="color: var(--text); font-size: 15px;">Q2: 杯量损失主要由谁贡献？</h3>
+    <p style="margin: 4px 0 16px; color: var(--muted);">
+        <strong style="color: var(--orange);">0-15天活跃用户贡献了 60~75% 的杯量损失</strong>，占人数仅 11%。
+        30+天用户虽然 80% 人数，但杯量损失占比仅 16~25%。<br>
+        → 所以你同事说的对：<strong style="color: var(--text);">杯量损失问题的焦点在活跃用户，而非流失用户</strong>。
+    </p>
+
+    <h3 style="color: var(--text); font-size: 15px;">Q3: 损失在扩大还是收敛？</h3>
+    <p style="margin: 4px 0 16px; color: var(--muted);">
+        全量层面<span class="pos">收敛</span>（B组收敛更快 +3.5pp）。<br>
+        但 <strong style="color: var(--red);">A组活跃用户的杯量 diff 在扩大(-1.5pp)</strong>，需要更长时间观察是适应期还是持续恶化。
+    </p>
+
+    <h3 style="color: var(--text); font-size: 15px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);">回到你同事的视角</h3>
+    <p style="color: var(--muted);">
+        同事建议「0-15天可以涨，30+天不要涨」，弹性 + 来访率数据均有支撑：<br><br>
+        <strong style="color: var(--green);">支持的理由：</strong><br>
+        - A组对活跃用户弹性仅 0.79（&lt;1），确实扛得住涨价<br>
+        - 活跃用户来访率 84.87% vs 对照 85.33%，几乎无差异（-0.46pp），涨价不会把他们赶走<br>
+        - 30+天用户涨不涨价杯量几乎不变（弹性0.31），但这些人的战略目标是<strong>拉活</strong>而非<strong>提价</strong><br><br>
+        <strong style="color: var(--yellow);">来访率补充的新洞察：</strong><br>
+        - 涨价的核心影响不在"来不来"（来访率各组几乎一致），而在<strong>"来了买不买"</strong>（访购率全面下降 -1.6~4.9pp）<br>
+        - 16-30天 A组来访率反而比对照高 +1.44pp — 涨价对衰退用户有"注意力唤醒"效应，但这个红利可能是一次性的<br><br>
+        <strong style="color: var(--red);">风险提示：</strong><br>
+        - A组活跃用户的杯量 diff 在后半段<span class="neg">扩大</span>了 1.5pp，可能有滞后效应<br>
+        - B组策略对活跃用户弹性 2.19、访购率降 4.9pp，完全不可行<br>
+        - 建议只用 <strong>A组(75折系)</strong> 对活跃用户涨价，<strong>绝对不能用 B组(7折系)</strong>
+    </p>
+</div>
+
+<div class="footer">
+    Lucky US Data Team | 杯量弹性分析 | 2026-03-10 生成
+</div>
+</div>
+
+<script>
+// Load daily data
+const dailyData = null; // We'll use inline data
+
+const colors = {
+    a: { line: '#f97316', bg: 'rgba(249,115,22,0.1)' },
+    b: { line: '#a855f7', bg: 'rgba(168,85,247,0.1)' },
+    c: { line: '#3b82f6', bg: 'rgba(59,130,246,0.1)' },
+};
+
+const commonOpts = {
+    responsive: true, maintainAspectRatio: false,
+    interaction: { intersect: false, mode: 'index' },
+    plugins: {
+        legend: { labels: { color: '#94a3b8', font: { size: 11 } } },
+        tooltip: { backgroundColor: '#1e293b', borderColor: '#334155', borderWidth: 1 },
+    },
+    scales: {
+        x: { ticks: { color: '#64748b', font: { size: 10 }, maxRotation: 45 }, grid: { color: 'rgba(51,65,85,0.2)' } },
+        y: { ticks: { color: '#64748b' }, grid: { color: 'rgba(51,65,85,0.2)' } },
+    },
+};
+
+function ds(label, data, c, fill=false) {
+    return { label, data, borderColor: c.line, backgroundColor: c.bg, borderWidth: 2, pointRadius: 2, tension: 0.3, fill };
+}
+</script>
+
+<script>
+const dates = ["02-13", "02-14", "02-15", "02-16", "02-17", "02-18", "02-19", "02-20", "02-21", "02-22", "02-24", "02-25", "02-26", "02-27", "02-28", "03-01", "03-02", "03-03", "03-04"];
+
+// 0-15天 active users daily ITT cups
+const aActive = [0.11335072, 0.07090349, 0.05216979, 0.06568651, 0.1218876, 0.12639317, 0.13350723, 0.08963718, 0.06568651, 0.03201328, 0.09698838, 0.11358786, 0.12900166, 0.10267963, 0.06284088, 0.05240692, 0.11927911, 0.10955656, 0.14844676];
+const bActive = [0.10760073, 0.06776557, 0.05265568, 0.0606685, 0.11423993, 0.11057692, 0.11492674, 0.07554945, 0.06135531, 0.04143773, 0.09661172, 0.12042125, 0.11378205, 0.09867216, 0.06341575, 0.05196886, 0.10393773, 0.1025641, 0.12522894];
+const cActive = [0.12078032, 0.07277354, 0.06429177, 0.07582697, 0.1187447, 0.13876166, 0.12722646, 0.09092451, 0.07514843, 0.04020356, 0.10534351, 0.13231552, 0.14368109, 0.11738762, 0.07463953, 0.05954198, 0.11789652, 0.11212892, 0.13248516];
+
+// 30+天 churned users daily ITT cups
+const aChurned = [0.00472984, 0.00509115, 0.00410576, 0.00374446, 0.00489407, 0.00436853, 0.00367876, 0.0029233, 0.00555099, 0.00141238, 0.00374446, 0.00394153, 0.0054853, 0.00446707, 0.00604369, 0.00472984, 0.00387584, 0.00312038, 0.00453276];
+const bChurned = [0.00502529, 0.0051906, 0.00489305, 0.00419876, 0.00466162, 0.00343836, 0.00462856, 0.00218203, 0.00452937, 0.00158693, 0.00284326, 0.00370285, 0.00403346, 0.0047608, 0.00555427, 0.00446325, 0.00403346, 0.0041657, 0.00568651];
+const cChurned = [0.00522239, 0.0069965, 0.00532234, 0.00414793, 0.0051974, 0.00474763, 0.00434783, 0.00247376, 0.00624688, 0.00207396, 0.00272364, 0.00374813, 0.0049975, 0.00484758, 0.00609695, 0.003998, 0.00417291, 0.00457271, 0.00509745];
+
+// Total diff %
+const aDiff = [-10.94, -14.47, -21.75, -12.53, -4.64, -10.17, -3.43, -2.99, -14.18, -24.54, -5.42, -14.52, -9.81, -14.63, -8.32, -8.54, -5.82, -12.55, 1.84];
+const bDiff = [-12.75, -12.44, -17.24, -14.72, -6.46, -19.24, -6.69, -16.01, -21.95, -5.87, -6.15, -9.5, -20.33, -11.78, -13.28, -6.46, -12.68, -7.19, -3.7];
+
+// Chart 1: Active users ITT cups
+new Chart(document.getElementById('chart_active'), {
+    type: 'line',
+    data: { labels: dates, datasets: [
+        ds('A 涨价组1', aActive, colors.a),
+        ds('B 涨价组2', bActive, colors.b),
+        ds('C 对照组', cActive, colors.c),
+    ]},
+    options: { ...commonOpts, scales: { ...commonOpts.scales, y: { ...commonOpts.scales.y, title: { display: true, text: '杯/人/天', color: '#64748b' } } } }
+});
+
+// Chart 2: Churned users ITT cups
+new Chart(document.getElementById('chart_churned'), {
+    type: 'line',
+    data: { labels: dates, datasets: [
+        ds('A 涨价组1', aChurned, colors.a),
+        ds('B 涨价组2', bChurned, colors.b),
+        ds('C 对照组', cChurned, colors.c),
+    ]},
+    options: { ...commonOpts, scales: { ...commonOpts.scales, y: { ...commonOpts.scales.y, title: { display: true, text: '杯/人/天', color: '#64748b' } } } }
+});
+
+// Chart 3: Total diff %
+new Chart(document.getElementById('chart_diff'), {
+    type: 'line',
+    data: { labels: dates, datasets: [
+        { ...ds('A vs C', aDiff, colors.a, true) },
+        { ...ds('B vs C', bDiff, colors.b, true) },
+        { label: '0线', data: Array(dates.length).fill(0), borderColor: '#475569', borderWidth: 1, borderDash: [4,4], pointRadius: 0, fill: false },
+    ]},
+    options: { ...commonOpts, scales: { ...commonOpts.scales, y: { ...commonOpts.scales.y, title: { display: true, text: 'diff %', color: '#64748b' } } } }
+});
+
+// Chart 4: Pie charts for loss contribution
+new Chart(document.getElementById('chart_pie'), {
+    type: 'bar',
+    data: {
+        labels: ['0-15天', '16-30天', '30+天'],
+        datasets: [
+            { label: 'A组 损失占比%', data: [59.6, 15.5, 24.9], backgroundColor: 'rgba(249,115,22,0.7)', borderRadius: 4 },
+            { label: 'B组 损失占比%', data: [74.9, 8.8, 16.3], backgroundColor: 'rgba(168,85,247,0.7)', borderRadius: 4 },
+        ]
+    },
+    options: {
+        ...commonOpts,
+        scales: {
+            ...commonOpts.scales,
+            y: { ...commonOpts.scales.y, title: { display: true, text: '占比 %', color: '#64748b' }, max: 80 },
+        },
+    }
+});
+</script>
+</body>
+</html>

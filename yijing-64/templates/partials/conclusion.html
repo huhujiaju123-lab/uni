@@ -1,0 +1,22 @@
+<!-- 结语 -->
+{% if gua.conclusion %}
+<div class="conclusion-section">
+  <div class="container">
+    <div class="conclusion-box fade-in">
+      <h2 style="text-align:center; font-size:1.3rem; color:var(--ink-black); margin-bottom:1.5rem;">{{ gua.meta.name }}卦总结</h2>
+
+      <p style="line-height:2; color:var(--ink-dark); margin-bottom:1.5rem;">{{ gua.conclusion.summary }}</p>
+
+      <div class="conclusion-highlight">
+        <p style="font-weight:600; color:var(--ink-black); margin-bottom:0.5rem;">核心洞见</p>
+        <p>{{ gua.conclusion.coreInsight }}</p>
+      </div>
+
+      <div style="margin-top:1.5rem; padding:1.5rem; background:rgba(184,134,11,0.04); border-radius:8px; text-align:center;">
+        <p style="font-size:0.85rem; color:var(--gold); letter-spacing:0.1em; margin-bottom:0.5rem;">实践指引</p>
+        <p style="line-height:1.9; color:var(--ink-dark);">{{ gua.conclusion.practicalAdvice }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Share The Luck - 数据更新至 2026-03-04</title>
+<style>
+:root {
+    --bg: #0f1117;
+    --card: #1a1d28;
+    --border: #2a2d3a;
+    --text: #e4e4e7;
+    --text-muted: #9ca3af;
+    --accent: #6366f1;
+    --green: #22c55e;
+    --red: #ef4444;
+    --orange: #f59e0b;
+    --blue: #3b82f6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+h2 { font-size: 20px; font-weight: 600; margin: 32px 0 16px; color: var(--accent); }
+h3 { font-size: 16px; font-weight: 600; margin: 20px 0 12px; }
+.subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.kpi {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+}
+.kpi .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.kpi .value { font-size: 28px; font-weight: 700; margin: 4px 0; }
+.kpi .change { font-size: 13px; }
+.up { color: var(--green); }
+.down { color: var(--red); }
+.neutral { color: var(--text-muted); }
+.warn { color: var(--orange); }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+th, td {
+    padding: 8px 12px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+}
+th { color: var(--text-muted); font-weight: 500; font-size: 12px; text-transform: uppercase; }
+td:first-child, th:first-child { text-align: left; }
+tr:hover { background: rgba(99, 102, 241, 0.05); }
+.highlight { background: rgba(99, 102, 241, 0.1); font-weight: 600; }
+.data-break { background: rgba(239, 68, 68, 0.08); }
+.alert {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 13px;
+    color: #fca5a5;
+}
+.info {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 13px;
+    color: #93c5fd;
+}
+.section-divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+.tag-green { background: rgba(34,197,94,0.15); color: var(--green); }
+.tag-red { background: rgba(239,68,68,0.15); color: var(--red); }
+.tag-orange { background: rgba(245,158,11,0.15); color: var(--orange); }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+.bar-container { display: flex; align-items: center; gap: 8px; }
+.bar { height: 8px; border-radius: 4px; background: var(--accent); }
+.footnote { font-size: 12px; color: var(--text-muted); margin-top: 8px; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<h1>Share The Luck 数据报告</h1>
+<p class="subtitle">2026年2月完整月 + 3月1-4日 | 数据截止：2026-03-04 | 上版数据截止：2026-03-02</p>
+
+<!-- ========== CORE KPIs ========== -->
+<h2>一、核心 KPI</h2>
+
+<div class="kpi-grid">
+    <div class="kpi">
+        <div class="label">2月拉新占比</div>
+        <div class="value">5.23%</div>
+        <div class="change down">vs 1月 6.78% (-1.55pp)</div>
+    </div>
+    <div class="kpi">
+        <div class="label">2月注册人数</div>
+        <div class="value">1,356</div>
+        <div class="change down">vs 1月 1,549 (-12.5%)</div>
+    </div>
+    <div class="kpi">
+        <div class="label">D14转化率(完整窗口)</div>
+        <div class="value" style="color: var(--green);">69.1%</div>
+        <div class="change neutral">2/1-2/18 cohort, 上版 68.8%</div>
+    </div>
+    <div class="kpi">
+        <div class="label">D0转化率(2/1-2/26)</div>
+        <div class="value">55.1%</div>
+        <div class="change up">上版 50.3% (+4.8pp flag延迟更新)</div>
+    </div>
+    <div class="kpi">
+        <div class="label">人均邀请</div>
+        <div class="value">1.10</div>
+        <div class="change down">vs 1月 1.23 (-10.6%)</div>
+    </div>
+    <div class="kpi">
+        <div class="label">3月初日均注册</div>
+        <div class="value" style="color: var(--green);">58.8</div>
+        <div class="change up">vs 2月日均 48.4 (+21%)</div>
+    </div>
+</div>
+
+<div class="alert">
+    <strong>数据质量警告：</strong>2/27 起 invitation_success 标记停止更新，转化数据全部为 0。
+    转化指标仅基于 2/1-2/26 数据（D14 完整窗口截至 2/18 注册 cohort）。
+    建议排查数据管道是否异常。
+</div>
+
+<!-- ========== FEB vs JAN ========== -->
+<hr class="section-divider">
+<h2>二、2月 vs 1月对比（更新版）</h2>
+
+<div class="two-col">
+<div class="card">
+    <h3>获客结果</h3>
+    <table>
+        <tr><th>指标</th><th>1月</th><th>2月</th><th>变化</th></tr>
+        <tr><td>分享有礼下单</td><td>1,138</td><td>837</td><td class="down">-26.4%</td></tr>
+        <tr><td>大盘新客</td><td>16,788</td><td>15,999</td><td class="down">-4.7%</td></tr>
+        <tr class="highlight"><td>拉新占比</td><td>6.78%</td><td>5.23%</td><td class="down">-1.55pp</td></tr>
+    </table>
+</div>
+<div class="card">
+    <h3>转化效率（更新后）</h3>
+    <table>
+        <tr><th>指标</th><th>1月</th><th>2月(更新)</th><th>变化</th></tr>
+        <tr><td>D0 转化率</td><td>56.3%</td><td>55.1%</td><td class="down">-1.2pp</td></tr>
+        <tr><td>D3 转化率</td><td>63.7%</td><td>60.5%</td><td class="down">-3.2pp</td></tr>
+        <tr><td>D7 转化率</td><td>68.4%</td><td>65.1%*</td><td class="down">-3.3pp</td></tr>
+        <tr><td>D14 转化率(完整)</td><td>71.1%</td><td>69.1%*</td><td class="down">-2.0pp</td></tr>
+    </table>
+    <p class="footnote">*D7 窗口=2/1-2/25 cohort, D14 窗口=2/1-2/18 cohort。较上版(D0=50.3%) 有所回升，因 flag 延迟更新。</p>
+</div>
+</div>
+
+<div class="info">
+    <strong>对比上版报告：</strong>D0 从 50.3%→55.1%，D14 从 61.3%→69.1%（完整窗口 68.8%→69.1%）。
+    差异原因：invitation_success 标记有延迟回写，更长的观察期让更多转化被记录。
+    实际 1月 vs 2月差距比上版报告更小（D14 仅差 2pp，非 9.8pp）。
+</div>
+
+<div class="two-col">
+<div class="card">
+    <h3>流量与分享</h3>
+    <table>
+        <tr><th>指标</th><th>1月</th><th>2月</th><th>变化</th></tr>
+        <tr><td>弹窗 CTR</td><td>6.3%</td><td>7.0%</td><td class="up">+0.7pp</td></tr>
+        <tr><td>Icon CTR</td><td>-</td><td>1.7%</td><td class="neutral">-</td></tr>
+        <tr><td>Banner CTR</td><td>-</td><td>4.5%</td><td class="neutral">-</td></tr>
+        <tr><td>分享率</td><td>55.7%</td><td>55.5%</td><td class="neutral">持平</td></tr>
+        <tr><td>人均邀请</td><td>1.23</td><td>1.10</td><td class="down">-10.6%</td></tr>
+    </table>
+</div>
+<div class="card">
+    <h3>邀请分布（2/1-3/4）</h3>
+    <table>
+        <tr><th>邀请人数</th><th>邀请者</th><th>占比</th><th style="width:40%">分布</th></tr>
+        <tr>
+            <td>1人</td><td>1,067</td><td>83.0%</td>
+            <td><div class="bar-container"><div class="bar" style="width:83%"></div></div></td>
+        </tr>
+        <tr>
+            <td>2人</td><td>168</td><td>13.1%</td>
+            <td><div class="bar-container"><div class="bar" style="width:13%"></div></div></td>
+        </tr>
+        <tr>
+            <td>3人</td><td>32</td><td>2.5%</td>
+            <td><div class="bar-container"><div class="bar" style="width:2.5%"></div></div></td>
+        </tr>
+        <tr>
+            <td>4+人</td><td>19</td><td>1.5%</td>
+            <td><div class="bar-container"><div class="bar" style="width:1.5%"></div></div></td>
+        </tr>
+        <tr class="highlight"><td>合计</td><td>1,286</td><td>100%</td><td></td></tr>
+    </table>
+    <p class="footnote">结构不变：83% 仅邀1人。最高1人邀11位。</p>
+</div>
+</div>
+
+<!-- ========== MARCH EARLY ========== -->
+<hr class="section-divider">
+<h2>三、3月初（3/1-3/4）速览</h2>
+
+<div class="kpi-grid">
+    <div class="kpi">
+        <div class="label">注册人数</div>
+        <div class="value">235</div>
+        <div class="change up">日均 58.8 vs 2月 48.4</div>
+    </div>
+    <div class="kpi">
+        <div class="label">大盘新客</div>
+        <div class="value">2,542</div>
+        <div class="change neutral">日均 635.5</div>
+    </div>
+    <div class="kpi">
+        <div class="label">分享率</div>
+        <div class="value" style="color: var(--green);">60.7%</div>
+        <div class="change up">vs 2月 55.5% (+5.2pp)</div>
+    </div>
+    <div class="kpi">
+        <div class="label">Icon CTR</div>
+        <div class="value">1.8%</div>
+        <div class="change neutral">vs 2月 1.7% (持平)</div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>3月每日明细</h3>
+    <table>
+        <tr><th>日期</th><th>注册</th><th>下单*</th><th>大盘新客</th><th>Icon点击</th><th>Banner点击</th><th>分享页UV</th><th>点击分享</th><th>分享率</th></tr>
+        <tr class="data-break"><td>03-01</td><td>54</td><td>-</td><td>756</td><td>73</td><td>30</td><td>266</td><td>174</td><td>65.4%</td></tr>
+        <tr class="data-break"><td>03-02</td><td>43</td><td>-</td><td>509</td><td>86</td><td>42</td><td>290</td><td>157</td><td>54.1%</td></tr>
+        <tr class="data-break"><td>03-03</td><td>61</td><td>-</td><td>547</td><td>97</td><td>71</td><td>356</td><td>209</td><td>58.7%</td></tr>
+        <tr class="data-break"><td>03-04</td><td>77</td><td>-</td><td>730</td><td>92</td><td>189</td><td>328</td><td>213</td><td>64.9%</td></tr>
+        <tr class="highlight"><td>合计</td><td>235</td><td>-</td><td>2,542</td><td>348</td><td>332</td><td>1,240</td><td>753</td><td>60.7%</td></tr>
+    </table>
+    <p class="footnote">*转化数据因 invitation_success flag 未更新暂不可用。3/4 Banner点击突增，可能有新资源位上线。</p>
+</div>
+
+<div class="info">
+    <strong>3月初积极信号：</strong>
+    (1) 日均注册 58.8，比2月48.4提升21%；
+    (2) 分享率 60.7%（2月55.5%），用户分享意愿明显提升；
+    (3) 3/4 Banner 点击 189（2月日均46），可能上了新Banner素材。
+</div>
+
+<!-- ========== DAILY DETAIL FEB ========== -->
+<hr class="section-divider">
+<h2>四、2月每日明细（更新版）</h2>
+
+<div class="card" style="overflow-x: auto;">
+<table>
+    <tr>
+        <th>日期</th><th>注册</th><th>邀请人</th><th>人均邀请</th>
+        <th>D0下单</th><th>D0率</th><th>D14下单</th><th>D14率</th>
+        <th>大盘新客</th><th>拉新占比</th>
+    </tr>
+    <tr><td>02-01</td><td>42</td><td>40</td><td>1.05</td><td>24</td><td>57.1%</td><td>31</td><td>73.8%</td><td>457</td><td>6.78%</td></tr>
+    <tr><td>02-02</td><td>51</td><td>46</td><td>1.11</td><td>27</td><td>52.9%</td><td>33</td><td>64.7%</td><td>396</td><td>8.33%</td></tr>
+    <tr><td>02-03</td><td>40</td><td>34</td><td>1.18</td><td>25</td><td>62.5%</td><td>31</td><td>77.5%</td><td>487</td><td>6.37%</td></tr>
+    <tr><td>02-04</td><td>43</td><td>42</td><td>1.02</td><td>22</td><td>51.2%</td><td>32</td><td>74.4%</td><td>514</td><td>6.42%</td></tr>
+    <tr><td>02-05</td><td>63</td><td>59</td><td>1.07</td><td>31</td><td>49.2%</td><td>40</td><td>63.5%</td><td>496</td><td>8.47%</td></tr>
+    <tr><td>02-06</td><td>63</td><td>60</td><td>1.05</td><td>30</td><td>47.6%</td><td>39</td><td>61.9%</td><td>659</td><td>5.92%</td></tr>
+    <tr><td>02-07</td><td>53</td><td>49</td><td>1.08</td><td>27</td><td>50.9%</td><td>34</td><td>64.2%</td><td>516</td><td>6.78%</td></tr>
+    <tr><td>02-08</td><td>32</td><td>31</td><td>1.03</td><td>21</td><td>65.6%</td><td>25</td><td>78.1%</td><td>356</td><td>7.02%</td></tr>
+    <tr><td>02-09</td><td>47</td><td>41</td><td>1.15</td><td>21</td><td>44.7%</td><td>34</td><td>72.3%</td><td>441</td><td>7.71%</td></tr>
+    <tr><td>02-10</td><td>50</td><td>46</td><td>1.09</td><td>24</td><td>48.0%</td><td>30</td><td>60.0%</td><td>579</td><td>5.53%</td></tr>
+    <tr><td>02-11</td><td>54</td><td>51</td><td>1.06</td><td>23</td><td>42.6%</td><td>33</td><td>61.1%</td><td>607</td><td>5.44%</td></tr>
+    <tr><td>02-12</td><td>60</td><td>57</td><td>1.05</td><td>35</td><td>58.3%</td><td>43</td><td>71.7%</td><td>622</td><td>6.91%</td></tr>
+    <tr><td>02-13</td><td>57</td><td>53</td><td>1.08</td><td>24</td><td>42.1%</td><td>34</td><td>59.6%</td><td>647</td><td>5.26%</td></tr>
+    <tr><td>02-14</td><td>48</td><td>42</td><td>1.14</td><td>34</td><td>70.8%</td><td>37</td><td>77.1%</td><td>863</td><td>4.29%</td></tr>
+    <tr><td>02-15</td><td>44</td><td>35</td><td>1.26</td><td>33</td><td>75.0%</td><td>38</td><td>86.4%</td><td>818</td><td>4.65%</td></tr>
+    <tr><td>02-16</td><td>42</td><td>34</td><td>1.24</td><td>27</td><td>64.3%</td><td>30</td><td>71.4%</td><td>615</td><td>4.88%</td></tr>
+    <tr><td>02-17</td><td>43</td><td>42</td><td>1.02</td><td>30</td><td>69.8%</td><td>31</td><td>72.1%</td><td>692</td><td>4.48%</td></tr>
+    <tr><td>02-18</td><td>49</td><td>46</td><td>1.07</td><td>31</td><td>63.3%</td><td>34</td><td>69.4%</td><td>555</td><td>6.13%</td></tr>
+    <tr><td>02-19</td><td>51</td><td>45</td><td>1.13</td><td>26</td><td>51.0%</td><td style="color:var(--orange)">34</td><td style="color:var(--orange)">66.7%</td><td>610</td><td>5.57%</td></tr>
+    <tr><td>02-20</td><td>49</td><td>47</td><td>1.04</td><td>25</td><td>51.0%</td><td style="color:var(--orange)">30</td><td style="color:var(--orange)">61.2%</td><td>515</td><td>5.83%</td></tr>
+    <tr><td>02-21</td><td>55</td><td>51</td><td>1.08</td><td>34</td><td>61.8%</td><td style="color:var(--orange)">40</td><td style="color:var(--orange)">72.7%</td><td>860</td><td>4.65%</td></tr>
+    <tr><td>02-22</td><td>34</td><td>31</td><td>1.10</td><td>15</td><td>44.1%</td><td style="color:var(--orange)">19</td><td style="color:var(--orange)">55.9%</td><td>269</td><td>7.06%</td></tr>
+    <tr><td>02-23</td><td>8</td><td>8</td><td>1.00</td><td>0</td><td>0.0%</td><td style="color:var(--orange)">3</td><td style="color:var(--orange)">37.5%</td><td>0*</td><td>-</td></tr>
+    <tr><td>02-24</td><td>25</td><td>25</td><td>1.00</td><td>11</td><td>44.0%</td><td style="color:var(--orange)">13</td><td style="color:var(--orange)">52.0%</td><td>397</td><td>3.27%</td></tr>
+    <tr><td>02-25</td><td>43</td><td>41</td><td>1.05</td><td>25</td><td>58.1%</td><td style="color:var(--orange)">26</td><td style="color:var(--orange)">60.5%</td><td>452</td><td>5.75%</td></tr>
+    <tr><td>02-26</td><td>92</td><td>78</td><td>1.18</td><td>57</td><td>62.0%</td><td style="color:var(--orange)">57</td><td style="color:var(--orange)">62.0%</td><td>810</td><td>7.04%</td></tr>
+    <tr class="data-break"><td>02-27</td><td>56</td><td>50</td><td>1.12</td><td colspan="4" style="text-align:center; color:var(--red)">转化数据缺失</td><td>757</td><td>-</td></tr>
+    <tr class="data-break"><td>02-28</td><td>62</td><td>52</td><td>1.19</td><td colspan="4" style="text-align:center; color:var(--red)">转化数据缺失</td><td>1,009</td><td>-</td></tr>
+    <tr class="highlight">
+        <td>2月合计</td><td>1,356</td><td>1,236*</td><td>1.10</td>
+        <td>682</td><td>55.1%</td><td>831</td><td>67.1%</td>
+        <td>15,999</td><td>5.23%</td>
+    </tr>
+</table>
+<p class="footnote">
+    *邀请人数为日sum口径（跨天去重存在偏差）。
+    橙色 D14 数字表示窗口未满（2/19后注册的用户 D14 窗口未到3/4）。
+    2/23 大盘新客=0 为数据异常（可能是节假日或数据延迟）。
+    拉新占比=分享下单/大盘新客，使用 invitation_success=1 口径。
+</p>
+</div>
+
+<!-- ========== TRAFFIC ========== -->
+<hr class="section-divider">
+<h2>五、流量资源位</h2>
+
+<div class="two-col">
+<div class="card">
+    <h3>2月资源位汇总</h3>
+    <table>
+        <tr><th>资源位</th><th>曝光UV</th><th>点击UV</th><th>CTR</th></tr>
+        <tr><td>Icon 金刚位</td><td>124,604</td><td>2,121</td><td>1.7%</td></tr>
+        <tr><td>腰部 Banner</td><td>29,051</td><td>1,300</td><td>4.5%</td></tr>
+        <tr><td>弹窗（5天）</td><td>13,105</td><td>912</td><td>7.0%</td></tr>
+        <tr class="highlight"><td>合计</td><td>-</td><td>4,333</td><td>-</td></tr>
+    </table>
+    <p class="footnote">弹窗投放日：2/2, 2/5, 2/6, 2/19, 2/20。日sum口径。</p>
+</div>
+<div class="card">
+    <h3>3月初资源位（3/1-3/4）</h3>
+    <table>
+        <tr><th>资源位</th><th>曝光UV</th><th>点击UV</th><th>CTR</th></tr>
+        <tr><td>Icon 金刚位</td><td>19,136</td><td>348</td><td>1.8%</td></tr>
+        <tr><td>腰部 Banner</td><td>7,940</td><td>332</td><td>4.2%</td></tr>
+        <tr><td>弹窗</td><td colspan="3" style="text-align:center; color:var(--orange)">ID 已切换*</td></tr>
+        <tr class="highlight"><td>合计</td><td>-</td><td>680</td><td>-</td></tr>
+    </table>
+    <p class="footnote">*3月弹窗 ID 从 LKUSCP118430296139038721 切换为 LKUSCP117864583917731840（12月ID），需确认是否为分享有礼弹窗。</p>
+</div>
+</div>
+
+<div class="card">
+    <h3>弹窗效果对比</h3>
+    <table>
+        <tr><th>指标</th><th>有弹窗日（5天）</th><th>无弹窗日（23天）</th><th>差异</th></tr>
+        <tr><td>日均注册</td><td>66.4</td><td>44.6</td><td class="up">+49%</td></tr>
+        <tr><td>弹窗 CTR</td><td>7.0%</td><td>-</td><td>-</td></tr>
+    </table>
+    <p class="footnote">有弹窗日 (2/2,2/5,2/6,2/19,2/20) 注册: 51+63+63+51+49=277, 日均55.4; 无弹窗日注册: 1,079/23=46.9。弹窗显著拉动注册。</p>
+</div>
+
+<!-- ========== SHARE INTENT ========== -->
+<hr class="section-divider">
+<h2>六、分享意愿</h2>
+
+<div class="two-col">
+<div class="card">
+    <h3>2月分享意愿</h3>
+    <table>
+        <tr><th>指标</th><th>数值</th></tr>
+        <tr><td>分享页 UV（日sum）</td><td>8,211</td></tr>
+        <tr><td>点击分享 UV</td><td>4,560</td></tr>
+        <tr class="highlight"><td>分享率</td><td>55.5%</td></tr>
+    </table>
+    <p class="footnote">分享页UV(8,211) > 资源位点击(4,333)，约47%流量来自其他入口</p>
+</div>
+<div class="card">
+    <h3>3月初分享意愿（3/1-3/4）</h3>
+    <table>
+        <tr><th>指标</th><th>数值</th></tr>
+        <tr><td>分享页 UV（日sum）</td><td>1,240</td></tr>
+        <tr><td>点击分享 UV</td><td>753</td></tr>
+        <tr class="highlight"><td>分享率</td><td style="color:var(--green)">60.7%</td></tr>
+    </table>
+    <p class="footnote">分享率显著提升 +5.2pp，可能与用户群体变化或季节回暖有关</p>
+</div>
+</div>
+
+<!-- ========== KEY CHANGES vs OLD REPORT ========== -->
+<hr class="section-divider">
+<h2>七、本版 vs 上版报告变化</h2>
+
+<div class="card">
+<table>
+    <tr><th>指标</th><th>上版(截止3/2)</th><th>本版(截止3/4)</th><th>变化说明</th></tr>
+    <tr><td>2月注册人数</td><td>1,356</td><td>1,356</td><td class="neutral">不变</td></tr>
+    <tr><td>2月拉新占比</td><td>5.23%</td><td>5.23%</td><td class="neutral">不变</td></tr>
+    <tr><td>D0 转化率</td><td>50.3%</td><td>55.1%</td><td class="up">+4.8pp（flag 延迟回写）</td></tr>
+    <tr><td>D14 转化率(全月)</td><td>61.3%</td><td>67.1%</td><td class="up">+5.8pp（flag 延迟回写）</td></tr>
+    <tr><td>D14 转化率(完整窗口)</td><td>68.8%</td><td>69.1%</td><td class="up">+0.3pp（微调）</td></tr>
+    <tr><td>弹窗投放天数</td><td>4天</td><td>5天</td><td class="neutral">多识别出2/2有投放</td></tr>
+    <tr><td>分享率</td><td>55.5%</td><td>55.5%</td><td class="neutral">不变</td></tr>
+    <tr><td>人均邀请</td><td>1.10</td><td>1.10</td><td class="neutral">不变</td></tr>
+</table>
+<p class="footnote">
+    核心结论不变：拉新占比下降主要由转化率和注册量双降驱动。
+    但 D0/D14 的实际差距比上版报告小得多（flag 延迟回写导致上版低估了2月转化率）。
+</p>
+</div>
+
+<!-- ========== CONCLUSIONS ========== -->
+<hr class="section-divider">
+<h2>八、结论与行动建议</h2>
+
+<div class="card">
+    <h3>核心结论</h3>
+    <ol style="padding-left: 20px; line-height: 2;">
+        <li><strong>2月拉新占比 5.23%（vs 1月 6.78%）确认下降</strong>，但转化率差距比之前认为的更小（D14: -2pp 而非 -9.8pp）</li>
+        <li><strong>3月初积极信号</strong>：日均注册 58.8（+21%），分享率 60.7%（+5.2pp），用户参与度回升</li>
+        <li><strong>数据管道告警</strong>：2/27 起 invitation_success 停止更新，影响实时转化追踪，需紧急排查</li>
+        <li><strong>弹窗依然是最强杠杆</strong>：有弹窗日注册比无弹窗日高 49%，3月弹窗 ID 已切换需确认</li>
+        <li><strong>裂变瓶颈未解</strong>：83% 仅邀1人，人均 1.10 未改善</li>
+    </ol>
+</div>
+
+<div class="card">
+    <h3>行动项</h3>
+    <table>
+        <tr><th>优先级</th><th>行动</th><th>状态</th></tr>
+        <tr><td><span class="tag tag-red">P0</span></td><td>排查 2/27 起 invitation_success 停止更新的原因</td><td>待处理</td></tr>
+        <tr><td><span class="tag tag-red">P0</span></td><td>确认 3 月弹窗 ID (LKUSCP117864583917731840) 是否为分享有礼</td><td>待确认</td></tr>
+        <tr><td><span class="tag tag-orange">P1</span></td><td>弹窗提频至每周 2-3 天（预估 +0.8~1.2pp）</td><td>2月执行5天</td></tr>
+        <tr><td><span class="tag tag-orange">P1</span></td><td>D1-D3 Push 唤醒未下单新客（D0率回升至55%+）</td><td>待验证效果</td></tr>
+        <tr><td><span class="tag tag-green">P2</span></td><td>重设阶梯奖励打破 1:1 裂变（人均1.1→1.5）</td><td>未启动</td></tr>
+    </table>
+</div>
+
+<!-- ========== DATA NOTES ========== -->
+<hr class="section-divider">
+<h2>九、数据口径</h2>
+
+<div class="card" style="font-size: 13px; color: var(--text-muted); line-height: 1.8;">
+    <ul style="padding-left: 20px;">
+        <li><strong>拉新占比</strong> = 分享有礼 invitation_success=1 人数 / 大盘当月首单新客数</li>
+        <li><strong>大盘新客</strong> = v_order (status=90, 排除IQ/测试店) 按 user_no 取首单日期在当月</li>
+        <li><strong>D14 转化率(完整窗口)</strong> = 仅统计注册日 + 14天 <= 数据截止日的 cohort</li>
+        <li><strong>流量UV</strong> = 日sum口径（每天去重后求和），与月度去重有差异</li>
+        <li><strong>分享率</strong> = 点击分享按钮UV / 进入分享页UV</li>
+        <li><strong>invitation_success 延迟</strong>：该标记由后端异步回写，可能延迟数天。上版报告截止3/2时部分2月用户flag未更新，本版有所恢复但2/27后完全断裂。</li>
+        <li><strong>弹窗方案ID</strong>：2月=LKUSCP118430296139038721，3月=LKUSCP117864583917731840（待确认）</li>
+    </ul>
+</div>
+
+<p style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 40px;">
+    Generated by Claude Code | Data as of 2026-03-05
+</p>
+
+</body>
+</html>

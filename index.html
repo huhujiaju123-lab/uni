@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家庭相册 - 2026年1月</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .slideshow-container {
+            position: relative;
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .slide-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3/2;
+            overflow: hidden;
+            border-radius: 15px;
+            background: #000;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            animation: fadeIn 0.5s;
+        }
+
+        .slide.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border: none;
+            font-size: 2rem;
+            padding: 20px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .prev:hover, .next:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .counter {
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s;
+            border-radius: 3px;
+        }
+
+        .thumbnail-strip {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            overflow-x: auto;
+            padding: 10px 0;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.3) transparent;
+        }
+
+        .thumbnail-strip::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .thumbnail-strip::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+
+        .thumbnail-strip::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+        }
+
+        .thumbnail {
+            min-width: 80px;
+            height: 80px;
+            cursor: pointer;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+            opacity: 0.6;
+        }
+
+        .thumbnail:hover {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .thumbnail.active {
+            border-color: #fff;
+            opacity: 1;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+        }
+
+        /* 全屏模式 */
+        .fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .prev, .next {
+                font-size: 1.5rem;
+                padding: 15px;
+            }
+
+            .controls {
+                gap: 10px;
+            }
+
+            .btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+
+            .thumbnail {
+                min-width: 60px;
+                height: 60px;
+            }
+        }
+
+        .info-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .info-panel h2 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .info-panel ul {
+            list-style: none;
+            line-height: 1.8;
+        }
+
+        .info-panel li:before {
+            content: "✓ ";
+            color: #4ade80;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>家庭相册</h1>
+        <p>2026年1月 · 共95张照片</p>
+    </div>
+
+    <div class="slideshow-container">
+        <div class="slide-wrapper" id="slideWrapper">
+            <div class="loading">正在加载照片...</div>
+        </div>
+
+        <button class="prev" onclick="changeSlide(-1)">❮</button>
+        <button class="next" onclick="changeSlide(1)">❯</button>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="controls">
+            <div class="counter">
+                <span id="currentSlide">1</span> / <span id="totalSlides">95</span>
+            </div>
+            <button class="btn" onclick="toggleAutoPlay()" id="autoplayBtn">自动播放</button>
+            <button class="btn" onclick="toggleFullscreen()">全屏查看</button>
+            <button class="btn" onclick="downloadCurrent()">下载当前</button>
+        </div>
+
+        <div class="thumbnail-strip" id="thumbnailStrip"></div>
+    </div>
+
+    <div class="info-panel">
+        <h2>使用说明</h2>
+        <ul>
+            <li>点击左右箭头或使用键盘方向键切换照片</li>
+            <li>在触摸设备上可以左右滑动浏览</li>
+            <li>点击缩略图快速跳转到指定照片</li>
+            <li>支持全屏查看，获得更好的观看体验</li>
+            <li>可以下载喜欢的照片到本地</li>
+        </ul>
+    </div>
+
+    <script>
+        // 照片路径（使用相对路径）
+        const photoFolder = 'photos/';
+        const photos = [
+            'LD__8262.jpg', 'LD__8267.jpg', 'LD__8270.jpg', 'LD__8273.jpg', 'LD__8279.jpg',
+            'LD__8283.jpg', 'LD__8287.jpg', 'LD__8291.jpg', 'LD__8292.jpg', 'LD__8294.jpg',
+            'LD__8297.jpg', 'LD__8298.jpg', 'LD__8302.jpg', 'LD__8306.jpg', 'LD__8315.jpg',
+            'LD__8320.jpg', 'LD__8322.jpg', 'LD__8327.jpg', 'LD__8328.jpg', 'LD__8332.jpg',
+            'LD__8337.jpg', 'LD__8338.jpg', 'LD__8341.jpg', 'LD__8351.jpg', 'LD__8352.jpg',
+            'LD__8370.jpg', 'LD__8388.jpg', 'LD__8390.jpg', 'LD__8392.jpg', 'LD__8394.jpg',
+            'LD__8396.jpg', 'LD__8407.jpg', 'LD__8408.jpg', 'LD__8410.jpg', 'LD__8420.jpg',
+            'LD__8422.jpg', 'LD__8431.jpg', 'LD__8441.jpg', 'LD__8442.jpg', 'LD__8449.jpg',
+            'LD__8452.jpg', 'LD__8462.jpg', 'LD__8465.jpg', 'LD__8480.jpg', 'LD__8490.jpg',
+            'LD__8499.jpg', 'LD__8515.jpg', 'LD__8518.jpg', 'LD__8525.jpg', 'LD__8536.jpg',
+            'LD__8538.jpg', 'LD__8544.jpg', 'LD__8545.jpg', 'LD__8550.jpg', 'LD__8555.jpg',
+            'LD__8558.jpg', 'LD__8574.jpg', 'LD__8585.jpg', 'LD__8596.jpg', 'LD__8601.jpg',
+            'LD__8608.jpg', 'LD__8613.jpg', 'LD__8617.jpg', 'LD__8618.jpg', 'LD__8620.jpg',
+            'LD__8644.jpg', 'LD__8647.jpg', 'LD__8653.jpg', 'LD__8654.jpg', 'LD__8663.jpg',
+            'LD__8676.jpg', 'LD__8681.jpg', 'LD__8683.jpg', 'LD__8695.jpg', 'LD__8703.jpg',
+            'LD__8710.jpg', 'LD__8713.jpg', 'LD__8726.jpg', 'LD__8733.jpg', 'LD__8735.jpg',
+            'LD__8737.jpg', 'LD__8753.jpg', 'LD__8758.jpg', 'LD__8768.jpg', 'LD__8775.jpg',
+            'LD__8778.jpg', 'LD__8781.jpg', 'LD__8801.jpg', 'LD__8819.jpg', 'LD__8824.jpg',
+            'LD__8828.jpg', 'LD__8831.jpg', 'LD__8840.jpg', 'LD__8847.jpg', 'LD__8854.jpg'
+        ];
+
+        let currentIndex = 0;
+        let autoplayInterval = null;
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        // 初始化
+        function init() {
+            const slideWrapper = document.getElementById('slideWrapper');
+            const thumbnailStrip = document.getElementById('thumbnailStrip');
+
+            slideWrapper.innerHTML = '';
+
+            photos.forEach((photo, index) => {
+                // 创建幻灯片
+                const slide = document.createElement('div');
+                slide.className = 'slide' + (index === 0 ? ' active' : '');
+
+                const img = document.createElement('img');
+                img.src = photoFolder + photo;
+                img.alt = `照片 ${index + 1}`;
+                img.loading = 'lazy';
+
+                slide.appendChild(img);
+                slideWrapper.appendChild(slide);
+
+                // 创建缩略图
+                const thumb = document.createElement('div');
+                thumb.className = 'thumbnail' + (index === 0 ? ' active' : '');
+
+                const thumbImg = document.createElement('img');
+                thumbImg.src = photoFolder + photo;
+                thumbImg.alt = `缩略图 ${index + 1}`;
+
+                thumb.appendChild(thumbImg);
+                thumb.onclick = () => goToSlide(index);
+                thumbnailStrip.appendChild(thumb);
+            });
+
+            updateCounter();
+            updateProgress();
+        }
+
+        // 切换幻灯片
+        function changeSlide(direction) {
+            const slides = document.querySelectorAll('.slide');
+            const thumbnails = document.querySelectorAll('.thumbnail');
+
+            slides[currentIndex].classList.remove('active');
+            thumbnails[currentIndex].classList.remove('active');
+
+            currentIndex += direction;
+
+            if (currentIndex >= photos.length) currentIndex = 0;
+            if (currentIndex < 0) currentIndex = photos.length - 1;
+
+            slides[currentIndex].classList.add('active');
+            thumbnails[currentIndex].classList.add('active');
+
+            updateCounter();
+            updateProgress();
+            scrollThumbnailIntoView();
+        }
+
+        // 跳转到指定幻灯片
+        function goToSlide(index) {
+            const slides = document.querySelectorAll('.slide');
+            const thumbnails = document.querySelectorAll('.thumbnail');
+
+            slides[currentIndex].classList.remove('active');
+            thumbnails[currentIndex].classList.remove('active');
+
+            currentIndex = index;
+
+            slides[currentIndex].classList.add('active');
+            thumbnails[currentIndex].classList.add('active');
+
+            updateCounter();
+            updateProgress();
+        }
+
+        // 更新计数器
+        function updateCounter() {
+            document.getElementById('currentSlide').textContent = currentIndex + 1;
+        }
+
+        // 更新进度条
+        function updateProgress() {
+            const progress = ((currentIndex + 1) / photos.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        // 滚动缩略图到可见区域
+        function scrollThumbnailIntoView() {
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            const activeThumbnail = thumbnails[currentIndex];
+            activeThumbnail.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+
+        // 自动播放
+        function toggleAutoPlay() {
+            const btn = document.getElementById('autoplayBtn');
+
+            if (autoplayInterval) {
+                clearInterval(autoplayInterval);
+                autoplayInterval = null;
+                btn.textContent = '自动播放';
+            } else {
+                autoplayInterval = setInterval(() => changeSlide(1), 3000);
+                btn.textContent = '停止播放';
+            }
+        }
+
+        // 全屏
+        function toggleFullscreen() {
+            const container = document.querySelector('.slideshow-container');
+
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(err => {
+                    alert('无法进入全屏模式');
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // 下载当前照片
+        function downloadCurrent() {
+            const currentPhoto = photos[currentIndex];
+            const link = document.createElement('a');
+            link.href = photoFolder + currentPhoto;
+            link.download = currentPhoto;
+            link.click();
+        }
+
+        // 键盘事件
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'Escape' && autoplayInterval) toggleAutoPlay();
+        });
+
+        // 触摸事件
+        const slideWrapper = document.getElementById('slideWrapper');
+
+        slideWrapper.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        slideWrapper.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) changeSlide(1);
+            if (touchEndX > touchStartX + 50) changeSlide(-1);
+        }
+
+        // 初始化相册
+        init();
+    </script>
+</body>
+</html>

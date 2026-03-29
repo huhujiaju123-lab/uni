@@ -1,0 +1,61 @@
+<!-- AI 洞察内容 -->
+{% if gua.aiInsights %}
+
+<!-- 跨卦分析 -->
+{% if gua.aiInsights.crossHexagram %}
+<div class="ai-panel fade-in">
+  <h3>{{ gua.aiInsights.crossHexagram.title }}</h3>
+  {% for paragraph in gua.aiInsights.crossHexagram.content.split('\n\n') %}
+  <p style="margin-bottom:1rem;">{{ paragraph }}</p>
+  {% endfor %}
+  {% if gua.aiInsights.crossHexagram.relatedGua %}
+  <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid rgba(42,100,150,0.15);">
+    <p style="font-size:0.8rem; color:var(--ink-light);">关联卦：
+      {% for g in gua.aiInsights.crossHexagram.relatedGua %}
+      <span style="display:inline-block; padding:0.1rem 0.5rem; background:rgba(42,100,150,0.08); border-radius:3px; margin:0.2rem; font-size:0.75rem; color:#2a6496;">{{ g }}</span>
+      {% endfor %}
+    </p>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<!-- 关系网络 -->
+{% if gua.aiInsights.network %}
+<div class="ai-panel fade-in fade-in-delay-1" style="margin-top:2rem;">
+  <h3>关系网络</h3>
+  <p style="margin-bottom:1.5rem;">{{ gua.aiInsights.network.description }}</p>
+
+  <div class="network-diagram">
+    <div class="network-node node-center">
+      <span style="font-size:1.8rem; font-weight:900;">{{ gua.meta.name }}</span>
+      <span class="network-label">本卦</span>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; margin-top:1.5rem;">
+    {% for conn in gua.aiInsights.network.connections %}
+    <div style="padding:1rem; background:rgba(42,100,150,0.04); border-radius:6px; border:1px solid rgba(42,100,150,0.08);">
+      <p style="font-size:0.75rem; color:#2a6496; font-weight:600; letter-spacing:0.1em; margin-bottom:0.3rem;">{{ conn.type }}</p>
+      <p style="font-weight:600; margin-bottom:0.3rem;">→ {{ conn.target }}</p>
+      <p style="font-size:0.82rem; color:var(--ink-medium); line-height:1.6;">{{ conn.relation }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<!-- 现代框架映射 -->
+{% if gua.aiInsights.modernFramework %}
+<div class="ai-panel fade-in fade-in-delay-2" style="margin-top:2rem;">
+  <h3>{{ gua.aiInsights.modernFramework.framework }}</h3>
+  {% for paragraph in gua.aiInsights.modernFramework.mapping.split('\n\n') %}
+  <p style="margin-bottom:1rem; white-space:pre-line;">{{ paragraph }}</p>
+  {% endfor %}
+  <div class="conclusion-highlight" style="margin-top:1.5rem; border-left-color:#2a6496;">
+    <p style="font-size:0.9rem; color:var(--ink-dark); line-height:1.8;">{{ gua.aiInsights.modernFramework.insight }}</p>
+  </div>
+</div>
+{% endif %}
+
+{% endif %}

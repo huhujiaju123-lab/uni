@@ -1,0 +1,34 @@
+<view class="poster-overlay" wx:if="{{visible}}" catchtouchmove="preventMove">
+  <view class="poster-mask" bindtap="onClose"></view>
+  <view class="poster-panel">
+    <!-- Canvas (隐藏，用于绘制) -->
+    <canvas
+      id="poster-canvas"
+      type="2d"
+      style="width: 750px; height: 1000px; position: fixed; left: -9999px;"
+    />
+
+    <!-- 预览 -->
+    <image
+      class="poster-preview"
+      src="{{posterPath}}"
+      mode="aspectFit"
+      wx:if="{{posterPath}}"
+    />
+    <view class="poster-placeholder" wx:else>
+      <text class="text-dim">点击下方按钮生成海报</text>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="poster-actions">
+      <view class="poster-btn" bindtap="generatePoster" wx:if="{{!posterPath}}">
+        <text wx:if="{{!generating}}">生成海报</text>
+        <text wx:else>生成中...</text>
+      </view>
+      <view class="poster-btn save" bindtap="savePoster" wx:if="{{posterPath}}">
+        保存到相册
+      </view>
+      <view class="poster-btn cancel" bindtap="onClose">关闭</view>
+    </view>
+  </view>
+</view>

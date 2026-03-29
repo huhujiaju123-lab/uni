@@ -1,0 +1,322 @@
+{
+  "R2_redemption": [
+    {
+      "use_status": "1",
+      "cnt": "449",
+      "user_cnt": "96"
+    },
+    {
+      "use_status": "2",
+      "cnt": "101",
+      "user_cnt": "38"
+    }
+  ],
+  "R2_redeem_dist": [
+    {
+      "used_cnt": "0",
+      "user_cnt": "6"
+    },
+    {
+      "used_cnt": "1",
+      "user_cnt": "4"
+    },
+    {
+      "used_cnt": "2",
+      "user_cnt": "3"
+    },
+    {
+      "used_cnt": "3",
+      "user_cnt": "7"
+    },
+    {
+      "used_cnt": "4",
+      "user_cnt": "16"
+    },
+    {
+      "used_cnt": "5",
+      "user_cnt": "62"
+    },
+    {
+      "used_cnt": "9",
+      "user_cnt": "1"
+    },
+    {
+      "used_cnt": "10",
+      "user_cnt": "2"
+    },
+    {
+      "used_cnt": "15",
+      "user_cnt": "1"
+    }
+  ],
+  "R2_timing": [
+    {
+      "days_to_use": "0",
+      "cnt": "100"
+    },
+    {
+      "days_to_use": "1",
+      "cnt": "39"
+    },
+    {
+      "days_to_use": "2",
+      "cnt": "36"
+    },
+    {
+      "days_to_use": "3",
+      "cnt": "32"
+    },
+    {
+      "days_to_use": "4",
+      "cnt": "33"
+    },
+    {
+      "days_to_use": "5",
+      "cnt": "30"
+    },
+    {
+      "days_to_use": "6",
+      "cnt": "27"
+    },
+    {
+      "days_to_use": "7",
+      "cnt": "23"
+    },
+    {
+      "days_to_use": "8",
+      "cnt": "12"
+    },
+    {
+      "days_to_use": "9",
+      "cnt": "13"
+    },
+    {
+      "days_to_use": "10",
+      "cnt": "14"
+    },
+    {
+      "days_to_use": "11",
+      "cnt": "8"
+    },
+    {
+      "days_to_use": "12",
+      "cnt": "4"
+    },
+    {
+      "days_to_use": "13",
+      "cnt": "14"
+    },
+    {
+      "days_to_use": "14",
+      "cnt": "13"
+    },
+    {
+      "days_to_use": "15",
+      "cnt": "7"
+    },
+    {
+      "days_to_use": "16",
+      "cnt": "7"
+    },
+    {
+      "days_to_use": "18",
+      "cnt": "4"
+    },
+    {
+      "days_to_use": "19",
+      "cnt": "6"
+    },
+    {
+      "days_to_use": "20",
+      "cnt": "4"
+    },
+    {
+      "days_to_use": "21",
+      "cnt": "9"
+    },
+    {
+      "days_to_use": "22",
+      "cnt": "4"
+    },
+    {
+      "days_to_use": "23",
+      "cnt": "1"
+    },
+    {
+      "days_to_use": "24",
+      "cnt": "5"
+    },
+    {
+      "days_to_use": "25",
+      "cnt": "1"
+    },
+    {
+      "days_to_use": "26",
+      "cnt": "2"
+    },
+    {
+      "days_to_use": "29",
+      "cnt": "1"
+    }
+  ],
+  "R2_expire": [
+    {
+      "coupon_state": "已核销",
+      "cnt": "449",
+      "user_cnt": "96"
+    },
+    {
+      "coupon_state": "未使用(有效期内)",
+      "cnt": "101",
+      "user_cnt": "38"
+    }
+  ],
+  "R2_unused_dist": [
+    {
+      "unused_cnt": "0",
+      "user_cnt": "64"
+    },
+    {
+      "unused_cnt": "1",
+      "user_cnt": "17"
+    },
+    {
+      "unused_cnt": "2",
+      "user_cnt": "7"
+    },
+    {
+      "unused_cnt": "3",
+      "user_cnt": "3"
+    },
+    {
+      "unused_cnt": "4",
+      "user_cnt": "3"
+    },
+    {
+      "unused_cnt": "5",
+      "user_cnt": "6"
+    },
+    {
+      "unused_cnt": "9",
+      "user_cnt": "1"
+    },
+    {
+      "unused_cnt": "10",
+      "user_cnt": "1"
+    }
+  ],
+  "R2_profile": [
+    {
+      "user_type": "30天+老客",
+      "user_cnt": "74",
+      "avg_prior_orders": "8.1"
+    },
+    {
+      "user_type": "近16-30天活跃",
+      "user_cnt": "12",
+      "avg_prior_orders": "7.2"
+    },
+    {
+      "user_type": "新客",
+      "user_cnt": "8",
+      "avg_prior_orders": "0.0"
+    },
+    {
+      "user_type": "近15天活跃",
+      "user_cnt": "8",
+      "avg_prior_orders": "3.6"
+    }
+  ],
+  "R2_before_after_30d": [
+    {
+      "period": "购买前30天",
+      "total_buyers": "102",
+      "active_users": "90",
+      "total_orders": "720",
+      "avg_orders": "7.1",
+      "total_pay": "4300.56"
+    },
+    {
+      "period": "购买后30天",
+      "total_buyers": "102",
+      "active_users": "102",
+      "total_orders": "902",
+      "avg_orders": "8.8",
+      "total_pay": "4776.23"
+    }
+  ],
+  "R2_before_after_14d": [
+    {
+      "period": "购买前14天",
+      "total_buyers": "102",
+      "active_users": "81",
+      "total_orders": "338",
+      "avg_orders": "3.3",
+      "total_pay": "1927.30"
+    },
+    {
+      "period": "购买后14天",
+      "total_buyers": "102",
+      "active_users": "102",
+      "total_orders": "643",
+      "avg_orders": "6.3",
+      "total_pay": "3402.12"
+    }
+  ],
+  "R2_repurchase": [
+    {
+      "buyer_group": "全部用完",
+      "total_users": "64",
+      "active_users": "63",
+      "return_rate": "98.4",
+      "total_orders": "390",
+      "avg_orders": "6.2",
+      "total_pay": "1910.31"
+    },
+    {
+      "buyer_group": "未用完",
+      "total_users": "38",
+      "active_users": "32",
+      "return_rate": "84.2",
+      "total_orders": "76",
+      "avg_orders": "2.4",
+      "total_pay": "185.37"
+    }
+  ],
+  "R2_freq_dist": [
+    {
+      "freq_bucket": "0单",
+      "user_cnt": "14"
+    },
+    {
+      "freq_bucket": "1-2单",
+      "user_cnt": "19"
+    },
+    {
+      "freq_bucket": "3-5单",
+      "user_cnt": "22"
+    },
+    {
+      "freq_bucket": "6-10单",
+      "user_cnt": "20"
+    },
+    {
+      "freq_bucket": "10单+",
+      "user_cnt": "27"
+    }
+  ],
+  "R2_packs_dist": [
+    {
+      "packs": "1.0",
+      "user_cnt": "96"
+    },
+    {
+      "packs": "2.0",
+      "user_cnt": "4"
+    },
+    {
+      "packs": "3.0",
+      "user_cnt": "2"
+    }
+  ]
+}

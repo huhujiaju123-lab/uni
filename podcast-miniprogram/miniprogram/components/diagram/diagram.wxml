@@ -1,0 +1,67 @@
+<view class="diagram" wx:if="{{data}}">
+  <view class="diagram-title" wx:if="{{data.title}}">{{data.title}}</view>
+
+  <!-- Flow 流程图 -->
+  <view class="diagram-flow" wx:if="{{type === 'flow'}}">
+    <block wx:for="{{items}}" wx:key="index">
+      <view class="flow-node">{{item.label || item}}</view>
+      <view class="flow-arrow" wx:if="{{index < items.length - 1}}">↓</view>
+    </block>
+  </view>
+
+  <!-- Comparison 对比 -->
+  <view class="diagram-comparison" wx:elif="{{type === 'comparison'}}">
+    <view class="compare-header">
+      <view class="compare-left-h">{{compLeft}}</view>
+      <view class="compare-vs-h"></view>
+      <view class="compare-right-h">{{compRight}}</view>
+    </view>
+    <view class="compare-row" wx:for="{{compEntries}}" wx:key="index">
+      <view class="compare-left">{{item.left || item.a}}</view>
+      <view class="compare-vs">vs</view>
+      <view class="compare-right">{{item.right || item.b}}</view>
+    </view>
+  </view>
+
+  <!-- Icon Grid -->
+  <view class="diagram-icon-grid" wx:elif="{{type === 'icon-grid' || type === 'icon-list'}}">
+    <view class="icon-item" wx:for="{{items}}" wx:key="index">
+      <text class="icon-emoji">{{item.icon || '·'}}</text>
+      <view class="icon-content">
+        <view class="icon-label">{{item.label}}</view>
+        <view class="icon-desc" wx:if="{{item.description}}">{{item.description}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Layers 层级 -->
+  <view class="diagram-layers" wx:elif="{{type === 'layers'}}">
+    <view
+      class="layer-item"
+      wx:for="{{items}}"
+      wx:key="index"
+      style="padding-left: {{index * 24 + 16}}rpx"
+    >
+      <view class="layer-label">{{item.label || item}}</view>
+    </view>
+  </view>
+
+  <!-- Timeline 时间线 -->
+  <view class="diagram-timeline" wx:elif="{{type === 'timeline'}}">
+    <view class="tl-item" wx:for="{{items}}" wx:key="index">
+      <view class="tl-dot"></view>
+      <view class="tl-content">
+        <view class="tl-time" wx:if="{{item.time || item.marker}}">{{item.time || item.marker}}</view>
+        <view class="tl-label">{{item.label || item.event || item}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 默认：列表 -->
+  <view class="diagram-list" wx:else>
+    <view class="list-item" wx:for="{{items}}" wx:key="index">
+      <text class="list-bullet">·</text>
+      <text>{{item.label || item}}</text>
+    </view>
+  </view>
+</view>

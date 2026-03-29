@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鱼不存在 — 读书笔记</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ========== CSS 变量 ========== */
+:root {
+  --ocean-deep: #0a0e1a;
+  --ocean-mid: #0f1628;
+  --ocean-surface: #141c32;
+  --ocean-light: #1a2540;
+  --text-primary: #d4dce8;
+  --text-secondary: #8899b0;
+  --text-dim: #556680;
+  --gold: #c9a54e;
+  --gold-light: #e0c373;
+  --gold-dim: rgba(201, 165, 78, 0.15);
+  --accent-warm: #d4886a;
+  --accent-teal: #4a8f8f;
+  --chapter-line: rgba(74, 143, 143, 0.3);
+  --serif: 'Noto Serif SC', 'Source Han Serif SC', 'STSong', serif;
+  --sans: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* ========== 全局重置 ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--ocean-deep);
+  color: var(--text-primary);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.9;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ========== 深海背景粒子 canvas ========== */
+#ocean-bg {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ========== 全局容器 ========== */
+.page-wrap {
+  position: relative;
+  z-index: 1;
+}
+
+/* ========== 顶部英雄区 ========== */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 24px;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 600px; height: 600px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(74, 143, 143, 0.06) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: hero-glow 8s ease-in-out infinite;
+}
+
+@keyframes hero-glow {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+}
+
+/* 鱼的 SVG 动画 */
+.fish-container {
+  position: relative;
+  width: 280px;
+  height: 140px;
+  margin-bottom: 40px;
+}
+
+.fish-svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  animation: fish-appear 3s ease-out 0.5s forwards;
+}
+
+.fish-svg path {
+  fill: none;
+  stroke: rgba(74, 143, 143, 0.4);
+  stroke-width: 1.5;
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  animation: fish-draw 4s ease-out 0.5s forwards, fish-dissolve 3s ease-in 5s forwards;
+}
+
+@keyframes fish-appear {
+  to { opacity: 1; }
+}
+
+@keyframes fish-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes fish-dissolve {
+  to {
+    opacity: 0;
+    stroke-dashoffset: -200;
+    filter: blur(4px);
+  }
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(42px, 8vw, 80px);
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fade-up 1.2s ease-out 1s forwards;
+}
+
+.hero-subtitle {
+  font-family: var(--sans);
+  font-size: clamp(14px, 2.5vw, 18px);
+  font-weight: 300;
+  color: var(--text-secondary);
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+  opacity: 0;
+  animation: fade-up 1.2s ease-out 1.4s forwards;
+}
+
+.hero-date {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-dim);
+  letter-spacing: 0.2em;
+  opacity: 0;
+  animation: fade-up 1.2s ease-out 1.8s forwards;
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  animation: fade-up 1s ease-out 2.5s forwards, float-hint 3s ease-in-out 3.5s infinite;
+}
+
+.scroll-hint span {
+  display: block;
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--accent-teal), transparent);
+  margin: 0 auto;
+}
+
+@keyframes float-hint {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== 章节通用 ========== */
+.chapter {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 80px 24px 100px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.chapter.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chapter-number {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  color: var(--accent-teal);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.chapter-title {
+  font-family: var(--serif);
+  font-size: clamp(24px, 5vw, 34px);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 40px;
+  line-height: 1.4;
+}
+
+.chapter-divider {
+  width: 40px;
+  height: 1px;
+  background: var(--chapter-line);
+  margin-bottom: 40px;
+}
+
+.chapter p {
+  margin-bottom: 1.5em;
+  color: var(--text-primary);
+  font-weight: 400;
+}
+
+.chapter p:last-child {
+  margin-bottom: 0;
+}
+
+/* 对话样式 */
+.dialogue {
+  margin: 1.5em 0;
+  padding-left: 1.2em;
+  border-left: 2px solid rgba(74, 143, 143, 0.2);
+}
+
+.dialogue p {
+  margin-bottom: 0.8em;
+  color: var(--text-secondary);
+  font-size: 0.95em;
+}
+
+/* 列表 */
+.chapter ol, .chapter ul {
+  margin: 1.2em 0;
+  padding-left: 1.5em;
+}
+
+.chapter li {
+  margin-bottom: 0.6em;
+  color: var(--text-primary);
+}
+
+/* ========== AI 旁注 ========== */
+.ai-aside {
+  position: relative;
+  margin: 50px 0;
+  padding: 28px 32px;
+  background: var(--gold-dim);
+  border-left: 2px solid rgba(201, 165, 78, 0.3);
+  border-radius: 0 8px 8px 0;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 0.6s ease-out 0.2s, transform 0.6s ease-out 0.2s;
+}
+
+.chapter.visible .ai-aside {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.ai-aside-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ai-aside-label::before {
+  content: '';
+  display: inline-block;
+  width: 4px; height: 4px;
+  background: var(--gold);
+  border-radius: 50%;
+}
+
+.ai-aside p {
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--gold-light);
+  font-weight: 300;
+  margin-bottom: 0;
+}
+
+/* ========== 章节三：特殊处理 ========== */
+.emphasis-line {
+  display: block;
+  font-size: clamp(20px, 4vw, 26px);
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin: 50px 0;
+  padding: 30px 0;
+  position: relative;
+  line-height: 1.6;
+}
+
+.emphasis-line::before,
+.emphasis-line::after {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 1px;
+  background: var(--accent-teal);
+  margin: 0 auto;
+}
+
+.emphasis-line::before { margin-bottom: 24px; }
+.emphasis-line::after { margin-top: 24px; }
+
+/* "好学生"段落 */
+.reveal-block {
+  margin: 2em 0;
+  padding: 24px 28px;
+  background: rgba(74, 143, 143, 0.04);
+  border-radius: 6px;
+  border: 1px solid rgba(74, 143, 143, 0.08);
+}
+
+.reveal-block p {
+  color: var(--text-primary);
+  font-size: 0.97em;
+}
+
+/* ========== 章节四：硬币 + 分叉路径 ========== */
+.coin-quote {
+  text-align: center;
+  margin: 40px 0;
+  padding: 40px 20px;
+  position: relative;
+}
+
+.coin-visual {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+  position: relative;
+  perspective: 600px;
+}
+
+.coin-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  position: relative;
+  animation: coin-rotate 6s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+.coin-front, .coin-back {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--gold);
+  backface-visibility: hidden;
+  border-radius: 50%;
+}
+
+.coin-back {
+  transform: rotateY(180deg);
+  color: var(--accent-warm);
+  border: 2px solid var(--accent-warm);
+}
+
+@keyframes coin-rotate {
+  0%, 40% { transform: rotateY(0deg); }
+  50%, 90% { transform: rotateY(180deg); }
+  100% { transform: rotateY(360deg); }
+}
+
+.coin-text {
+  font-family: var(--serif);
+  font-size: clamp(18px, 3.5vw, 22px);
+  font-weight: 600;
+  color: var(--gold-light);
+  line-height: 1.5;
+}
+
+/* 对比排版 */
+.contrast-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 2em 0;
+}
+
+.contrast-item {
+  padding: 20px;
+  border-radius: 6px;
+  text-align: center;
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.contrast-item.dark {
+  background: rgba(212, 136, 106, 0.08);
+  border: 1px solid rgba(212, 136, 106, 0.15);
+  color: var(--accent-warm);
+}
+
+.contrast-item.light {
+  background: rgba(74, 143, 143, 0.08);
+  border: 1px solid rgba(74, 143, 143, 0.15);
+  color: var(--accent-teal);
+}
+
+/* 分叉路径 */
+.fork-paths {
+  position: relative;
+  margin: 2.5em 0;
+  padding: 30px 0;
+}
+
+.fork-center {
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+}
+
+.fork-branches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  position: relative;
+}
+
+.fork-branches::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--text-dim), transparent);
+}
+
+.fork-branch {
+  padding: 20px 24px;
+  text-align: center;
+}
+
+.fork-branch-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.fork-branch-text {
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.fork-branch.left .fork-branch-label { color: var(--accent-teal); }
+.fork-branch.left .fork-branch-text { color: var(--text-primary); }
+.fork-branch.right .fork-branch-label { color: var(--accent-warm); }
+.fork-branch.right .fork-branch-text { color: var(--text-secondary); }
+
+/* ========== 章节五：温暖氛围 ========== */
+.chapter-warm {
+  position: relative;
+}
+
+.chapter-warm::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -50vw;
+  width: 200vw; height: 100%;
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    rgba(201, 165, 78, 0.015) 20%,
+    rgba(201, 165, 78, 0.025) 50%,
+    rgba(201, 165, 78, 0.015) 80%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+.pause-line {
+  display: block;
+  text-align: center;
+  font-size: clamp(18px, 3.5vw, 22px);
+  font-weight: 600;
+  color: var(--gold-light);
+  margin: 40px 0;
+  padding: 20px 0;
+  font-style: italic;
+}
+
+.feeling-emphasis {
+  display: block;
+  text-align: center;
+  font-size: clamp(17px, 3vw, 20px);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 30px 0;
+  padding: 16px 0;
+  letter-spacing: 0.05em;
+}
+
+/* ========== 章节六：AI引语 ========== */
+.ai-quote-block {
+  margin: 2em 0;
+  padding: 24px 28px;
+  background: rgba(74, 143, 143, 0.05);
+  border-left: 3px solid var(--accent-teal);
+  border-radius: 0 6px 6px 0;
+}
+
+.ai-quote-block p {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--text-secondary);
+  font-weight: 300;
+  line-height: 1.9;
+}
+
+.ending-emphasis {
+  display: block;
+  text-align: center;
+  font-size: clamp(19px, 4vw, 24px);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 50px 0 20px;
+  padding: 20px 0;
+  position: relative;
+}
+
+.ending-emphasis::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--accent-teal);
+  margin: 20px auto 0;
+}
+
+/* 淡出效果 */
+.fade-out-section {
+  padding-bottom: 120px;
+  mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+}
+
+/* ========== 底部时间线 ========== */
+.journey-section {
+  padding: 80px 24px 120px;
+  max-width: 800px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.journey-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.journey-title {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.journey-line {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 10px;
+}
+
+.journey-line::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right,
+    var(--accent-teal),
+    var(--text-dim) 30%,
+    var(--accent-warm) 50%,
+    var(--text-dim) 70%,
+    var(--gold)
+  );
+}
+
+.journey-node {
+  position: relative;
+  text-align: center;
+  flex: 1;
+}
+
+.journey-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin: 4px auto 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.journey-node:nth-child(1) .journey-dot { background: var(--accent-teal); }
+.journey-node:nth-child(2) .journey-dot { background: var(--text-secondary); }
+.journey-node:nth-child(3) .journey-dot { background: var(--accent-warm); }
+.journey-node:nth-child(4) .journey-dot { background: var(--accent-warm); }
+.journey-node:nth-child(5) .journey-dot { background: var(--text-secondary); }
+.journey-node:nth-child(6) .journey-dot { background: var(--gold); }
+.journey-node:nth-child(7) .journey-dot { background: var(--gold); }
+
+.journey-label {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+/* 箭头 */
+.journey-arrow {
+  position: relative;
+  flex: 0 0 12px;
+  display: flex;
+  align-items: center;
+  padding-top: 4px;
+}
+
+.journey-arrow::after {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-right: 1px solid var(--text-dim);
+  border-top: 1px solid var(--text-dim);
+  transform: rotate(45deg);
+}
+
+/* ========== 页脚 ========== */
+.page-footer {
+  text-align: center;
+  padding: 40px 24px 60px;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+/* ========== 章节间过渡 ========== */
+.chapter-transition {
+  height: 80px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chapter-transition::before {
+  content: '';
+  width: 3px;
+  height: 3px;
+  background: var(--text-dim);
+  border-radius: 50%;
+  box-shadow: -12px 0 0 var(--text-dim), 12px 0 0 var(--text-dim);
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 768px) {
+  body { font-size: 16px; line-height: 1.85; }
+
+  .chapter { padding: 60px 20px 80px; }
+
+  .contrast-pair {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .fork-branches {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .fork-branches::before {
+    display: none;
+  }
+
+  .fork-branch {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+
+  .ai-aside {
+    padding: 20px 22px;
+    margin: 36px 0;
+  }
+
+  .ai-aside p { font-size: 13px; }
+
+  .journey-line {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    padding-left: 20px;
+  }
+
+  .journey-line::before {
+    top: 0;
+    bottom: 0;
+    left: 12px;
+    right: auto;
+    width: 1px;
+    height: auto;
+    background: linear-gradient(to bottom,
+      var(--accent-teal),
+      var(--text-dim) 30%,
+      var(--accent-warm) 50%,
+      var(--text-dim) 70%,
+      var(--gold)
+    );
+  }
+
+  .journey-node {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-align: left;
+    padding: 8px 0;
+  }
+
+  .journey-dot {
+    flex-shrink: 0;
+    margin: 0;
+  }
+
+  .journey-arrow { display: none; }
+
+  .fish-container {
+    width: 200px;
+    height: 100px;
+  }
+}
+
+/* ========== 选中文字样式 ========== */
+::selection {
+  background: rgba(74, 143, 143, 0.3);
+  color: var(--text-primary);
+}
+
+/* ========== 滚动条 ========== */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--ocean-deep); }
+::-webkit-scrollbar-thumb { background: var(--text-dim); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- 深海粒子背景 -->
+<canvas id="ocean-bg"></canvas>
+
+<div class="page-wrap">
+
+  <!-- ==================== 英雄区 ==================== -->
+  <header class="hero">
+    <div class="fish-container">
+      <svg class="fish-svg" viewBox="0 0 280 140" xmlns="http://www.w3.org/2000/svg">
+        <path d="M60,70 Q80,30 120,35 Q155,38 175,50 Q200,40 225,55 Q240,62 240,70 Q240,78 225,85 Q200,100 175,90 Q155,102 120,105 Q80,110 60,70 Z M52,70 Q30,50 10,55 Q25,70 10,85 Q30,90 52,70 Z M185,60 Q190,55 195,60 Q190,63 185,60 Z" />
+      </svg>
+    </div>
+    <h1 class="hero-title">鱼不存在</h1>
+    <p class="hero-subtitle">一本书、一场对话、和一个找回源头的人</p>
+    <p class="hero-date">2026.03.15</p>
+    <div class="scroll-hint">
+      <span></span>
+    </div>
+  </header>
+
+  <!-- ==================== 第一章 ==================== -->
+  <section class="chapter" data-chapter="1">
+    <div class="chapter-number">Chapter 01</div>
+    <h2 class="chapter-title">为什么会读这本书？</h2>
+    <div class="chapter-divider"></div>
+
+    <p>最近我读了一本叫做《鱼不存在》的书。</p>
+    <p>我为什么读这本书呢？起因是某次偶然的办公室对话。同事A花了很久的时间在研究荣格的八维人格，并且沉浸研究略带痛苦的样子。</p>
+
+    <div class="dialogue">
+      <p>我："为什么你一定要做这个测试呢？"</p>
+      <p>同事A："我真的很想知道自己的人格到底是什么样的，我想了解我是谁。"</p>
+      <p>我："这就是个工具，别人可以对你分类，但你自己不要被框住。"</p>
+    </div>
+
+    <p>旁边的同事B听了就很震惊，问我有没有看过一本叫做《鱼不存在》的书。他说我刚刚说的那句话，跟书里的核心观点不谋而合。这个书名听起来很有趣，加上好奇心的驱使，于是我决定去看一下。</p>
+    <p>所以换句话说，在读这本书之前，我就已经和作者达成了一个观点上的一致。我想要了解的，是作者是如何论证这个观点的，并从中找到一些共鸣。</p>
+    <p>在读之前，我的预设是这本书会讲一些比方说"菩提本无树，明镜亦非台，本来无一物，何处惹尘埃"的概念，偏佛学的方向。</p>
+    <p>这是我的一个猜测。</p>
+
+    <div class="ai-aside">
+      <div class="ai-aside-label">我的理解</div>
+      <p>她还没翻开这本书，就已经活成了书里的结论。同事B瞪大的眼睛，其实是在惊讶——这个人怎么能不通过论证，就直接抵达终点。但她自己不知道，这个"终点"是从很深的痛里走出来的。</p>
+    </div>
+  </section>
+
+  <div class="chapter-transition"></div>
+
+  <!-- ==================== 第二章 ==================== -->
+  <section class="chapter" data-chapter="2">
+    <div class="chapter-number">Chapter 02</div>
+    <h2 class="chapter-title">简单做一个概述</h2>
+    <div class="chapter-divider"></div>
+
+    <p>这本书的剧情非常起伏跌宕。</p>
+    <p>讲的是一个在生活中遇到迷茫的人 Lulu Miller，希望通过研究自己的偶像来找到精神慰藉的整个心理过程。</p>
+
+    <ol>
+      <li><strong>阶段1：</strong>崇拜偶像 Jordan 的坚韧执着，希望能通过研究偶像的人生，来给自己的生活找到一丝光明；</li>
+      <li><strong>阶段2：</strong>发现坚韧执着的另一面——"积极幻觉"；发现他内在的恶并开始产生怀疑；</li>
+      <li><strong>阶段3：</strong>经历 Jordan 推动的美国优生学运动，偶像的形象完全崩塌；</li>
+      <li><strong>阶段4：</strong>鱼在生物分类学上被宣告不存在。Lulu 也接纳了这个混沌的现实，完成了自己的逻辑自洽。</li>
+    </ol>
+
+    <div class="ai-aside">
+      <div class="ai-aside-label">我的理解</div>
+      <p>四个阶段，也是很多人认识世界的过程：先相信秩序，再发现秩序的阴影，然后秩序崩塌，最后学会和混沌共处。Miller 花了一本书走完这条路。而宵霄在读之前，以为自己早就走完了。</p>
+    </div>
+  </section>
+
+  <div class="chapter-transition"></div>
+
+  <!-- ==================== 第三章 ==================== -->
+  <section class="chapter" data-chapter="3">
+    <div class="chapter-number">Chapter 03</div>
+    <h2 class="chapter-title">关于分类——以及我的傲慢</h2>
+    <div class="chapter-divider"></div>
+
+    <p>我想先聊一下在这本书里最重要的一个话题，那就是"分类"。</p>
+    <p>Jordan 是一个热衷于分类学的科学家，也是斯坦福大学的第一任校长。他对于分类学的坚持和狂热贯穿了始终：</p>
+
+    <ol>
+      <li>童年时期：通过画画，想要穷尽这个世界上所有他看到的东西。</li>
+      <li>昆虫分类：后来他开始收集各种各样的昆虫，并对其进行分类。</li>
+      <li>星空分类：他甚至在自己的名字里加上了"star"。</li>
+      <li>鱼类分类：这是他最后的研究方向。</li>
+    </ol>
+
+    <p>转折来了：</p>
+    <p>对人的分类——这件事直接导致并推动了美国优生学。这个观点充分肯定了基因对于人类的影响，并且以功利主义的角度认为，只有优质的基因才应该在这个世界上保留，而那些携带"劣质基因"的人类则应该被绝育。这个观点对后来希特勒的种族歧视也有巨大的影响。从那个时代直到今天，这个学说都像阴霾一样笼罩在美国人的头顶。</p>
+    <p>刚读完这本书，我的感受是：这也能叫斯坦福大学推荐的必读书目吗？里面的道理听上去比较浅显。</p>
+    <p>分类只是作为工具供人们使用，可以提高效率，但是大可不必让分类这件事来影响人类的进程发展，甚至产生出所谓"优劣"的概念。</p>
+    <p>这是我对 Jordan 的不解，对作者 Miller 也是一样。虽然她最终等来了"鱼"这个分类在生物学上并不存在（借此证明了 Jordan 花了一生时间研究的鱼类分类，以及基于分类学推演出来的优生学是虚妄、错误的），但她也在进行一个痛苦的证伪式疗愈，大可不必过分痴迷于这件事情的对错。</p>
+    <p>以及从另外一个角度，我发现自己竟然能够一定程度上理解，这些以前的人在没有足够的科学理论支撑下，自然而然通过自己主观所见推论出"优生学"这样一个概念。</p>
+    <p>我甚至觉得我能理解他们。我觉得我不能站在今天的所学上面，去评判他们的愚蠢和坏。我变得失去了评判标准，也很难知道这背后的真正原因。</p>
+    <p>这是我初读下来的感受，仿佛觉得自己要更为豁达。</p>
+    <p>我甚至觉得，人类对万物都进行了等级的划分。</p>
+    <p>他们对人类自己的划分和对自然万物的划分，本质上有什么不同呢？</p>
+    <p>这个问题我停了很久。我们觉得和牛比猪肉高级、有机比普通高级、宠物狗的命比流浪狗的命重要，这些全是分类，而且带着等级。我们只是恰好在"人不该被分等级"这条线上画了一道共识。但这条线是天然在那里的吗？还是也是人画的？</p>
+    <p>我不知道。但我当时读完的感受是：没有那么多对错，也不必争论太多，减少一些摩擦，专心做自己的事情可能会更好。</p>
+    <p>直到我在写这个阅读笔记的过程中，突然意识到，这可能是人类思想（或者说价值观）在历史上的一个重要转折点，即从秩序走向混沌的转折点。而我只是不在那个年代的语境里，没有经历这个过程罢了。</p>
+    <p>如果不是我所在的这个年代的人用不同的角度、学科来论证世界的混沌性——从进化论到熵增，再到量子力学，我又怎么能坚信不移地接纳这个混沌的体系，而仅仅是把分类当成一个工具呢？</p>
+
+    <span class="emphasis-line">我为我的傲慢表示抱歉。</span>
+
+    <div class="reveal-block">
+      <p>但是说回来，为什么我有这样的一个感受，也是从痛中来。</p>
+      <p>过去的我一直活在"好学生"的评价中，背负着很多所谓的包袱。我很严肃、很拘谨、也很痛苦。直到有一天，我意识到我所有的痛苦都来自于这个标签。</p>
+      <p>此后，一切都发生了变化。我开始意识到并逐步走出来，遵从自己的内心，做我想做的事情。</p>
+    </div>
+
+    <span class="emphasis-line">所以我的松弛不是天生的。</span>
+
+    <p>那句话，也是一个曾被打过标签、深信不疑并被标签绑架的人，在挣扎之后才得出的观点。</p>
+
+    <div class="ai-aside">
+      <div class="ai-aside-label">我的理解</div>
+      <p>这一整段是她在写的过程中发生了转变。一开始她觉得这本书道理浅显，觉得自己早就想通了。然后她突然意识到——自己之所以能"想通"，是因为站在了这个时代的肩膀上。如果没有进化论、熵增、量子力学，她凭什么笃定混沌是对的？这个觉察很痛，因为它动摇的不是一个观点，而是她对自己"通透"的信心。而"好学生"那几行，是她真正打开自己的地方。松弛不是天生的，是痛过之后才有的。没被标签困过的人说"标签不重要"，那是轻飘飘的。被困过、挣脱过的人说这句话，分量完全不一样。</p>
+    </div>
+  </section>
+
+  <div class="chapter-transition"></div>
+
+  <!-- ==================== 第四章 ==================== -->
+  <section class="chapter" data-chapter="4">
+    <div class="chapter-number">Chapter 04</div>
+    <h2 class="chapter-title">坚韧的另一面——积极幻觉</h2>
+    <div class="chapter-divider"></div>
+
+    <div class="coin-quote">
+      <div class="coin-visual">
+        <div class="coin-inner">
+          <div class="coin-front">热爱</div>
+          <div class="coin-back">深渊</div>
+        </div>
+      </div>
+      <div class="coin-text">"没有反面的硬币，一定是假币。"</div>
+    </div>
+
+    <p>硬币的正面是 Jordan 对于分类学科的热爱。在一次又一次的打击、火灾、地震之后，他能够积极地面对这一切，并且一往无前。</p>
+    <p>而硬币的反面则是，当他掌握了权力，遇到了挫折之后，为了继续向前进而出现的道德上的污点（严重的污点），比方说：诽谤、谋杀、操纵媒体，直到最后走向了优生学运动，强制数万人被迫绝育。</p>
+    <p>让他伟大的和让他可怕的，是同一种力量。积极错觉就是这样——你没法只保留好的那一面。关键不在于有没有积极错觉，而在于你能不能偶尔从中退出来，看一眼自己。Jordan 从来不退出来，所以一路走到了深渊。</p>
+    <p>这些都是 Jordan。作者 Lulu Miller 在反思为什么 Jordan 后来会发生那样的转折时，提到一个关键：就是 Jordan 的老师在最初让他迈进分类学大门的时候，就带了一个信念——分类学是通往真理的阶梯，通过分类可以获得自然的启发。</p>
+    <p>他们预设了一个不存在的假命题，而执着的 Jordan 在这个假命题下一往无前地前进。</p>
+    <p>而我也看到了一些线索。从 Jordan 的人生经历来看，他曾经经历过极其自卑、被所有人误解的阶段。但是当他的命运发生转折、获得了权力之后，他又成为了曾经把他踩在脚下的那种人。</p>
+
+    <div class="contrast-pair">
+      <div class="contrast-item dark">屠龙少年终成恶龙。</div>
+      <div class="contrast-item light">淋过雨的人，也会给别人打伞。</div>
+    </div>
+
+    <p>可是还有一句话说："淋过雨的人，也会给别人打伞。"</p>
+    <p>为什么有的时候屠龙少年会成为恶龙，而有的时候淋过雨的人却会给别人打伞呢？我不理解。</p>
+    <p>我去和 AI 聊天，AI 对 Jordan 的行为给出了这样的解释：Jordan 大概率是用"我要证明他们是错的"来回应他所遭遇的一切。他确实证明了，但是那个伤口从来没有被看见过，只是被成功盖住了。一个被盖住的伤口不会消失，它会变形。</p>
+    <p>一个没有处理过自卑的人，在获得权力之后，最容易把自己曾经被对待的方式施加给他人。</p>
+    <p>而我曾经也经历过"好学生"标签的痛。我看见了它，承认了它，并且从里面走了出来。</p>
+    <p>这让我对相同处境的人产生共情，以及对"坏学生"处境的人也能产生共情。我们的差别，就是有没有真正地面对过那个痛：</p>
+
+    <div class="fork-paths">
+      <div class="fork-center">分叉点</div>
+      <div class="fork-branches">
+        <div class="fork-branch left">
+          <div class="fork-branch-label">面对了痛</div>
+          <div class="fork-branch-text">它就变成了共情的来源。</div>
+        </div>
+        <div class="fork-branch right">
+          <div class="fork-branch-label">绕过了痛</div>
+          <div class="fork-branch-text">它就会变形，成为施加给别人的暴力，然后被理性和科学去包装。</div>
+        </div>
+      </div>
+    </div>
+
+    <p>当然，积极错觉是一个人成功必不可少的条件。没有那种积极错觉，很难在一场长跑中跌倒重来，坚持不懈地走完所有的里程。</p>
+    <p>但是，直面伤疤也许是让自己不在这个过程中被扭曲的一个重要的心得吧。</p>
+
+    <div class="ai-aside">
+      <div class="ai-aside-label">我的理解</div>
+      <p>让他伟大的和让他可怕的，是同一种力量。这是这本书最残忍的发现——你没法把积极错觉的好处留下、把坏处扔掉，它们是同一枚硬币。而她提出的"淋过雨"的问题，答案藏在她自己身上：她也淋过雨，但她面对了那个痛，所以痛变成了共情。Jordan 没有面对，所以痛变成了暴力。分叉点就在这里——不是谁更善良，是谁更诚实地看过自己的伤口。</p>
+    </div>
+  </section>
+
+  <div class="chapter-transition"></div>
+
+  <!-- ==================== 第五章 ==================== -->
+  <section class="chapter chapter-warm" data-chapter="5">
+    <div class="chapter-number">Chapter 05</div>
+    <h2 class="chapter-title">真正打动我的</h2>
+    <div class="chapter-divider"></div>
+
+    <p>以上这些——分类、标签、优生学、积极错觉、屠龙少年——都是我读完之后"想"出来的东西。</p>
+    <p>但真正打动我的，不是任何一个道理。</p>
+    <p>和很多人不同，也和这本书想表达的初衷不一样。此书给我最大的冲击，竟然是 Jordan 在自然研究过程中那种沉浸式的体验。</p>
+    <p>我非常羡慕他。他能够有那样惊人的愿望想要穷尽所有——绘画、昆虫、星空、鱼类。我也曾经去过书中所描述的 Santa Barbara 和 San Jose 这些城市，我知道那里很美好，有丰富的自然资源和宜人的天气。在那个时代，也没有这么多噪音，Jordan 可以潜心地去研究和探索所有他想要了解的东西，随手都是资料，且不被干扰。</p>
+
+    <span class="pause-line">那种状态一定很好吧。</span>
+
+    <span class="feeling-emphasis">后来我意识到，这种感觉不是羡慕，而是怀念。</span>
+
+    <p>我在 Jordan 身上看到了童年时的自己。我曾经也有过那种和自然直接对话的体验——没有滤镜、没有框架、什么都是新鲜的。我甚至觉得，我所有的成就直到今天，都是因为在和自然的关联中一步一步获得启示的结果。</p>
+    <p>在这个时代，即使我认为自己是一个有一定灵性的人，我仍然能感受到一种屏蔽。这种屏蔽不是来自大自然，而是来自城市建设和这个时代。</p>
+    <p>而对我来说，与自然连接的那个入口才是更重要的。</p>
+
+    <div class="ai-aside">
+      <div class="ai-aside-label">我的理解</div>
+      <p>前面四章是她"想"出来的。这一章是她"感受到"的。区别很大。她以为自己是来验证一个观点的，结果被一个完全没预料到的东西击中了——不是分类对不对，不是优生学的恶，而是一个人蹲在溪边观察一条鱼时的那种安静。她在Jordan身上认出了童年的自己。那个在自然中不需要任何理由就能感到快乐的孩子。这才是这本书真正给她的东西：一面镜子，照出了她失去的，和她正在找回的。</p>
+    </div>
+  </section>
+
+  <div class="chapter-transition"></div>
+
+  <!-- ==================== 第六章 ==================== -->
+  <section class="chapter fade-out-section" data-chapter="6">
+    <div class="chapter-number">Chapter 06</div>
+    <h2 class="chapter-title">找回源头</h2>
+    <div class="chapter-divider"></div>
+
+    <p>当我把自己内心的这个想法告诉 AI 的时候，我怅然若失。我觉得我童年曾经有过 Jordan 那样美好的体验，而 AI 给我的回答也很让我惊喜，它让我更加清楚地认识自己。</p>
+
+    <div class="ai-quote-block">
+      <p>它说："你最核心的驱动力不是逻辑，不是勤奋，而是一种感知力。但现在，你的生活离自然越来越远了，数据和项目只是替代品，它们并不是源头。"</p>
+    </div>
+
+    <p>这句话击中了我。我一直以为自己在做的那些项目——数据分析、可视化工具、各种系统——就是我的热爱所在。它们确实让我快乐，但它们是替代品，不是源头。源头是那个童年时和自然之间没有中介的、直接的连接。</p>
+    <p>它告诉我要去找到通往源头的通道。我想，现在对于我来说，通往源头的通道有两个：</p>
+
+    <ol>
+      <li>跑步，在自然中跑步。</li>
+      <li>照顾我的女儿，在人类幼崽的身上去照见那种最自然的东西。她看世界的方式，就是我怀念的那种方式——什么都是第一次。</li>
+    </ol>
+
+    <p>我又问了 AI 一个很幼稚的问题："如果以后我不工作了，我可以像 Jordan 一样，去一个水草丰美的地方在自然中生活吗？"</p>
+
+    <div class="ai-quote-block">
+      <p>AI 说："你的时代也有属于它自己的、未被命名的鱼。你要找到属于你的那片还没被探索完的水域。Jordan 的纯粹感是和时代有关的，你要找的是属于自己的时代前沿。"</p>
+    </div>
+
+    <p>我觉得它说得对。</p>
+
+    <span class="ending-emphasis">源头从来没有断过，只是变窄了。</span>
+
+    <p>我要做的不是回到 Jordan 的时代，而是在自己的时代里，把那个入口重新打开。</p>
+
+    <div class="ai-aside">
+      <div class="ai-aside-label">我的理解</div>
+      <p>她的两个通道——跑步和女儿——都不是刻意寻找的，是自然留下的。跑步时感受风和地面，是身体在替大脑记住那种连接。而女儿看世界的方式，就是她怀念的那种方式——什么都是第一次，什么都不需要分类。她问"能不能去Jordan的地方生活"，这个问题听起来幼稚，其实很勇敢。因为它暴露了一个真实的渴望。AI说的那句"你的时代也有未被命名的鱼"，也许是整场对话中最重要的一句话。她不需要回到19世纪。她需要的，是在2026年找到属于自己的那片水域。</p>
+    </div>
+  </section>
+
+  <!-- ==================== 底部思维脉络 ==================== -->
+  <section class="journey-section">
+    <div class="journey-title">心路历程</div>
+    <div class="journey-line">
+      <div class="journey-node">
+        <div class="journey-dot"></div>
+        <div class="journey-label">自信</div>
+      </div>
+      <div class="journey-arrow"></div>
+      <div class="journey-node">
+        <div class="journey-dot"></div>
+        <div class="journey-label">傲慢</div>
+      </div>
+      <div class="journey-arrow"></div>
+      <div class="journey-node">
+        <div class="journey-dot"></div>
+        <div class="journey-label">自省</div>
+      </div>
+      <div class="journey-arrow"></div>
+      <div class="journey-node">
+        <div class="journey-dot"></div>
+        <div class="journey-label">痛</div>
+      </div>
+      <div class="journey-arrow"></div>
+      <div class="journey-node">
+        <div class="journey-dot"></div>
+        <div class="journey-label">理解</div>
+      </div>
+      <div class="journey-arrow"></div>
+      <div class="journey-node">
+        <div class="journey-dot"></div>
+        <div class="journey-label">怀念</div>
+      </div>
+      <div class="journey-arrow"></div>
+      <div class="journey-node">
+        <div class="journey-dot"></div>
+        <div class="journey-label">找回源头</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    <p>Why Fish Don't Exist &middot; Lulu Miller</p>
+  </footer>
+</div>
+
+<script>
+/* ========== 深海粒子背景 ========== */
+(function() {
+  const canvas = document.getElementById('ocean-bg');
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [];
+  const PARTICLE_COUNT = 40;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+
+  function createParticle() {
+    return {
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: Math.random() * 2 + 0.5,
+      dx: (Math.random() - 0.5) * 0.15,
+      dy: -Math.random() * 0.12 - 0.02,
+      opacity: Math.random() * 0.25 + 0.05,
+      pulse: Math.random() * Math.PI * 2,
+      pulseSpeed: Math.random() * 0.008 + 0.003
+    };
+  }
+
+  function init() {
+    resize();
+    particles = [];
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push(createParticle());
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach(p => {
+      p.x += p.dx;
+      p.y += p.dy;
+      p.pulse += p.pulseSpeed;
+
+      /* 边界循环 */
+      if (p.y < -10) { p.y = h + 10; p.x = Math.random() * w; }
+      if (p.x < -10) p.x = w + 10;
+      if (p.x > w + 10) p.x = -10;
+
+      const currentOpacity = p.opacity * (0.5 + 0.5 * Math.sin(p.pulse));
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(74, 143, 143, ${currentOpacity})`;
+      ctx.fill();
+
+      /* 光晕 */
+      if (p.r > 1.2) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(74, 143, 143, ${currentOpacity * 0.15})`;
+        ctx.fill();
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  init();
+  draw();
+})();
+
+/* ========== 滚动进入视口淡入 ========== */
+(function() {
+  const targets = document.querySelectorAll('.chapter, .journey-section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: 0.08,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  targets.forEach(t => observer.observe(t));
+})();
+</script>
+</body>
+</html>

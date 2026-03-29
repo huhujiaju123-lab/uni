@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H5 延迟登录效果评估 - 最终版</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+<style>
+  :root {
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #16213e;
+    --bg-card: #16213e;
+    --bg-card-alt: #1e2d4a;
+    --border: #2a3a5c;
+    --text-primary: #f0f0f0;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --blue: #0ea5e9;
+    --orange: #f97316;
+    --green: #10b981;
+    --red: #ef4444;
+    --gray: #64748b;
+    --green-dim: rgba(16,185,129,0.15);
+    --red-dim: rgba(239,68,68,0.12);
+    --blue-dim: rgba(14,165,233,0.15);
+    --orange-dim: rgba(249,115,22,0.12);
+    --radius: 14px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ===== Hero ===== */
+  .hero {
+    background: linear-gradient(135deg, #16213e 0%, #1a1a2e 50%, #0f172a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 56px 0 44px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #f0f0f0, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero .subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: 32px;
+  }
+  .hero .tags {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+  }
+  .hero .tag {
+    display: inline-block;
+    padding: 4px 14px;
+    background: var(--blue-dim);
+    border-radius: 6px;
+    color: var(--blue);
+    font-size: 0.82rem;
+    font-weight: 500;
+  }
+  .hero .tag.green { background: var(--green-dim); color: var(--green); }
+  .hero .tag.orange { background: var(--orange-dim); color: var(--orange); }
+
+  /* 流程对比 */
+  .flow-compare {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 880px;
+    margin: 0 auto;
+  }
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 14px 20px;
+    border: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  .flow-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    min-width: 52px;
+    text-align: center;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  .flow-steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-shrink: 0;
+  }
+  .flow-steps .step {
+    padding: 7px 16px;
+    border-radius: 7px;
+    font-size: 0.84rem;
+    font-weight: 500;
+    background: #1e2d4a;
+    color: var(--text-primary);
+    white-space: nowrap;
+    border: 1px solid var(--border);
+  }
+  .flow-steps .step.hl-red {
+    background: var(--red-dim);
+    color: var(--red);
+    border-color: rgba(239,68,68,0.3);
+    font-weight: 700;
+  }
+  .flow-steps .step.hl-green {
+    background: var(--green-dim);
+    color: var(--green);
+    border-color: rgba(16,185,129,0.3);
+    font-weight: 700;
+  }
+  .flow-arrow {
+    color: var(--text-muted);
+    margin: 0 5px;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  /* ===== 通用 Section ===== */
+  section { padding: 44px 0 0; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .section-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--blue-dim);
+    color: var(--blue);
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .section-desc {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+    padding-left: 44px;
+  }
+
+  /* ===== 核心指标卡片 ===== */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .kpi-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+  .kpi-card.accent {
+    border-color: rgba(16,185,129,0.3);
+    background: linear-gradient(135deg, #16213e, #0f2922);
+  }
+  .kpi-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .kpi-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+  }
+  .kpi-value.green { color: var(--green); }
+  .kpi-value.blue { color: var(--blue); }
+  .kpi-sub {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .kpi-delta {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+  .kpi-delta.up { background: var(--green-dim); color: var(--green); }
+
+  /* ===== 图表容器 ===== */
+  .chart-box {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .chart-box.featured {
+    padding: 32px 28px;
+    border-color: rgba(14,165,233,0.25);
+    box-shadow: 0 0 40px rgba(14,165,233,0.05);
+  }
+  .chart-box h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+  }
+  .chart-box.featured h3 {
+    font-size: 1.05rem;
+    color: var(--text-primary);
+  }
+
+  /* ===== 警告框 ===== */
+  .warning-box {
+    background: rgba(249,115,22,0.1);
+    border: 1px solid rgba(249,115,22,0.35);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .warning-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .warning-text {
+    font-size: 0.85rem;
+    color: var(--orange);
+    line-height: 1.6;
+  }
+  .warning-text strong {
+    color: #fb923c;
+  }
+
+  /* ===== 质量表格 ===== */
+  .quality-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .quality-table-wrap {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    border: 1px solid var(--border);
+  }
+  .quality-table-wrap h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+  }
+  .quality-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  .quality-table th {
+    text-align: left;
+    padding: 8px 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--border);
+  }
+  .quality-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(42,58,92,0.3);
+    color: var(--text-secondary);
+  }
+  .quality-table tr:last-child td { border-bottom: none; }
+  .quality-table .val-old { color: var(--text-muted); }
+  .quality-table .val-new { color: var(--text-primary); font-weight: 600; }
+  .quality-table .change-neg {
+    color: var(--orange);
+    font-weight: 600;
+    font-size: 0.82rem;
+  }
+  .quality-table .change-pos {
+    color: var(--green);
+    font-weight: 600;
+    font-size: 0.82rem;
+  }
+  .quality-table .change-neutral {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.82rem;
+  }
+
+  /* ===== 结论 ===== */
+  .conclusion-box {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    border: 1px solid var(--border);
+  }
+  .conclusion-box ol {
+    list-style: none;
+    counter-reset: item;
+    padding: 0;
+  }
+  .conclusion-box li {
+    counter-increment: item;
+    margin-bottom: 20px;
+    padding-left: 40px;
+    position: relative;
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: var(--text-secondary);
+  }
+  .conclusion-box li::before {
+    content: counter(item);
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 26px;
+    height: 26px;
+    background: var(--blue-dim);
+    color: var(--blue);
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .conclusion-box li strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+  .conclusion-box li:last-child { margin-bottom: 0; }
+
+  /* ===== Footer ===== */
+  footer {
+    text-align: center;
+    padding: 36px 0;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+
+  /* ===== 响应式 ===== */
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 1.6rem; }
+    .hero { padding: 36px 0 32px; }
+    .kpi-row { grid-template-columns: 1fr; }
+    .quality-grid { grid-template-columns: 1fr; }
+    .flow-row { padding: 10px 12px; }
+    .flow-steps .step { padding: 5px 10px; font-size: 0.78rem; }
+    .chart-box { padding: 20px 16px; }
+    .section-desc { padding-left: 0; }
+    .kpi-value { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== Hero ===== -->
+<header class="hero">
+  <div class="container">
+    <h1>H5 延迟登录效果评估</h1>
+    <p class="subtitle">前后对比分析 | 聚焦渠道结构变化与转化效率</p>
+    <div class="tags">
+      <span class="tag">2026-02-05 全量上线</span>
+      <span class="tag green">前后对比（非AB）</span>
+      <span class="tag orange">无同期 H5 专属推广变化</span>
+    </div>
+
+    <div class="flow-compare">
+      <div class="flow-row">
+        <div class="flow-label">旧流程</div>
+        <div class="flow-steps">
+          <div class="step">首页</div>
+          <span class="flow-arrow">&#10132;</span>
+          <div class="step hl-red">登录注册</div>
+          <span class="flow-arrow">&#10132;</span>
+          <div class="step">选定位</div>
+          <span class="flow-arrow">&#10132;</span>
+          <div class="step">浏览菜单</div>
+          <span class="flow-arrow">&#10132;</span>
+          <div class="step">加购结账</div>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-label">新流程</div>
+        <div class="flow-steps">
+          <div class="step">首页</div>
+          <span class="flow-arrow">&#10132;</span>
+          <div class="step">选定位</div>
+          <span class="flow-arrow">&#10132;</span>
+          <div class="step">浏览菜单</div>
+          <span class="flow-arrow">&#10132;</span>
+          <div class="step">加购结账</div>
+          <span class="flow-arrow">&#10132;</span>
+          <div class="step hl-green">登录拦截</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ========================================== -->
+  <!-- 模块一：渠道结构变化                          -->
+  <!-- ========================================== -->
+  <section>
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">渠道结构变化</div>
+    </div>
+    <div class="section-desc">以 APP 新客增速作为伪对照组，衡量 H5 的超额增速。核心论据：同期无 H5 专属营销推广变化。</div>
+
+    <!-- KPI 卡片 -->
+    <div class="kpi-row">
+      <div class="kpi-card accent">
+        <div class="kpi-label">H5 超额增速</div>
+        <div class="kpi-value green">~20pp</div>
+        <div class="kpi-sub">H5 +48.4% vs APP +28.6%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">H5 新客占比</div>
+        <div class="kpi-value">18.6% <span style="font-size:1rem;color:var(--text-muted)">&#10132;</span> <span class="green">20.8%</span></div>
+        <div class="kpi-delta up">+2.2pp</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">日均新客</div>
+        <div class="kpi-value" style="font-size:1.4rem;">
+          <span style="color:var(--text-muted)">H5 96</span>
+          <span style="font-size:1rem;color:var(--text-muted)">&#10132;</span>
+          <span class="green">143</span>
+        </div>
+        <div class="kpi-sub">APP: 423 &#10132; 544 (+28.6%)</div>
+      </div>
+    </div>
+
+    <!-- 图表1A：日级双轴线图 -->
+    <div class="chart-box featured">
+      <h3>图表 1A｜H5 新客 vs APP 新客 日级趋势（7日移动均线）</h3>
+      <div style="position:relative; height:440px;">
+        <canvas id="chart1a"></canvas>
+      </div>
+    </div>
+
+    <!-- 图表1B：H5占比趋势 -->
+    <div class="chart-box featured">
+      <h3>图表 1B｜H5 新客占总新客比例趋势（%）</h3>
+      <div style="position:relative; height:360px;">
+        <canvas id="chart1b"></canvas>
+      </div>
+    </div>
+
+    <!-- 图表1C：周级比值柱状图 -->
+    <div class="chart-box">
+      <h3>图表 1C｜H5 / APP 新客比值（周级）</h3>
+      <div style="position:relative; height:320px;">
+        <canvas id="chart1c"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 模块二：漏斗转化率                            -->
+  <!-- ========================================== -->
+  <section>
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">漏斗转化率</div>
+    </div>
+    <div class="section-desc">登录成功 &#10132; 下单成功转化率 + 完单率。注意登录事件在新旧流程中的含义差异。</div>
+
+    <!-- 图表2A：登录→下单转化率 -->
+    <div class="chart-box">
+      <h3>图表 2A｜登录 &#10132; 下单 转化率（%，周级）</h3>
+      <div style="position:relative; height:360px;">
+        <canvas id="chart2a"></canvas>
+      </div>
+      <!-- 警告框 -->
+      <div class="warning-box">
+        <div class="warning-icon">&#9888;</div>
+        <div class="warning-text">
+          <strong>口径说明：</strong>登录事件的含义在新旧流程中不同。旧流程中登录在第 2 步（分母含大量浏览用户），新流程中登录在第 5 步（分母仅含高意向用户）。转化率提升部分来自分母结构变化，不可将全部提升归因为"转化效率提升"。
+        </div>
+      </div>
+    </div>
+
+    <!-- 图表2B：完单率 -->
+    <div class="chart-box">
+      <h3>图表 2B｜订单完单率（%，周级）</h3>
+      <div style="position:relative; height:300px;">
+        <canvas id="chart2b"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 模块三：新客质量验证                          -->
+  <!-- ========================================== -->
+  <section>
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">新客质量验证</div>
+    </div>
+    <div class="section-desc">对比上线前后新客的消费指标与复购留存，评估流量质量变化。</div>
+
+    <div class="quality-grid">
+      <!-- 消费质量 -->
+      <div class="quality-table-wrap">
+        <h4>消费质量</h4>
+        <table class="quality-table">
+          <thead>
+            <tr>
+              <th>指标</th>
+              <th>上线前</th>
+              <th>上线后</th>
+              <th>变化</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>首单 AOV</td>
+              <td class="val-old">$6.54</td>
+              <td class="val-new">$5.95</td>
+              <td class="change-neg">-9.0%</td>
+            </tr>
+            <tr>
+              <td>单杯实收</td>
+              <td class="val-old">$4.92</td>
+              <td class="val-new">$4.59</td>
+              <td class="change-neg">-6.7%</td>
+            </tr>
+            <tr>
+              <td>人均杯量</td>
+              <td class="val-old">1.36</td>
+              <td class="val-new">1.32</td>
+              <td class="change-neutral">-2.9%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 留存质量 -->
+      <div class="quality-table-wrap">
+        <h4>留存质量（复购率）</h4>
+        <table class="quality-table">
+          <thead>
+            <tr>
+              <th>指标</th>
+              <th>上线前</th>
+              <th>上线后</th>
+              <th>变化</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>D3 复购</td>
+              <td class="val-old">6.46%</td>
+              <td class="val-new">5.62%</td>
+              <td class="change-neg">-0.84pp</td>
+            </tr>
+            <tr>
+              <td>D7 复购</td>
+              <td class="val-old">8.95%</td>
+              <td class="val-new">8.75%</td>
+              <td class="change-neutral">-0.20pp</td>
+            </tr>
+            <tr>
+              <td>D14 复购</td>
+              <td class="val-old">9.86%</td>
+              <td class="val-new">9.94%</td>
+              <td class="change-pos">+0.08pp</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 模块四：分析结论                              -->
+  <!-- ========================================== -->
+  <section>
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">分析结论</div>
+    </div>
+    <div class="section-desc">基于前后对比的克制表达，标注已知局限。</div>
+
+    <div class="conclusion-box">
+      <ol>
+        <li><strong>渠道结构变化：</strong>H5 新客增速（+48.4%）显著快于 APP（+28.6%），H5 占总新客比例从 18.6% 提升至 20.8%（+2.2pp）。同期无 H5 专属推广变化，APP 作为伪对照组增速低于 H5 约 20pp，支持延迟登录对 H5 拉新有正向贡献的假设。</li>
+        <li><strong>漏斗转化率：</strong>登录&#10132;下单转化率从 29.5% 提升至 48.3%（+18.8pp），但需注意该指标存在结构性偏差——登录事件在新旧流程中处于不同漏斗位置，分母含义不同，不可直接归因为"转化效率提升"。</li>
+        <li><strong>完单率稳定：</strong>H5 订单完单率稳定在 ~93.5%，延迟登录插入结账环节未导致额外弃单，说明用户在有购买意向后的注册意愿强。</li>
+        <li><strong>新客质量微降：</strong>首单 AOV 下降 9%（$6.54&#10132;$5.95），单杯实收下降 6.7%，可能因新流程吸引了更多价格敏感用户。但中长期留存（D7/D14）基本持平，长期价值暂无劣化信号。</li>
+        <li><strong>局限性：</strong>本分析为前后对比（非 AB 测试），无法排除季节性等混杂因素；标准埋点表缺少匿名用户标识（distinct_id），无法构建完整的端到端漏斗（落地页&#10132;注册&#10132;下单）。如需精确归因，建议申请 relative_privacy 表权限或设计 AB 实验。</li>
+      </ol>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">Lucky US Data Team / H5 延迟登录效果评估 / 2026-03-16</div>
+</footer>
+
+<script>
+// ========================================
+// 数据定义
+// ========================================
+
+// 68天日级数据
+const dates = ['2026-01-06','2026-01-07','2026-01-08','2026-01-09','2026-01-10','2026-01-11','2026-01-12','2026-01-13','2026-01-14','2026-01-15','2026-01-16','2026-01-17','2026-01-18','2026-01-19','2026-01-20','2026-01-21','2026-01-22','2026-01-23','2026-01-24','2026-01-25','2026-01-26','2026-01-27','2026-01-28','2026-01-29','2026-01-30','2026-01-31','2026-02-01','2026-02-02','2026-02-03','2026-02-04','2026-02-05','2026-02-06','2026-02-07','2026-02-08','2026-02-09','2026-02-10','2026-02-11','2026-02-12','2026-02-13','2026-02-14','2026-02-15','2026-02-16','2026-02-17','2026-02-18','2026-02-19','2026-02-20','2026-02-21','2026-02-22','2026-02-23','2026-02-24','2026-02-25','2026-02-26','2026-02-27','2026-02-28','2026-03-01','2026-03-02','2026-03-03','2026-03-04','2026-03-05','2026-03-06','2026-03-07','2026-03-08','2026-03-09','2026-03-10','2026-03-11','2026-03-12','2026-03-13','2026-03-14'];
+const h5_new = [87,100,114,101,87,124,108,123,115,127,92,113,99,100,90,100,111,102,98,46,56,69,72,90,99,90,79,79,98,124,124,134,116,87,89,136,130,144,156,141,163,130,141,124,157,103,164,66,103,97,134,124,209,142,115,113,164,123,155,201,202,163,209,182,148,172,194,182];
+const app_new = [512,542,578,557,524,589,426,496,472,544,495,494,518,463,345,420,548,370,383,81,140,274,279,388,331,457,378,317,389,390,372,525,400,269,352,443,477,478,491,722,655,485,551,431,453,412,696,203,294,355,676,633,800,614,394,434,566,446,599,863,938,702,725,722,470,615,768,658];
+
+// 上线日 index: 2026-02-05 在 dates 数组的 index
+const launchIndex = dates.indexOf('2026-02-05'); // = 30
+
+// 周级数据
+const weekStarts = ['01-06','01-12','01-19','01-26','02-02','02-09','02-16','02-24','03-02','03-09'];
+const weekH5 = [613, 777, 647, 555, 762, 959, 885, 809, 1073, 1250];
+const weekApp = [3302, 3445, 2610, 2247, 2662, 3618, 3231, 3372, 4240, 4660];
+const weekH5AppRatio = [0.186, 0.226, 0.248, 0.247, 0.286, 0.265, 0.274, 0.240, 0.253, 0.268];
+const weekSplitIndex = 4; // 02-02 周含上线日，从这周开始算上线后
+
+// 漏斗数据
+const funnelWeeks = ['01-06','01-12','01-19','01-26','02-02','02-09','02-16','02-23','03-02','03-09'];
+const loginSuccess = [1257, 833, 736, 633, 857, 1121, 887, 825, 1121, 1207];
+const orderSuccess = [285, 291, 272, 222, 377, 526, 481, 419, 597, 653];
+const convRate = [22.7, 34.9, 37.0, 35.1, 44.0, 46.9, 54.2, 50.8, 53.3, 54.1];
+
+// 完单率
+const totalOrders = [807, 987, 883, 759, 1039, 1286, 1191, 1045, 1439, 1633];
+const completedOrders = [754, 926, 828, 714, 972, 1202, 1112, 978, 1337, 1529];
+const completionRate = [93.43, 93.82, 93.77, 94.07, 93.55, 93.47, 93.37, 93.59, 92.91, 93.63];
+
+// ========================================
+// 工具函数
+// ========================================
+
+// 7日移动均线
+function ma7(arr) {
+  return arr.map(function(_, i) {
+    var start = Math.max(0, i - 6);
+    var slice = arr.slice(start, i + 1);
+    return +(slice.reduce(function(a, b) { return a + b; }, 0) / slice.length).toFixed(1);
+  });
+}
+
+// 日级 H5 占比
+function dailyH5Pct(h5, app) {
+  return h5.map(function(v, i) {
+    var total = v + app[i];
+    return total > 0 ? +(v / total * 100).toFixed(1) : 0;
+  });
+}
+
+// X轴：只显示周一日期
+function mondayTickFilter(dates) {
+  return dates.map(function(d) {
+    var dt = new Date(d);
+    return dt.getDay() === 1 ? d.slice(5) : '';
+  });
+}
+
+// 通用 Chart.js 颜色/样式
+var chartFontColor = '#94a3b8';
+var chartGridColor = 'rgba(42,58,92,0.3)';
+
+// 公共 annotation：2/5 上线竖线 + 前后背景色
+function makeAnnotations(launchX, maxX) {
+  return {
+    launchLine: {
+      type: 'line',
+      xMin: launchX,
+      xMax: launchX,
+      borderColor: 'rgba(239,68,68,0.6)',
+      borderWidth: 2,
+      borderDash: [6, 4],
+      label: {
+        display: true,
+        content: '02-05 上线',
+        position: 'start',
+        backgroundColor: 'rgba(239,68,68,0.15)',
+        color: '#ef4444',
+        font: { size: 10, weight: 'bold' },
+        padding: { top: 3, bottom: 3, left: 6, right: 6 },
+        borderRadius: 4
+      }
+    },
+    beforeBox: {
+      type: 'box',
+      xMin: -0.5,
+      xMax: launchX,
+      backgroundColor: 'rgba(100,116,139,0.03)',
+      borderWidth: 0
+    },
+    afterBox: {
+      type: 'box',
+      xMin: launchX,
+      xMax: maxX + 0.5,
+      backgroundColor: 'rgba(16,185,129,0.03)',
+      borderWidth: 0
+    }
+  };
+}
+
+// ========================================
+// 图表 1A：日级双轴 H5 + APP 新客
+// ========================================
+(function() {
+  var h5ma = ma7(h5_new);
+  var appma = ma7(app_new);
+  var labels = mondayTickFilter(dates);
+  // 上线日对应 launchIndex = 30 => 竖线在 29.5（让线在那天之前一点）
+  var launchX = launchIndex - 0.5;
+
+  new Chart(document.getElementById('chart1a').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        // H5 原始值（小点）
+        {
+          label: 'H5 新客（日）',
+          data: h5_new,
+          borderColor: 'transparent',
+          backgroundColor: 'rgba(14,165,233,0.3)',
+          pointBackgroundColor: 'rgba(14,165,233,0.35)',
+          pointBorderColor: 'transparent',
+          pointRadius: 2.5,
+          pointHoverRadius: 5,
+          borderWidth: 0,
+          showLine: false,
+          yAxisID: 'yH5',
+          order: 3
+        },
+        // H5 MA7
+        {
+          label: 'H5 新客 7日均线',
+          data: h5ma,
+          borderColor: '#0ea5e9',
+          backgroundColor: 'rgba(14,165,233,0.08)',
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          borderWidth: 3,
+          fill: false,
+          tension: 0.35,
+          yAxisID: 'yH5',
+          order: 1
+        },
+        // APP 原始值（小点）
+        {
+          label: 'APP 新客（日）',
+          data: app_new,
+          borderColor: 'transparent',
+          backgroundColor: 'rgba(249,115,22,0.25)',
+          pointBackgroundColor: 'rgba(249,115,22,0.3)',
+          pointBorderColor: 'transparent',
+          pointRadius: 2.5,
+          pointHoverRadius: 5,
+          borderWidth: 0,
+          showLine: false,
+          yAxisID: 'yApp',
+          order: 4
+        },
+        // APP MA7
+        {
+          label: 'APP 新客 7日均线',
+          data: appma,
+          borderColor: '#f97316',
+          backgroundColor: 'rgba(249,115,22,0.08)',
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          borderWidth: 3,
+          fill: false,
+          tension: 0.35,
+          yAxisID: 'yApp',
+          order: 2
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          labels: {
+            color: chartFontColor,
+            font: { size: 11 },
+            usePointStyle: true,
+            pointStyle: 'circle',
+            filter: function(item) {
+              // 只显示均线的图例
+              return item.text.indexOf('均线') > -1;
+            }
+          }
+        },
+        tooltip: {
+          backgroundColor: '#16213e',
+          titleColor: '#f0f0f0',
+          bodyColor: '#94a3b8',
+          borderColor: '#2a3a5c',
+          borderWidth: 1,
+          callbacks: {
+            title: function(items) {
+              return dates[items[0].dataIndex];
+            }
+          }
+        },
+        annotation: {
+          annotations: makeAnnotations(launchX, dates.length - 1)
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: chartGridColor },
+          ticks: {
+            color: chartFontColor,
+            font: { size: 10 },
+            maxRotation: 0,
+            autoSkip: false,
+            callback: function(value, index) {
+              return labels[index] || '';
+            }
+          }
+        },
+        yH5: {
+          type: 'linear',
+          position: 'left',
+          title: {
+            display: true,
+            text: 'H5 新客',
+            color: '#0ea5e9',
+            font: { size: 11, weight: '600' }
+          },
+          grid: { color: chartGridColor },
+          ticks: { color: '#0ea5e9', font: { size: 10 } },
+          min: 0
+        },
+        yApp: {
+          type: 'linear',
+          position: 'right',
+          title: {
+            display: true,
+            text: 'APP 新客',
+            color: '#f97316',
+            font: { size: 11, weight: '600' }
+          },
+          grid: { drawOnChartArea: false },
+          ticks: { color: '#f97316', font: { size: 10 } },
+          min: 0
+        }
+      }
+    }
+  });
+})();
+
+// ========================================
+// 图表 1B：日级 H5 占比趋势
+// ========================================
+(function() {
+  var pct = dailyH5Pct(h5_new, app_new);
+  var pctMa = ma7(pct);
+  var labels = mondayTickFilter(dates);
+  var launchX = launchIndex - 0.5;
+
+  new Chart(document.getElementById('chart1b').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        // 每日值（小点）
+        {
+          label: 'H5占比（日）',
+          data: pct,
+          borderColor: 'transparent',
+          backgroundColor: 'rgba(16,185,129,0.3)',
+          pointBackgroundColor: 'rgba(16,185,129,0.4)',
+          pointBorderColor: 'transparent',
+          pointRadius: 2.5,
+          pointHoverRadius: 5,
+          borderWidth: 0,
+          showLine: false,
+          order: 2
+        },
+        // MA7
+        {
+          label: 'H5占比 7日均线',
+          data: pctMa,
+          borderColor: '#10b981',
+          backgroundColor: 'rgba(16,185,129,0.08)',
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          borderWidth: 3,
+          fill: true,
+          tension: 0.35,
+          order: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          labels: {
+            color: chartFontColor,
+            font: { size: 11 },
+            usePointStyle: true,
+            pointStyle: 'circle',
+            filter: function(item) {
+              return item.text.indexOf('均线') > -1;
+            }
+          }
+        },
+        tooltip: {
+          backgroundColor: '#16213e',
+          titleColor: '#f0f0f0',
+          bodyColor: '#94a3b8',
+          borderColor: '#2a3a5c',
+          borderWidth: 1,
+          callbacks: {
+            title: function(items) {
+              return dates[items[0].dataIndex];
+            },
+            label: function(ctx) {
+              return ctx.dataset.label + ': ' + ctx.raw + '%';
+            }
+          }
+        },
+        annotation: {
+          annotations: Object.assign({}, makeAnnotations(launchX, dates.length - 1), {
+            avgBefore: {
+              type: 'line',
+              yMin: 18.6,
+              yMax: 18.6,
+              xMin: -0.5,
+              xMax: launchX,
+              borderColor: 'rgba(100,116,139,0.5)',
+              borderWidth: 1.5,
+              borderDash: [4, 3],
+              label: {
+                display: true,
+                content: '上线前均值 18.6%',
+                position: 'start',
+                backgroundColor: 'rgba(100,116,139,0.2)',
+                color: '#94a3b8',
+                font: { size: 10 },
+                padding: { top: 2, bottom: 2, left: 6, right: 6 },
+                borderRadius: 3
+              }
+            },
+            avgAfter: {
+              type: 'line',
+              yMin: 20.8,
+              yMax: 20.8,
+              xMin: launchX,
+              xMax: dates.length - 0.5,
+              borderColor: 'rgba(16,185,129,0.5)',
+              borderWidth: 1.5,
+              borderDash: [4, 3],
+              label: {
+                display: true,
+                content: '上线后均值 20.8%',
+                position: 'end',
+                backgroundColor: 'rgba(16,185,129,0.2)',
+                color: '#10b981',
+                font: { size: 10 },
+                padding: { top: 2, bottom: 2, left: 6, right: 6 },
+                borderRadius: 3
+              }
+            }
+          })
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: chartGridColor },
+          ticks: {
+            color: chartFontColor,
+            font: { size: 10 },
+            maxRotation: 0,
+            autoSkip: false,
+            callback: function(value, index) {
+              return labels[index] || '';
+            }
+          }
+        },
+        y: {
+          grid: { color: chartGridColor },
+          ticks: {
+            color: chartFontColor,
+            font: { size: 10 },
+            callback: function(v) { return v + '%'; }
+          },
+          min: 5,
+          max: 35
+        }
+      }
+    }
+  });
+})();
+
+// ========================================
+// 图表 1C：周级 H5/APP 比值柱状图
+// ========================================
+(function() {
+  var colors = weekH5AppRatio.map(function(_, i) {
+    return i < weekSplitIndex ? 'rgba(100,116,139,0.5)' : 'rgba(16,185,129,0.7)';
+  });
+  var borderColors = weekH5AppRatio.map(function(_, i) {
+    return i < weekSplitIndex ? '#64748b' : '#10b981';
+  });
+
+  new Chart(document.getElementById('chart1c').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: weekStarts,
+      datasets: [{
+        label: 'H5/APP 新客比值',
+        data: weekH5AppRatio,
+        backgroundColor: colors,
+        borderColor: borderColors,
+        borderWidth: 1.5,
+        borderRadius: 6,
+        barPercentage: 0.65
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#16213e',
+          titleColor: '#f0f0f0',
+          bodyColor: '#94a3b8',
+          borderColor: '#2a3a5c',
+          borderWidth: 1,
+          callbacks: {
+            label: function(ctx) {
+              return 'H5/APP = ' + ctx.raw.toFixed(3);
+            }
+          }
+        },
+        annotation: {
+          annotations: {
+            launchLine: {
+              type: 'line',
+              xMin: weekSplitIndex - 0.5,
+              xMax: weekSplitIndex - 0.5,
+              borderColor: 'rgba(239,68,68,0.5)',
+              borderWidth: 2,
+              borderDash: [6, 4],
+              label: {
+                display: true,
+                content: '上线',
+                position: 'start',
+                backgroundColor: 'rgba(239,68,68,0.15)',
+                color: '#ef4444',
+                font: { size: 10, weight: 'bold' },
+                padding: { top: 3, bottom: 3, left: 6, right: 6 },
+                borderRadius: 4
+              }
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: chartGridColor },
+          ticks: { color: chartFontColor, font: { size: 11 } }
+        },
+        y: {
+          grid: { color: chartGridColor },
+          ticks: { color: chartFontColor, font: { size: 10 } },
+          min: 0.1,
+          max: 0.35
+        }
+      }
+    },
+    plugins: [{
+      afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        var meta = chart.getDatasetMeta(0);
+        meta.data.forEach(function(bar, i) {
+          var val = weekH5AppRatio[i];
+          ctx.save();
+          ctx.fillStyle = i < weekSplitIndex ? '#94a3b8' : '#10b981';
+          ctx.font = 'bold 11px -apple-system, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          ctx.fillText(val.toFixed(3), bar.x, bar.y - 5);
+          ctx.restore();
+        });
+      }
+    }]
+  });
+})();
+
+// ========================================
+// 图表 2A：登录→下单转化率
+// ========================================
+(function() {
+  // 构建两条线让上线前后颜色不同
+  var beforeLine = convRate.map(function(v, i) { return i <= weekSplitIndex ? v : null; });
+  var afterLine = convRate.map(function(v, i) { return i >= weekSplitIndex ? v : null; });
+
+  new Chart(document.getElementById('chart2a').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: funnelWeeks,
+      datasets: [
+        {
+          label: '上线前',
+          data: beforeLine,
+          borderColor: '#64748b',
+          backgroundColor: 'rgba(100,116,139,0.06)',
+          pointBackgroundColor: funnelWeeks.map(function(_, i) { return i < weekSplitIndex ? '#64748b' : 'transparent'; }),
+          pointBorderColor: funnelWeeks.map(function(_, i) { return i < weekSplitIndex ? '#64748b' : 'transparent'; }),
+          pointRadius: funnelWeeks.map(function(_, i) { return i < weekSplitIndex ? 5 : 0; }),
+          pointHoverRadius: 7,
+          borderWidth: 2.5,
+          fill: true,
+          tension: 0.3
+        },
+        {
+          label: '上线后',
+          data: afterLine,
+          borderColor: '#10b981',
+          backgroundColor: 'rgba(16,185,129,0.08)',
+          pointBackgroundColor: '#10b981',
+          pointBorderColor: '#10b981',
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          borderWidth: 2.5,
+          fill: true,
+          tension: 0.3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          labels: { color: chartFontColor, font: { size: 11 }, usePointStyle: true, pointStyle: 'circle' }
+        },
+        tooltip: {
+          backgroundColor: '#16213e',
+          titleColor: '#f0f0f0',
+          bodyColor: '#94a3b8',
+          borderColor: '#2a3a5c',
+          borderWidth: 1,
+          callbacks: {
+            label: function(ctx) {
+              if (ctx.raw === null) return null;
+              return ctx.dataset.label + ': ' + ctx.raw + '%';
+            }
+          }
+        },
+        annotation: {
+          annotations: {
+            launchLine: {
+              type: 'line',
+              xMin: weekSplitIndex - 0.5,
+              xMax: weekSplitIndex - 0.5,
+              borderColor: 'rgba(239,68,68,0.6)',
+              borderWidth: 2,
+              borderDash: [6, 4],
+              label: {
+                display: true,
+                content: '02-05 上线',
+                position: 'start',
+                backgroundColor: 'rgba(239,68,68,0.15)',
+                color: '#ef4444',
+                font: { size: 10, weight: 'bold' },
+                padding: { top: 3, bottom: 3, left: 6, right: 6 },
+                borderRadius: 4
+              }
+            },
+            beforeBox: {
+              type: 'box',
+              xMin: -0.5,
+              xMax: weekSplitIndex - 0.5,
+              backgroundColor: 'rgba(100,116,139,0.03)',
+              borderWidth: 0
+            },
+            afterBox: {
+              type: 'box',
+              xMin: weekSplitIndex - 0.5,
+              xMax: 9.5,
+              backgroundColor: 'rgba(16,185,129,0.03)',
+              borderWidth: 0
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: chartGridColor },
+          ticks: { color: chartFontColor, font: { size: 11 } }
+        },
+        y: {
+          min: 15,
+          max: 65,
+          grid: { color: chartGridColor },
+          ticks: {
+            color: chartFontColor,
+            font: { size: 10 },
+            callback: function(v) { return v + '%'; }
+          }
+        }
+      }
+    },
+    plugins: [{
+      afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        chart.data.datasets.forEach(function(ds, dsIdx) {
+          var meta = chart.getDatasetMeta(dsIdx);
+          meta.data.forEach(function(pt, i) {
+            var val = ds.data[i];
+            if (val === null || val === undefined) return;
+            if (dsIdx === 0 && i >= weekSplitIndex) return;
+            if (dsIdx === 1 && i < weekSplitIndex) return;
+            ctx.save();
+            ctx.fillStyle = dsIdx === 0 ? '#94a3b8' : '#10b981';
+            ctx.font = 'bold 11px -apple-system, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(val + '%', pt.x, pt.y - 8);
+            ctx.restore();
+          });
+        });
+      }
+    }]
+  });
+})();
+
+// ========================================
+// 图表 2B：完单率
+// ========================================
+(function() {
+  new Chart(document.getElementById('chart2b').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: funnelWeeks,
+      datasets: [{
+        label: '完单率',
+        data: completionRate,
+        borderColor: '#0ea5e9',
+        backgroundColor: 'rgba(14,165,233,0.08)',
+        pointBackgroundColor: '#0ea5e9',
+        pointBorderColor: '#0ea5e9',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#16213e',
+          titleColor: '#f0f0f0',
+          bodyColor: '#94a3b8',
+          borderColor: '#2a3a5c',
+          borderWidth: 1,
+          callbacks: {
+            label: function(ctx) {
+              return '完单率: ' + ctx.raw + '%';
+            }
+          }
+        },
+        annotation: {
+          annotations: {
+            launchLine: {
+              type: 'line',
+              xMin: weekSplitIndex - 0.5,
+              xMax: weekSplitIndex - 0.5,
+              borderColor: 'rgba(239,68,68,0.5)',
+              borderWidth: 2,
+              borderDash: [6, 4],
+              label: {
+                display: true,
+                content: '上线',
+                position: 'start',
+                backgroundColor: 'rgba(239,68,68,0.15)',
+                color: '#ef4444',
+                font: { size: 10, weight: 'bold' },
+                padding: { top: 3, bottom: 3, left: 6, right: 6 },
+                borderRadius: 4
+              }
+            },
+            avgLine: {
+              type: 'line',
+              yMin: 93.5,
+              yMax: 93.5,
+              borderColor: 'rgba(14,165,233,0.35)',
+              borderWidth: 1.5,
+              borderDash: [4, 3],
+              label: {
+                display: true,
+                content: '均值 ~93.5%',
+                position: 'end',
+                backgroundColor: 'rgba(14,165,233,0.15)',
+                color: '#0ea5e9',
+                font: { size: 10 },
+                padding: { top: 2, bottom: 2, left: 6, right: 6 },
+                borderRadius: 3
+              }
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: chartGridColor },
+          ticks: { color: chartFontColor, font: { size: 11 } }
+        },
+        y: {
+          min: 92,
+          max: 95,
+          grid: { color: chartGridColor },
+          ticks: {
+            color: chartFontColor,
+            font: { size: 10 },
+            callback: function(v) { return v + '%'; },
+            stepSize: 0.5
+          }
+        }
+      }
+    },
+    plugins: [{
+      afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        var meta = chart.getDatasetMeta(0);
+        meta.data.forEach(function(pt, i) {
+          ctx.save();
+          ctx.fillStyle = '#0ea5e9';
+          ctx.font = 'bold 10px -apple-system, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          ctx.fillText(completionRate[i] + '%', pt.x, pt.y - 8);
+          ctx.restore();
+        });
+      }
+    }]
+  });
+})();
+</script>
+
+</body>
+</html>

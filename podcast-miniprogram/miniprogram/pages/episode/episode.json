@@ -1,0 +1,14 @@
+{
+  "usingComponents": {
+    "preview-card": "/components/preview-card/preview-card",
+    "section-card": "/components/section-card/section-card",
+    "quote-card": "/components/quote-card/quote-card",
+    "mind-map": "/components/mind-map/mind-map",
+    "diagram": "/components/diagram/diagram",
+    "quiz": "/components/quiz/quiz",
+    "share-poster": "/components/share-poster/share-poster"
+  },
+  "enableShareAppMessage": true,
+  "enableShareTimeline": true,
+  "navigationBarTitleText": ""
+}

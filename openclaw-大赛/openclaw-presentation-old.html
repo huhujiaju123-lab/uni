@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>超级龙虾 — OpenClaw AI 运营大脑</title>
+<style>
+/* ========== CSS 变量 & 基础 ========== */
+:root {
+  --bg: #0B0E17;
+  --bg-card: #151A2A;
+  --bg-card-dim: #111628;
+  --primary: #FF6B4A;
+  --primary-glow: rgba(255, 107, 74, 0.35);
+  --accent: #4ECDC4;
+  --accent-glow: rgba(78, 205, 196, 0.3);
+  --purple: #A78BFA;
+  --yellow: #FBBF24;
+  --blue: #60A5FA;
+  --text: #F1F5F9;
+  --text-dim: #64748B;
+  --text-muted: #475569;
+  --radius: 16px;
+  --slide-transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+/* ========== 进度条 ========== */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px; z-index: 1000;
+  background: var(--primary);
+  transition: width 0.4s ease;
+}
+
+/* ========== 页码 ========== */
+#slide-counter {
+  position: fixed; bottom: 24px; right: 32px; z-index: 1000;
+  font-size: 1rem; color: var(--text-dim); letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ========== 幻灯片容器 ========== */
+#deck {
+  display: flex; height: 100vh; width: 100%;
+  transition: transform var(--slide-transition);
+}
+
+.slide {
+  min-width: 100vw; height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  padding: 60px 80px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ========== 演讲者备注 ========== */
+#notes-panel {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 999;
+  background: rgba(11, 14, 23, 0.96);
+  border-top: 2px solid var(--primary);
+  padding: 20px 40px;
+  transform: translateY(100%);
+  transition: transform 0.35s ease;
+  max-height: 30vh; overflow-y: auto;
+}
+#notes-panel.visible { transform: translateY(0); }
+#notes-panel .notes-label {
+  font-size: 0.75rem; color: var(--primary); text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 8px;
+}
+#notes-panel .notes-text {
+  font-size: 1rem; color: var(--text-dim); line-height: 1.7;
+}
+
+/* ========== 通用排版 ========== */
+.slide-title {
+  font-size: 2.8rem; font-weight: 800; margin-bottom: 48px;
+  text-align: center; line-height: 1.3;
+}
+.slide-title .coral { color: var(--primary); }
+.slide-title .accent { color: var(--accent); }
+
+.big-text {
+  font-size: 3.2rem; font-weight: 800; text-align: center; line-height: 1.5;
+}
+.huge-text {
+  font-size: 4rem; font-weight: 900; text-align: center; line-height: 1.4;
+}
+.sub-text {
+  font-size: 1.4rem; color: var(--text-dim); text-align: center; margin-top: 16px; line-height: 1.6;
+}
+.small-text {
+  font-size: 1.1rem; color: var(--text-muted); text-align: center; margin-top: 12px;
+}
+.coral { color: var(--primary); }
+.accent-c { color: var(--accent); }
+.glow-coral { color: var(--primary); text-shadow: 0 0 30px var(--primary-glow), 0 0 60px rgba(255,107,74,0.15); }
+
+/* ========== 卡片 ========== */
+.cards-row {
+  display: flex; gap: 32px; justify-content: center;
+  flex-wrap: wrap; width: 100%; max-width: 1200px;
+}
+.card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 36px 32px;
+  flex: 1; min-width: 240px; max-width: 340px;
+  text-align: center;
+}
+.card-icon { font-size: 2.8rem; margin-bottom: 16px; display: block; }
+.card-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 12px; }
+.card-body { font-size: 1rem; color: var(--text-dim); line-height: 1.6; }
+
+/* ========== 比较面板 ========== */
+.compare-row {
+  display: flex; gap: 32px; width: 100%; max-width: 1200px;
+}
+.compare-panel {
+  flex: 1; border-radius: var(--radius); padding: 36px 32px;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+}
+.panel-dim {
+  background: var(--bg-card-dim); border: 1px solid rgba(255,255,255,0.05);
+}
+.panel-glow {
+  background: linear-gradient(135deg, rgba(255,107,74,0.08), rgba(78,205,196,0.06));
+  border: 1px solid rgba(255,107,74,0.2);
+  box-shadow: 0 0 40px rgba(255,107,74,0.08);
+}
+.panel-label {
+  font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; letter-spacing: 0.03em;
+}
+.panel-emoji { font-size: 4rem; margin: 12px 0; }
+.panel-headline { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+.panel-desc { font-size: 1.1rem; color: var(--text-dim); line-height: 1.5; }
+
+/* ========== Demo 场景 ========== */
+.demo-header {
+  width: 100%; max-width: 1200px; margin-bottom: 24px; text-align: center;
+}
+.demo-header .tag {
+  display: inline-block; background: var(--primary);
+  color: #fff; font-size: 0.85rem; font-weight: 700;
+  padding: 4px 16px; border-radius: 20px; margin-bottom: 8px;
+}
+.demo-header h2 { font-size: 2.2rem; font-weight: 800; }
+.demo-header .demo-sub { font-size: 1.1rem; color: var(--text-dim); margin-top: 6px; }
+
+.demo-split {
+  display: flex; gap: 24px; width: 100%; max-width: 1200px; flex: 1;
+  max-height: calc(100vh - 240px);
+}
+.demo-col {
+  flex: 1; border-radius: var(--radius); padding: 24px 20px;
+  display: flex; flex-direction: column; gap: 10px;
+  overflow-y: auto; font-size: 0.92rem;
+}
+.demo-col-dim { background: var(--bg-card-dim); border: 1px solid rgba(255,255,255,0.05); }
+.demo-col-glow { background: rgba(255,107,74,0.04); border: 1px solid rgba(255,107,74,0.15); }
+.demo-col-label {
+  font-size: 0.85rem; font-weight: 700; text-align: center;
+  padding: 4px 0; margin-bottom: 4px; letter-spacing: 0.05em;
+}
+
+/* 聊天气泡 */
+.chat-bubble {
+  background: rgba(255,255,255,0.06); border-radius: 12px;
+  padding: 12px 16px; line-height: 1.55; color: var(--text);
+  font-size: 0.88rem;
+}
+.chat-bubble.bot { border-left: 3px solid var(--accent); }
+.chat-bubble.user { border-left: 3px solid var(--yellow); }
+.chat-bubble.think {
+  border: 1px dashed var(--yellow); background: rgba(251,191,36,0.06);
+  font-style: italic; color: var(--yellow);
+}
+.chat-bubble code, .code-block {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.82rem; background: rgba(0,0,0,0.4);
+  border-radius: 6px; padding: 8px 12px; display: block;
+  color: var(--accent); margin-top: 6px; white-space: pre-wrap;
+  line-height: 1.5;
+}
+.verdict {
+  font-size: 0.9rem; font-weight: 700; text-align: center;
+  padding: 8px; border-radius: 8px; margin-top: auto;
+}
+.verdict-red { background: rgba(239,68,68,0.12); color: #EF4444; }
+.verdict-green { background: rgba(78,205,196,0.12); color: var(--accent); }
+.day-label {
+  font-size: 0.78rem; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px;
+}
+.record-bar {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.8rem; color: var(--accent);
+  background: rgba(78,205,196,0.08); border-radius: 8px;
+  padding: 6px 12px;
+}
+.callout-box {
+  background: rgba(255,107,74,0.08); border: 1px solid rgba(255,107,74,0.2);
+  border-radius: 12px; padding: 12px 20px; text-align: center;
+  font-size: 1.2rem; font-weight: 700; color: var(--primary);
+  margin-top: 16px; width: 100%; max-width: 1200px;
+}
+
+/* ========== 记忆塔 ========== */
+.memory-compare {
+  display: flex; gap: 48px; align-items: flex-end;
+  width: 100%; max-width: 1100px; justify-content: center;
+}
+.mem-stack { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.mem-block {
+  width: 240px; padding: 14px 16px; text-align: center;
+  font-size: 0.85rem; font-weight: 600; border: 1px solid rgba(255,255,255,0.08);
+  position: relative;
+}
+.mem-block:first-child { border-radius: 12px 12px 0 0; }
+.mem-block:last-child { border-radius: 0 0 12px 12px; }
+.mem-label-below { font-size: 0.9rem; color: var(--text-dim); margin-top: 12px; text-align: center; max-width: 260px; line-height: 1.5; }
+.mem-arrow {
+  position: absolute; right: -70px; top: 0; bottom: 0;
+  display: flex; align-items: center;
+  font-size: 0.75rem; color: var(--primary); font-weight: 700;
+  writing-mode: vertical-rl; text-orientation: mixed;
+  letter-spacing: 0.1em;
+}
+
+/* ========== 飞轮 ========== */
+.flywheel-container {
+  position: relative; width: 420px; height: 420px;
+}
+@keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.flywheel-ring {
+  position: absolute; inset: 0;
+  border: 2px dashed rgba(255,107,74,0.2);
+  border-radius: 50%;
+  animation: spin-slow 30s linear infinite;
+}
+.flywheel-node {
+  position: absolute;
+  width: 90px; height: 90px;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; font-size: 0.82rem; font-weight: 700;
+  background: var(--bg-card); border: 2px solid rgba(255,107,74,0.3);
+  border-radius: 50%; line-height: 1.3;
+  transform: translate(-50%, -50%);
+}
+.flywheel-center {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.4rem; text-align: center; line-height: 1.3;
+}
+
+/* ========== 4卡片横排（Slide 10） ========== */
+.four-cards { display: flex; gap: 24px; max-width: 1200px; width: 100%; }
+.four-cards .card { flex: 1; min-width: 0; }
+
+/* ========== ROI 数字 ========== */
+.roi-number {
+  font-size: 4rem; font-weight: 900; color: var(--primary);
+  text-align: center; margin-bottom: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.roi-detail { font-size: 1.1rem; color: var(--text-dim); text-align: center; margin-bottom: 40px; }
+.roi-cards { display: flex; gap: 24px; max-width: 1000px; width: 100%; }
+.roi-cards .card { flex: 1; }
+
+/* ========== 依次淡入（Slide 14） ========== */
+.fade-line { opacity: 0; transform: translateY(20px); transition: all 0.8s ease; }
+.fade-line.visible { opacity: 1; transform: translateY(0); }
+
+/* ========== 打印 ========== */
+@media print {
+  body { overflow: visible; }
+  #deck { flex-direction: column; transform: none !important; }
+  .slide { min-width: 100%; page-break-after: always; height: auto; min-height: 100vh; }
+  #progress-bar, #slide-counter, #notes-panel { display: none; }
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 768px) {
+  .slide { padding: 40px 24px 60px; }
+  .slide-title { font-size: 1.8rem; }
+  .big-text { font-size: 2rem; }
+  .huge-text { font-size: 2.4rem; }
+  .sub-text { font-size: 1rem; }
+  .cards-row, .compare-row, .demo-split, .four-cards, .roi-cards, .memory-compare {
+    flex-direction: column; align-items: center;
+  }
+  .card, .compare-panel, .demo-col { max-width: 100%; min-width: 0; }
+  .flywheel-container { width: 280px; height: 280px; }
+  .flywheel-node { width: 64px; height: 64px; font-size: 0.65rem; }
+  .roi-number { font-size: 2.5rem; }
+  .mem-block { width: 180px; font-size: 0.75rem; }
+}
+
+/* ========== Slide 2 延迟出现 ========== */
+.delayed-fade { opacity: 0; transition: opacity 1s ease 2s; }
+.slide.active .delayed-fade { opacity: 1; }
+
+/* ========== Slide 入场动画 ========== */
+.slide .animate-in {
+  opacity: 0; transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.slide.active .animate-in { opacity: 1; transform: translateY(0); }
+.slide.active .animate-in:nth-child(2) { transition-delay: 0.1s; }
+.slide.active .animate-in:nth-child(3) { transition-delay: 0.2s; }
+.slide.active .animate-in:nth-child(4) { transition-delay: 0.3s; }
+
+/* ========== 计数器动画 ========== */
+.count-up { font-variant-numeric: tabular-nums; }
+
+/* ========== 飞轮指标 ========== */
+.flywheel-metrics {
+  display: flex; gap: 32px; margin-top: 32px; text-align: center;
+}
+.flywheel-metric { flex: 1; }
+.flywheel-metric .metric-label { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 4px; }
+.flywheel-metric .metric-value { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+
+/* ========== 辉光脉冲 ========== */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255,107,74,0.1); }
+  50% { box-shadow: 0 0 40px rgba(255,107,74,0.25); }
+}
+.glow-pulse { animation: pulse-glow 3s ease-in-out infinite; }
+</style>
+</head>
+<body>
+
+<!-- 进度条 -->
+<div id="progress-bar" style="width: 6.67%;"></div>
+
+<!-- 页码 -->
+<div id="slide-counter">1 / 15</div>
+
+<!-- 演讲者备注面板 -->
+<div id="notes-panel">
+  <div class="notes-label">Speaker Notes (N)</div>
+  <div class="notes-text" id="notes-text"></div>
+</div>
+
+<!-- ========== 幻灯片组 ========== -->
+<div id="deck">
+
+<!-- Slide 1: Title -->
+<div class="slide" data-index="0" data-notes="大家好，我是XX。今天我要给大家看一只不一样的龙虾。">
+  <div class="huge-text" style="margin-bottom: 24px;">
+    <span style="font-size: 5rem;">&#x1F99E;</span><br>
+    <span class="glow-coral">超级龙虾</span>
+  </div>
+  <div class="sub-text" style="font-size: 1.6rem; color: var(--text); margin-bottom: 32px;">
+    别人在做工作流，我们在造<span class="coral">运营大脑</span>
+  </div>
+  <div class="small-text" style="font-size: 1rem;">
+    3人团队 &middot; 10分钟 &middot; 1个让你惊讶的 AI
+  </div>
+</div>
+
+<!-- Slide 2: Provocative Question -->
+<div class="slide" data-index="1" data-notes="停顿，和观众眼神接触。让这个问题沉一下。然后说：今天我想给大家看一个东西——一只永远不会离职、越用越聪明、还能把经验自动传给全团队的 AI 运营同事。">
+  <div class="big-text" style="max-width: 900px; line-height: 1.7;">
+    你团队里<span class="coral">最懂业务</span>的那个人，<br>
+    如果明天离职了，<br>
+    他脑子里的东西能留下多少？
+  </div>
+  <div class="sub-text delayed-fade" style="max-width: 700px; margin-top: 36px;">
+    他踩过的坑、摸出来的套路、那些"这个数据要排除XX才准"的隐性经验——大概率，<span class="coral">全蒸发了。</span>
+  </div>
+</div>
+
+<!-- Slide 3: Three Black Holes -->
+<div class="slide" data-index="2" data-notes="这三个黑洞，大部分参赛团队解决了第一个——自动化重复劳动。我们三个都解决了。">
+  <div class="slide-title">运营团队的三个<span class="coral">效率黑洞</span></div>
+  <div class="cards-row">
+    <div class="card animate-in">
+      <span class="card-icon">&#x1F504;</span>
+      <div class="card-title coral">重复劳动</div>
+      <div class="card-body">每周同样的报表、同样的SQL、同样的分析</div>
+      <div style="margin-top: 12px; font-size: 1.5rem; font-weight: 800; color: var(--primary);">一年 = 100+ 小时</div>
+    </div>
+    <div class="card animate-in">
+      <span class="card-icon">&#x1F573;&#xFE0F;</span>
+      <div class="card-title coral">同坑反复踩</div>
+      <div class="card-body">今天纠正了，下次新对话又忘了</div>
+      <div style="margin-top: 12px; font-size: 1.1rem; color: var(--text-dim);">AI 也是金鱼记忆</div>
+    </div>
+    <div class="card animate-in">
+      <span class="card-icon">&#x1F9E0;</span>
+      <div class="card-title coral">知识在个人脑中</div>
+      <div class="card-body">A 的经验 &ne; B 的经验 &ne; C 的经验</div>
+      <div style="margin-top: 12px; font-size: 1.1rem; color: var(--text-dim);">团队智慧永远是 1 不是 3</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 4: Core Metaphor -->
+<div class="slide" data-index="3" data-notes="一句话总结：我们给龙虾装了一套'错误免疫系统'和'经验复利引擎'。">
+  <div class="slide-title">一只龙虾，两种命运</div>
+  <div class="compare-row">
+    <div class="compare-panel panel-dim">
+      <div class="panel-label" style="color: var(--text-muted);">普通 OpenClaw</div>
+      <div class="panel-emoji">&#x1F9E0;&#x274C;</div>
+      <div class="panel-headline" style="color: var(--text-dim);">每天失忆的天才</div>
+      <div class="panel-desc">聪明，但记不住事</div>
+    </div>
+    <div class="compare-panel panel-glow glow-pulse">
+      <div class="panel-label coral">我们的 OpenClaw</div>
+      <div class="panel-emoji">&#x1F9E0;&#x2728;</div>
+      <div class="panel-headline coral">认真做笔记的同事</div>
+      <div class="panel-desc">纠正一次 &rarr; 记住 &rarr; 内化 &rarr; 传播</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 5: Transition -->
+<div class="slide" data-index="4" data-notes="现在切到 Demo。让大家亲眼看看差别。">
+  <div class="huge-text glow-coral" style="margin-bottom: 24px;">
+    说再多不如看一次
+  </div>
+  <div class="sub-text" style="font-size: 1.4rem;">
+    4 个场景，同样的问题，两只不同的龙虾
+  </div>
+</div>
+
+<!-- Slide 6: Demo 1 - 幻觉陷阱 -->
+<div class="slide" data-index="5" data-notes="左边的龙虾很自信地说12家——但它在编。右边的龙虾，它先检查了自己的'错误记忆库'，发现这个问题上周就答错过，于是它不猜，它去查数据库。这就是负反馈在起作用：犯过的错，永远不会再犯。" style="padding-top: 36px; padding-bottom: 40px;">
+  <div class="demo-header">
+    <span class="tag">场景一</span>
+    <h2>幻觉陷阱</h2>
+    <div class="demo-sub">问题：我们现在有多少家门店？</div>
+  </div>
+  <div class="demo-split">
+    <div class="demo-col demo-col-dim">
+      <div class="demo-col-label" style="color: var(--text-muted);">&#x1F99E; 普通龙虾</div>
+      <div class="chat-bubble bot">Lucky JP 目前有 <strong>12 家</strong>门店。各门店日均杯量大约在 200-350 杯之间，其中东京涩谷店表现最好...</div>
+      <div class="verdict verdict-red">&#x274C; 自信地编造了数字</div>
+    </div>
+    <div class="demo-col demo-col-glow">
+      <div class="demo-col-label coral">&#x1F99E;&#x2728; 我们的龙虾</div>
+      <div class="chat-bubble think">&#x26A0;&#xFE0F; 命中已知陷阱 ERR-003，禁止凭记忆回答</div>
+      <div class="chat-bubble bot">让我查一下实时数据...</div>
+      <div class="code-block">SELECT shop_name, AVG(sku_cnt)
+FROM ads_sales
+WHERE tenant = 'LKJP' ...</div>
+      <div class="chat-bubble bot">共 <strong style="color:var(--accent);">8 家</strong>运营门店。数据来源：实时查询</div>
+      <div class="verdict verdict-green">&#x2705; 命中陷阱 &rarr; 自动查库 &rarr; 用数据说话</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 7: Demo 2 - 重复犯错 -->
+<div class="slide" data-index="6" data-notes="普通龙虾的记忆像金鱼，7秒就忘。我们的龙虾有一个不会褪色的笔记本。" style="padding-top: 36px; padding-bottom: 40px;">
+  <div class="demo-header">
+    <span class="tag">场景二</span>
+    <h2>8天后，同一个问题</h2>
+    <div class="demo-sub">Day 1 被纠正后，Day 8 再问一次</div>
+  </div>
+  <div class="demo-split">
+    <div class="demo-col demo-col-dim">
+      <div class="demo-col-label" style="color: var(--text-muted);">&#x1F99E; 普通龙虾</div>
+      <div class="day-label">Day 1</div>
+      <div class="chat-bubble bot">转化率约 15%</div>
+      <div class="chat-bubble user">&#x1F645; 不对，要排除试喝券，是 11%</div>
+      <div class="chat-bubble bot">抱歉，是 11%</div>
+      <div class="day-label">Day 8</div>
+      <div class="chat-bubble bot">转化率约 <strong>14%</strong></div>
+      <div class="verdict verdict-red">&#x274C; 完全忘了，又犯同样的错</div>
+    </div>
+    <div class="demo-col demo-col-glow">
+      <div class="demo-col-label coral">&#x1F99E;&#x2728; 我们的龙虾</div>
+      <div class="day-label">Day 1</div>
+      <div class="chat-bubble bot">转化率约 15%</div>
+      <div class="chat-bubble user">&#x1F645; 不对，要排除试喝券，是 11%</div>
+      <div class="record-bar">&#x1F4DD; Recording to .learnings/LEARNINGS.md &#x2713;</div>
+      <div class="day-label">Day 8</div>
+      <div class="chat-bubble think">&#x1F4A1; 加载规则 LRN-007：需排除试喝券</div>
+      <div class="chat-bubble bot">转化率（已排除试喝券）：<strong style="color:var(--accent);">11.2%</strong></div>
+      <div class="verdict verdict-green">&#x2705; 自动加载教训，永不重犯</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 8: Demo 3 - 团队共享 -->
+<div class="slide" data-index="7" data-notes="这就是团队智慧复利。知识不再锁在个人脑子里。" style="padding-top: 36px; padding-bottom: 40px;">
+  <div class="demo-header">
+    <span class="tag">场景三</span>
+    <h2>A 的经验，B 和 C 能用吗？</h2>
+  </div>
+  <div class="demo-split">
+    <div class="demo-col demo-col-dim">
+      <div class="demo-col-label" style="color: var(--text-muted);">&#x1F99E; 普通龙虾</div>
+      <div class="day-label">成员 A</div>
+      <div class="chat-bubble bot">研究了外卖分析 &rarr; 得到专业回答</div>
+      <div class="day-label">成员 B 问类似问题</div>
+      <div class="chat-bubble bot">从零开始，泛泛而答...</div>
+      <div class="verdict verdict-red">&#x274C; 每个人各教一遍</div>
+    </div>
+    <div class="demo-col demo-col-glow">
+      <div class="demo-col-label coral">&#x1F99E;&#x2728; 我们的龙虾</div>
+      <div class="day-label">成员 A</div>
+      <div class="chat-bubble bot">深入研究了外卖分析，输出完整框架</div>
+      <div class="record-bar">&#x1F4DD; &rarr; git push &rarr; team sync &#x2713;</div>
+      <div class="day-label">成员 B 问类似问题</div>
+      <div class="chat-bubble think">&#x1F4A1; 成员A 3/15 已研究 (LRN-012)</div>
+      <div class="chat-bubble bot">基于成员A的研究框架...</div>
+      <div class="verdict verdict-green">&#x2705; A 的学习 &rarr; B/C 直接受益</div>
+    </div>
+  </div>
+  <div class="callout-box">A 踩过的坑，B 和 C 永远不会再踩</div>
+</div>
+
+<!-- Slide 9: Demo 4 - 自我进化 -->
+<div class="slide" data-index="8" data-notes="它不只是在干活，它在学习怎么更好地干活。这只龙虾，自己给自己升级了。" style="padding-top: 36px; padding-bottom: 40px;">
+  <div class="demo-header">
+    <span class="tag">场景四</span>
+    <h2>连做三周周报，会发生什么？</h2>
+  </div>
+  <div class="demo-split">
+    <div class="demo-col demo-col-dim">
+      <div class="demo-col-label" style="color: var(--text-muted);">&#x1F99E; 普通龙虾</div>
+      <div class="day-label">Week 1</div>
+      <div class="chat-bubble bot">做报告...</div>
+      <div class="day-label">Week 2</div>
+      <div class="chat-bubble bot">做报告...（重复问同样的问题）</div>
+      <div class="day-label">Week 3</div>
+      <div class="chat-bubble bot">做报告...（越来越敷衍）</div>
+      <div class="verdict verdict-red">&#x274C; 每次从零开始，越来越敷衍</div>
+    </div>
+    <div class="demo-col demo-col-glow">
+      <div class="demo-col-label coral">&#x1F99E;&#x2728; 我们的龙虾</div>
+      <div class="day-label">Week 1</div>
+      <div class="chat-bubble bot">做报告 + 标记模式 #1</div>
+      <div class="day-label">Week 2</div>
+      <div class="chat-bubble think">&#x1F4A1; 检测到模式 (2/3) &rarr; 增强输出</div>
+      <div class="day-label">Week 3</div>
+      <div class="chat-bubble think">&#x1F9EC; 模式命中 3/3 &rarr; 自动提取为技能！</div>
+      <div class="record-bar">Creating skill: weekly-store-report &#x2713;</div>
+      <div class="chat-bubble bot">结构化报告 + 结论 + 建议</div>
+      <div class="verdict verdict-green">&#x2705; 主动发现规律 &rarr; 自造技能 &rarr; 进化了</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 10: How It Works -->
+<div class="slide" data-index="9" data-notes="就这四样东西，让一只普通的龙虾，变成了一个越用越聪明、永远不离职的运营专家。不需要理解技术细节，只需要记住这四个比喻。">
+  <div class="slide-title">简单说，我们给龙虾加了<span class="coral">四样东西</span></div>
+  <div class="four-cards">
+    <div class="card animate-in">
+      <span class="card-icon">&#x1F4D2;</span>
+      <div class="card-title">一个错题本</div>
+      <div class="card-body" style="color: var(--accent); font-family: monospace;">.learnings/</div>
+      <div class="card-body">犯错自动记录</div>
+    </div>
+    <div class="card animate-in">
+      <span class="card-icon">&#x2B06;&#xFE0F;</span>
+      <div class="card-title">一个升职机制</div>
+      <div class="card-body" style="color: var(--accent);">晋升引擎</div>
+      <div class="card-body">错3次 &rarr; 写入DNA</div>
+    </div>
+    <div class="card animate-in">
+      <span class="card-icon">&#x2601;&#xFE0F;</span>
+      <div class="card-title">一个共享网盘</div>
+      <div class="card-body" style="color: var(--accent);">Git 同步</div>
+      <div class="card-body">3人笔记打通</div>
+    </div>
+    <div class="card animate-in">
+      <span class="card-icon">&#x1FA9E;</span>
+      <div class="card-title">一个自省习惯</div>
+      <div class="card-body" style="color: var(--accent);">严谨性规则</div>
+      <div class="card-body">不确定就说不确定</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 11: Memory Advantage -->
+<div class="slide" data-index="10" data-notes="普通OpenClaw只有2层记忆。我们扩展到5层，关键是加了自动晋升通道——错误记录会一路升级，最终写入龙虾的'人格'，从根本上改变它的回答方式。这就是为什么越用越聪明。">
+  <div class="slide-title">记忆力对比</div>
+  <div class="memory-compare">
+    <!-- 左: 普通 -->
+    <div class="mem-stack">
+      <div class="panel-label" style="color: var(--text-muted); margin-bottom: 12px;">普通龙虾</div>
+      <div class="mem-block" style="background: rgba(148,163,184,0.1); border-radius: 12px 12px 0 0;">L2 长期 <span style="font-size:0.75rem;color:var(--text-dim);">MEMORY.md</span></div>
+      <div class="mem-block" style="background: rgba(148,163,184,0.06); border-radius: 0 0 12px 12px;">L1 日志 <span style="font-size:0.75rem;color:var(--text-dim);">每天记</span></div>
+      <div class="mem-label-below">2层 &middot; 只是记笔记<br>不影响行为</div>
+    </div>
+    <!-- 右: 我们的 -->
+    <div class="mem-stack" style="position: relative;">
+      <div class="panel-label coral" style="margin-bottom: 12px;">我们的龙虾</div>
+      <div class="mem-block" style="background: rgba(255,107,74,0.2); border-radius: 12px 12px 0 0; color: var(--primary); font-weight: 800;">L5 DNA记忆 <span style="font-size:0.7rem;">SOUL.md &rarr; 改变行为</span></div>
+      <div class="mem-block" style="background: rgba(78,205,196,0.15); color: var(--accent);">L4 团队记忆 <span style="font-size:0.7rem;">Git同步 &rarr; 全员共享</span></div>
+      <div class="mem-block" style="background: rgba(167,139,250,0.15); color: var(--purple);">L3 长期记忆 <span style="font-size:0.7rem;">MEMORY.md &rarr; 精华</span></div>
+      <div class="mem-block" style="background: rgba(251,191,36,0.12); color: var(--yellow);">L2 日志记忆 <span style="font-size:0.7rem;">每日记录</span></div>
+      <div class="mem-block" style="background: rgba(96,165,250,0.12); color: var(--blue); border-radius: 0 0 12px 12px;">L1 会话记忆 <span style="font-size:0.7rem;">当前对话</span></div>
+      <div class="mem-label-below" style="color: var(--primary);">记忆不只是参考资料<br><strong>它会反向改写龙虾的行为</strong></div>
+      <!-- 箭头 -->
+      <div style="position: absolute; right: -56px; top: 36px; bottom: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <div style="width: 2px; flex: 1; background: linear-gradient(to top, var(--blue), var(--primary));"></div>
+        <div style="color: var(--primary); font-size: 1.4rem; margin-top: -4px;">&#x25B2;</div>
+        <div style="font-size: 0.7rem; color: var(--primary); font-weight: 700; margin-top: 4px; white-space: nowrap;">自动晋升</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 12: Evolution Flywheel -->
+<div class="slide" data-index="11" data-notes="这个飞轮一旦转起来，就是指数级增长。团队用得越多，龙虾越聪明；龙虾越聪明，团队效率越高。">
+  <div class="slide-title">越用越聪明的<span class="coral">飞轮</span></div>
+  <div style="display: flex; align-items: center; gap: 60px; flex-wrap: wrap; justify-content: center;">
+    <div class="flywheel-container">
+      <div class="flywheel-ring"></div>
+      <!-- 6 nodes around the circle -->
+      <div class="flywheel-node" style="top: 5%; left: 50%;">使用</div>
+      <div class="flywheel-node" style="top: 30%; left: 93%;">犯错<br>学习</div>
+      <div class="flywheel-node" style="top: 75%; left: 93%;">自动<br>记录</div>
+      <div class="flywheel-node" style="top: 95%; left: 50%;">模式<br>识别</div>
+      <div class="flywheel-node" style="top: 75%; left: 7%;">知识<br>晋升</div>
+      <div class="flywheel-node" style="top: 30%; left: 7%;">更聪明</div>
+      <div class="flywheel-center">&#x1F99E;<br><span style="font-size:1rem; color:var(--primary); font-weight:700;">越用越聪明</span></div>
+    </div>
+    <div class="flywheel-metrics" style="flex-direction: column; gap: 24px;">
+      <div class="flywheel-metric">
+        <div class="metric-label">第 1 周</div>
+        <div class="metric-value count-up" data-target="5">0</div>
+        <div class="metric-label">条经验</div>
+      </div>
+      <div class="flywheel-metric">
+        <div class="metric-label">第 1 月</div>
+        <div class="metric-value count-up" data-target="23">0</div>
+        <div class="metric-label">条规则 + 3 个自动技能</div>
+      </div>
+      <div class="flywheel-metric">
+        <div class="metric-label">第 3 月</div>
+        <div class="metric-value" style="font-size: 1.2rem; color: var(--accent);">团队运营大脑<br>新人培训靠它</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 13: ROI -->
+<div class="slide" data-index="12" data-notes="省时间只是表面的。更大的价值是——这只龙虾变成了团队的机构记忆。人会走，龙虾不会。">
+  <div class="slide-title">算笔账</div>
+  <div class="roi-number"><span class="count-up" data-target="540">0</span> <span style="font-size: 2rem;">小时/年</span></div>
+  <div class="roi-detail">3人 &times; 30分钟/天 &times; 365天 = 直接省下的重复劳动</div>
+  <div style="color: var(--text-muted); margin-bottom: 28px; font-size: 1rem;">&darr; 但更大的价值是 &darr;</div>
+  <div class="roi-cards">
+    <div class="card animate-in">
+      <span class="card-icon">&#x1F195;</span>
+      <div class="card-title">新人入职</div>
+      <div class="card-body">不用2周培训<br>龙虾里有全团队知识</div>
+    </div>
+    <div class="card animate-in">
+      <span class="card-icon">&#x1F44B;</span>
+      <div class="card-title">有人离职</div>
+      <div class="card-body">经验不蒸发<br>已写入DNA</div>
+    </div>
+    <div class="card animate-in">
+      <span class="card-icon">&#x1F4CA;</span>
+      <div class="card-title">月底复盘</div>
+      <div class="card-body">龙虾记得每一次分析<br>每一次纠正</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 14: Punchline -->
+<div class="slide" data-index="13" data-notes="放慢语速，留余味。">
+  <div style="max-width: 800px; text-align: center;">
+    <div class="fade-line" style="font-size: 2.4rem; margin-bottom: 24px;" data-delay="0">
+      别人的 OpenClaw 是一个<span style="color: var(--text-dim);">工具</span>。
+    </div>
+    <div class="fade-line" style="font-size: 3rem; font-weight: 900; margin-bottom: 32px;" data-delay="1">
+      我们的 OpenClaw 是一个<span class="glow-coral">同事</span>。
+    </div>
+    <div class="fade-line" style="font-size: 1.6rem; color: var(--text-dim); margin-bottom: 8px;" data-delay="2">
+      一个越用越靠谱、永远不离职、
+    </div>
+    <div class="fade-line" style="font-size: 1.6rem; color: var(--text-dim);" data-delay="3">
+      还能把经验传给所有人的同事。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 15: Thank You -->
+<div class="slide" data-index="14" data-notes="鞠躬，等待提问。">
+  <div class="huge-text" style="margin-bottom: 24px;">谢谢大家</div>
+  <div class="sub-text" style="font-size: 1.4rem; margin-bottom: 48px;">
+    &#x1F99E; <span class="coral">超级龙虾</span> — 越用越聪明的运营大脑
+  </div>
+  <div class="small-text" style="font-size: 1.2rem; color: var(--text-muted);">Q&A 时间</div>
+</div>
+
+</div><!-- end #deck -->
+
+<script>
+/* ========== 核心导航逻辑 ========== */
+(function () {
+  'use strict';
+
+  var currentSlide = 0;
+  var totalSlides = 15;
+  var deck = document.getElementById('deck');
+  var progressBar = document.getElementById('progress-bar');
+  var counter = document.getElementById('slide-counter');
+  var notesPanel = document.getElementById('notes-panel');
+  var notesText = document.getElementById('notes-text');
+  var notesVisible = false;
+  var slides = document.querySelectorAll('.slide');
+
+  function goTo(index) {
+    if (index < 0) index = 0;
+    if (index >= totalSlides) index = totalSlides - 1;
+    currentSlide = index;
+    deck.style.transform = 'translateX(-' + (index * 100) + 'vw)';
+    progressBar.style.width = ((index + 1) / totalSlides * 100) + '%';
+    counter.textContent = (index + 1) + ' / ' + totalSlides;
+
+    /* 标记 active */
+    slides.forEach(function (s, i) {
+      s.classList.toggle('active', i === index);
+    });
+
+    /* 更新备注 */
+    var note = slides[index].getAttribute('data-notes') || '';
+    notesText.textContent = note;
+
+    /* 触发 Slide 14 逐行淡入 */
+    if (index === 13) triggerFadeLines();
+
+    /* 触发计数动画 */
+    triggerCountUps(slides[index]);
+  }
+
+  /* ---- 键盘导航 ---- */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(currentSlide + 1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(currentSlide - 1); }
+    else if (e.key === 'n' || e.key === 'N') {
+      notesVisible = !notesVisible;
+      notesPanel.classList.toggle('visible', notesVisible);
+    }
+    else if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+
+  /* ---- 点击导航 ---- */
+  document.addEventListener('click', function (e) {
+    if (notesPanel.contains(e.target)) return;
+    var x = e.clientX / window.innerWidth;
+    if (x > 0.5) goTo(currentSlide + 1);
+    else goTo(currentSlide - 1);
+  });
+
+  /* ---- 触摸/滑动 ---- */
+  var touchStartX = 0;
+  var touchStartY = 0;
+  document.addEventListener('touchstart', function (e) {
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    var dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) goTo(currentSlide + 1);
+      else goTo(currentSlide - 1);
+    }
+  }, { passive: true });
+
+  /* ---- Slide 14 逐行淡入 ---- */
+  function triggerFadeLines() {
+    var lines = slides[13].querySelectorAll('.fade-line');
+    lines.forEach(function (el) {
+      el.classList.remove('visible');
+      var delay = parseInt(el.getAttribute('data-delay') || '0', 10);
+      setTimeout(function () { el.classList.add('visible'); }, delay * 1000);
+    });
+  }
+
+  /* ---- 计数动画 ---- */
+  var animated = {};
+  function triggerCountUps(slide) {
+    var idx = slide.getAttribute('data-index');
+    if (animated[idx]) return;
+    var els = slide.querySelectorAll('.count-up');
+    if (!els.length) return;
+    animated[idx] = true;
+    els.forEach(function (el) {
+      var target = parseInt(el.getAttribute('data-target'), 10);
+      if (isNaN(target)) return;
+      var duration = 1500;
+      var start = performance.now();
+      function step(now) {
+        var progress = Math.min((now - start) / duration, 1);
+        /* ease out quad */
+        var ease = 1 - (1 - progress) * (1 - progress);
+        el.textContent = Math.round(target * ease);
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
+  /* ---- 初始化 ---- */
+  goTo(0);
+})();
+</script>
+</body>
+</html>

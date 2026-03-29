@@ -1,0 +1,146 @@
+.header {
+  text-align: center;
+  padding: 60rpx 0 40rpx;
+}
+
+.logo {
+  font-size: 80rpx;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: 800;
+  color: var(--gold);
+  margin-bottom: 12rpx;
+}
+
+.subtitle {
+  display: block;
+  color: var(--text-dim);
+  font-size: 26rpx;
+}
+
+/* 输入区 */
+.input-area {
+  margin: 20rpx 0 48rpx;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  background: var(--bg2);
+  border: 2rpx solid var(--text-muted);
+  border-radius: var(--radius);
+  padding: 8rpx;
+}
+
+.url-input {
+  flex: 1;
+  padding: 20rpx 24rpx;
+  color: var(--text);
+  font-size: 28rpx;
+}
+
+.placeholder {
+  color: var(--text-muted);
+}
+
+.paste-btn {
+  padding: 16rpx 28rpx;
+  color: var(--gold);
+  font-size: 26rpx;
+  font-weight: 600;
+  border-left: 2rpx solid var(--text-muted);
+}
+
+.error {
+  color: var(--danger);
+  font-size: 24rpx;
+  margin-top: 12rpx;
+  padding-left: 8rpx;
+}
+
+.submit-btn {
+  margin-top: 24rpx;
+  background: linear-gradient(135deg, var(--gold), var(--amber));
+  color: var(--bg);
+  font-size: 32rpx;
+  font-weight: 700;
+  border-radius: var(--radius);
+  padding: 24rpx;
+  border: none;
+  width: 100%;
+}
+
+.submit-btn.disabled {
+  opacity: 0.5;
+}
+
+.submit-btn::after {
+  border: none;
+}
+
+/* 历史记录 */
+.section-title {
+  margin-bottom: 20rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.history-card {
+  display: flex;
+  align-items: center;
+  background: var(--bg2);
+  border-radius: var(--radius);
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.cover {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+}
+
+.cover-placeholder {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 12rpx;
+  background: var(--bg3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  flex-shrink: 0;
+}
+
+.info {
+  flex: 1;
+  margin-left: 24rpx;
+  overflow: hidden;
+}
+
+.history-title {
+  display: block;
+  font-size: 28rpx;
+  color: var(--text);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-podcast {
+  display: block;
+  margin-top: 6rpx;
+}
+
+.arrow {
+  color: var(--text-muted);
+  font-size: 36rpx;
+  margin-left: 16rpx;
+}

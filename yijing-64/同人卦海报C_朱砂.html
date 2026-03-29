@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>同人卦海报C · 朱砂</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#2a2a2a;display:flex;justify-content:center;padding:20px;font-family:'Noto Serif SC',serif}
+
+.poster{
+  width:375px;
+  background:#f7f2ea;
+  position:relative;overflow:hidden;color:#2a1810;
+}
+
+/* 左侧朱红竖条 */
+.poster::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:48px;
+  background:linear-gradient(180deg,#a82820,#c23a2b 30%,#a82820 70%,#8b1a15);
+  z-index:1;
+}
+
+.poster>*{position:relative;z-index:2}
+
+/* 左栏竖排文字 */
+.left-bar{
+  position:absolute;left:0;top:0;bottom:0;width:48px;z-index:3;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;
+  padding:40px 0;
+}
+.left-text{
+  writing-mode:vertical-rl;
+  font-size:11px;letter-spacing:6px;
+  color:rgba(255,255,255,0.85);
+  font-weight:600;
+}
+.left-year{
+  writing-mode:vertical-rl;
+  font-size:9px;letter-spacing:4px;
+  color:rgba(255,255,255,0.5);
+  margin-top:16px;
+}
+
+/* 主内容区 */
+.main{
+  margin-left:48px;
+}
+
+/* 头部 */
+.header{
+  padding:32px 24px 0;
+  display:flex;align-items:flex-start;gap:16px;
+}
+.title-col{flex:1}
+.title-big{
+  font-size:52px;font-weight:900;letter-spacing:8px;
+  color:#2a1810;line-height:1.15;
+}
+.title-sub{
+  font-size:12px;color:#888;letter-spacing:3px;margin-top:6px;
+}
+.seal-stamp{
+  width:52px;height:52px;
+  border:2.5px solid #c23a2b;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:#c23a2b;font-size:14px;font-weight:900;
+  letter-spacing:2px;line-height:1.1;text-align:center;
+  transform:rotate(12deg);
+  flex-shrink:0;margin-top:4px;
+}
+
+/* 分割线 */
+.sep{
+  height:1px;margin:16px 24px;
+  background:linear-gradient(90deg,#c23a2b,rgba(194,58,43,0.1));
+}
+
+/* 卦象+卦辞 横排 */
+.gua-info{
+  display:flex;align-items:center;gap:16px;
+  padding:0 24px;
+}
+.gua-svg-box{flex-shrink:0}
+.gua-text{flex:1}
+.gua-ci-main{
+  font-size:17px;font-weight:700;
+  letter-spacing:3px;line-height:1.8;
+  color:#2a1810;
+}
+.gua-ci-src{font-size:10px;color:#aaa;letter-spacing:2px;margin-top:4px}
+
+/* 引文区 */
+.quotes-area{padding:16px 24px 0}
+.quote-card{
+  padding:14px 16px;
+  margin-bottom:10px;
+  background:#fff;
+  border-radius:6px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.05);
+  border-left:3px solid;
+  position:relative;
+}
+.quote-card:nth-child(1){border-color:#c23a2b}
+.quote-card:nth-child(2){border-color:#b8860b}
+.quote-card:nth-child(3){border-color:#2a1810}
+.quote-from{
+  position:absolute;top:8px;right:12px;
+  font-size:9px;color:#bbb;letter-spacing:1px;
+}
+.quote-body{font-size:14px;line-height:1.8;color:#333}
+.quote-body em{font-style:normal;color:#c23a2b;font-weight:700}
+
+/* 六爻横条 */
+.yao-section{padding:16px 24px 8px}
+.yao-section-title{
+  font-size:10px;color:#aaa;letter-spacing:3px;margin-bottom:10px
+}
+.yao-row{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:6px;
+}
+.yao-tag{
+  font-size:10px;font-weight:700;
+  width:32px;text-align:center;
+  padding:2px 0;border-radius:3px;
+  flex-shrink:0;
+}
+.yao-tag-normal{background:rgba(42,24,16,0.06);color:#666}
+.yao-tag-warn{background:rgba(194,58,43,0.1);color:#c23a2b}
+.yao-tag-good{background:rgba(74,124,89,0.1);color:#4a7c59}
+.yao-tag-gold{background:rgba(184,134,11,0.1);color:#b8860b}
+.yao-bar{
+  flex:1;height:22px;border-radius:3px;
+  display:flex;align-items:center;padding:0 8px;
+  font-size:11px;color:#fff;font-weight:600;
+}
+.yao-sub{font-size:9px;color:#999;margin-left:auto;font-weight:400}
+
+/* 结论 */
+.conclusion{
+  margin:12px 24px 0;
+  padding:14px 16px;
+  background:#2a1810;
+  border-radius:6px;
+  text-align:center;
+}
+.conclusion-text{
+  font-size:13px;line-height:2;color:rgba(245,240,232,0.9)
+}
+.conclusion-text strong{color:#d4a843}
+
+/* 底部 */
+.footer{
+  display:flex;align-items:center;
+  padding:16px 24px 24px;gap:14px;
+}
+.qr-wrap{
+  flex-shrink:0;width:76px;height:76px;
+  border:1px solid rgba(0,0,0,0.1);border-radius:8px;
+  padding:4px;background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,0.06);
+}
+.qr-wrap canvas,.qr-wrap img{width:68px!important;height:68px!important}
+.footer-right{flex:1}
+.footer-cta{font-size:13px;color:#c23a2b;font-weight:700;margin-bottom:3px}
+.footer-note{font-size:10px;color:#999;line-height:1.7}
+
+.save-hint{text-align:center;color:#666;font-size:12px;margin-top:14px}
+</style>
+</head>
+<body>
+<div>
+<div class="poster">
+
+  <!-- 左栏 -->
+  <div class="left-bar">
+    <div class="left-text">天火同人</div>
+    <div class="left-year">二〇二六</div>
+  </div>
+
+  <div class="main">
+    <!-- 头部 -->
+    <div class="header">
+      <div class="title-col">
+        <div class="title-big">同人</div>
+        <div class="title-sub">世界年卦 · 第十三卦</div>
+      </div>
+      <div class="seal-stamp">☰<br>☲</div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- 卦象+卦辞 -->
+    <div class="gua-info">
+      <div class="gua-svg-box">
+        <svg width="56" height="56" viewBox="0 0 56 56">
+          <rect x="4" y="2" width="20" height="4" rx="1" fill="#2a1810"/>
+          <rect x="32" y="2" width="20" height="4" rx="1" fill="#2a1810"/>
+          <rect x="4" y="10" width="20" height="4" rx="1" fill="#2a1810"/>
+          <rect x="32" y="10" width="20" height="4" rx="1" fill="#2a1810"/>
+          <rect x="4" y="18" width="20" height="4" rx="1" fill="#2a1810"/>
+          <rect x="32" y="18" width="20" height="4" rx="1" fill="#2a1810"/>
+          <rect x="4" y="30" width="20" height="4" rx="1" fill="#2a1810"/>
+          <rect x="32" y="30" width="20" height="4" rx="1" fill="#2a1810"/>
+          <rect x="4" y="38" width="18" height="4" rx="1" fill="#c23a2b"/>
+          <rect x="34" y="38" width="18" height="4" rx="1" fill="#c23a2b"/>
+          <rect x="4" y="46" width="20" height="4" rx="1" fill="#2a1810"/>
+          <rect x="32" y="46" width="20" height="4" rx="1" fill="#2a1810"/>
+        </svg>
+      </div>
+      <div class="gua-text">
+        <div class="gua-ci-main">同人于野，亨<br>利涉大川<br>利君子贞</div>
+        <div class="gua-ci-src">上乾天 · 下离火</div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- 引文 -->
+    <div class="quotes-area">
+      <div class="quote-card">
+        <div class="quote-from">彖传</div>
+        <div class="quote-body"><em>唯君子为能通天下之志</em><br>文明以健，中正而应</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-from">系辞传</div>
+        <div class="quote-body">二人同心，<em>其利断金</em><br>同心之言，其臭如兰</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-from">序卦传</div>
+        <div class="quote-body">物不可以终否 → <em>同人</em> → 大有<br>杂卦传：同人，<em>亲</em>也</div>
+      </div>
+    </div>
+
+    <!-- 六爻 -->
+    <div class="yao-section">
+      <div class="yao-section-title">六爻 · 2026走势</div>
+      <div class="yao-row">
+        <div class="yao-tag yao-tag-normal">初九</div>
+        <div class="yao-bar" style="background:linear-gradient(90deg,rgba(42,24,16,0.5),rgba(42,24,16,0.15));width:50%">
+          同人于门<div class="yao-sub">区域合作</div>
+        </div>
+      </div>
+      <div class="yao-row">
+        <div class="yao-tag yao-tag-warn">六二</div>
+        <div class="yao-bar" style="background:linear-gradient(90deg,rgba(194,58,43,0.7),rgba(194,58,43,0.2));width:40%">
+          同人于宗 ⚠<div class="yao-sub">小圈子陷阱</div>
+        </div>
+      </div>
+      <div class="yao-row">
+        <div class="yao-tag yao-tag-normal">九三</div>
+        <div class="yao-bar" style="background:linear-gradient(90deg,rgba(140,40,30,0.8),rgba(140,40,30,0.2));width:80%">
+          伏戎于莽<div class="yao-sub">暗流涌动</div>
+        </div>
+      </div>
+      <div class="yao-row">
+        <div class="yao-tag yao-tag-good">九四</div>
+        <div class="yao-bar" style="background:linear-gradient(90deg,rgba(74,124,89,0.8),rgba(74,124,89,0.2));width:60%">
+          弗克攻 ✦ 吉<div class="yao-sub">知止而退</div>
+        </div>
+      </div>
+      <div class="yao-row">
+        <div class="yao-tag yao-tag-gold">九五</div>
+        <div class="yao-bar" style="background:linear-gradient(90deg,rgba(184,134,11,0.85),rgba(184,134,11,0.25));width:95%">
+          先号啕而后笑<div class="yao-sub">真实和解</div>
+        </div>
+      </div>
+      <div class="yao-row">
+        <div class="yao-tag yao-tag-normal">上九</div>
+        <div class="yao-bar" style="background:linear-gradient(90deg,rgba(42,24,16,0.35),rgba(42,24,16,0.08));width:55%">
+          同人于郊<div class="yao-sub">志未得</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 结论 -->
+    <div class="conclusion">
+      <div class="conclusion-text">
+        否极之后 · 从分裂走向联合<br>
+        不是廉价的和谐<br>
+        而是经历<strong>号啕之痛</strong>后的<strong>真实和解</strong>
+      </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+      <div class="qr-wrap" id="qrcode"></div>
+      <div class="footer-right">
+        <div class="footer-cta">扫码 → 完整九步解读</div>
+        <div class="footer-note">
+          观象·读彖·训字·析位·玩辞<br>
+          察变·归德·征引·映射<br>
+          融合易传方法论与佑安释易
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="save-hint">长按保存图片 · 分享朋友圈</div>
+</div>
+
+<script>
+new QRCode(document.getElementById("qrcode"),{
+  text:"http://134.175.228.73:8082",
+  width:68,height:68,
+  colorDark:"#2a1810",colorLight:"#ffffff",
+  correctLevel:QRCode.CorrectLevel.M
+});
+</script>
+</body>
+</html>

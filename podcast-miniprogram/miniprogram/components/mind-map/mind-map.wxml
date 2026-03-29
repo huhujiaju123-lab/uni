@@ -1,0 +1,14 @@
+<view class="mind-map card" wx:if="{{flatNodes.length > 0}}">
+  <view class="card-title">思维导图</view>
+  <view class="map-container">
+    <view
+      class="map-node depth-{{item.depth}}"
+      wx:for="{{flatNodes}}"
+      wx:key="index"
+      style="padding-left: {{item.depth * 40 + 16}}rpx"
+    >
+      <view class="node-dot {{item.depth === 0 ? 'root' : ''}}"></view>
+      <text class="node-label {{item.depth === 0 ? 'root-label' : ''}}">{{item.label}}</text>
+    </view>
+  </view>
+</view>

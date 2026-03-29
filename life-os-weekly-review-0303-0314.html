@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tyrion 周策略复盘 | 03-03 → 03-14</title>
+  <style>
+    /* ========== 基础变量 ========== */
+    :root {
+      --bg-deep: #1a1a2e;
+      --bg-card: #16213e;
+      --bg-card-alt: #1c2a4a;
+      --bg-surface: #0f3460;
+      --text-primary: #e8e8e8;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --accent-warm: #f59e0b;
+      --accent-gold: #fbbf24;
+      --accent-soft: #d97706;
+      --green-bright: #34d399;
+      --green-mid: #6ee7b7;
+      --yellow: #fbbf24;
+      --orange: #f97316;
+      --red-soft: #ef8c6b;
+      --border: rgba(255, 255, 255, 0.06);
+      --radius: 12px;
+      --font-stack: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+    }
+
+    /* ========== 全局重置 ========== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+
+    /* ========== 布局 ========== */
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+    }
+
+    section {
+      margin-bottom: 72px;
+    }
+
+    /* ========== 头部 ========== */
+    .header {
+      text-align: center;
+      margin-bottom: 80px;
+      padding-top: 20px;
+    }
+
+    .header-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 4px 16px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .header .date-range {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .header .summary-line {
+      margin-top: 20px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ========== 章节标题 ========== */
+    .section-number {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--accent-warm);
+      margin-bottom: 8px;
+      opacity: 0.8;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 28px;
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent-gold);
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+    }
+
+    /* ========== 精力柱状图 ========== */
+    .energy-chart {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 8px;
+      height: 240px;
+      padding: 0 4px;
+      margin-bottom: 12px;
+    }
+
+    .bar-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      max-width: 64px;
+    }
+
+    .bar-score {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bar {
+      width: 100%;
+      border-radius: 6px 6px 3px 3px;
+      min-height: 4px;
+      position: relative;
+      transition: opacity 0.2s;
+    }
+
+    .bar-group:hover .bar {
+      opacity: 0.85;
+    }
+
+    .bar-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .bar-keyword {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 2px;
+      opacity: 0.7;
+    }
+
+    .chart-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .chart-meta span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .chart-meta .avg {
+      color: var(--accent-warm);
+      font-weight: 600;
+    }
+
+    /* ========== 洞察卡片 ========== */
+    .insight-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 28px 28px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .insight-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .insight-list li {
+      position: relative;
+      padding-left: 24px;
+      margin-bottom: 14px;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .insight-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .insight-list.positive li::before {
+      background: var(--green-bright);
+      box-shadow: 0 0 8px rgba(52, 211, 153, 0.3);
+    }
+
+    .insight-list.negative li::before {
+      background: var(--red-soft);
+      box-shadow: 0 0 8px rgba(239, 140, 107, 0.2);
+    }
+
+    .highlight {
+      color: var(--accent-gold);
+      font-weight: 500;
+    }
+
+    .tag-inline {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 1px 8px;
+      border-radius: 4px;
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--accent-warm);
+      margin-left: 4px;
+      font-weight: 500;
+    }
+
+    /* ========== 对比表格 ========== */
+    .comparison-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.9rem;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .comparison-table thead th {
+      padding: 14px 18px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    .comparison-table thead th:first-child {
+      background: var(--bg-card);
+      color: var(--text-muted);
+      width: 80px;
+    }
+
+    .comparison-table thead th:nth-child(2) {
+      background: rgba(239, 140, 107, 0.1);
+      color: var(--red-soft);
+    }
+
+    .comparison-table thead th:nth-child(3) {
+      background: rgba(52, 211, 153, 0.1);
+      color: var(--green-bright);
+    }
+
+    .comparison-table tbody td {
+      padding: 14px 18px;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.6;
+    }
+
+    .comparison-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comparison-table tbody td:first-child {
+      background: var(--bg-card);
+      color: var(--accent-warm);
+      font-weight: 600;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .comparison-table tbody td:nth-child(2) {
+      background: rgba(239, 140, 107, 0.03);
+      color: var(--text-muted);
+    }
+
+    .comparison-table tbody td:nth-child(3) {
+      background: rgba(52, 211, 153, 0.04);
+      color: var(--text-secondary);
+    }
+
+    /* ========== 正循环图 ========== */
+    .cycle-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 36px 0 40px;
+    }
+
+    .cycle-ring {
+      position: relative;
+      width: 340px;
+      height: 340px;
+    }
+
+    .cycle-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 2;
+    }
+
+    .cycle-center-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .cycle-center-text {
+      font-size: 1rem;
+      color: var(--accent-gold);
+      font-weight: 600;
+    }
+
+    .cycle-node {
+      position: absolute;
+      width: 100px;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .cycle-node-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+      font-size: 1.2rem;
+      border: 2px solid;
+    }
+
+    .cycle-node-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .cycle-node-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .node-run {
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .node-run .cycle-node-icon {
+      background: rgba(52, 211, 153, 0.12);
+      border-color: rgba(52, 211, 153, 0.4);
+    }
+
+    .node-frog {
+      top: 50%;
+      right: -16px;
+      transform: translateY(-50%);
+    }
+    .node-frog .cycle-node-icon {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .node-wheel {
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .node-wheel .cycle-node-icon {
+      background: rgba(99, 102, 241, 0.12);
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+
+    .node-read {
+      top: 50%;
+      left: -16px;
+      transform: translateY(-50%);
+    }
+    .node-read .cycle-node-icon {
+      background: rgba(168, 85, 247, 0.12);
+      border-color: rgba(168, 85, 247, 0.4);
+    }
+
+    .cycle-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* ========== 双锚点 ========== */
+    .anchors {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .anchor-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .anchor-icon {
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+    }
+
+    .anchor-type {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+
+    .anchor-text {
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .anchor-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .anchor-bottom-note {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ========== 问题区域 ========== */
+    .question-box {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.06), rgba(217, 119, 6, 0.03));
+      border: 1px solid rgba(245, 158, 11, 0.15);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+    }
+
+    .question-box p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+
+    .question-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .question-highlight {
+      color: var(--accent-gold);
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    /* ========== 页脚 ========== */
+    .footer {
+      text-align: center;
+      padding-top: 48px;
+      border-top: 1px solid var(--border);
+      margin-top: 0;
+    }
+
+    .footer-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+    }
+
+    .footer-divider {
+      display: inline-block;
+      width: 1px;
+      height: 10px;
+      background: var(--text-muted);
+      opacity: 0.3;
+      margin: 0 12px;
+      vertical-align: middle;
+    }
+
+    /* ========== 分隔线 ========== */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0 0 72px;
+    }
+
+    /* ========== 响应式 ========== */
+    @media (max-width: 640px) {
+      .container {
+        padding: 40px 18px 60px;
+      }
+
+      .header h1 {
+        font-size: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+      }
+
+      section {
+        margin-bottom: 56px;
+      }
+
+      .energy-chart {
+        height: 180px;
+        gap: 4px;
+      }
+
+      .bar-score {
+        font-size: 0.65rem;
+      }
+
+      .bar-label {
+        font-size: 0.55rem;
+      }
+
+      .bar-keyword {
+        font-size: 0.55rem;
+      }
+
+      .insight-card {
+        padding: 20px 18px;
+      }
+
+      .comparison-table {
+        font-size: 0.8rem;
+      }
+
+      .comparison-table thead th,
+      .comparison-table tbody td {
+        padding: 10px 12px;
+      }
+
+      .cycle-ring {
+        width: 280px;
+        height: 280px;
+      }
+
+      .cycle-node {
+        width: 80px;
+      }
+
+      .cycle-node-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+
+      .cycle-node-label {
+        font-size: 0.7rem;
+      }
+
+      .cycle-node-sub {
+        font-size: 0.6rem;
+      }
+
+      .anchors {
+        grid-template-columns: 1fr;
+      }
+
+      .question-box {
+        padding: 24px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ==================== 头部 ==================== -->
+  <header class="header">
+    <div class="header-tag">Life OS</div>
+    <h1>Tyrion 周策略复盘</h1>
+    <div class="date-range">2026.03.03 — 2026.03.14</div>
+    <p class="summary-line">12 天，从透支到高产。从没有节奏到双锚点。</p>
+  </header>
+
+  <!-- ==================== 一、精力曲线 ==================== -->
+  <section>
+    <span class="section-number">01</span>
+    <h2>精力曲线</h2>
+
+    <div class="energy-chart" id="energyChart"></div>
+
+    <div class="chart-meta">
+      <span>12 天趋势：6 分透支 → 9 分高产</span>
+      <span class="avg">均值 7.5</span>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ==================== 二、什么拉高了精力 ==================== -->
+  <section>
+    <span class="section-number">02</span>
+    <h2>什么拉高了精力？</h2>
+
+    <p style="margin-bottom: 20px;">8 分以上的日子有 <span class="highlight">5 天</span>（03-04 / 05 / 09 / 11 / 12），三个共同点：</p>
+
+    <div class="insight-card">
+      <ul class="insight-list positive">
+        <li>当天有<span class="highlight">运动</span>，尤其是早上</li>
+        <li><span class="highlight">创造性产出</span>——周易成品、AI 技能、PPT skill</li>
+        <li><span class="highlight">自主感强</span>——节奏在自己手上，不被别人的时间表牵着走</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ==================== 三、什么拉低了精力 ==================== -->
+  <section>
+    <span class="section-number">03</span>
+    <h2>什么拉低了精力？</h2>
+
+    <p style="margin-bottom: 20px;">低于 7 分的只有 <span class="highlight">2 天</span>（03-03 和 03-08），共同点：</p>
+
+    <div class="insight-card">
+      <ul class="insight-list negative">
+        <li>身体没恢复，或时间结构被打乱</li>
+        <li><span class="highlight">被动占用</span>——被迫社交、等人、临时会议</li>
+        <li>不是"做了什么累的事"，而是<span class="highlight">节奏不在自己手上</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ==================== 四、12 天里你发生了什么变化 ==================== -->
+  <section>
+    <span class="section-number">04</span>
+    <h2>12 天里你发生了什么变化？</h2>
+
+    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>维度</th>
+            <th>03-03 的你</th>
+            <th>03-14 的你</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>运动</td>
+            <td>断了一周没动</td>
+            <td>连续多天早起跑步，正在研究怎么跑得更好</td>
+          </tr>
+          <tr>
+            <td>项目</td>
+            <td>4 个并发不知道先做哪个</td>
+            <td>"podcast 优先，其他先不做"</td>
+          </tr>
+          <tr>
+            <td>新冲动</td>
+            <td>想到就开始</td>
+            <td>"先清前面的项目"</td>
+          </tr>
+          <tr>
+            <td>时间结构</td>
+            <td>没有</td>
+            <td>双锚点（跑步上限 + 工作下限）+ 双轨切换</td>
+          </tr>
+          <tr>
+            <td>未完成</td>
+            <td>容易变成压力</td>
+            <td>"没做完也行，不影响"</td>
+          </tr>
+          <tr>
+            <td>注意力</td>
+            <td>没有保护意识</td>
+            <td>主动屏蔽干扰源、认可钝感力</td>
+          </tr>
+          <tr>
+            <td>自我认知</td>
+            <td>"想做的太多，时间焦虑"</td>
+            <td>"做什么都是好的，没有什么是必须要做的"</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ==================== 五、正循环模型 ==================== -->
+  <section>
+    <span class="section-number">05</span>
+    <h2>正循环模型</h2>
+
+    <div class="cycle-container">
+      <div class="cycle-ring">
+        <!-- SVG 循环箭头 -->
+        <svg class="cycle-svg" viewBox="0 0 340 340">
+          <defs>
+            <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="rgba(245,158,11,0.35)" />
+            </marker>
+          </defs>
+          <!-- 四段弧线，顺时针：上→右→下→左→上 -->
+          <!-- 上到右 -->
+          <path d="M 195 40 Q 280 40, 295 140" fill="none" stroke="rgba(245,158,11,0.18)" stroke-width="1.5" marker-end="url(#arrowhead)" />
+          <!-- 右到下 -->
+          <path d="M 295 200 Q 280 295, 195 305" fill="none" stroke="rgba(245,158,11,0.18)" stroke-width="1.5" marker-end="url(#arrowhead)" />
+          <!-- 下到左 -->
+          <path d="M 145 305 Q 55 295, 42 200" fill="none" stroke="rgba(245,158,11,0.18)" stroke-width="1.5" marker-end="url(#arrowhead)" />
+          <!-- 左到上 -->
+          <path d="M 42 140 Q 55 40, 145 40" fill="none" stroke="rgba(245,158,11,0.18)" stroke-width="1.5" marker-end="url(#arrowhead)" />
+        </svg>
+
+        <!-- 中心文字 -->
+        <div class="cycle-center">
+          <span class="cycle-center-label">DAILY CYCLE</span>
+          <span class="cycle-center-text">自主感</span>
+        </div>
+
+        <!-- 四个节点 -->
+        <div class="cycle-node node-run">
+          <div class="cycle-node-icon">&#x1F3C3;</div>
+          <div class="cycle-node-label">早起跑步</div>
+          <div class="cycle-node-sub">激活</div>
+        </div>
+
+        <div class="cycle-node node-frog">
+          <div class="cycle-node-icon">&#x1F438;</div>
+          <div class="cycle-node-label">先吃青蛙</div>
+          <div class="cycle-node-sub">释放</div>
+        </div>
+
+        <div class="cycle-node node-wheel">
+          <div class="cycle-node-icon">&#x1F504;</div>
+          <div class="cycle-node-label">用轮子 / 造轮子</div>
+          <div class="cycle-node-sub">沉浸</div>
+        </div>
+
+        <div class="cycle-node node-read">
+          <div class="cycle-node-icon">&#x1F4D6;</div>
+          <div class="cycle-node-label">晚上看书</div>
+          <div class="cycle-node-sub">平静</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 双锚点 -->
+    <h3>每日双锚点</h3>
+    <div class="anchors">
+      <div class="anchor-card">
+        <div class="anchor-icon">&#x2B06;&#xFE0F;</div>
+        <div class="anchor-type">上限锚点</div>
+        <div class="anchor-text">跑步</div>
+        <div class="anchor-sub">最喜欢的事</div>
+      </div>
+      <div class="anchor-card">
+        <div class="anchor-icon">&#x2B07;&#xFE0F;</div>
+        <div class="anchor-type">下限锚点</div>
+        <div class="anchor-text">工作完成</div>
+        <div class="anchor-sub">最担忧的事</div>
+      </div>
+    </div>
+    <p class="anchor-bottom-note">锚住上下限，其他随心情。</p>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ==================== 六、一个问题 ==================== -->
+  <section>
+    <span class="section-number">06</span>
+    <h2>一个问题</h2>
+
+    <div class="question-box">
+      <p>高分日的共同特征：<span class="highlight">自主感</span>。低分日的特征：<span class="highlight">被动</span>。</p>
+
+      <p>生活里有些被动不可消除——工作的会、家人的事、等别人的时间。</p>
+
+      <p>你已经找到了"早上跑步"来锚定自主感的开头。</p>
+
+      <p class="question-highlight" style="margin-top: 24px;">问题是：当一天的自主感被意外打破的时候，你有没有一个快速找回来的方法？</p>
+    </div>
+  </section>
+
+  <!-- ==================== 页脚 ==================== -->
+  <footer class="footer">
+    <div class="footer-text">
+      Life OS
+      <span class="footer-divider"></span>
+      Tyrion 周策略复盘
+      <span class="footer-divider"></span>
+      2026-03-03 → 2026-03-14
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // ========== 精力柱状图 ==========
+  const data = [
+    { date: '03-03', score: 6,   keyword: '透支期' },
+    { date: '03-04', score: 8,   keyword: '回弹' },
+    { date: '03-05', score: 8,   keyword: '运动+阅读' },
+    { date: '03-06', score: 7,   keyword: '工具故障' },
+    { date: '03-07', score: 7,   keyword: '家庭日' },
+    { date: '03-08', score: 6.5, keyword: '被挤压' },
+    { date: '03-09', score: 8.5, keyword: '首次跑通' },
+    { date: '03-11', score: 8,   keyword: '持续' },
+    { date: '03-12', score: 9,   keyword: '最高产' },
+    { date: '03-13', score: 7,   keyword: '等人拖沓' },
+    { date: '03-14', score: 7,   keyword: '家庭日+担忧' },
+  ];
+
+  const minScore = 4;  // 柱状图底线
+  const maxScore = 10; // 柱状图上限
+  const chartHeight = 200; // 可用高度（px）
+
+  function getBarColor(score) {
+    if (score >= 9)   return '#34d399'; // 亮绿
+    if (score >= 8)   return '#6ee7b7'; // 绿
+    if (score >= 7)   return '#fbbf24'; // 黄
+    if (score >= 6.5) return '#f97316'; // 橙
+    return '#ef8c6b';                   // 暗红/橙
+  }
+
+  const chart = document.getElementById('energyChart');
+
+  data.forEach(d => {
+    const pct = ((d.score - minScore) / (maxScore - minScore)) * 100;
+    const barH = Math.max(pct * chartHeight / 100, 8);
+
+    const group = document.createElement('div');
+    group.className = 'bar-group';
+
+    const scoreEl = document.createElement('div');
+    scoreEl.className = 'bar-score';
+    scoreEl.textContent = d.score;
+
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.style.height = barH + 'px';
+    bar.style.background = getBarColor(d.score);
+    bar.style.boxShadow = '0 0 12px ' + getBarColor(d.score) + '33';
+
+    const label = document.createElement('div');
+    label.className = 'bar-label';
+    label.textContent = d.date;
+
+    const kw = document.createElement('div');
+    kw.className = 'bar-keyword';
+    kw.textContent = d.keyword;
+
+    group.appendChild(scoreEl);
+    group.appendChild(bar);
+    group.appendChild(label);
+    group.appendChild(kw);
+    chart.appendChild(group);
+  });
+</script>
+
+</body>
+</html>

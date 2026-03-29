@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>0119 新客涨价实验</title>
+<style>
+@page { size: landscape; margin: 10mm; }
+body { font-family: -apple-system, 'Segoe UI', sans-serif; margin: 16px auto; max-width: 1100px; font-size: 12px; color: #333; line-height: 1.45; }
+h1 { color: #1a1a2e; font-size: 17px; border-bottom: 2px solid #e94560; padding-bottom: 5px; margin: 0 0 3px 0; }
+.meta { color: #888; font-size: 10px; margin: 0 0 10px; }
+.conclusion { background: #f8f9fa; border-radius: 6px; padding: 10px 14px; margin: 0 0 12px; }
+.conclusion b { font-size: 13px; color: #1a1a2e; }
+.conclusion ul { margin: 4px 0 0; padding-left: 18px; }
+.conclusion li { margin: 2px 0; font-size: 11px; }
+.pos { color: #D32F2F; font-weight: 600; }
+.neg { color: #2E7D32; font-weight: 600; }
+table { border-collapse: collapse; width: 100%; margin: 6px 0; }
+th, td { border: 1px solid #ddd; padding: 4px 8px; text-align: right; font-size: 11px; }
+th { background: #f0f0f0; font-weight: 600; text-align: center; }
+td:first-child { text-align: left; font-weight: 500; }
+.grpA { background: #E3F2FD; }
+.grpB { background: #FFF3E0; }
+h3 { color: #0f3460; font-size: 12px; margin: 10px 0 4px 0; }
+.kpi-row { display: flex; gap: 10px; margin: 8px 0; }
+.kpi { flex: 1; background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 8px 10px; text-align: center; }
+.kpi-label { font-size: 9px; color: #888; text-transform: uppercase; }
+.kpi-val { font-size: 20px; font-weight: 700; margin: 2px 0; }
+.kpi-sub { font-size: 10px; color: #666; }
+.note { font-size: 9px; color: #aaa; margin-top: 8px; }
+</style></head><body>
+
+<h1>0119 新客券包涨价实验</h1>
+<p class="meta">券包整体提价 $1（次日券 $1.99→$2.99，固定价券 $2.99→$3.99）| 8,282 vs 8,296 人（1/22起）| 42天</p>
+
+<div class="conclusion">
+<b>结论：新客券包整体提价 $1 可全量推广。转化率无损，收入全面提升，LTV 正向。</b>
+<ul>
+<li><b>转化不受影响</b>：两组转化率 86.3% vs 86.5%（+0.26pp），涨价未阻碍新客首购</li>
+<li><b>收入全面提升</b>：总收入 <span class="pos">+4.5%</span>，客单价 <span class="pos">+5.7%</span>，单杯实收 <span class="pos">+4.2%</span></li>
+<li><b>复购有代价但可控</b>：D7 <span class="neg">-2.16pp</span>，D14 <span class="neg">-2.97pp</span>，D30 收窄至 <span class="neg">-1.27pp</span></li>
+<li><b>高价筛选高价值用户</b>：涨价组非首单客单价 <span class="pos">+15.3%</span>，后续消费力显著更强</li>
+</ul>
+</div>
+
+<p style="font-size:12px;color:#555;margin:4px 0 10px;"><b>转化率持平（+0.26pp），收入 +4.5%，单杯实收 +4.2%，LTV30天 +4.2%，D14复购 -2.97pp。</b></p>
+
+<h3>核心指标对比</h3>
+<table>
+<tr><th>组别</th><th>转化率</th><th>单杯实收</th><th>客单价</th><th>D7复购</th><th>D14复购</th><th>D30复购</th><th>LTV 30天</th></tr>
+<tr class="grpB"><td><b>$3.99 涨价组</b></td>
+  <td>86.54%<br><small>(+0.26pp)</small></td>
+  <td>$3.00<br><small>(<span class="pos">+4.2%</span>)</small></td>
+  <td>$4.30<br><small>(<span class="pos">+5.7%</span>)</small></td>
+  <td>18.67%<br><small>(<span class="neg">-2.16pp</span>)</small></td>
+  <td>23.96%<br><small>(<span class="neg">-2.97pp</span>)</small></td>
+  <td>29.44%<br><small>(<span class="neg">-1.27pp</span>)</small></td>
+  <td>$5.85<br><small>(<span class="pos">+4.2%</span>)</small></td>
+</tr>
+<tr class="grpA"><td><b>$2.99 对照组</b></td>
+  <td>86.28%</td><td>$2.88</td><td>$4.07</td><td>20.83%</td><td>26.93%</td><td>30.71%</td><td>$5.62</td>
+</tr>
+</table>
+
+<h3>券包结构 & 核销率变化</h3>
+<table>
+<tr><th>券位</th><th>对照组</th><th>涨价组</th><th>核销率变化</th></tr>
+<tr><td>首杯券 (T0-7)</td><td>$1.99</td><td>$1.99</td><td>19.3% → 23.3%（相同券，差异为人群波动）</td></tr>
+<tr><td><b>次日券 (-15)</b></td><td><b>$1.99</b></td><td><b>$2.99</b></td><td>17.0% → 11.9%（<span class="neg">-5.1pp</span>，涨价有代价但仍可用）</td></tr>
+<tr><td><b>固定价券 (T0-15)</b></td><td><b>$2.99</b></td><td><b>$3.99</b></td><td>8.1% → 2.0%（<span class="neg">-6.1pp</span>，该券基本失效）</td></tr>
+<tr><td>50% off (T0-15)</td><td>50% off</td><td>50% off</td><td>相同，不受影响</td></tr>
+</table>
+
+<h3>收入为什么涨了？—— 按下单顺序归因</h3>
+<div style="background:#fff;border:1px solid #e0e0e0;border-radius:6px;padding:10px 14px;margin:6px 0;">
+<p style="font-size:11px;margin:0 0 6px;color:#555;">券包 4 张券，2 张不变（首杯 $1.99 + 50% off），2 张各涨 $1。按用户<b>实际下单顺序</b>拆解收入差异：</p>
+<table style="margin:4px 0;">
+<tr><th style="width:12%">下单顺序</th><th style="width:20%">单杯实收</th><th style="width:20%">客单价</th><th style="width:12%">总实收增量</th><th>归因说明</th></tr>
+<tr style="background:#f5f5f5">
+<td><b>第1单</b></td>
+<td>$2.67 → $2.66<br><small>(持平)</small></td>
+<td>$3.80 → $3.77<br><small>(持平)</small></td>
+<td style="text-align:center">持平</td>
+<td>两组都用 $1.99 首杯券，消费行为一致。<b>基本盘相同</b></td>
+</tr>
+<tr style="background:#E8F5E9">
+<td><b>第2单 ⭐</b></td>
+<td>$2.88 → $3.34<br><small>(<span class="pos">+16.0%</span>)</small></td>
+<td>$3.97 → $4.87<br><small>(<span class="pos">+22.7%</span>)</small></td>
+<td style="text-align:center"><span class="pos">+$860</span></td>
+<td>涨价组用 $2.99 次日券，对照组用 $1.99。<b>每杯多收 $0.46，收入增量主力</b></td>
+</tr>
+<tr style="background:#E8F5E9">
+<td><b>第3单+</b></td>
+<td>$3.45 → $3.68<br><small>(<span class="pos">+6.7%</span>)</small></td>
+<td>$4.88 → $5.45<br><small>(<span class="pos">+11.7%</span>)</small></td>
+<td style="text-align:center"><span class="pos">+$1,330</span></td>
+<td>券已用完，差异来自<b>用户筛选效应</b>：高价门槛过滤后留下的用户付费意愿更强</td>
+</tr>
+</table>
+<p style="font-size:11px;margin:6px 0 0;color:#1a1a2e;">
+<b>总结：收入 +$2,094 由两个引擎驱动 —— ① 第2单次日券提价（贡献 41%）② 第3单起高价值用户筛选效应（贡献 59%）。固定价券 $3.99 核销率仅 2%，对收入几乎无贡献，是可优化的浪费券位。</b>
+</p>
+</div>
+
+<h3>建议行动</h3>
+<table>
+<tr><th style="width:30%">行动</th><th>说明</th></tr>
+<tr><td><b>全量推涨价券包</b></td><td>转化无损 + 收入/LTV 全面正向，建议替代当前方案作为新客默认券包</td></tr>
+<tr><td><b>改造固定价券位</b></td><td>$3.99 核销率仅 2%，券位浪费。建议方案：<br>① 降至 $3.49 测试核销弹性；② 改为 65% off 让用户感知折扣；③ 改为 D7-D14 复购券，定向弥补复购缺口</td></tr>
+<tr><td><b>持续监控 D30+ 复购</b></td><td>当前 D30 样本~1,300人/组，需更多数据确认长期复购趋势。D30 差距已收窄至 -1.27pp，后续可能进一步收敛</td></tr>
+</table>
+
+<p class="note">
+数据来源：CyberData | 分析日：2026-03-02 | 分析口径：1/22起（已剔除$2.99活动2025年11月历史发券用户1,468人）<br>
+转化率=有购/总用户 | 复购率=N天内复购/满N天首购用户 | LTV=总收入/总用户 | 单杯实收=item级pay_money/sku_num
+</p>
+
+</body></html>

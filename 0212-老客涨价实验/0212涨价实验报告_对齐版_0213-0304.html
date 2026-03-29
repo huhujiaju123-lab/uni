@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>0212 老客涨价实验报告 (02-13 ~ 03-04)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --border: #334155;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #3b82f6;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --orange: #f97316;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'SF Pro Display', 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 24px; }
+.container { max-width: 1400px; margin: 0 auto; }
+
+/* Header */
+.header { text-align: center; padding: 40px 0 32px; }
+.header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+.header .subtitle { color: var(--muted); font-size: 14px; }
+.header .tags { margin-top: 16px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+.tag-blue { background: rgba(59,130,246,0.15); color: var(--accent); border: 1px solid rgba(59,130,246,0.3); }
+.tag-green { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+.tag-yellow { background: rgba(234,179,8,0.15); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
+
+/* Cards */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+.card h2 { font-size: 18px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.card h3 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: var(--muted); }
+
+/* KPI strip */
+.kpi-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.kpi { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
+.kpi .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.kpi .value { font-size: 24px; font-weight: 700; margin: 4px 0; }
+.kpi .diff { font-size: 13px; font-weight: 600; }
+.kpi .diff.positive { color: var(--green); }
+.kpi .diff.negative { color: var(--red); }
+.kpi .diff.neutral { color: var(--yellow); }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: rgba(59,130,246,0.1); color: var(--accent); font-weight: 600; padding: 10px 8px; text-align: center; white-space: nowrap; position: sticky; top: 0; }
+td { padding: 8px; text-align: center; border-bottom: 1px solid var(--border); }
+.lc-label { font-weight: 600; text-align: left !important; white-space: nowrap; }
+.total-row { background: rgba(59,130,246,0.05); font-weight: 600; }
+.total-row td { border-top: 2px solid var(--accent); }
+tr:hover { background: rgba(255,255,255,0.02); }
+.th-group { border-bottom: 2px solid var(--accent); }
+
+/* Conclusion */
+.conclusion { background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1)); border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 24px; }
+.conclusion h2 { color: var(--accent); }
+.conclusion ul { margin: 12px 0 0 20px; }
+.conclusion li { margin-bottom: 8px; }
+.highlight { color: var(--yellow); font-weight: 600; }
+.positive { color: var(--green); }
+.negative { color: var(--red); }
+
+/* Chart */
+.chart-container { position: relative; height: 300px; margin: 16px 0; }
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 900px) { .charts-grid { grid-template-columns: 1fr; } }
+
+/* Design info */
+.design-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.design-item { background: rgba(255,255,255,0.03); border-radius: 8px; padding: 16px; text-align: center; }
+.design-item .group-name { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+.design-item .group-desc { color: var(--muted); font-size: 13px; }
+.design-item .group-count { font-size: 20px; font-weight: 700; color: var(--accent); margin-top: 8px; }
+
+/* Footer */
+.footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Header -->
+<div class="header">
+    <h1>0212 老客涨价实验效果报告</h1>
+    <div class="subtitle">Lucky US | 实验周期: 2026-02-13 ~ 03-04 (20天) | 生成时间: 2026-03-10 03:55</div>
+    <div class="tags">
+        <span class="tag tag-blue">DWD 订单明细表</span>
+        <span class="tag tag-green">仅饮品 Drink Only</span>
+        <span class="tag tag-yellow">门店订单 | type NOT IN (3,4,5)</span>
+    </div>
+</div>
+
+<!-- KPI Summary -->
+<div class="kpi-strip">
+    <div class="kpi">
+        <div class="label">A组 ITT人均饮品实收 vs 对照</div>
+        <div class="value" style="color: var(--yellow);">-0.2%</div>
+        <div class="diff neutral">收入基本持平</div>
+    </div>
+    <div class="kpi">
+        <div class="label">B组 ITT人均饮品实收 vs 对照</div>
+        <div class="value" style="color: var(--red);">-4.0%</div>
+        <div class="diff negative">收入显著下降</div>
+    </div>
+    <div class="kpi">
+        <div class="label">A组 单杯实收 vs 对照</div>
+        <div class="value" style="color: var(--green);">+10.5%</div>
+        <div class="diff positive">涨价有效推高单价</div>
+    </div>
+    <div class="kpi">
+        <div class="label">全量下单率 差异 (A/B vs C)</div>
+        <div class="value" style="color: var(--red);">-1.00pp</div>
+        <div class="diff negative">涨价抑制购买</div>
+    </div>
+</div>
+
+<!-- Experiment Design -->
+<div class="card">
+    <h2>1. 实验设计</h2>
+    <div class="design-grid">
+        <div class="design-item">
+            <div class="group-name" style="color: #f97316;">A 涨价组1 (30%)</div>
+            <div class="group-desc">75折系 — 折扣力度最小（激进涨价）</div>
+            <div class="group-count">37,954 人</div>
+        </div>
+        <div class="design-item">
+            <div class="group-name" style="color: #a855f7;">B 涨价组2 (30%)</div>
+            <div class="group-desc">7折系 — 中等折扣（普通涨价）</div>
+            <div class="group-count">37,922 人</div>
+        </div>
+        <div class="design-item">
+            <div class="group-name" style="color: #3b82f6;">C 对照组 (40%)</div>
+            <div class="group-desc">原价策略 — 维持现有折扣</div>
+            <div class="group-count">50,084 人</div>
+        </div>
+    </div>
+    <h3>分析口径</h3>
+    <table>
+        <tr><td style="text-align:left; font-weight:600; width:140px;">数据源</td><td style="text-align:left;">dw_dwd.dwd_t_ord_order_item_d_inc (DWD订单明细)</td></tr>
+        <tr><td style="text-align:left; font-weight:600;">用户过滤</td><td style="text-align:left;">type NOT IN (3, 4, 5)，排除特殊/游客/外卖用户</td></tr>
+        <tr><td style="text-align:left; font-weight:600;">订单过滤</td><td style="text-align:left;">order_category = '门店订单'，order_status = 90</td></tr>
+        <tr><td style="text-align:left; font-weight:600;">品类</td><td style="text-align:left;">one_category_name = 'Drink'（仅饮品）</td></tr>
+        <tr><td style="text-align:left; font-weight:600;">核心指标</td><td style="text-align:left;">ITT 进组人均饮品实收 = SUM(drink_pay) / 进组总人数</td></tr>
+        <tr><td style="text-align:left; font-weight:600;">生命周期分层</td><td style="text-align:left;">按实验前最后下单距今：0-15天(活跃) / 16-30天(衰退) / 30+天(流失)</td></tr>
+    </table>
+</div>
+
+<!-- Core Results: Segmented Summary Table -->
+<div class="card">
+    <h2>2. 分层核心指标对比</h2>
+    <div style="overflow-x: auto;">
+    <table>
+        <thead>
+            <tr>
+                <th rowspan="2">分层</th>
+                <th colspan="3" class="th-group">用户数</th>
+                <th colspan="5" class="th-group">下单率</th>
+                <th colspan="5" class="th-group">ITT人均饮品实收 $</th>
+                <th colspan="5" class="th-group">单杯实收 $</th>
+            </tr>
+            <tr>
+                <th>A组</th><th>B组</th><th>C组</th>
+                <th>A组</th><th>B组</th><th>C组</th><th>A-C</th><th>B-C</th>
+                <th>A组</th><th>B组</th><th>C组</th><th>A vs C</th><th>B vs C</th>
+                <th>A组</th><th>B组</th><th>C组</th><th>A vs C</th><th>B vs C</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="">
+            <td class="lc-label" rowspan="1">0-15天</td>
+            <td>4,217</td><td>4,368</td><td>5,895</td>
+            <td>55.68%</td><td>54.42%</td><td>58.41%</td>
+            <td style="color: #ef4444; font-weight: 600;">-2.73pp</td>
+            <td style="color: #ef4444; font-weight: 600;">-3.99pp</td>
+            <td>$6.8428</td><td>$6.2658</td><td>$6.7669</td>
+            <td style="color: #22c55e; font-weight: 600;">+1.1%</td>
+            <td style="color: #ef4444; font-weight: 600;">-7.4%</td>
+            <td>$3.7889</td><td>$3.7222</td><td>$3.5242</td>
+            <td style="color: #22c55e; font-weight: 600;">+7.5%</td>
+            <td style="color: #22c55e; font-weight: 600;">+5.6%</td>
+        </tr>
+        <tr class="">
+            <td class="lc-label" rowspan="1">16-30天</td>
+            <td>3,292</td><td>3,307</td><td>4,169</td>
+            <td>21.69%</td><td>20.62%</td><td>22.67%</td>
+            <td style="color: #ef4444; font-weight: 600;">-0.98pp</td>
+            <td style="color: #ef4444; font-weight: 600;">-2.04pp</td>
+            <td>$1.3649</td><td>$1.3991</td><td>$1.3209</td>
+            <td style="color: #22c55e; font-weight: 600;">+3.3%</td>
+            <td style="color: #22c55e; font-weight: 600;">+5.9%</td>
+            <td>$3.3656</td><td>$3.4400</td><td>$2.9784</td>
+            <td style="color: #22c55e; font-weight: 600;">+13.0%</td>
+            <td style="color: #22c55e; font-weight: 600;">+15.5%</td>
+        </tr>
+        <tr class="">
+            <td class="lc-label" rowspan="1">30+天</td>
+            <td>30,445</td><td>30,247</td><td>40,020</td>
+            <td>4.66%</td><td>4.55%</td><td>5.06%</td>
+            <td style="color: #ef4444; font-weight: 600;">-0.40pp</td>
+            <td style="color: #ef4444; font-weight: 600;">-0.51pp</td>
+            <td>$0.2431</td><td>$0.2367</td><td>$0.2118</td>
+            <td style="color: #22c55e; font-weight: 600;">+14.8%</td>
+            <td style="color: #22c55e; font-weight: 600;">+11.7%</td>
+            <td>$3.0225</td><td>$2.9742</td><td>$2.4336</td>
+            <td style="color: #22c55e; font-weight: 600;">+24.2%</td>
+            <td style="color: #22c55e; font-weight: 600;">+22.2%</td>
+        </tr>
+        <tr class="total-row">
+            <td class="lc-label" rowspan="1">全量</td>
+            <td>37,954</td><td>37,922</td><td>50,084</td>
+            <td>11.81%</td><td>11.70%</td><td>12.81%</td>
+            <td style="color: #ef4444; font-weight: 600;">-1.00pp</td>
+            <td style="color: #ef4444; font-weight: 600;">-1.11pp</td>
+            <td>$1.0737</td><td>$1.0325</td><td>$1.0757</td>
+            <td style="color: #ef4444; font-weight: 600;">-0.2%</td>
+            <td style="color: #ef4444; font-weight: 600;">-4.0%</td>
+            <td>$3.5747</td><td>$3.5259</td><td>$3.2355</td>
+            <td style="color: #22c55e; font-weight: 600;">+10.5%</td>
+            <td style="color: #22c55e; font-weight: 600;">+9.0%</td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
+<!-- Visit & Purchase Rate -->
+<div class="card">
+    <h2>3. 分层来访率与访购率</h2>
+    <p style="color: var(--muted); margin-bottom: 12px;">来访数据来源: dws_mg_log_user_screen_name_d_1d。来访率 = 来访人数 / 进组总人数。访购率 = 购买人数 / 来访人数。</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th rowspan="2">分层</th>
+                <th colspan="3">进组人数</th>
+                <th colspan="3">来访人数</th>
+                <th colspan="5">来访率</th>
+                <th colspan="5">访购率 (来访→购买)</th>
+            </tr>
+            <tr>
+                <th>A组</th><th>B组</th><th>C组</th>
+                <th>A组</th><th>B组</th><th>C组</th>
+                <th>A组</th><th>B组</th><th>C组</th><th>A-C</th><th>B-C</th>
+                <th>A组</th><th>B组</th><th>C组</th><th>A-C</th><th>B-C</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="lc-label">0-15天</td>
+                <td>4,217</td><td>4,368</td><td>5,895</td>
+                <td>3,579</td><td>3,737</td><td>5,030</td>
+                <td>84.87%</td><td>85.56%</td><td>85.33%</td>
+                <td>-0.46pp</td><td>+0.23pp</td>
+                <td>65.6%</td><td>63.6%</td><td>68.5%</td>
+                <td style="color: #ef4444; font-weight: 600;">-2.9pp</td>
+                <td style="color: #ef4444; font-weight: 600;">-4.9pp</td>
+            </tr>
+            <tr>
+                <td class="lc-label">16-30天</td>
+                <td>3,292</td><td>3,307</td><td>4,169</td>
+                <td>1,835</td><td>1,769</td><td>2,264</td>
+                <td>55.74%</td><td>53.48%</td><td>54.30%</td>
+                <td style="color: #22c55e; font-weight: 600;">+1.44pp</td>
+                <td>-0.82pp</td>
+                <td>38.9%</td><td>38.6%</td><td>41.8%</td>
+                <td style="color: #ef4444; font-weight: 600;">-2.9pp</td>
+                <td style="color: #ef4444; font-weight: 600;">-3.2pp</td>
+            </tr>
+            <tr>
+                <td class="lc-label">30+天</td>
+                <td>30,445</td><td>30,247</td><td>40,020</td>
+                <td>6,625</td><td>6,605</td><td>8,818</td>
+                <td>21.76%</td><td>21.84%</td><td>22.03%</td>
+                <td>-0.27pp</td><td>-0.19pp</td>
+                <td>21.4%</td><td>20.8%</td><td>23.0%</td>
+                <td style="color: #ef4444; font-weight: 600;">-1.6pp</td>
+                <td style="color: #ef4444; font-weight: 600;">-2.2pp</td>
+            </tr>
+            <tr class="total-row">
+                <td class="lc-label">全量</td>
+                <td>37,954</td><td>37,922</td><td>50,084</td>
+                <td>12,039</td><td>12,111</td><td>16,112</td>
+                <td>31.72%</td><td>31.94%</td><td>32.17%</td>
+                <td>-0.45pp</td><td>-0.23pp</td>
+                <td>37.2%</td><td>36.6%</td><td>39.8%</td>
+                <td style="color: #ef4444; font-weight: 600;">-2.6pp</td>
+                <td style="color: #ef4444; font-weight: 600;">-3.2pp</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="background: linear-gradient(135deg, rgba(234,179,8,0.08), rgba(249,115,22,0.08)); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px; margin-top: 16px;">
+        <h3 style="color: #eab308; font-size: 14px; margin-bottom: 8px;">来访率发现</h3>
+        <ul style="margin-left: 18px; color: var(--muted); font-size: 13px;">
+            <li><strong>16-30天 A组来访率反而更高（+1.44pp）</strong>：涨价对衰退期用户起到了"注意力唤醒"作用——价格变化触发好奇心驱动打开 APP</li>
+            <li><strong>但访购率全面下降</strong>：所有分层涨价组的访购率均低于对照组 -1.6~4.9pp，说明来了之后因价格高而放弃购买的人增多</li>
+            <li><strong>0-15天和30+天来访率基本无差异</strong>（±0.5pp），涨价对来访行为的影响集中在衰退期用户</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Daily Trend Charts -->
+<div class="card">
+    <h2>4. 每日趋势</h2>
+    <div class="charts-grid">
+        <div>
+            <h3>ITT 人均饮品实收 ($/人/天)</h3>
+            <div class="chart-container"><canvas id="ittChart"></canvas></div>
+        </div>
+        <div>
+            <h3>单杯实收 ($)</h3>
+            <div class="chart-container"><canvas id="cupChart"></canvas></div>
+        </div>
+        <div>
+            <h3>每日购买用户数</h3>
+            <div class="chart-container"><canvas id="buyerChart"></canvas></div>
+        </div>
+        <div>
+            <h3>ITT 人均实收累计差异 (A/B vs C)</h3>
+            <div class="chart-container"><canvas id="cumDiffChart"></canvas></div>
+        </div>
+    </div>
+</div>
+
+<!-- Segmented Deep Dive -->
+<div class="card">
+    <h2>5. 分层深度解读</h2>
+
+    <h3 style="color: var(--green);">30+天流失用户 — 涨价效果最好</h3>
+    <p style="color: var(--muted); margin-bottom: 12px;">占进组人数 ~80%，但仅贡献 ~15% 饮品收入。这部分用户本身购买概率很低，涨价对其行为影响有限，但一旦购买则贡献更高单杯收入。</p>
+    <table>
+        <tr><th>指标</th><th>A组</th><th>B组</th><th>C对照</th><th>A vs C</th><th>B vs C</th></tr>
+        <tr><td>下单率</td><td>4.66%</td><td>4.55%</td><td>5.06%</td>
+            <td style="color: #ef4444; font-weight: 600;">-0.40pp</td>
+            <td style="color: #ef4444; font-weight: 600;">-0.51pp</td></tr>
+        <tr><td>ITT人均实收</td><td>$0.2431</td><td>$0.2367</td><td>$0.2118</td>
+            <td style="color: #22c55e; font-weight: 600;">+14.8%</td>
+            <td style="color: #22c55e; font-weight: 600;">+11.7%</td></tr>
+        <tr><td>单杯实收</td><td>$3.0225</td><td>$2.9742</td><td>$2.4336</td>
+            <td style="color: #22c55e; font-weight: 600;">+24.2%</td>
+            <td style="color: #22c55e; font-weight: 600;">+22.2%</td></tr>
+    </table>
+
+    <h3 style="color: var(--yellow); margin-top: 24px;">16-30天衰退用户 — 涨价温和正向</h3>
+    <p style="color: var(--muted); margin-bottom: 12px;">占进组人数 ~9%，贡献 ~10% 饮品收入。单杯实收提升显著 (+13~16%)，虽杯量下降但价格弹性不大，ITT 实收正向。</p>
+    <table>
+        <tr><th>指标</th><th>A组</th><th>B组</th><th>C对照</th><th>A vs C</th><th>B vs C</th></tr>
+        <tr><td>下单率</td><td>21.69%</td><td>20.62%</td><td>22.67%</td>
+            <td style="color: #ef4444; font-weight: 600;">-0.98pp</td>
+            <td style="color: #ef4444; font-weight: 600;">-2.04pp</td></tr>
+        <tr><td>ITT人均实收</td><td>$1.3649</td><td>$1.3991</td><td>$1.3209</td>
+            <td style="color: #22c55e; font-weight: 600;">+3.3%</td>
+            <td style="color: #22c55e; font-weight: 600;">+5.9%</td></tr>
+        <tr><td>单杯实收</td><td>$3.3656</td><td>$3.4400</td><td>$2.9784</td>
+            <td style="color: #22c55e; font-weight: 600;">+13.0%</td>
+            <td style="color: #22c55e; font-weight: 600;">+15.5%</td></tr>
+    </table>
+
+    <h3 style="color: var(--red); margin-top: 24px;">0-15天活跃用户 — A组持平，B组显著负向</h3>
+    <p style="color: var(--muted); margin-bottom: 12px;">占进组人数 ~11%，但贡献 ~70% 饮品收入。该群体价格敏感度高，涨价导致杯量明显下降，B组总收入被拖负。</p>
+    <table>
+        <tr><th>指标</th><th>A组</th><th>B组</th><th>C对照</th><th>A vs C</th><th>B vs C</th></tr>
+        <tr><td>下单率</td><td>55.68%</td><td>54.42%</td><td>58.41%</td>
+            <td style="color: #ef4444; font-weight: 600;">-2.73pp</td>
+            <td style="color: #ef4444; font-weight: 600;">-3.99pp</td></tr>
+        <tr><td>ITT人均实收</td><td>$6.8428</td><td>$6.2658</td><td>$6.7669</td>
+            <td style="color: #22c55e; font-weight: 600;">+1.1%</td>
+            <td style="color: #ef4444; font-weight: 600;">-7.4%</td></tr>
+        <tr><td>单杯实收</td><td>$3.7889</td><td>$3.7222</td><td>$3.5242</td>
+            <td style="color: #22c55e; font-weight: 600;">+7.5%</td>
+            <td style="color: #22c55e; font-weight: 600;">+5.6%</td></tr>
+        <tr><td>ITT人均杯量</td><td>1.8060</td><td>1.6834</td><td>1.9201</td>
+            <td style="color: #ef4444; font-weight: 600;">-5.9%</td>
+            <td style="color: #ef4444; font-weight: 600;">-12.3%</td></tr>
+    </table>
+</div>
+
+<!-- Economic Analysis -->
+<div class="card">
+    <h2>6. 经济分析</h2>
+    <p style="color: var(--muted); margin-bottom: 16px;">核心问题：涨价带来的单杯收入提升，能否在可接受周期内弥补杯量损失？</p>
+    <table>
+        <thead>
+            <tr>
+                <th>分层</th>
+                <th colspan="3">用户数</th>
+                <th colspan="2">ITT实收增量 $/人</th>
+                <th colspan="2">ITT杯量增量 杯/人</th>
+                <th colspan="2">毛利回收周期</th>
+            </tr>
+            <tr>
+                <th></th><th>A组</th><th>B组</th><th>C组</th>
+                <th>A-C</th><th>B-C</th><th>A-C</th><th>B-C</th>
+                <th>A组</th><th>B组</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr class="">
+            <td class="lc-label">0-15天</td>
+            <td>4,217</td><td>4,368</td><td>5,895</td>
+            <td style="color: #22c55e; font-weight: 600;">+0.0759</td>
+            <td style="color: #ef4444; font-weight: 600;">-0.5010</td>
+            <td style="color: #22c55e; font-weight: 600;">-0.1141</td>
+            <td style="color: #22c55e; font-weight: 600;">-0.2367</td>
+            <td>8.82月</td>
+            <td>—</td>
+        </tr>
+        <tr class="">
+            <td class="lc-label">16-30天</td>
+            <td>3,292</td><td>3,307</td><td>4,169</td>
+            <td style="color: #22c55e; font-weight: 600;">+0.0439</td>
+            <td style="color: #22c55e; font-weight: 600;">+0.0782</td>
+            <td style="color: #22c55e; font-weight: 600;">-0.0380</td>
+            <td style="color: #22c55e; font-weight: 600;">-0.0368</td>
+            <td>5.15月</td>
+            <td>2.80月</td>
+        </tr>
+        <tr class="">
+            <td class="lc-label">30+天</td>
+            <td>30,445</td><td>30,247</td><td>40,020</td>
+            <td style="color: #22c55e; font-weight: 600;">+0.0313</td>
+            <td style="color: #22c55e; font-weight: 600;">+0.0249</td>
+            <td style="color: #22c55e; font-weight: 600;">-0.0066</td>
+            <td style="color: #22c55e; font-weight: 600;">-0.0075</td>
+            <td>1.28月</td>
+            <td>1.82月</td>
+        </tr>
+        <tr class="total-row">
+            <td class="lc-label">全量</td>
+            <td>37,954</td><td>37,922</td><td>50,084</td>
+            <td style="color: #ef4444; font-weight: 600;">-0.0020</td>
+            <td style="color: #ef4444; font-weight: 600;">-0.0432</td>
+            <td style="color: #22c55e; font-weight: 600;">-0.0321</td>
+            <td style="color: #22c55e; font-weight: 600;">-0.0396</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>
+        </tbody>
+    </table>
+    <p style="color: var(--muted); font-size: 12px; margin-top: 12px;">毛利回收周期 = 杯量损失成本 / (月增量收入 × 边际毛利率)。&lt;1月为快速回收。边际毛利率假设：活跃0.6、衰退0.5、流失0.4。</p>
+</div>
+
+<!-- Conclusion -->
+<div class="conclusion">
+    <h2>7. 结论与建议</h2>
+    <h3 style="color: var(--text); margin-top: 16px;">核心发现</h3>
+    <ul>
+        <li><strong>辛普森悖论</strong>：全量看 A组持平(-0.2%)、B组负向(-4.0%)，但分层后衰退/流失用户实收显著正向。原因是活跃用户仅占11%人数却贡献70%收入，其杯量下降拖负了整体。</li>
+        <li><strong>A组(75折系)优于B组(7折系)</strong>：A组在所有分层的ITT实收 diff 都优于B组，特别是活跃用户层（A: +1.1% vs B: -7.4%）。</li>
+        <li><strong>涨价对不同生命周期用户影响不同</strong>：
+            <ul>
+                <li><span class="positive">30+天流失用户</span>：涨价 A/B 组 ITT 实收分别 <span class="positive">+14.8%/+11.7%</span>，效果最显著</li>
+                <li><span class="highlight">16-30天衰退用户</span>：涨价正向 <span class="positive">+3.3%/+5.9%</span>，价格敏感度低</li>
+                <li><span class="negative">0-15天活跃用户</span>：A组勉强持平(+1.1%)，B组显著负向(<span class="negative">-7.4%</span>)，价格敏感度最高</li>
+            </ul>
+        </li>
+    </ul>
+    <h3 style="color: var(--text); margin-top: 16px;">策略建议</h3>
+    <ul>
+        <li><strong>分人群定价</strong>：对衰退/流失用户推行涨价策略（首选A组75折系），对活跃用户维持现有折扣力度</li>
+        <li><strong>继续观察</strong>：当前20天数据窗口偏短，建议追踪至少45天确认长期趋势稳定性</li>
+        <li><strong>关注B组活跃用户</strong>：B组对活跃用户 ITT 实收 -7.4%，如全量推行将严重影响核心收入</li>
+    </ul>
+</div>
+
+<div class="footer">
+    Lucky US Data Team | 数据口径：DWD订单明细 + 仅饮品 + type NOT IN (3,4,5) + 门店订单 | 报告自动生成
+</div>
+</div>
+
+<script>
+const dates = ["2026-02-13", "2026-02-14", "2026-02-15", "2026-02-16", "2026-02-17", "2026-02-18", "2026-02-19", "2026-02-20", "2026-02-21", "2026-02-22", "2026-02-24", "2026-02-25", "2026-02-26", "2026-02-27", "2026-02-28", "2026-03-01", "2026-03-02", "2026-03-03", "2026-03-04"];
+const shortDates = dates.map(d => d.slice(5));
+
+const colors = {
+    a: { line: '#f97316', bg: 'rgba(249,115,22,0.1)' },
+    b: { line: '#a855f7', bg: 'rgba(168,85,247,0.1)' },
+    c: { line: '#3b82f6', bg: 'rgba(59,130,246,0.1)' },
+};
+
+const commonOpts = {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { intersect: false, mode: 'index' },
+    plugins: {
+        legend: { labels: { color: '#94a3b8', font: { size: 11 } } },
+        tooltip: { backgroundColor: '#1e293b', borderColor: '#334155', borderWidth: 1 },
+    },
+    scales: {
+        x: { ticks: { color: '#64748b', font: { size: 10 }, maxRotation: 45 }, grid: { color: 'rgba(51,65,85,0.3)' } },
+        y: { ticks: { color: '#64748b' }, grid: { color: 'rgba(51,65,85,0.3)' } },
+    },
+};
+
+function makeDS(label, data, color) {
+    return { label, data, borderColor: color.line, backgroundColor: color.bg, borderWidth: 2, pointRadius: 2, tension: 0.3, fill: false };
+}
+
+// ITT Chart
+new Chart(document.getElementById('ittChart'), {
+    type: 'line',
+    data: { labels: shortDates, datasets: [
+        makeDS('A 涨价组1', [0.066041, 0.048288, 0.037262, 0.042879, 0.071083, 0.071104, 0.072891, 0.050179, 0.046326, 0.019804, 0.05655, 0.063233, 0.075824, 0.061627, 0.049058, 0.037744, 0.065259, 0.058969, 0.079588], colors.a),
+        makeDS('B 涨价组2', [0.064121, 0.049315, 0.038052, 0.041788, 0.069001, 0.06406, 0.068359, 0.043257, 0.042984, 0.023929, 0.055817, 0.066273, 0.06642, 0.062506, 0.045704, 0.037243, 0.058907, 0.061675, 0.073206], colors.b),
+        makeDS('C 对照组', [0.068481, 0.050767, 0.043211, 0.0452, 0.066191, 0.073194, 0.066911, 0.047664, 0.048631, 0.023089, 0.055153, 0.070187, 0.076242, 0.064657, 0.047802, 0.036291, 0.061663, 0.059321, 0.071069], colors.c),
+    ] },
+    options: { ...commonOpts, scales: { ...commonOpts.scales, y: { ...commonOpts.scales.y, title: { display: true, text: '$/人', color: '#64748b' } } } }
+});
+
+// Cup Price Chart
+new Chart(document.getElementById('cupChart'), {
+    type: 'line',
+    data: { labels: shortDates, datasets: [
+        makeDS('A 涨价组1', [3.5403, 3.4909, 3.4919, 3.5074, 3.5829, 3.565, 3.674, 3.6695, 3.4886, 3.6311, 3.6564, 3.5555, 3.5928, 3.6264, 3.5264, 3.4855, 3.5741, 3.6451, 3.5454], colors.a),
+        makeDS('B 涨价组2', [3.5088, 3.4826, 3.3715, 3.5059, 3.5456, 3.5725, 3.5658, 3.6534, 3.559, 3.5172, 3.6369, 3.5199, 3.5526, 3.5591, 3.4594, 3.3627, 3.4796, 3.5927, 3.4486], colors.b),
+        makeDS('C 对照组', [3.2696, 3.139, 3.1594, 3.234, 3.1784, 3.2966, 3.2567, 3.3813, 3.1427, 3.1944, 3.3727, 3.3736, 3.2581, 3.2415, 3.1501, 3.0651, 3.1773, 3.2119, 3.2241], colors.c),
+    ] },
+    options: { ...commonOpts, scales: { ...commonOpts.scales, y: { ...commonOpts.scales.y, title: { display: true, text: '$/杯', color: '#64748b' } } } }
+});
+
+// Buyer Count Chart
+new Chart(document.getElementById('buyerChart'), {
+    type: 'line',
+    data: { labels: shortDates, datasets: [
+        makeDS('A 涨价组1', [581, 390, 320, 355, 628, 619, 638, 424, 387, 164, 487, 562, 658, 544, 388, 323, 578, 525, 676], colors.a),
+        makeDS('B 涨价组2', [574, 411, 317, 356, 597, 559, 628, 374, 348, 191, 485, 579, 608, 551, 375, 324, 550, 533, 637], colors.b),
+        makeDS('C 对照组', [830, 576, 471, 513, 832, 909, 873, 575, 585, 267, 677, 848, 978, 824, 584, 453, 827, 778, 924], colors.c),
+    ] },
+    options: commonOpts
+});
+
+// Cumulative ITT Diff Chart
+const ittA = [0.066041, 0.048288, 0.037262, 0.042879, 0.071083, 0.071104, 0.072891, 0.050179, 0.046326, 0.019804, 0.05655, 0.063233, 0.075824, 0.061627, 0.049058, 0.037744, 0.065259, 0.058969, 0.079588];
+const ittB = [0.064121, 0.049315, 0.038052, 0.041788, 0.069001, 0.06406, 0.068359, 0.043257, 0.042984, 0.023929, 0.055817, 0.066273, 0.06642, 0.062506, 0.045704, 0.037243, 0.058907, 0.061675, 0.073206];
+const ittC = [0.068481, 0.050767, 0.043211, 0.0452, 0.066191, 0.073194, 0.066911, 0.047664, 0.048631, 0.023089, 0.055153, 0.070187, 0.076242, 0.064657, 0.047802, 0.036291, 0.061663, 0.059321, 0.071069];
+let cumA = [], cumB = [], sumA = 0, sumB = 0;
+for (let i = 0; i < dates.length; i++) {
+    sumA += (ittA[i] - ittC[i]);
+    sumB += (ittB[i] - ittC[i]);
+    cumA.push(+(sumA * 1000).toFixed(2));
+    cumB.push(+(sumB * 1000).toFixed(2));
+}
+new Chart(document.getElementById('cumDiffChart'), {
+    type: 'line',
+    data: { labels: shortDates, datasets: [
+        { ...makeDS('A-C 累计差', cumA, colors.a), fill: true },
+        { ...makeDS('B-C 累计差', cumB, colors.b), fill: true },
+    ] },
+    options: { ...commonOpts, scales: { ...commonOpts.scales, y: { ...commonOpts.scales.y, title: { display: true, text: '千分之 $', color: '#64748b' } } } }
+});
+</script>
+</body>
+</html>

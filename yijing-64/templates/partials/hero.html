@@ -1,0 +1,142 @@
+<!-- Hero 区 -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    {% if gua.meta.number == 1 %}
+    <!-- 乾卦：天上有天，纯阳苍穹 -->
+    <svg width="100%" height="100%" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" style="position:absolute;top:0;left:0;">
+      <defs>
+        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0a1628"/>
+          <stop offset="30%" stop-color="#1a2744"/>
+          <stop offset="60%" stop-color="#2c3e5a"/>
+          <stop offset="85%" stop-color="#3d5070"/>
+          <stop offset="100%" stop-color="#4a6080"/>
+        </linearGradient>
+        <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="dragonGold" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#b8860b" stop-opacity="0.2"/>
+          <stop offset="50%" stop-color="#d4a843" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#b8860b" stop-opacity="0.2"/>
+        </linearGradient>
+      </defs>
+      <!-- 深邃夜空 -->
+      <rect width="1200" height="800" fill="url(#skyGrad)"/>
+      <!-- 星辰 -->
+      <circle cx="150" cy="80" r="1.5" fill="#fff" opacity="0.6"><animate attributeName="opacity" values="0.2;0.8;0.2" dur="4s" repeatCount="indefinite"/></circle>
+      <circle cx="350" cy="120" r="1" fill="#fff" opacity="0.4"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="3s" repeatCount="indefinite"/></circle>
+      <circle cx="550" cy="60" r="2" fill="#fff" opacity="0.7"><animate attributeName="opacity" values="0.4;0.9;0.4" dur="5s" repeatCount="indefinite"/></circle>
+      <circle cx="780" cy="100" r="1.5" fill="#fff" opacity="0.5"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="3.5s" repeatCount="indefinite"/></circle>
+      <circle cx="950" cy="150" r="1" fill="#fff" opacity="0.3"><animate attributeName="opacity" values="0.1;0.5;0.1" dur="4.5s" repeatCount="indefinite"/></circle>
+      <circle cx="1050" cy="70" r="1.5" fill="#fff" opacity="0.6"><animate attributeName="opacity" values="0.3;0.8;0.3" dur="3.2s" repeatCount="indefinite"/></circle>
+      <circle cx="250" cy="200" r="1" fill="#fff" opacity="0.4"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="5.5s" repeatCount="indefinite"/></circle>
+      <circle cx="680" cy="180" r="1.5" fill="#fff" opacity="0.5"><animate attributeName="opacity" values="0.3;0.7;0.3" dur="4.2s" repeatCount="indefinite"/></circle>
+      <!-- 云气 -->
+      <ellipse cx="300" cy="550" rx="350" ry="60" fill="rgba(255,255,255,0.03)">
+        <animate attributeName="cx" values="300;350;300" dur="20s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="800" cy="480" rx="250" ry="40" fill="rgba(255,255,255,0.04)">
+        <animate attributeName="cx" values="800;750;800" dur="15s" repeatCount="indefinite"/>
+      </ellipse>
+      <!-- 金色龙气光带 -->
+      <ellipse cx="600" cy="400" rx="500" ry="80" fill="url(#dragonGold)" opacity="0.3">
+        <animate attributeName="opacity" values="0.2;0.4;0.2" dur="8s" repeatCount="indefinite"/>
+      </ellipse>
+    </svg>
+    {% elif gua.meta.number == 3 %}
+    <!-- 屯卦：云雷交作，万物破甲 -->
+    <svg width="100%" height="100%" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" style="position:absolute;top:0;left:0;">
+      <defs>
+        <linearGradient id="stormSky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a1a2e"/>
+          <stop offset="25%" stop-color="#2d2d4a"/>
+          <stop offset="50%" stop-color="#3a3a5c"/>
+          <stop offset="75%" stop-color="#4a4a6a"/>
+          <stop offset="100%" stop-color="#5a5a78"/>
+        </linearGradient>
+        <radialGradient id="lightningGlow" cx="50%" cy="40%" r="40%">
+          <stop offset="0%" stop-color="#e6c453" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="#e6c453" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="cloudBlur">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="8"/>
+        </filter>
+      </defs>
+      <!-- 暴风夜空 -->
+      <rect width="1200" height="800" fill="url(#stormSky)"/>
+      <!-- 厚重云层 -->
+      <ellipse cx="250" cy="150" rx="350" ry="100" fill="rgba(40,40,60,0.7)" filter="url(#cloudBlur)">
+        <animate attributeName="cx" values="250;280;250" dur="18s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="800" cy="120" rx="400" ry="90" fill="rgba(35,35,55,0.8)" filter="url(#cloudBlur)">
+        <animate attributeName="cx" values="800;770;800" dur="22s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="500" cy="180" rx="300" ry="80" fill="rgba(50,50,70,0.6)" filter="url(#cloudBlur)">
+        <animate attributeName="cx" values="500;530;500" dur="15s" repeatCount="indefinite"/>
+      </ellipse>
+      <!-- 闪电 -->
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;0;0.8;0.9;0;0;0;0;0;0.6;0;0;0;0;0" dur="6s" repeatCount="indefinite"/>
+        <path d="M580,160 L560,280 L590,280 L550,400" stroke="#e6c453" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M580,160 L560,280 L590,280 L550,400" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      </g>
+      <!-- 闪电辉光 -->
+      <ellipse cx="560" cy="300" rx="400" ry="200" fill="url(#lightningGlow)">
+        <animate attributeName="opacity" values="0;0;0.4;0.5;0;0;0;0;0;0.3;0;0;0;0;0" dur="6s" repeatCount="indefinite"/>
+      </ellipse>
+      <!-- 雨线 -->
+      <g opacity="0.15">
+        <line x1="100" y1="250" x2="90" y2="350" stroke="rgba(180,200,220,0.5)" stroke-width="1"><animate attributeName="y1" values="250;350;250" dur="1.5s" repeatCount="indefinite"/><animate attributeName="y2" values="350;450;350" dur="1.5s" repeatCount="indefinite"/></line>
+        <line x1="300" y1="280" x2="290" y2="380" stroke="rgba(180,200,220,0.4)" stroke-width="1"><animate attributeName="y1" values="280;380;280" dur="1.8s" repeatCount="indefinite"/><animate attributeName="y2" values="380;480;380" dur="1.8s" repeatCount="indefinite"/></line>
+        <line x1="500" y1="260" x2="490" y2="360" stroke="rgba(180,200,220,0.5)" stroke-width="1"><animate attributeName="y1" values="260;360;260" dur="1.3s" repeatCount="indefinite"/><animate attributeName="y2" values="360;460;360" dur="1.3s" repeatCount="indefinite"/></line>
+        <line x1="700" y1="290" x2="690" y2="390" stroke="rgba(180,200,220,0.4)" stroke-width="1"><animate attributeName="y1" values="290;390;290" dur="1.6s" repeatCount="indefinite"/><animate attributeName="y2" values="390;490;390" dur="1.6s" repeatCount="indefinite"/></line>
+        <line x1="900" y1="270" x2="890" y2="370" stroke="rgba(180,200,220,0.5)" stroke-width="1"><animate attributeName="y1" values="270;370;270" dur="1.4s" repeatCount="indefinite"/><animate attributeName="y2" values="370;470;370" dur="1.4s" repeatCount="indefinite"/></line>
+        <line x1="1100" y1="240" x2="1090" y2="340" stroke="rgba(180,200,220,0.3)" stroke-width="1"><animate attributeName="y1" values="240;340;240" dur="1.7s" repeatCount="indefinite"/><animate attributeName="y2" values="340;440;340" dur="1.7s" repeatCount="indefinite"/></line>
+      </g>
+      <!-- 地平线 — 破土的嫩芽意象 -->
+      <path d="M0,650 Q300,640 600,645 Q900,650 1200,640" stroke="rgba(100,120,80,0.3)" stroke-width="2" fill="none"/>
+      <g transform="translate(580,620)" opacity="0.4">
+        <path d="M0,30 C0,15 -3,5 2,-5 C4,-10 6,-5 5,0" stroke="rgba(120,160,80,0.8)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M5,0 C8,5 12,2 10,-3" stroke="rgba(120,160,80,0.6)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </g>
+    </svg>
+    {% else %}
+    <!-- 通用背景 -->
+    <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg, #f5f0e8 0%, #e8e0d0 50%, #a89b84 100%);"></div>
+    {% endif %}
+  </div>
+
+  <div class="hero-content">
+    {% set dark_hero = gua.meta.number in [1, 3] %}
+    <p class="hero-step-label">易经第{{ gua.meta.number }}卦</p>
+    <h1 class="hero-gua-name" {% if dark_hero %}style="color:#f5f0e8;"{% endif %}>{{ gua.meta.name }}</h1>
+    <p class="hero-full-name" {% if dark_hero %}style="color:rgba(245,240,232,0.7);"{% endif %}>{{ gua.meta.fullName }}</p>
+    <p class="hero-tagline" {% if dark_hero %}style="color:rgba(245,240,232,0.6);"{% endif %}>{{ gua.hero.tagline }}</p>
+
+    <!-- 卦象 SVG -->
+    <div class="hero-hexagram">
+      <svg width="80" height="120" viewBox="0 0 80 120">
+        {% for line in gua.hero.hexagramLines | reverse %}
+        {% set y = loop.index0 * 18 + 10 %}
+        {% if line == 1 %}
+        <!-- 阳爻 -->
+        <rect x="5" y="{{ y }}" width="70" height="8" rx="2"
+              fill="{% if dark_hero %}rgba(245,240,232,0.8){% else %}#2d2d2d{% endif %}"/>
+        {% else %}
+        <!-- 阴爻 -->
+        <rect x="5" y="{{ y }}" width="28" height="8" rx="2"
+              fill="{% if dark_hero %}rgba(245,240,232,0.8){% else %}#2d2d2d{% endif %}"/>
+        <rect x="47" y="{{ y }}" width="28" height="8" rx="2"
+              fill="{% if dark_hero %}rgba(245,240,232,0.8){% else %}#2d2d2d{% endif %}"/>
+        {% endif %}
+        {% endfor %}
+      </svg>
+    </div>
+  </div>
+
+  <div class="hero-scroll-hint" {% if dark_hero %}style="color:rgba(245,240,232,0.4);"{% endif %}>
+    向下探索
+  </div>
+</section>

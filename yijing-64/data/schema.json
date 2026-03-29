@@ -1,0 +1,312 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "易经卦象数据结构",
+  "description": "每卦的完整数据结构，含经典原文、佑安解读、AI独创分析",
+  "type": "object",
+  "required": ["meta", "guaci", "hero", "steps"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["number", "name", "pinyin", "fullName", "upperTrigram", "lowerTrigram"],
+      "properties": {
+        "number": { "type": "integer", "minimum": 1, "maximum": 64 },
+        "name": { "type": "string", "description": "卦名（单字）" },
+        "pinyin": { "type": "string" },
+        "fullName": { "type": "string", "description": "完整卦名（如：乾为天）" },
+        "upperTrigram": { "type": "string", "description": "上卦" },
+        "lowerTrigram": { "type": "string", "description": "下卦" }
+      }
+    },
+    "seo": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "keywords": { "type": "array", "items": { "type": "string" } },
+        "ogImage": { "type": "string" }
+      }
+    },
+    "guaci": { "type": "string", "description": "卦辞原文" },
+    "hero": {
+      "type": "object",
+      "properties": {
+        "scene": { "type": "string", "description": "意象描述" },
+        "tagline": { "type": "string", "description": "一句话提炼" },
+        "hexagramLines": {
+          "type": "array",
+          "items": { "type": "integer", "enum": [0, 1] },
+          "minItems": 6,
+          "maxItems": 6,
+          "description": "六爻阴阳，从初爻到上爻，1=阳 0=阴"
+        }
+      }
+    },
+    "steps": {
+      "type": "object",
+      "properties": {
+        "guanxiang": {
+          "type": "object",
+          "description": "第一步：观象",
+          "properties": {
+            "scene": { "type": "string" },
+            "imagery": { "type": "string" },
+            "essence": { "type": "string" }
+          }
+        },
+        "dutuan": {
+          "type": "object",
+          "description": "第二步：读彖",
+          "properties": {
+            "tuanText": { "type": "string", "description": "彖传原文" },
+            "cards": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": { "type": "string" },
+                  "text": { "type": "string" },
+                  "explain": { "type": "string" }
+                }
+              }
+            },
+            "insight": { "type": "string" },
+            "source": { "type": "string", "enum": ["classic", "youan", "ai-analysis"] }
+          }
+        },
+        "xunzi": {
+          "type": "array",
+          "description": "第三步：训字",
+          "items": {
+            "type": "object",
+            "properties": {
+              "char": { "type": "string", "description": "字" },
+              "glyph": { "type": "string", "description": "字形/本义" },
+              "originalMeaning": { "type": "string" },
+              "extension": { "type": "string", "description": "在本卦中的引申" },
+              "shuowenRef": { "type": "string", "description": "说文/甲骨文参考" },
+              "source": { "type": "string", "enum": ["classic", "youan", "ai-analysis"] }
+            }
+          }
+        },
+        "xiwei": {
+          "type": "object",
+          "description": "第四步：析位",
+          "properties": {
+            "overview": { "type": "string" },
+            "yaoAnalysis": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "position": { "type": "string" },
+                  "yinYang": { "type": "string", "enum": ["yang", "yin"] },
+                  "isProper": { "type": "boolean", "description": "是否当位" },
+                  "traits": { "type": "array", "items": { "type": "string" } },
+                  "note": { "type": "string" }
+                }
+              }
+            },
+            "keyInsight": { "type": "string" }
+          }
+        },
+        "wanci": {
+          "type": "object",
+          "description": "第五步：玩辞",
+          "properties": {
+            "trendData": {
+              "type": "array",
+              "description": "六爻吉凶走势数据",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "position": { "type": "string" },
+                  "level": { "type": "string", "enum": ["safe", "warn", "danger", "turn", "climax", "end"] },
+                  "value": { "type": "number", "description": "吉凶值 0-100" }
+                }
+              }
+            },
+            "yao": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "position": { "type": "string" },
+                  "yaoci": { "type": "string", "description": "爻辞原文" },
+                  "xiangYue": { "type": "string", "description": "象曰" },
+                  "wenyan": { "type": "string", "description": "文言传（乾坤独有）" },
+                  "interpretation": { "type": "string" },
+                  "level": { "type": "string" },
+                  "isHighlight": { "type": "boolean" },
+                  "highlightLabel": { "type": "string" },
+                  "source": { "type": "string", "enum": ["classic", "youan", "ai-analysis"] }
+                }
+              }
+            },
+            "yongjiu": {
+              "type": "object",
+              "description": "用九/用六（乾坤独有）",
+              "properties": {
+                "text": { "type": "string" },
+                "interpretation": { "type": "string" }
+              }
+            }
+          }
+        },
+        "chabian": {
+          "type": "object",
+          "description": "第六步：察变",
+          "properties": {
+            "xugua": {
+              "type": "object",
+              "properties": {
+                "text": { "type": "string" },
+                "chain": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": { "type": "string" },
+                      "desc": { "type": "string" },
+                      "type": { "type": "string", "enum": ["past", "present", "future"] }
+                    }
+                  }
+                }
+              }
+            },
+            "zagua": { "type": "string" },
+            "zonggua": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "comparison": { "type": "string" }
+              }
+            },
+            "cuogua": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "comparison": { "type": "string" }
+              }
+            },
+            "hugua": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "meaning": { "type": "string" }
+              }
+            },
+            "trajectory": { "type": "string" }
+          }
+        },
+        "guide": {
+          "type": "object",
+          "description": "第七步：归德",
+          "properties": {
+            "jiude": { "type": "string", "description": "九卦修德对应" },
+            "jiudeMeaning": { "type": "string" },
+            "virtues": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "icon": { "type": "string" },
+                  "description": { "type": "string" }
+                }
+              }
+            },
+            "principle": { "type": "string" }
+          }
+        },
+        "zhengyin": {
+          "type": "array",
+          "description": "第八步：征引",
+          "items": {
+            "type": "object",
+            "properties": {
+              "yao": { "type": "string" },
+              "event": { "type": "string" },
+              "source": { "type": "string" },
+              "detail": { "type": "string" },
+              "contentSource": { "type": "string", "enum": ["classic", "youan", "ai-analysis"] }
+            }
+          }
+        },
+        "yingshe": {
+          "type": "array",
+          "description": "第九步：映射",
+          "items": {
+            "type": "object",
+            "properties": {
+              "yao": { "type": "string" },
+              "scenario": { "type": "string" },
+              "actionAdvice": { "type": "string" },
+              "level": { "type": "string" },
+              "contentSource": { "type": "string", "enum": ["classic", "youan", "ai-analysis"] }
+            }
+          }
+        }
+      }
+    },
+    "aiInsights": {
+      "type": "object",
+      "description": "AI独创分析板块",
+      "properties": {
+        "crossHexagram": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "content": { "type": "string" },
+            "relatedGua": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "network": {
+          "type": "object",
+          "properties": {
+            "description": { "type": "string" },
+            "connections": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": { "type": "string" },
+                  "target": { "type": "string" },
+                  "relation": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "modernFramework": {
+          "type": "object",
+          "properties": {
+            "framework": { "type": "string" },
+            "mapping": { "type": "string" },
+            "insight": { "type": "string" }
+          }
+        }
+      }
+    },
+    "conclusion": {
+      "type": "object",
+      "properties": {
+        "summary": { "type": "string" },
+        "coreInsight": { "type": "string" },
+        "practicalAdvice": { "type": "string" }
+      }
+    },
+    "relations": {
+      "type": "object",
+      "properties": {
+        "prev": { "type": ["object", "null"] },
+        "next": {
+          "type": "object",
+          "properties": {
+            "number": { "type": "integer" },
+            "name": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

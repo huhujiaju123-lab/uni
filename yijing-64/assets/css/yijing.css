@@ -1,0 +1,1271 @@
+/* ============================================================
+   易经64卦 — 统一设计系统 (宣纸美学)
+   提取自谦卦/天火同人卦解读 + 扩展
+   ============================================================ */
+
+/* --- Design Tokens --- */
+:root {
+  --ink-black: #1a1a1a;
+  --ink-dark: #2d2d2d;
+  --ink-medium: #555;
+  --ink-light: #888;
+  --paper: #f5f0e8;
+  --paper-light: #faf7f0;
+  --paper-dark: #e8e0d0;
+  --gold: #b8860b;
+  --gold-light: #d4a843;
+  --gold-bright: #e6c453;
+  --vermilion: #c23a2b;
+  --vermilion-light: #d4554a;
+  --vermilion-dark: #8b1a1a;
+  --cloud-white: rgba(255,255,255,0.6);
+  --shadow-ink: rgba(26,26,26,0.08);
+  --radius: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --font-main: 'Noto Serif SC', 'Songti SC', 'SimSun', serif;
+  --font-body: 'Noto Serif SC', -apple-system, 'PingFang SC', serif;
+  /* Source tag colors */
+  --source-classic: #2d2d2d;
+  --source-youan: #6b4c8a;
+  --source-ai: #2a6496;
+}
+
+/* --- Reset & Base --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink-black);
+  background-color: var(--paper);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  line-height: 1.9;
+  font-size: 1rem;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(200,190,170,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 50%, rgba(200,190,170,0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+a { color: var(--gold); text-decoration: none; transition: color 0.3s; }
+a:hover { color: var(--vermilion); }
+
+img { max-width: 100%; height: auto; }
+
+/* --- Container --- */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Navigation (Sticky 9-Step) --- */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: rgba(245, 240, 232, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  transform: translateY(-100%);
+  transition: transform 0.4s ease;
+  z-index: 100;
+  padding: 0.5rem 0;
+}
+.nav.visible { transform: translateY(0); }
+
+.nav-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-dark);
+  white-space: nowrap;
+}
+
+.nav-links {
+  display: flex;
+  gap: 0.2rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.nav-links a {
+  font-size: 0.7rem;
+  color: var(--ink-medium);
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--radius);
+  transition: all 0.3s;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--vermilion);
+  background: rgba(194, 58, 43, 0.06);
+}
+
+/* --- Hero Section --- */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+}
+
+.hero-step-label {
+  font-size: 0.75rem;
+  color: var(--gold);
+  letter-spacing: 0.5em;
+  margin-bottom: 1rem;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.3s forwards;
+}
+
+.hero-gua-name {
+  font-size: clamp(5rem, 15vw, 10rem);
+  font-weight: 900;
+  color: var(--ink-black);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  animation: brushReveal 1.2s ease 0.5s forwards;
+}
+
+.hero-full-name {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: var(--ink-medium);
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.8s forwards;
+}
+
+.hero-tagline {
+  font-size: 1.1rem;
+  color: var(--ink-medium);
+  max-width: 500px;
+  margin: 0 auto 2rem;
+  opacity: 0;
+  animation: fadeUp 1s ease 1s forwards;
+}
+
+.hero-hexagram {
+  opacity: 0;
+  animation: fadeUp 1s ease 1.2s forwards;
+}
+
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: var(--ink-light);
+  letter-spacing: 0.3em;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.5s forwards;
+}
+
+.hero-scroll-hint::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 30px;
+  background: linear-gradient(180deg, var(--ink-light), transparent);
+  margin: 0.5rem auto 0;
+  animation: scrollPulse 2s ease infinite;
+}
+
+/* --- Sections --- */
+section {
+  padding: 5rem 0;
+  position: relative;
+}
+
+.section-light { background: transparent; }
+.section-warm { background: rgba(184, 134, 11, 0.03); }
+.section-dark {
+  background: var(--ink-dark);
+  color: var(--paper);
+}
+
+.section-step {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--vermilion);
+  letter-spacing: 0.4em;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.section-title {
+  text-align: center;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--ink-black);
+  margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--ink-light);
+  margin-bottom: 2.5rem;
+}
+
+/* --- Dividers --- */
+.divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ink-light), transparent);
+  margin: 2rem auto;
+}
+.divider-gold { background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.divider-vermilion { background: linear-gradient(90deg, transparent, var(--vermilion), transparent); }
+.divider-wide { width: 120px; }
+
+/* --- Quote Block --- */
+.quote-block {
+  background: var(--paper-light);
+  border-left: 3px solid var(--gold);
+  padding: 1.5rem 2rem;
+  margin: 1.5rem 0;
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  font-style: italic;
+  color: var(--ink-dark);
+}
+
+.quote-block cite {
+  display: block;
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  color: var(--ink-light);
+  font-style: normal;
+}
+
+/* --- Source Tags --- */
+.source-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+}
+
+.source-classic {
+  background: rgba(45, 45, 45, 0.08);
+  color: var(--source-classic);
+}
+
+.source-youan {
+  background: rgba(107, 76, 138, 0.1);
+  color: var(--source-youan);
+}
+
+.source-ai {
+  background: rgba(42, 100, 150, 0.1);
+  color: var(--source-ai);
+}
+
+/* --- Tuan Grid (读彖 3-Column) --- */
+.tuan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.tuan-card {
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.tuan-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--vermilion));
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+.tuan-card:hover::before { transform: scaleX(1); }
+.tuan-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+
+.tuan-card .tuan-label {
+  font-size: 0.75rem;
+  color: var(--vermilion);
+  letter-spacing: 0.2em;
+  margin-bottom: 0.5rem;
+}
+
+.tuan-card .tuan-text {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink-black);
+  margin-bottom: 0.8rem;
+}
+
+.tuan-card .tuan-explain {
+  font-size: 0.85rem;
+  color: var(--ink-medium);
+  line-height: 1.7;
+}
+
+/* --- Character Table (训字) --- */
+.char-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 2rem 0;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.char-table thead th {
+  background: var(--ink-dark);
+  color: var(--paper);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 1rem 1.2rem;
+  letter-spacing: 0.1em;
+  text-align: left;
+}
+
+.char-table tbody tr {
+  transition: background 0.3s;
+}
+.char-table tbody tr:hover { background: rgba(184, 134, 11, 0.06); }
+.char-table tbody tr:nth-child(even) { background: rgba(0,0,0,0.015); }
+
+.char-table tbody td {
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  font-size: 0.9rem;
+  color: var(--ink-dark);
+  vertical-align: top;
+}
+
+.char-table tbody td:first-child {
+  font-size: 1.8rem;
+  font-weight: 900;
+  text-align: center;
+  width: 70px;
+  color: var(--ink-black);
+}
+
+/* --- Yao Analysis (析位) --- */
+.xiwei-layout {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 3rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.yao-structure { flex: 0 0 280px; }
+
+.yao-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  transition: all 0.3s;
+}
+.yao-row:hover { background: rgba(184, 134, 11, 0.04); border-radius: var(--radius); }
+.yao-row.yao-highlight { background: rgba(194, 58, 43, 0.06); border-radius: var(--radius); }
+
+.yao-pos {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-medium);
+  min-width: 35px;
+}
+
+.yao-line-mini { display: flex; gap: 4px; align-items: center; }
+.yao-line-mini .bar {
+  height: 4px;
+  border-radius: 2px;
+}
+.yao-line-mini .bar.yang { width: 50px; background: var(--ink-dark); }
+.yao-line-mini .bar.yin { width: 20px; background: var(--ink-dark); }
+
+.yao-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+.yao-tag {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  background: rgba(0,0,0,0.05);
+  color: var(--ink-medium);
+}
+.yao-tag.tag-key {
+  background: rgba(184, 134, 11, 0.12);
+  color: var(--gold);
+}
+
+.xiwei-insight {
+  flex: 0 0 280px;
+  background: linear-gradient(135deg, rgba(194, 58, 43, 0.04), rgba(184, 134, 11, 0.04));
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.xiwei-insight h4 {
+  font-size: 0.85rem;
+  color: var(--vermilion);
+  margin-bottom: 0.8rem;
+  letter-spacing: 0.1em;
+}
+
+.xiwei-insight p {
+  font-size: 0.9rem;
+  color: var(--ink-dark);
+  line-height: 1.8;
+}
+
+/* --- Yao Cards (玩辞) --- */
+.yao-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 3rem 0;
+}
+
+.yao-card {
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+
+.yao-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.yao-card:hover {
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  transform: translateY(-2px);
+}
+
+.yao-card.level-safe::after { background: #4a9c6d; }
+.yao-card.level-warn::after { background: var(--gold); }
+.yao-card.level-danger::after { background: var(--vermilion); }
+.yao-card.level-turn::after { background: #3a7bd5; }
+.yao-card.level-climax::after { background: linear-gradient(180deg, var(--vermilion), var(--gold)); }
+.yao-card.level-end::after { background: var(--ink-light); }
+
+.yao-card .yao-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.yao-card .yao-position {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink-black);
+}
+
+.yao-card .yao-level {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.level-label-safe { background: rgba(74, 156, 109, 0.12); color: #4a9c6d; }
+.level-label-warn { background: rgba(184, 134, 11, 0.12); color: var(--gold); }
+.level-label-danger { background: rgba(194, 58, 43, 0.12); color: var(--vermilion); }
+.level-label-turn { background: rgba(58, 123, 213, 0.12); color: #3a7bd5; }
+.level-label-climax { background: rgba(194, 58, 43, 0.12); color: var(--vermilion); }
+.level-label-end { background: rgba(136, 136, 136, 0.12); color: var(--ink-light); }
+
+.yao-card .yao-original {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink-dark);
+  margin-bottom: 0.5rem;
+}
+
+.yao-card .yao-xiang {
+  font-size: 0.85rem;
+  color: var(--ink-light);
+  margin-bottom: 0.8rem;
+  font-style: italic;
+}
+
+.yao-card .yao-interp {
+  font-size: 0.9rem;
+  color: var(--ink-dark);
+  line-height: 1.8;
+}
+
+/* Special: Highlight Card (e.g. 九五) */
+.yao-card.yao-highlight {
+  background: linear-gradient(135deg, #fdf8ef, #faf0db);
+  border: 2px solid var(--gold);
+  box-shadow: 0 4px 20px rgba(184, 134, 11, 0.1);
+}
+.yao-card.yao-highlight::before {
+  content: attr(data-highlight-label);
+  position: absolute;
+  top: -12px;
+  right: 24px;
+  background: linear-gradient(135deg, var(--vermilion), var(--vermilion-light));
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.8rem;
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+/* --- Trend Chart (玩辞 SVG) --- */
+.chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1rem 1rem;
+  overflow-x: auto;
+}
+
+.chart-tooltip {
+  position: absolute;
+  background: var(--ink-dark);
+  color: var(--paper);
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 10;
+  max-width: 200px;
+}
+
+.chart-path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 2s ease;
+}
+.chart-path.animated { stroke-dashoffset: 0; }
+
+.chart-dot { opacity: 0; transition: opacity 0.5s ease; cursor: pointer; }
+.chart-dot.animated { opacity: 1; }
+
+/* --- Xugua Flow (察变 序卦) --- */
+.xugua-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 2.5rem 0;
+  flex-wrap: wrap;
+}
+
+.xugua-node {
+  text-align: center;
+  padding: 1.5rem 2rem;
+  border-radius: var(--radius-lg);
+  position: relative;
+  min-width: 140px;
+}
+
+.xugua-node.node-past {
+  background: rgba(136, 136, 136, 0.08);
+  border: 1px solid rgba(136, 136, 136, 0.15);
+}
+.xugua-node.node-present {
+  background: rgba(194, 58, 43, 0.08);
+  border: 2px solid var(--vermilion);
+  box-shadow: 0 0 20px rgba(194, 58, 43, 0.1);
+}
+.xugua-node.node-future {
+  background: rgba(184, 134, 11, 0.08);
+  border: 1px solid rgba(184, 134, 11, 0.2);
+}
+
+.xugua-node .node-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.xugua-node .node-desc {
+  font-size: 0.8rem;
+  color: var(--ink-medium);
+}
+
+.xugua-arrow {
+  font-size: 1.5rem;
+  color: var(--ink-light);
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+.xugua-arrow .arrow-label {
+  font-size: 0.7rem;
+  color: var(--ink-light);
+}
+
+/* --- Zonggua Compare (察变 综卦) --- */
+.zonggua-compare {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2.5rem 0;
+  flex-wrap: wrap;
+}
+
+.zonggua-item {
+  text-align: center;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  min-width: 160px;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: var(--paper-light);
+}
+
+.zonggua-vs {
+  font-size: 1.5rem;
+  color: var(--ink-light);
+  font-weight: 300;
+}
+
+/* --- Virtue Cards (归德) --- */
+.de-cards {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.de-card {
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  text-align: center;
+  flex: 0 1 250px;
+  transition: all 0.4s;
+}
+.de-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.de-card .de-icon {
+  font-size: 2rem;
+  margin-bottom: 0.8rem;
+}
+
+.de-card .de-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink-black);
+  margin-bottom: 0.5rem;
+}
+
+.de-card .de-desc {
+  font-size: 0.85rem;
+  color: var(--ink-medium);
+  line-height: 1.7;
+}
+
+/* --- Citation Cards (征引) --- */
+.citation-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.citation-item {
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+
+.citation-item::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--vermilion));
+  transform: scaleX(0);
+  transition: transform 0.4s;
+  transform-origin: left;
+}
+.citation-item:hover::before { transform: scaleX(1); }
+.citation-item:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
+
+.citation-item .cite-yao {
+  font-size: 0.7rem;
+  color: var(--vermilion);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.citation-item .cite-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink-black);
+  margin-bottom: 0.5rem;
+}
+
+.citation-item .cite-detail {
+  font-size: 0.85rem;
+  color: var(--ink-medium);
+  line-height: 1.7;
+}
+
+.citation-item .cite-source {
+  font-size: 0.75rem;
+  color: var(--ink-light);
+  margin-top: 0.8rem;
+  font-style: italic;
+}
+
+/* --- Guide Timeline (映射 Zigzag) --- */
+.guide-timeline {
+  position: relative;
+  padding: 2rem 0;
+  margin: 2rem 0;
+}
+
+.guide-timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--gold), var(--vermilion), var(--ink-light));
+  transform: translateX(-50%);
+}
+
+.guide-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.guide-item:nth-child(odd) {
+  flex-direction: row;
+  padding-right: calc(50% + 2rem);
+  text-align: right;
+}
+
+.guide-item:nth-child(even) {
+  flex-direction: row-reverse;
+  padding-left: calc(50% + 2rem);
+  text-align: left;
+}
+
+.guide-dot {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--paper);
+  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.2);
+  z-index: 2;
+}
+
+.guide-label {
+  font-size: 0.7rem;
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.guide-content h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink-black);
+  margin-bottom: 0.3rem;
+}
+
+.guide-content p {
+  font-size: 0.85rem;
+  color: var(--ink-medium);
+  line-height: 1.7;
+}
+
+/* --- AI Insights Panel --- */
+.ai-panel {
+  background: linear-gradient(135deg, rgba(42, 100, 150, 0.04), rgba(42, 100, 150, 0.08));
+  border: 1px solid rgba(42, 100, 150, 0.15);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  margin: 2rem 0;
+  position: relative;
+}
+
+.ai-panel::before {
+  content: 'AI 洞察';
+  position: absolute;
+  top: -12px;
+  left: 24px;
+  background: linear-gradient(135deg, #2a6496, #3a7bd5);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.8rem;
+  border-radius: var(--radius);
+  letter-spacing: 0.1em;
+}
+
+.ai-panel h3 {
+  font-size: 1.1rem;
+  color: #2a6496;
+  margin-bottom: 1rem;
+}
+
+.ai-panel p {
+  font-size: 0.9rem;
+  color: var(--ink-dark);
+  line-height: 1.8;
+}
+
+/* --- Network Diagram (关系网络) --- */
+.network-diagram {
+  max-width: 600px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.network-node {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  margin: 0.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(0,0,0,0.08);
+  background: var(--paper-light);
+  transition: all 0.3s;
+}
+.network-node:hover {
+  border-color: var(--gold);
+  box-shadow: 0 4px 15px rgba(184, 134, 11, 0.1);
+}
+.network-node.node-center {
+  border: 2px solid var(--vermilion);
+  background: linear-gradient(135deg, rgba(194, 58, 43, 0.04), var(--paper-light));
+}
+
+.network-label {
+  font-size: 0.7rem;
+  color: var(--ink-light);
+  margin-top: 0.3rem;
+}
+
+/* --- Conclusion Section --- */
+.conclusion-section {
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-dark) 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 4rem 0;
+}
+
+.conclusion-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 10%, var(--gold) 50%, transparent 90%);
+}
+
+.conclusion-box {
+  background: var(--paper-light);
+  border: 1px solid rgba(184, 134, 11, 0.15);
+  border-radius: var(--radius-xl);
+  padding: 3rem;
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.conclusion-box::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 2rem; right: 2rem;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--vermilion), var(--gold));
+  border-radius: 2px 2px 0 0;
+}
+
+.conclusion-highlight {
+  background: rgba(194, 58, 43, 0.04);
+  border-left: 3px solid var(--vermilion);
+  padding: 1.2rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 6px 6px 0;
+}
+
+/* --- Footer --- */
+.footer {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--ink-light);
+  font-size: 0.8rem;
+}
+
+.footer-nav {
+  margin-bottom: 1.5rem;
+}
+
+.footer-nav a {
+  color: var(--ink-medium);
+  padding: 0.3rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+/* --- Back to Top --- */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem; right: 2rem;
+  width: 40px; height: 40px;
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+  z-index: 90;
+  font-size: 1rem;
+  color: var(--ink-medium);
+}
+.back-to-top.visible { opacity: 1; visibility: visible; }
+.back-to-top:hover {
+  background: var(--gold);
+  color: #fff;
+  border-color: var(--gold);
+}
+
+/* --- Animations --- */
+@keyframes brushReveal {
+  0% { opacity: 0; transform: scale(0.8); filter: blur(4px); }
+  60% { opacity: 0.8; transform: scale(1.02); filter: blur(0); }
+  100% { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* Scroll-triggered fade-in */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+.fade-in-delay-1 { transition-delay: 0.15s; }
+.fade-in-delay-2 { transition-delay: 0.3s; }
+.fade-in-delay-3 { transition-delay: 0.45s; }
+.fade-in-delay-4 { transition-delay: 0.6s; }
+
+/* --- TOC (目录导引) --- */
+.toc-section {
+  padding: 3rem 0 2rem;
+}
+
+.toc-heading {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--ink-light);
+  letter-spacing: 0.5em;
+  margin-bottom: 2rem;
+}
+
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.8rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.toc-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.2rem 0.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(0,0,0,0.05);
+  background: var(--paper-light);
+  text-decoration: none;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.toc-item:hover {
+  border-color: var(--gold);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(184, 134, 11, 0.1);
+}
+
+.toc-num {
+  font-size: 0.7rem;
+  color: var(--vermilion);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+}
+
+.toc-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink-black);
+  margin-bottom: 0.2rem;
+}
+
+.toc-desc {
+  font-size: 0.7rem;
+  color: var(--ink-light);
+}
+
+.toc-item-ai {
+  border-style: dashed;
+  border-color: rgba(42, 100, 150, 0.2);
+}
+.toc-item-ai .toc-num { color: var(--source-ai); }
+.toc-item-ai:hover { border-color: var(--source-ai); box-shadow: 0 4px 15px rgba(42, 100, 150, 0.1); }
+
+/* --- Xunzi Cards (训字 — 象形可视化) --- */
+.xunzi-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.xunzi-card {
+  background: var(--paper-light);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem;
+  transition: all 0.4s;
+}
+.xunzi-card:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+  transform: translateY(-2px);
+}
+
+.xunzi-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.xunzi-modern {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.xunzi-char {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--ink-black);
+  line-height: 1;
+}
+
+.xunzi-pictograph {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pictograph-svg {
+  width: 100%;
+  max-width: 120px;
+  height: auto;
+  background: rgba(0,0,0,0.02);
+  border-radius: var(--radius);
+  padding: 6px;
+  border: 1px dashed rgba(0,0,0,0.08);
+}
+
+.pictograph-label {
+  font-size: 0.7rem;
+  color: var(--ink-light);
+  margin-top: 0.4rem;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+.xunzi-components {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.8rem 1rem;
+  background: rgba(184, 134, 11, 0.04);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--gold);
+}
+
+.xunzi-comp {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+}
+
+.comp-part {
+  font-weight: 700;
+  color: var(--vermilion);
+  font-size: 1rem;
+}
+
+.comp-arrow {
+  color: var(--ink-light);
+  font-size: 0.75rem;
+}
+
+.comp-meaning {
+  color: var(--ink-medium);
+}
+
+.xunzi-shuowen {
+  font-size: 0.8rem;
+  color: var(--ink-light);
+  font-style: italic;
+  padding: 0.6rem 0;
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.xunzi-extension {
+  font-size: 0.88rem;
+  color: var(--ink-dark);
+  line-height: 1.85;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  section { padding: 3.5rem 0; }
+  .container { padding: 0 1.2rem; }
+  .tuan-grid { grid-template-columns: 1fr; }
+  .yao-cards { grid-template-columns: 1fr; }
+  .xunzi-cards { grid-template-columns: 1fr; }
+  .toc-grid { grid-template-columns: repeat(5, 1fr); gap: 0.5rem; }
+  .toc-desc { display: none; }
+  .toc-item { padding: 0.8rem 0.3rem; }
+  .toc-name { font-size: 0.95rem; }
+  .xiwei-layout { flex-direction: column; align-items: center; }
+  .citation-list { grid-template-columns: 1fr; }
+  .de-cards { flex-direction: column; align-items: center; }
+  .guide-timeline::before { left: 1rem; }
+  .guide-item { padding-left: 3rem !important; padding-right: 0 !important; text-align: left !important; flex-direction: row !important; }
+  .guide-dot { left: 1rem; }
+  .nav-links { display: none; }
+  .xugua-flow { flex-direction: column; gap: 1rem; }
+  .xugua-arrow { transform: rotate(90deg); }
+  .zonggua-compare { flex-direction: column; }
+}
+
+@media (max-width: 480px) {
+  .hero-gua-name { font-size: clamp(3rem, 20vw, 5rem); }
+  .char-table th, .char-table td { font-size: 0.8rem; padding: 0.7rem 0.6rem; }
+  .yao-card .yao-header { flex-direction: column; gap: 0.5rem; }
+  .ai-panel { padding: 2rem 1.5rem; }
+  .conclusion-box { padding: 2rem 1.5rem; }
+  .toc-grid { grid-template-columns: repeat(5, 1fr); }
+  .toc-num { font-size: 0.6rem; }
+  .toc-name { font-size: 0.8rem; }
+  .xunzi-card-top { flex-direction: column; align-items: center; }
+  .xunzi-card { padding: 1.2rem; }
+}

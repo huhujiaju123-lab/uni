@@ -1,0 +1,170 @@
+<view class="page-episode" wx:if="{{!loading && episode}}">
+  <!-- Hero 区 -->
+  <view class="hero">
+    <image
+      class="hero-cover"
+      src="{{episode.meta.cover_url}}"
+      mode="aspectFill"
+      wx:if="{{episode.meta.cover_url}}"
+    />
+    <view class="hero-overlay">
+      <view class="hero-podcast-name">{{episode.meta.podcast_name}}</view>
+      <view class="hero-title">{{episode.meta.title}}</view>
+      <view class="hero-quote" wx:if="{{episode.core_quotes[0]}}">
+        「{{episode.core_quotes[0]}}」
+      </view>
+    </view>
+  </view>
+
+  <!-- 听前预览卡 -->
+  <preview-card
+    preview="{{preview}}"
+    wx:if="{{preview}}"
+  />
+
+  <!-- 章节导航浮窗 -->
+  <view class="nav-fab" bindtap="toggleNav">
+    <text class="nav-fab-icon">☰</text>
+  </view>
+
+  <view class="nav-panel {{showNavPanel ? 'show' : ''}}" catchtouchmove="preventMove">
+    <view class="nav-panel-mask" bindtap="toggleNav"></view>
+    <view class="nav-panel-content">
+      <view class="nav-panel-title">章节导航</view>
+      <view
+        class="nav-item {{activeSection === index ? 'active' : ''}}"
+        wx:for="{{navigation}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="scrollToChapter"
+      >
+        <text class="nav-time">{{item.timeLabel}}</text>
+        <text class="nav-label">{{item.title}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 内容概览 -->
+  <view class="content-overview card" wx:if="{{episode.content_overview}}">
+    <view class="card-title">内容概览</view>
+    <view class="overview-blocks">
+      <view
+        class="overview-block"
+        wx:for="{{episode.content_overview.blocks}}"
+        wx:key="id"
+      >
+        <view class="overview-block-title">{{item.title}}</view>
+        <view class="overview-block-desc">{{item.description}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 各章节 -->
+  <scroll-view scroll-y scroll-into-view="{{scrollToSection}}" class="sections-scroll">
+    <view
+      id="{{item.id}}"
+      wx:for="{{episode.sections}}"
+      wx:key="id"
+      class="fade-in"
+    >
+      <section-card
+        section="{{item}}"
+        sectionIndex="{{index}}"
+        participants="{{episode.participants}}"
+        favorites="{{favorites}}"
+        bind:toggleFavorite="onToggleFavorite"
+      />
+    </view>
+  </scroll-view>
+
+  <!-- 思维导图 -->
+  <mind-map
+    data="{{episode.mind_map}}"
+    wx:if="{{episode.mind_map}}"
+  />
+
+  <!-- 核心观点 -->
+  <view class="arguments-section card" wx:if="{{episode.arguments.length > 0}}">
+    <view class="card-title">核心观点</view>
+    <view
+      class="argument-item"
+      wx:for="{{episode.arguments}}"
+      wx:key="index"
+    >
+      <view class="argument-claim">{{item.claim}}</view>
+      <view class="argument-evidence" wx:if="{{item.evidence}}">
+        <text class="text-dim">论据：</text>{{item.evidence}}
+      </view>
+      <view class="argument-strength" wx:if="{{item.strength}}">
+        <view class="strength-bar" style="width: {{item.strength * 20}}%"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 关键概念 -->
+  <view class="concepts-section card" wx:if="{{episode.key_concepts.length > 0}}">
+    <view class="card-title">关键概念</view>
+    <view
+      class="concept-item"
+      wx:for="{{episode.key_concepts}}"
+      wx:key="term"
+    >
+      <view class="concept-term">{{item.term}}</view>
+      <view class="concept-definition">{{item.definition}}</view>
+    </view>
+  </view>
+
+  <!-- 自测 -->
+  <quiz
+    data="{{episode.quiz}}"
+    wx:if="{{episode.quiz}}"
+  />
+
+  <!-- 精选金句 -->
+  <view class="quotes-section card" wx:if="{{episode.core_quotes.length > 1}}">
+    <view class="card-title">精选金句</view>
+    <view wx:for="{{episode.core_quotes}}" wx:key="index" wx:if="{{index > 0}}">
+      <quote-card
+        quote="{{item}}"
+        index="{{index}}"
+        isFavorite="{{favorites[index]}}"
+        bind:toggleFavorite="onToggleFavorite"
+      />
+    </view>
+  </view>
+
+  <!-- 延伸阅读 -->
+  <view class="reading-section card" wx:if="{{episode.extended_reading.length > 0}}">
+    <view class="card-title">延伸阅读</view>
+    <view
+      class="reading-item"
+      wx:for="{{episode.extended_reading}}"
+      wx:key="index"
+    >
+      <view class="reading-direction">{{item.direction}}</view>
+      <view class="reading-resources" wx:if="{{item.resources}}">
+        <text wx:for="{{item.resources}}" wx:key="*this" wx:for-item="res" class="reading-resource">
+          {{res}}
+        </text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部 -->
+  <view class="footer">
+    <view class="footer-podcast">{{episode.meta.podcast_name}}</view>
+    <view class="footer-powered">podcast-viz · 播客可视化</view>
+    <button class="share-btn" open-type="share">分享给朋友</button>
+  </view>
+</view>
+
+<!-- Loading -->
+<view class="loading-full" wx:if="{{loading}}">
+  <view class="loading-dot"></view>
+  <text class="text-dim">加载中...</text>
+</view>
+
+<!-- Error -->
+<view class="error-full" wx:if="{{error}}">
+  <text class="text-dim">{{error}}</text>
+</view>

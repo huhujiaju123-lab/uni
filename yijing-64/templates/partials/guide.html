@@ -1,0 +1,24 @@
+<!-- 归德内容 -->
+{% if gua.steps.guide.jiude %}
+<div class="quote-block fade-in">
+  <p style="font-size:1.1rem; font-weight:600;">{{ gua.steps.guide.jiude }}</p>
+  <p style="margin-top:0.8rem; font-style:normal; color:var(--ink-dark); line-height:1.9;">{{ gua.steps.guide.jiudeMeaning }}</p>
+  <cite>系辞传 · 九卦修德</cite>
+</div>
+{% endif %}
+
+<div class="de-cards fade-in fade-in-delay-1">
+  {% for virtue in gua.steps.guide.virtues %}
+  <div class="de-card">
+    <div class="de-icon">{{ virtue.icon }}</div>
+    <p class="de-name">{{ virtue.name }}</p>
+    <p class="de-desc">{{ virtue.description }}</p>
+  </div>
+  {% endfor %}
+</div>
+
+{% if gua.steps.guide.principle %}
+<div class="fade-in fade-in-delay-2" style="margin:2rem auto; max-width:650px; padding:2rem; background:rgba(184,134,11,0.04); border:1px solid rgba(184,134,11,0.1); border-radius:8px;">
+  <p style="font-size:0.95rem; color:var(--ink-dark); line-height:1.9; text-align:center;">{{ gua.steps.guide.principle }}</p>
+</div>
+{% endif %}

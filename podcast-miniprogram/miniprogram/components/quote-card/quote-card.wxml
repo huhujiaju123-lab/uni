@@ -1,0 +1,9 @@
+<view class="quote-card" bindtap="onTap">
+  <view class="quote-mark">「</view>
+  <view class="quote-text">{{quote}}</view>
+  <view class="quote-mark end">」</view>
+  <view class="quote-fav {{isFavorite ? 'active' : ''}}">
+    <text wx:if="{{isFavorite}}">♥</text>
+    <text wx:else>♡</text>
+  </view>
+</view>

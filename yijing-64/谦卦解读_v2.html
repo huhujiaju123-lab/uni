@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>謙 · 周易第十五卦 · 地山谦</title>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   CSS Variables & Reset
+   ═══════════════════════════════════════════ */
+:root {
+  --obsidian: #0a0a0a;
+  --charcoal: #1a1a1a;
+  --smoke: #2a2a2a;
+  --ash: #888;
+  --bone: #e8e0d0;
+  --gold: #c9a84c;
+  --gold-dim: #8b7332;
+  --gold-bright: #e6c453;
+  --vermilion: #c23a2b;
+  --jade: #4a7c6f;
+  --font-display: 'LXGW WenKai', 'STKaiti', 'KaiTi', serif;
+  --font-body: 'LXGW WenKai', 'STKaiti', 'KaiTi', serif;
+  --font-accent: 'LXGW WenKai', 'STKaiti', 'KaiTi', serif;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold-dim) var(--obsidian);
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--bone);
+  background: var(--obsidian);
+  line-height: 1.9;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════════════════════════════════════════
+   Grain / Noise Overlay (SVG filter)
+   ═══════════════════════════════════════════ */
+.grain-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.045;
+}
+
+/* ═══════════════════════════════════════════
+   Scroll-triggered animations
+   ═══════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-80px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.reveal-right {
+  opacity: 0;
+  transform: translateX(80px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-scale.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.stagger-1 { transition-delay: 0.1s; }
+.stagger-2 { transition-delay: 0.2s; }
+.stagger-3 { transition-delay: 0.35s; }
+.stagger-4 { transition-delay: 0.5s; }
+.stagger-5 { transition-delay: 0.65s; }
+.stagger-6 { transition-delay: 0.8s; }
+.stagger-7 { transition-delay: 1.0s; }
+.stagger-8 { transition-delay: 1.2s; }
+
+/* ═══════════════════════════════════════════
+   SECTION A: HERO
+   ═══════════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Animated gradient mesh background */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(201,168,76,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 20%, rgba(74,124,111,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 100% at 50% 100%, rgba(42,42,42,0.8) 0%, transparent 50%),
+    var(--obsidian);
+  animation: meshShift 12s ease-in-out infinite alternate;
+}
+
+@keyframes meshShift {
+  0% {
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 80%, rgba(201,168,76,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 20%, rgba(74,124,111,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse 100% 100% at 50% 100%, rgba(42,42,42,0.8) 0%, transparent 50%),
+      var(--obsidian);
+  }
+  100% {
+    background:
+      radial-gradient(ellipse 90% 70% at 30% 70%, rgba(201,168,76,0.06) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 90% at 70% 30%, rgba(74,124,111,0.04) 0%, transparent 45%),
+      radial-gradient(ellipse 120% 80% at 50% 110%, rgba(42,42,42,0.9) 0%, transparent 40%),
+      var(--obsidian);
+  }
+}
+
+/* Mountain silhouette */
+.mountain-layer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 45vh;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.mountain-back {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.15;
+}
+
+.mountain-front {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 80%;
+  opacity: 0.25;
+}
+
+/* Hero content */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 2rem;
+}
+
+.hero-tag {
+  font-family: var(--font-accent);
+  font-size: 0.75rem;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 2rem;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(8rem, 22vw, 16rem);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--gold);
+  text-shadow: 0 0 80px rgba(201,168,76,0.15), 0 0 160px rgba(201,168,76,0.05);
+  margin-bottom: 0.5rem;
+  animation: titleGlow 4s ease-in-out infinite alternate;
+  position: relative;
+}
+
+.hero-title::after {
+  content: '謙';
+  position: absolute;
+  inset: 0;
+  -webkit-text-stroke: 0;
+  color: rgba(201,168,76,0.03);
+  filter: blur(2px);
+}
+
+@keyframes titleGlow {
+  0% { text-shadow: 0 0 80px rgba(201,168,76,0.1), 0 0 160px rgba(201,168,76,0.03); }
+  100% { text-shadow: 0 0 100px rgba(201,168,76,0.2), 0 0 200px rgba(201,168,76,0.08); }
+}
+
+.hero-subtitle {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  color: var(--ash);
+  letter-spacing: 8px;
+  margin-bottom: 3rem;
+}
+
+/* Hexagram SVG in hero */
+.hero-hexagram {
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.hero-hexagram svg {
+  filter: drop-shadow(0 0 12px rgba(201,168,76,0.2));
+}
+
+.hero-quote {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: var(--bone);
+  letter-spacing: 4px;
+  margin-top: 2.5rem;
+  opacity: 0.9;
+}
+
+.hero-badge {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 0.5rem 1.5rem;
+  border: 1px solid var(--gold-dim);
+  font-size: 0.85rem;
+  color: var(--gold);
+  letter-spacing: 3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.06), transparent);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+}
+
+/* Scroll indicator */
+.scroll-hint {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ash);
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  animation: scrollBounce 2s ease-in-out infinite;
+}
+
+.scroll-hint .line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--gold-dim), transparent);
+}
+
+@keyframes scrollBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(10px); }
+}
+
+/* ═══════════════════════════════════════════
+   SECTION B: 卦象解读
+   ═══════════════════════════════════════════ */
+.section-guaxiang {
+  padding: 8rem 0;
+  position: relative;
+}
+
+.section-guaxiang::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+
+.guaxiang-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 6rem;
+  align-items: start;
+}
+
+.guaxiang-visual {
+  position: sticky;
+  top: 10vh;
+}
+
+.guaxiang-diagram {
+  position: relative;
+  padding: 3rem;
+  border: 1px solid rgba(201,168,76,0.15);
+  background: linear-gradient(135deg, rgba(26,26,26,0.9), rgba(42,42,42,0.4));
+}
+
+.guaxiang-diagram::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(201,168,76,0.08);
+}
+
+.diagram-label {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--gold-dim);
+  letter-spacing: 4px;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.diagram-svg-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.diagram-caption {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--ash);
+  margin-top: 1.5rem;
+  letter-spacing: 2px;
+}
+
+.guaxiang-text {
+  padding-top: 2rem;
+}
+
+.section-label {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--gold-dim);
+  letter-spacing: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  color: var(--bone);
+  margin-bottom: 3rem;
+  line-height: 1.4;
+  letter-spacing: 2px;
+}
+
+.section-title .gold {
+  color: var(--gold);
+}
+
+.guaxiang-para {
+  font-size: 1.05rem;
+  line-height: 2.2;
+  color: rgba(232,224,208,0.85);
+  margin-bottom: 2rem;
+  text-indent: 2em;
+}
+
+/* Stone inscription quote */
+.stone-inscription {
+  position: relative;
+  margin: 3rem 0;
+  padding: 2.5rem 3rem;
+  background: linear-gradient(145deg, rgba(26,26,26,0.95), rgba(15,15,15,0.98));
+  border-left: 3px solid var(--gold);
+  overflow: hidden;
+}
+
+.stone-inscription::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+.stone-inscription::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 80px; height: 80px;
+  background: linear-gradient(225deg, rgba(201,168,76,0.06), transparent 60%);
+}
+
+.stone-line {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  color: var(--gold);
+  letter-spacing: 4px;
+  line-height: 2.5;
+  opacity: 0.9;
+}
+
+.stone-source {
+  position: relative;
+  text-align: right;
+  font-size: 0.9rem;
+  color: var(--gold-dim);
+  margin-top: 1rem;
+  letter-spacing: 2px;
+}
+
+/* ═══════════════════════════════════════════
+   SECTION C: 六爻详解
+   ═══════════════════════════════════════════ */
+.section-liuyao {
+  padding: 8rem 0;
+  position: relative;
+  background: linear-gradient(180deg, var(--obsidian) 0%, rgba(15,12,8,1) 50%, var(--obsidian) 100%);
+}
+
+.liuyao-header {
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+  padding: 0 2rem;
+}
+
+.yao-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  grid-auto-rows: auto;
+}
+
+/* Each yao card */
+.yao-card {
+  position: relative;
+  padding: 2.5rem 2rem;
+  background: linear-gradient(160deg, rgba(26,26,26,0.95), rgba(20,20,20,0.98));
+  border: 1px solid rgba(201,168,76,0.1);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+  transform-style: preserve-3d;
+  perspective: 800px;
+  overflow: hidden;
+}
+
+.yao-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='150' height='150' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='150' height='150' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.yao-card:hover {
+  transform: translateY(-8px) rotateX(2deg);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 30px rgba(201,168,76,0.05);
+}
+
+.yao-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.yao-card:hover::after {
+  opacity: 1;
+}
+
+/* 九三 special card */
+.yao-card.yao-highlight {
+  grid-column: 1 / -1;
+  max-width: 800px;
+  justify-self: center;
+  width: 100%;
+  border: 1px solid rgba(201,168,76,0.3);
+  background: linear-gradient(160deg, rgba(30,25,15,0.98), rgba(20,18,12,0.99));
+  box-shadow: 0 0 40px rgba(201,168,76,0.06), inset 0 0 60px rgba(201,168,76,0.02);
+  padding: 3rem 3rem;
+}
+
+.yao-card.yao-highlight::after {
+  opacity: 1;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold-bright), var(--gold), var(--gold-bright), transparent);
+}
+
+.yao-card.yao-highlight .yao-number {
+  color: var(--gold-bright);
+  font-size: 4.5rem;
+  text-shadow: 0 0 40px rgba(201,168,76,0.3);
+}
+
+.yao-card.yao-highlight .yao-name {
+  color: var(--gold-bright);
+}
+
+.yao-number {
+  font-family: var(--font-accent);
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: rgba(201,168,76,0.15);
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  line-height: 1;
+}
+
+.yao-name {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--gold);
+  letter-spacing: 4px;
+  margin-bottom: 0.3rem;
+}
+
+.yao-sub {
+  font-size: 0.85rem;
+  color: var(--ash);
+  letter-spacing: 2px;
+  margin-bottom: 1.5rem;
+}
+
+.yao-quote {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--bone);
+  letter-spacing: 2px;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+  margin-bottom: 1.2rem;
+  line-height: 1.8;
+}
+
+.yao-text {
+  font-size: 0.95rem;
+  color: rgba(232,224,208,0.75);
+  line-height: 2;
+  margin-bottom: 1rem;
+}
+
+.yao-rhythm {
+  font-size: 0.9rem;
+  color: var(--gold-dim);
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.yao-history {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 1rem;
+  background: rgba(201,168,76,0.03);
+  border-left: 2px solid var(--gold-dim);
+  margin-top: 1rem;
+}
+
+.yao-history-icon {
+  font-size: 1.2rem;
+  color: var(--gold-dim);
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+
+.yao-history-text {
+  font-size: 0.88rem;
+  color: rgba(232,224,208,0.65);
+  line-height: 1.8;
+}
+
+.yao-history-text strong {
+  color: var(--gold);
+  font-weight: 400;
+}
+
+/* ═══════════════════════════════════════════
+   SECTION D: 谦德走势
+   ═══════════════════════════════════════════ */
+.section-trend {
+  padding: 8rem 0;
+  position: relative;
+}
+
+.section-trend::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+
+.trend-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.trend-header {
+  margin-bottom: 4rem;
+}
+
+.trend-chart {
+  position: relative;
+  width: 100%;
+  padding: 2rem 0;
+}
+
+.trend-svg-wrap {
+  width: 100%;
+  overflow: visible;
+}
+
+.trend-svg-wrap svg {
+  width: 100%;
+  height: auto;
+}
+
+.trend-path {
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  transition: stroke-dashoffset 2.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.trend-path.animate {
+  stroke-dashoffset: 0;
+}
+
+.trend-dot {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.trend-dot.animate {
+  opacity: 1;
+}
+
+.trend-labels {
+  display: flex;
+  justify-content: space-between;
+  max-width: 100%;
+  margin-top: 1.5rem;
+  padding: 0 2rem;
+}
+
+.trend-label-group {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.trend-phase {
+  text-align: center;
+  padding: 1rem 2rem;
+  border-top: 1px solid rgba(201,168,76,0.15);
+  margin-top: 2rem;
+}
+
+.trend-phase-label {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  color: var(--gold-dim);
+  letter-spacing: 3px;
+}
+
+/* Tooltip */
+.trend-tooltip {
+  position: absolute;
+  background: rgba(26,26,26,0.95);
+  border: 1px solid var(--gold-dim);
+  padding: 0.8rem 1.2rem;
+  font-size: 0.85rem;
+  color: var(--bone);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+  max-width: 200px;
+  line-height: 1.6;
+  backdrop-filter: blur(8px);
+}
+
+.trend-tooltip.show {
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════
+   SECTION E: 郭子仪时间线
+   ═══════════════════════════════════════════ */
+.section-timeline {
+  padding: 8rem 0;
+  position: relative;
+  background: linear-gradient(180deg, var(--obsidian), rgba(12,10,8,1), var(--obsidian));
+  overflow: hidden;
+}
+
+.timeline-header {
+  max-width: 1200px;
+  margin: 0 auto 5rem;
+  padding: 0 2rem;
+}
+
+.timeline-wrap {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Vertical center line */
+.timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--gold-dim), var(--gold-dim), transparent);
+  transform: translateX(-50%);
+}
+
+.timeline-item {
+  position: relative;
+  display: flex;
+  margin-bottom: 4rem;
+  align-items: flex-start;
+}
+
+.timeline-item:nth-child(odd) {
+  flex-direction: row;
+  padding-right: calc(50% + 2rem);
+  text-align: right;
+}
+
+.timeline-item:nth-child(even) {
+  flex-direction: row-reverse;
+  padding-left: calc(50% + 2rem);
+  text-align: left;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: 50%;
+  top: 0.5rem;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--gold-dim);
+  border-radius: 50%;
+  background: var(--obsidian);
+  transform: translateX(-50%);
+  z-index: 2;
+  transition: all 0.4s ease;
+}
+
+.timeline-item:hover .timeline-dot {
+  background: var(--gold);
+  box-shadow: 0 0 20px rgba(201,168,76,0.4);
+  border-color: var(--gold-bright);
+}
+
+.timeline-item.highlight .timeline-dot {
+  width: 16px;
+  height: 16px;
+  border-color: var(--gold-bright);
+  background: var(--gold);
+  box-shadow: 0 0 30px rgba(201,168,76,0.5);
+}
+
+.timeline-content {
+  position: relative;
+}
+
+.timeline-yao-tag {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--gold);
+  letter-spacing: 3px;
+  margin-bottom: 0.5rem;
+}
+
+.timeline-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--bone);
+  margin-bottom: 0.8rem;
+  letter-spacing: 2px;
+}
+
+.timeline-desc {
+  font-size: 0.92rem;
+  color: rgba(232,224,208,0.65);
+  line-height: 1.9;
+}
+
+.timeline-item.highlight .timeline-title {
+  color: var(--gold-bright);
+  font-size: 1.35rem;
+}
+
+.timeline-item.highlight .timeline-content {
+  padding: 1.5rem;
+  background: rgba(201,168,76,0.03);
+  border: 1px solid rgba(201,168,76,0.12);
+}
+
+/* ═══════════════════════════════════════════
+   SECTION F: 核心启示
+   ═══════════════════════════════════════════ */
+.section-insight {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 6rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.insight-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(201,168,76,0.04) 0%, transparent 70%),
+    var(--obsidian);
+}
+
+.insight-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  text-align: center;
+}
+
+.insight-line {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 3.5vw, 2rem);
+  color: var(--bone);
+  line-height: 2.4;
+  letter-spacing: 3px;
+  margin-bottom: 2.5rem;
+  opacity: 0.92;
+}
+
+.insight-line .em {
+  color: var(--gold);
+  position: relative;
+}
+
+.insight-line .em::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--gold-dim);
+}
+
+.insight-divider {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 3rem auto;
+}
+
+.insight-final {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  color: var(--gold);
+  letter-spacing: 2px;
+  line-height: 2.2;
+  opacity: 0.85;
+}
+
+/* ═══════════════════════════════════════════
+   SECTION G: FOOTER
+   ═══════════════════════════════════════════ */
+.footer {
+  padding: 4rem 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+
+.footer-text {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  color: var(--ash);
+  letter-spacing: 6px;
+}
+
+.footer-sub {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 0.75rem;
+  color: rgba(136,136,136,0.5);
+  letter-spacing: 3px;
+  margin-top: 1rem;
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .guaxiang-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .guaxiang-visual {
+    position: relative;
+    top: 0;
+  }
+  .yao-grid {
+    grid-template-columns: 1fr;
+  }
+  .yao-card.yao-highlight {
+    grid-column: 1;
+  }
+  .timeline-line { display: none; }
+  .timeline-dot { display: none; }
+  .timeline-item,
+  .timeline-item:nth-child(odd),
+  .timeline-item:nth-child(even) {
+    flex-direction: column;
+    padding: 0 !important;
+    text-align: left;
+  }
+  .timeline-content {
+    padding: 1.5rem;
+    border-left: 2px solid var(--gold-dim);
+  }
+  .timeline-item.highlight .timeline-content {
+    border-left: 3px solid var(--gold-bright);
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-title {
+    -webkit-text-stroke: 1.5px var(--gold);
+  }
+  .stone-inscription {
+    padding: 1.5rem 1.5rem;
+  }
+  .yao-card {
+    padding: 2rem 1.5rem;
+  }
+  .yao-card.yao-highlight {
+    padding: 2.5rem 1.5rem;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   Custom Scrollbar
+   ═══════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--obsidian);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--gold-dim);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
+/* ═══════════════════════════════════════════
+   Selection
+   ═══════════════════════════════════════════ */
+::selection {
+  background: rgba(201,168,76,0.3);
+  color: var(--bone);
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ GRAIN OVERLAY (SVG FILTER) ═══════ -->
+<svg class="grain-overlay" xmlns="http://www.w3.org/2000/svg">
+  <filter id="grain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+    <feColorMatrix type="saturate" values="0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#grain)"/>
+</svg>
+
+<!-- ═══════════════════════════════════════════
+     SECTION A: HERO
+     ═══════════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+
+  <!-- Mountain silhouettes -->
+  <div class="mountain-layer" id="mountainLayer">
+    <svg class="mountain-back" viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 400 L0 280 Q120 180 240 220 Q360 130 480 180 Q560 100 680 150 Q780 60 900 130 Q1020 70 1100 120 Q1200 50 1300 100 Q1380 80 1440 110 L1440 400 Z" fill="rgba(201,168,76,0.08)"/>
+    </svg>
+    <svg class="mountain-front" viewBox="0 0 1440 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 320 L0 260 Q100 220 200 250 Q340 180 440 220 Q520 150 640 200 Q740 120 860 180 Q960 140 1060 170 Q1160 130 1260 160 Q1360 140 1440 155 L1440 320 Z" fill="rgba(42,42,42,0.6)"/>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-tag reveal stagger-1">HEXAGRAM XV · I CHING</div>
+
+    <h1 class="hero-title reveal stagger-2">謙</h1>
+
+    <p class="hero-subtitle reveal stagger-3">周易第十五卦 · 地山谦</p>
+
+    <!-- Hexagram: ☷ over ☶ (坤 over 艮) -->
+    <div class="hero-hexagram reveal stagger-4">
+      <svg width="120" height="180" viewBox="0 0 120 180" xmlns="http://www.w3.org/2000/svg">
+        <!-- 上卦：坤 (三阴) -->
+        <!-- 上六 (line 6) -->
+        <rect x="10" y="10" width="42" height="8" rx="1" fill="rgba(232,224,208,0.5)"/>
+        <rect x="68" y="10" width="42" height="8" rx="1" fill="rgba(232,224,208,0.5)"/>
+        <!-- 六五 (line 5) -->
+        <rect x="10" y="40" width="42" height="8" rx="1" fill="rgba(232,224,208,0.5)"/>
+        <rect x="68" y="40" width="42" height="8" rx="1" fill="rgba(232,224,208,0.5)"/>
+        <!-- 六四 (line 4) -->
+        <rect x="10" y="70" width="42" height="8" rx="1" fill="rgba(232,224,208,0.5)"/>
+        <rect x="68" y="70" width="42" height="8" rx="1" fill="rgba(232,224,208,0.5)"/>
+        <!-- 下卦：艮 (一阳二阴) -->
+        <!-- 九三 (line 3) - YANG, HIGHLIGHTED -->
+        <rect x="10" y="100" width="100" height="8" rx="1" fill="var(--gold)"/>
+        <rect x="10" y="100" width="100" height="8" rx="1" fill="url(#goldGlow)"/>
+        <!-- 六二 (line 2) -->
+        <rect x="10" y="130" width="42" height="8" rx="1" fill="rgba(232,224,208,0.5)"/>
+        <rect x="68" y="130" width="42" height="8" rx="1" fill="rgba(232,224,208,0.5)"/>
+        <!-- 初六 (line 1) -->
+        <rect x="10" y="160" width="42" height="8" rx="1" fill="rgba(232,224,208,0.5)"/>
+        <rect x="68" y="160" width="42" height="8" rx="1" fill="rgba(232,224,208,0.5)"/>
+        <defs>
+          <linearGradient id="goldGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="rgba(230,196,83,0.3)"/>
+            <stop offset="50%" stop-color="rgba(230,196,83,0.6)"/>
+            <stop offset="100%" stop-color="rgba(230,196,83,0.3)"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <p class="hero-quote reveal stagger-5">谦：亨，君子有终。</p>
+
+    <div class="hero-badge reveal stagger-6">六十四卦中，唯一六爻皆吉之卦</div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>SCROLL</span>
+    <div class="line"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION B: 卦象解读
+     ═══════════════════════════════════════════ -->
+<section class="section-guaxiang" id="guaxiang">
+  <div class="guaxiang-grid">
+    <!-- Left: diagram -->
+    <div class="guaxiang-visual reveal-left">
+      <div class="guaxiang-diagram">
+        <div class="diagram-label">卦 象</div>
+        <div class="diagram-svg-wrap">
+          <svg width="280" height="320" viewBox="0 0 280 320" xmlns="http://www.w3.org/2000/svg">
+            <!-- Ground / 坤 (earth) at top -->
+            <rect x="20" y="20" width="240" height="4" fill="rgba(232,224,208,0.2)"/>
+            <rect x="20" y="28" width="240" height="4" fill="rgba(232,224,208,0.2)"/>
+            <rect x="20" y="36" width="240" height="4" fill="rgba(232,224,208,0.2)"/>
+
+            <!-- Earth surface -->
+            <line x1="20" y1="140" x2="260" y2="140" stroke="rgba(232,224,208,0.3)" stroke-width="1" stroke-dasharray="4,4"/>
+
+            <!-- Text labels -->
+            <text x="140" y="75" text-anchor="middle" fill="rgba(232,224,208,0.4)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="14" letter-spacing="6">☷ 坤 · 地</text>
+
+            <!-- Mountain below ground (艮) -->
+            <path d="M140 160 L80 280 L200 280 Z" fill="none" stroke="var(--gold)" stroke-width="1.5" opacity="0.6"/>
+            <path d="M140 180 L100 270 L180 270 Z" fill="rgba(201,168,76,0.06)"/>
+
+            <!-- Mountain peak detail -->
+            <path d="M125 200 L140 160 L155 200" fill="none" stroke="var(--gold)" stroke-width="1" opacity="0.3"/>
+
+            <text x="140" y="250" text-anchor="middle" fill="var(--gold-dim)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="14" letter-spacing="6">☶ 艮 · 山</text>
+
+            <!-- Arrow showing mountain hidden below -->
+            <text x="140" y="310" text-anchor="middle" fill="rgba(232,224,208,0.25)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="12" letter-spacing="3">山在地下</text>
+
+            <!-- Annotation line -->
+            <line x1="265" y1="20" x2="265" y2="140" stroke="rgba(232,224,208,0.15)" stroke-width="1"/>
+            <text x="275" y="80" fill="rgba(232,224,208,0.3)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="10" writing-mode="vertical-rl">上卦</text>
+            <line x1="265" y1="140" x2="265" y2="280" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+            <text x="275" y="210" fill="var(--gold-dim)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="10" writing-mode="vertical-rl">下卦</text>
+          </svg>
+        </div>
+        <div class="diagram-caption">上坤下艮 · 地在山上</div>
+      </div>
+    </div>
+
+    <!-- Right: text -->
+    <div class="guaxiang-text">
+      <div class="section-label reveal stagger-1">Hexagram Imagery</div>
+      <h2 class="section-title reveal stagger-2">卦象<span class="gold">解读</span></h2>
+
+      <p class="guaxiang-para reveal stagger-3">
+        上坤下艮，地在山上。山本高大峻峭，却甘愿处于大地之下——这便是谦的核心意象。
+      </p>
+
+      <p class="guaxiang-para reveal stagger-4">
+        不是山不够高，恰恰因为它足够高，所以才能选择低处。高者自甘卑下，有而不居，这是谦的真义。
+      </p>
+
+      <p class="guaxiang-para reveal stagger-5">
+        君子观此卦象，效法山藏于地下之德：有才能而不自夸，有功劳而不自居，有智慧而不自矜。
+      </p>
+
+      <!-- Stone inscription -->
+      <div class="stone-inscription reveal stagger-6">
+        <div class="stone-line">天道亏盈而益谦</div>
+        <div class="stone-line">地道变盈而流谦</div>
+        <div class="stone-line">鬼神害盈而福谦</div>
+        <div class="stone-line">人道恶盈而好谦</div>
+        <div class="stone-source">——《彖传》</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION C: 六爻详解
+     ═══════════════════════════════════════════ -->
+<section class="section-liuyao" id="liuyao">
+  <div class="liuyao-header">
+    <div class="section-label reveal">Six Lines Analysis</div>
+    <h2 class="section-title reveal stagger-1">六爻<span class="gold">详解</span></h2>
+  </div>
+
+  <div class="yao-grid">
+    <!-- 初六 -->
+    <div class="yao-card reveal stagger-1">
+      <div class="yao-number" style="font-style: italic;">I</div>
+      <div class="yao-name">初六 · 自谦</div>
+      <div class="yao-sub">阴爻 · 下卦初位</div>
+      <div class="yao-quote">"谦谦君子，用涉大川，吉。"</div>
+      <div class="yao-text">位于最底层，以阴柔处卑位，谦而又谦。"谦谦"叠用，强调谦到极致、发自内心。这种彻底的低姿态反而赋予了巨大的行动力——连"涉大川"这样的危险之事都可以做，因为没有傲慢就没有轻敌。</div>
+      <div class="yao-rhythm">节奏：静默蓄势。如同一个人刚入世，身份最低，但正因不矜不伐，反而获得了最大的自由度。</div>
+      <div class="yao-history">
+        <div class="yao-history-icon">&#9670;</div>
+        <div class="yao-history-text"><strong>郭子仪</strong>：边疆默默服役三十年，以最低姿态积累实力。</div>
+      </div>
+    </div>
+
+    <!-- 六二 -->
+    <div class="yao-card reveal stagger-2">
+      <div class="yao-number" style="font-style: italic;">II</div>
+      <div class="yao-name">六二 · 鸣谦</div>
+      <div class="yao-sub">阴爻 · 下卦中位 · 得中</div>
+      <div class="yao-quote">"鸣谦，贞吉。"</div>
+      <div class="yao-text">"鸣"即声音传出，谦德已经不仅仅是内在修养，而是被他人感知、传颂。六二居中得正，是中正之德的体现。</div>
+      <div class="yao-rhythm">节奏：由内而外。谦德从自我修养扩展为社会声誉。</div>
+      <div class="yao-history">
+        <div class="yao-history-icon">&#9670;</div>
+        <div class="yao-history-text"><strong>郭子仪</strong>：安史之乱起，出任朔方节度使，战功初显。</div>
+      </div>
+    </div>
+
+    <!-- 九三 — HIGHLIGHT -->
+    <div class="yao-card yao-highlight reveal-scale stagger-3">
+      <div class="yao-number" style="font-style: italic;">III</div>
+      <div class="yao-name">九三 · 劳谦</div>
+      <div class="yao-sub">阳爻 · 下卦之极 · 全卦唯一阳爻</div>
+      <div class="yao-quote">"劳谦，君子有终，吉。"</div>
+      <div class="yao-text">全卦唯一的阳爻，是实际做事、建立功劳的人。"劳谦"——有功劳而仍保持谦逊，这是最难的。九三是全卦的关键转折点。再次出现"君子有终"，与卦辞呼应。</div>
+      <div class="yao-rhythm">节奏：全卦高潮。能力最强、贡献最大、却最为谦虚。这是谦卦精神的极致体现。</div>
+      <div class="yao-history">
+        <div class="yao-history-icon">&#9670;</div>
+        <div class="yao-history-text"><strong>郭子仪</strong>：收复长安、洛阳两京，再造唐室。肃宗言"虽吾之家国，实由卿再造"。</div>
+      </div>
+    </div>
+
+    <!-- 六四 -->
+    <div class="yao-card reveal stagger-4">
+      <div class="yao-number" style="font-style: italic;">IV</div>
+      <div class="yao-name">六四 · 撝谦</div>
+      <div class="yao-sub">阴爻 · 上卦初位</div>
+      <div class="yao-quote">"无不利，撝谦。"</div>
+      <div class="yao-text">"撝"意为挥动、施展。在一切行动中都贯彻谦逊之道。从个人修养推广到做事处世，谦德成为行动准则。</div>
+      <div class="yao-rhythm">节奏：从修身到治世的过渡。谦不再是被动的低姿态，而是主动的处世哲学。</div>
+      <div class="yao-history">
+        <div class="yao-history-icon">&#9670;</div>
+        <div class="yao-history-text"><strong>郭子仪</strong>：被掘祖坟不报复，被夺兵权不怨怼。</div>
+      </div>
+    </div>
+
+    <!-- 六五 -->
+    <div class="yao-card reveal stagger-5">
+      <div class="yao-number" style="font-style: italic;">V</div>
+      <div class="yao-name">六五 · 权谦</div>
+      <div class="yao-sub">阴爻 · 上卦中位 · 君位</div>
+      <div class="yao-quote">"不富以其邻，利用侵伐，无不利。"</div>
+      <div class="yao-text">六五是君位，以阴柔居之。"不富以其邻"——以谦德使人归附。谦不是软弱，该出手时出手。</div>
+      <div class="yao-rhythm">节奏：权力与谦德的统一。居高位而不骄，有权力而知节制。</div>
+      <div class="yao-history">
+        <div class="yao-history-icon">&#9670;</div>
+        <div class="yao-history-text"><strong>郭子仪</strong>：单骑退回纥，以人格感召退三十万大军。</div>
+      </div>
+    </div>
+
+    <!-- 上六 -->
+    <div class="yao-card reveal stagger-6">
+      <div class="yao-number" style="font-style: italic;">VI</div>
+      <div class="yao-name">上六 · 归谦</div>
+      <div class="yao-sub">阴爻 · 上卦之极</div>
+      <div class="yao-quote">"鸣谦，利用行师，征邑国。"</div>
+      <div class="yao-text">与六二呼应。谦名远播。"征邑国"——仅限自己的属地，整顿内部。谦到终极，仍不忘自省自律。</div>
+      <div class="yao-rhythm">节奏：归于圆满。谦德贯穿始终，善始善终。</div>
+      <div class="yao-history">
+        <div class="yao-history-icon">&#9670;</div>
+        <div class="yao-history-text"><strong>郭子仪</strong>：大开府门、善终于八十五岁，谥号"忠武"。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION D: 谦德走势
+     ═══════════════════════════════════════════ -->
+<section class="section-trend" id="trend">
+  <div class="trend-container">
+    <div class="trend-header">
+      <div class="section-label reveal">Trend of Modesty</div>
+      <h2 class="section-title reveal stagger-1">谦德<span class="gold">走势</span></h2>
+    </div>
+
+    <div class="trend-chart reveal stagger-2" id="trendChart">
+      <div class="trend-svg-wrap">
+        <svg viewBox="0 0 800 350" xmlns="http://www.w3.org/2000/svg" id="trendSvg">
+          <!-- Grid lines -->
+          <line x1="80" y1="280" x2="720" y2="280" stroke="rgba(232,224,208,0.1)" stroke-width="1"/>
+          <line x1="80" y1="220" x2="720" y2="220" stroke="rgba(232,224,208,0.05)" stroke-width="1" stroke-dasharray="4,8"/>
+          <line x1="80" y1="160" x2="720" y2="160" stroke="rgba(232,224,208,0.05)" stroke-width="1" stroke-dasharray="4,8"/>
+          <line x1="80" y1="100" x2="720" y2="100" stroke="rgba(232,224,208,0.05)" stroke-width="1" stroke-dasharray="4,8"/>
+
+          <!-- Area fill under curve -->
+          <path d="M120 240 C180 235 200 210 240 200 C280 140 310 60 360 50 C410 70 420 170 480 180 C520 160 540 130 600 120 C640 150 660 180 680 190 L680 280 L120 280 Z"
+                fill="url(#areaGrad)" opacity="0.4"/>
+
+          <!-- Main trend line -->
+          <path class="trend-path" id="trendPath"
+                d="M120 240 C180 235 200 210 240 200 C280 140 310 60 360 50 C410 70 420 170 480 180 C520 160 540 130 600 120 C640 150 660 180 680 190"
+                fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round"/>
+
+          <!-- Glow line -->
+          <path d="M120 240 C180 235 200 210 240 200 C280 140 310 60 360 50 C410 70 420 170 480 180 C520 160 540 130 600 120 C640 150 660 180 680 190"
+                fill="none" stroke="var(--gold)" stroke-width="6" stroke-linecap="round" opacity="0.15" class="trend-path" style="transition-delay: 0.2s"/>
+
+          <!-- Data points -->
+          <g class="trend-dot" id="dot1" data-tooltip="初六 · 自谦｜谦谦君子，静默蓄势" style="transition-delay: 0.8s">
+            <circle cx="120" cy="240" r="5" fill="var(--obsidian)" stroke="var(--gold-dim)" stroke-width="2"/>
+            <text x="120" y="305" text-anchor="middle" fill="var(--bone)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="13" letter-spacing="2">初六</text>
+            <text x="120" y="322" text-anchor="middle" fill="var(--ash)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="10">自谦</text>
+          </g>
+          <g class="trend-dot" id="dot2" data-tooltip="六二 · 鸣谦｜谦德外传，声名初显" style="transition-delay: 1.0s">
+            <circle cx="240" cy="200" r="5" fill="var(--obsidian)" stroke="var(--gold-dim)" stroke-width="2"/>
+            <text x="240" y="305" text-anchor="middle" fill="var(--bone)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="13" letter-spacing="2">六二</text>
+            <text x="240" y="322" text-anchor="middle" fill="var(--ash)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="10">鸣谦</text>
+          </g>
+          <g class="trend-dot" id="dot3" data-tooltip="九三 · 劳谦｜功劳最大，谦德最盛，全卦高潮" style="transition-delay: 1.2s">
+            <circle cx="360" cy="50" r="8" fill="var(--gold)" stroke="var(--gold-bright)" stroke-width="2.5"/>
+            <circle cx="360" cy="50" r="14" fill="none" stroke="var(--gold)" stroke-width="1" opacity="0.3">
+              <animate attributeName="r" values="14;20;14" dur="2.5s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.3;0;0.3" dur="2.5s" repeatCount="indefinite"/>
+            </circle>
+            <text x="360" y="305" text-anchor="middle" fill="var(--gold-bright)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="14" font-weight="bold" letter-spacing="2">九三</text>
+            <text x="360" y="322" text-anchor="middle" fill="var(--gold)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="10">劳谦</text>
+          </g>
+          <g class="trend-dot" id="dot4" data-tooltip="六四 · 撝谦｜谦德成为行动准则" style="transition-delay: 1.4s">
+            <circle cx="480" cy="180" r="5" fill="var(--obsidian)" stroke="var(--gold-dim)" stroke-width="2"/>
+            <text x="480" y="305" text-anchor="middle" fill="var(--bone)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="13" letter-spacing="2">六四</text>
+            <text x="480" y="322" text-anchor="middle" fill="var(--ash)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="10">撝谦</text>
+          </g>
+          <g class="trend-dot" id="dot5" data-tooltip="六五 · 权谦｜君位行谦，以德服人" style="transition-delay: 1.6s">
+            <circle cx="600" cy="120" r="5" fill="var(--obsidian)" stroke="var(--gold-dim)" stroke-width="2"/>
+            <text x="600" y="305" text-anchor="middle" fill="var(--bone)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="13" letter-spacing="2">六五</text>
+            <text x="600" y="322" text-anchor="middle" fill="var(--ash)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="10">权谦</text>
+          </g>
+          <g class="trend-dot" id="dot6" data-tooltip="上六 · 归谦｜谦德归圆，善始善终" style="transition-delay: 1.8s">
+            <circle cx="680" cy="190" r="5" fill="var(--obsidian)" stroke="var(--gold-dim)" stroke-width="2"/>
+            <text x="680" y="305" text-anchor="middle" fill="var(--bone)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="13" letter-spacing="2">上六</text>
+            <text x="680" y="322" text-anchor="middle" fill="var(--ash)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="10">归谦</text>
+          </g>
+
+          <!-- Phase labels at bottom -->
+          <line x1="120" y1="340" x2="360" y2="340" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+          <text x="240" y="348" text-anchor="middle" fill="var(--gold-dim)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="11" letter-spacing="3" dominant-baseline="hanging">下卦 · 修身</text>
+
+          <line x1="400" y1="340" x2="680" y2="340" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+          <text x="540" y="348" text-anchor="middle" fill="var(--gold-dim)" font-family="'LXGW WenKai', 'STKaiti', serif" font-size="11" letter-spacing="3" dominant-baseline="hanging">上卦 · 治世</text>
+
+          <defs>
+            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--gold)" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="var(--gold)" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="trend-tooltip" id="trendTooltip"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION E: 郭子仪时间线
+     ═══════════════════════════════════════════ -->
+<section class="section-timeline" id="timeline">
+  <div class="timeline-header">
+    <div class="section-label reveal">The Life of Guo Ziyi</div>
+    <h2 class="section-title reveal stagger-1">郭子仪<span class="gold">时间线</span></h2>
+    <p class="reveal stagger-2" style="color: var(--ash); max-width: 600px; font-size: 0.95rem; line-height: 2; margin-top: 1rem;">以一人之力印证谦卦六爻。从边疆无名将领到再造唐室，从功高震主到善终八十五，郭子仪用一生演绎了谦德的完整弧线。</p>
+  </div>
+
+  <div class="timeline-wrap">
+    <div class="timeline-line"></div>
+
+    <!-- 初六 -->
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-yao-tag">初六 · 自谦</div>
+        <div class="timeline-title">边疆三十年</div>
+        <div class="timeline-desc">默默服役于边疆，以最低姿态积累实力。武举出身，却甘于寂寂无名，在北境磨砺军事才能。</div>
+      </div>
+    </div>
+
+    <!-- 六二 -->
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-yao-tag">六二 · 鸣谦</div>
+        <div class="timeline-title">朔方节度使</div>
+        <div class="timeline-desc">安史之乱爆发，出任朔方节度使。战功初显，谦德之名开始传播。以沉稳之风应对乱局。</div>
+      </div>
+    </div>
+
+    <!-- 九三 HIGHLIGHT -->
+    <div class="timeline-item highlight reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-yao-tag">九三 · 劳谦</div>
+        <div class="timeline-title">收复两京，再造唐室</div>
+        <div class="timeline-desc">收复长安、洛阳，功勋彪炳。肃宗赞曰："虽吾之家国，实由卿再造。"功劳至极，而谦德不减。</div>
+      </div>
+    </div>
+
+    <!-- 六四 -->
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-yao-tag">六四 · 撝谦</div>
+        <div class="timeline-title">被掘祖坟，不报复</div>
+        <div class="timeline-desc">被宦官鱼朝恩掘祖坟、被夺兵权，皆不报复不怨怼。将谦德贯彻到每一个行动中。</div>
+      </div>
+    </div>
+
+    <!-- 六五 -->
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-yao-tag">六五 · 权谦</div>
+        <div class="timeline-title">单骑退回纥</div>
+        <div class="timeline-desc">年逾七旬，孤身一人入回纥大营，以人格感召退三十万大军。谦不是软弱，而是无畏。</div>
+      </div>
+    </div>
+
+    <!-- 上六 -->
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-yao-tag">上六 · 归谦</div>
+        <div class="timeline-title">大开府门，善终忠武</div>
+        <div class="timeline-desc">晚年大开府门、坦荡无私，善终于八十五岁。谥号"忠武"——忠以事君，武以安邦。谦德贯穿始终。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION F: 核心启示
+     ═══════════════════════════════════════════ -->
+<section class="section-insight" id="insight">
+  <div class="insight-bg"></div>
+  <div class="insight-content">
+    <p class="insight-line reveal stagger-1">
+      谦不是无能者的遮羞布，<br>而是有<span class="em">绝对实力</span>者的自我选择。
+    </p>
+
+    <p class="insight-line reveal stagger-3">
+      山甘居地下，<br>不是因为它不够高，<br>恰恰因为它<span class="em">足够高</span>。
+    </p>
+
+    <div class="insight-divider reveal stagger-5"></div>
+
+    <p class="insight-final reveal stagger-6">
+      满招损，谦受益。<br>
+      唯谦卦六爻皆吉，<br>
+      盖天地人鬼神之所共予也。
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SECTION G: FOOTER
+     ═══════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-text">周易六十四卦 · 第十五卦 · 谦</div>
+  <div class="footer-sub">Hexagram XV &middot; Qian &middot; Modesty</div>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  // ──── Intersection Observer for scroll reveals ────
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -50px 0px'
+  });
+
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+    revealObserver.observe(el);
+  });
+
+  // ──── Parallax mountain on scroll ────
+  const mountainLayer = document.getElementById('mountainLayer');
+  const hero = document.getElementById('hero');
+
+  function handleParallax() {
+    const scrollY = window.pageYOffset;
+    const heroHeight = hero.offsetHeight;
+    if (scrollY < heroHeight) {
+      const ratio = scrollY / heroHeight;
+      const backShift = ratio * 60;
+      const frontShift = ratio * 30;
+      const backs = mountainLayer.querySelector('.mountain-back');
+      const fronts = mountainLayer.querySelector('.mountain-front');
+      if (backs) backs.style.transform = `translateY(${backShift}px)`;
+      if (fronts) fronts.style.transform = `translateY(${frontShift}px)`;
+    }
+  }
+
+  // ──── Trend chart animation ────
+  const trendChart = document.getElementById('trendChart');
+  let trendAnimated = false;
+
+  const trendObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !trendAnimated) {
+        trendAnimated = true;
+        // Animate the path
+        document.querySelectorAll('.trend-path').forEach(p => p.classList.add('animate'));
+        // Animate the dots with stagger
+        document.querySelectorAll('.trend-dot').forEach(d => d.classList.add('animate'));
+      }
+    });
+  }, { threshold: 0.3 });
+
+  if (trendChart) trendObserver.observe(trendChart);
+
+  // ──── Trend chart tooltips ────
+  const tooltip = document.getElementById('trendTooltip');
+  const trendSvg = document.getElementById('trendSvg');
+
+  document.querySelectorAll('.trend-dot').forEach(dot => {
+    const circle = dot.querySelector('circle');
+    const tipText = dot.getAttribute('data-tooltip');
+
+    dot.addEventListener('mouseenter', (e) => {
+      if (!tooltip || !tipText) return;
+      tooltip.textContent = tipText;
+      tooltip.classList.add('show');
+    });
+
+    dot.addEventListener('mousemove', (e) => {
+      if (!tooltip) return;
+      const chartRect = trendChart.getBoundingClientRect();
+      const x = e.clientX - chartRect.left + 15;
+      const y = e.clientY - chartRect.top - 40;
+      tooltip.style.left = x + 'px';
+      tooltip.style.top = y + 'px';
+    });
+
+    dot.addEventListener('mouseleave', () => {
+      if (tooltip) tooltip.classList.remove('show');
+    });
+
+    // Make dots interactive
+    dot.style.cursor = 'pointer';
+  });
+
+  // ──── Yao card 3D tilt on hover ────
+  document.querySelectorAll('.yao-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = (y - centerY) / centerY * -3;
+      const rotateY = (x - centerX) / centerX * 3;
+      card.style.transform = `translateY(-8px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+
+  // ──── Hero title stroke animation on load ────
+  const heroTitle = document.querySelector('.hero-title');
+  if (heroTitle) {
+    setTimeout(() => {
+      heroTitle.style.transition = 'text-shadow 2s ease';
+    }, 500);
+  }
+
+  // ──── Scroll listener ────
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        handleParallax();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  // ──── Fade out scroll hint ────
+  const scrollHint = document.querySelector('.scroll-hint');
+  window.addEventListener('scroll', () => {
+    if (scrollHint && window.pageYOffset > 100) {
+      scrollHint.style.opacity = Math.max(0, 1 - window.pageYOffset / 300);
+    }
+  });
+
+  // ──── Initial hero animations (stagger on page load) ────
+  window.addEventListener('load', () => {
+    // Trigger hero reveals
+    document.querySelectorAll('.hero .reveal').forEach(el => {
+      el.classList.add('visible');
+    });
+  });
+
+})();
+</script>
+</body>
+</html>

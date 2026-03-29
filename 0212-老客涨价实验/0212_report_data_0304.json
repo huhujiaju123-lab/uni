@@ -1,0 +1,1831 @@
+{
+  "Q1": [
+    {
+      "grp": "对照组3",
+      "total_users": "50295"
+    },
+    {
+      "grp": "涨价组1",
+      "total_users": "38093"
+    },
+    {
+      "grp": "涨价组2",
+      "total_users": "38058"
+    }
+  ],
+  "Q2": [
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-12",
+      "order_users": "938",
+      "order_cnt": "978",
+      "revenue": "4531.14"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-12",
+      "order_users": "634",
+      "order_cnt": "659",
+      "revenue": "3218.77"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-12",
+      "order_users": "697",
+      "order_cnt": "731",
+      "revenue": "3341.32"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-13",
+      "order_users": "823",
+      "order_cnt": "856",
+      "revenue": "4141.38"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-13",
+      "order_users": "576",
+      "order_cnt": "605",
+      "revenue": "3093.02"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-13",
+      "order_users": "571",
+      "order_cnt": "594",
+      "revenue": "3026.29"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-14",
+      "order_users": "590",
+      "order_cnt": "618",
+      "revenue": "3034.87"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-14",
+      "order_users": "401",
+      "order_cnt": "417",
+      "revenue": "2208.14"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-14",
+      "order_users": "417",
+      "order_cnt": "439",
+      "revenue": "2264.22"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-15",
+      "order_users": "473",
+      "order_cnt": "501",
+      "revenue": "2652.49"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-15",
+      "order_users": "319",
+      "order_cnt": "334",
+      "revenue": "1747.92"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-15",
+      "order_users": "322",
+      "order_cnt": "335",
+      "revenue": "1745.87"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-16",
+      "order_users": "516",
+      "order_cnt": "535",
+      "revenue": "2672.80"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-16",
+      "order_users": "358",
+      "order_cnt": "373",
+      "revenue": "1918.49"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-16",
+      "order_users": "358",
+      "order_cnt": "367",
+      "revenue": "1921.54"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-17",
+      "order_users": "832",
+      "order_cnt": "859",
+      "revenue": "4016.08"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-17",
+      "order_users": "627",
+      "order_cnt": "651",
+      "revenue": "3202.28"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-17",
+      "order_users": "605",
+      "order_cnt": "625",
+      "revenue": "3136.70"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-18",
+      "order_users": "906",
+      "order_cnt": "945",
+      "revenue": "4385.00"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-18",
+      "order_users": "628",
+      "order_cnt": "648",
+      "revenue": "3318.78"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-18",
+      "order_users": "564",
+      "order_cnt": "578",
+      "revenue": "2930.49"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-19",
+      "order_users": "866",
+      "order_cnt": "904",
+      "revenue": "4043.76"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-19",
+      "order_users": "639",
+      "order_cnt": "657",
+      "revenue": "3294.26"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-19",
+      "order_users": "628",
+      "order_cnt": "648",
+      "revenue": "3094.41"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-20",
+      "order_users": "588",
+      "order_cnt": "604",
+      "revenue": "2970.73"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-20",
+      "order_users": "431",
+      "order_cnt": "442",
+      "revenue": "2361.69"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-20",
+      "order_users": "376",
+      "order_cnt": "389",
+      "revenue": "2071.32"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-21",
+      "order_users": "587",
+      "order_cnt": "611",
+      "revenue": "2928.63"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-21",
+      "order_users": "387",
+      "order_cnt": "403",
+      "revenue": "2065.01"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-21",
+      "order_users": "351",
+      "order_cnt": "365",
+      "revenue": "1955.70"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-22",
+      "order_users": "279",
+      "order_cnt": "288",
+      "revenue": "1468.13"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-22",
+      "order_users": "171",
+      "order_cnt": "174",
+      "revenue": "944.44"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-22",
+      "order_users": "196",
+      "order_cnt": "199",
+      "revenue": "1161.60"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-24",
+      "order_users": "668",
+      "order_cnt": "690",
+      "revenue": "3362.64"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-24",
+      "order_users": "485",
+      "order_cnt": "500",
+      "revenue": "2614.20"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-24",
+      "order_users": "482",
+      "order_cnt": "505",
+      "revenue": "2630.82"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-25",
+      "order_users": "852",
+      "order_cnt": "878",
+      "revenue": "4245.82"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-25",
+      "order_users": "566",
+      "order_cnt": "589",
+      "revenue": "2939.57"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-25",
+      "order_users": "577",
+      "order_cnt": "595",
+      "revenue": "3049.34"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-26",
+      "order_users": "974",
+      "order_cnt": "994",
+      "revenue": "4522.68"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-26",
+      "order_users": "652",
+      "order_cnt": "683",
+      "revenue": "3444.76"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-26",
+      "order_users": "613",
+      "order_cnt": "631",
+      "revenue": "3054.60"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-27",
+      "order_users": "826",
+      "order_cnt": "848",
+      "revenue": "3977.86"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-27",
+      "order_users": "548",
+      "order_cnt": "562",
+      "revenue": "2864.18"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-27",
+      "order_users": "549",
+      "order_cnt": "567",
+      "revenue": "2975.60"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-28",
+      "order_users": "590",
+      "order_cnt": "610",
+      "revenue": "2849.69"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-28",
+      "order_users": "393",
+      "order_cnt": "411",
+      "revenue": "2209.13"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-28",
+      "order_users": "375",
+      "order_cnt": "394",
+      "revenue": "2049.96"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-03-01",
+      "order_users": "458",
+      "order_cnt": "478",
+      "revenue": "2236.12"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-03-01",
+      "order_users": "325",
+      "order_cnt": "336",
+      "revenue": "1727.97"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-03-01",
+      "order_users": "330",
+      "order_cnt": "338",
+      "revenue": "1710.71"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-03-02",
+      "order_users": "829",
+      "order_cnt": "852",
+      "revenue": "3868.70"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-03-02",
+      "order_users": "570",
+      "order_cnt": "588",
+      "revenue": "2921.52"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-03-02",
+      "order_users": "551",
+      "order_cnt": "565",
+      "revenue": "2666.35"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-03-03",
+      "order_users": "784",
+      "order_cnt": "803",
+      "revenue": "3565.41"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-03-03",
+      "order_users": "536",
+      "order_cnt": "552",
+      "revenue": "2773.66"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-03-03",
+      "order_users": "540",
+      "order_cnt": "556",
+      "revenue": "2871.46"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-03-04",
+      "order_users": "921",
+      "order_cnt": "943",
+      "revenue": "4264.69"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-03-04",
+      "order_users": "671",
+      "order_cnt": "700",
+      "revenue": "3626.12"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-03-04",
+      "order_users": "641",
+      "order_cnt": "657",
+      "revenue": "3376.60"
+    }
+  ],
+  "Q3": [
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-12",
+      "visit_users": "6559"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-12",
+      "visit_users": "4940"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-12",
+      "visit_users": "4947"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-13",
+      "visit_users": "6890"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-13",
+      "visit_users": "5152"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-13",
+      "visit_users": "5117"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-14",
+      "visit_users": "10313"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-14",
+      "visit_users": "7692"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-14",
+      "visit_users": "7806"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-15",
+      "visit_users": "1149"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-15",
+      "visit_users": "858"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-15",
+      "visit_users": "852"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-16",
+      "visit_users": "4176"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-16",
+      "visit_users": "3184"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-16",
+      "visit_users": "3152"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-17",
+      "visit_users": "4581"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-17",
+      "visit_users": "3529"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-17",
+      "visit_users": "3491"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-18",
+      "visit_users": "8686"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-18",
+      "visit_users": "6600"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-18",
+      "visit_users": "6441"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-19",
+      "visit_users": "1713"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-19",
+      "visit_users": "1275"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-19",
+      "visit_users": "1306"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-20",
+      "visit_users": "7978"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-20",
+      "visit_users": "6007"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-20",
+      "visit_users": "6006"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-21",
+      "visit_users": "2092"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-21",
+      "visit_users": "1549"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-21",
+      "visit_users": "1513"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-22",
+      "visit_users": "3486"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-22",
+      "visit_users": "2604"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-22",
+      "visit_users": "2637"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-23",
+      "visit_users": "3878"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-23",
+      "visit_users": "2915"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-23",
+      "visit_users": "2937"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-24",
+      "visit_users": "4498"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-24",
+      "visit_users": "3349"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-24",
+      "visit_users": "3376"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-25",
+      "visit_users": "8457"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-25",
+      "visit_users": "6277"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-25",
+      "visit_users": "6307"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-26",
+      "visit_users": "2191"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-26",
+      "visit_users": "1573"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-26",
+      "visit_users": "1553"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-27",
+      "visit_users": "8298"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-27",
+      "visit_users": "6195"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-27",
+      "visit_users": "6184"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-28",
+      "visit_users": "1442"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-28",
+      "visit_users": "1017"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-28",
+      "visit_users": "1064"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-03-01",
+      "visit_users": "1449"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-03-01",
+      "visit_users": "1106"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-03-01",
+      "visit_users": "1099"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-03-02",
+      "visit_users": "1956"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-03-02",
+      "visit_users": "1425"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-03-02",
+      "visit_users": "1392"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-03-03",
+      "visit_users": "1903"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-03-03",
+      "visit_users": "1360"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-03-03",
+      "visit_users": "1335"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-03-04",
+      "visit_users": "5434"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-03-04",
+      "visit_users": "4088"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-03-04",
+      "visit_users": "4143"
+    }
+  ],
+  "Q4": [
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-12",
+      "cups": "1256",
+      "item_revenue": "4162.74",
+      "unit_price": "3.31"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-12",
+      "cups": "818",
+      "item_revenue": "2956.83",
+      "unit_price": "3.61"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-12",
+      "cups": "903",
+      "item_revenue": "3068.92",
+      "unit_price": "3.40"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-13",
+      "cups": "1136",
+      "item_revenue": "3805.03",
+      "unit_price": "3.35"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-13",
+      "cups": "793",
+      "item_revenue": "2845.49",
+      "unit_price": "3.59"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-13",
+      "cups": "782",
+      "item_revenue": "2784.27",
+      "unit_price": "3.56"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-14",
+      "cups": "876",
+      "item_revenue": "2786.00",
+      "unit_price": "3.18"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-14",
+      "cups": "577",
+      "item_revenue": "2028.59",
+      "unit_price": "3.52"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-14",
+      "cups": "593",
+      "item_revenue": "2083.46",
+      "unit_price": "3.51"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-15",
+      "cups": "755",
+      "item_revenue": "2438.16",
+      "unit_price": "3.23"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-15",
+      "cups": "452",
+      "item_revenue": "1607.95",
+      "unit_price": "3.56"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-15",
+      "cups": "471",
+      "item_revenue": "1607.62",
+      "unit_price": "3.41"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-16",
+      "cups": "749",
+      "item_revenue": "2453.46",
+      "unit_price": "3.28"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-16",
+      "cups": "501",
+      "item_revenue": "1762.47",
+      "unit_price": "3.52"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-16",
+      "cups": "497",
+      "item_revenue": "1763.68",
+      "unit_price": "3.55"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-17",
+      "cups": "1136",
+      "item_revenue": "3687.03",
+      "unit_price": "3.25"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-17",
+      "cups": "817",
+      "item_revenue": "2939.98",
+      "unit_price": "3.60"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-17",
+      "cups": "806",
+      "item_revenue": "2879.76",
+      "unit_price": "3.57"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-18",
+      "cups": "1208",
+      "item_revenue": "4025.69",
+      "unit_price": "3.33"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-18",
+      "cups": "847",
+      "item_revenue": "3046.92",
+      "unit_price": "3.60"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-18",
+      "cups": "747",
+      "item_revenue": "2690.41",
+      "unit_price": "3.60"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-19",
+      "cups": "1118",
+      "item_revenue": "3714.00",
+      "unit_price": "3.32"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-19",
+      "cups": "820",
+      "item_revenue": "3024.70",
+      "unit_price": "3.69"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-19",
+      "cups": "792",
+      "item_revenue": "2840.83",
+      "unit_price": "3.59"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-20",
+      "cups": "797",
+      "item_revenue": "2727.20",
+      "unit_price": "3.42"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-20",
+      "cups": "585",
+      "item_revenue": "2168.01",
+      "unit_price": "3.71"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-20",
+      "cups": "516",
+      "item_revenue": "1901.82",
+      "unit_price": "3.69"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-21",
+      "cups": "841",
+      "item_revenue": "2688.15",
+      "unit_price": "3.20"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-21",
+      "cups": "537",
+      "item_revenue": "1895.77",
+      "unit_price": "3.53"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-21",
+      "cups": "502",
+      "item_revenue": "1795.10",
+      "unit_price": "3.58"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-22",
+      "cups": "412",
+      "item_revenue": "1347.33",
+      "unit_price": "3.27"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-22",
+      "cups": "238",
+      "item_revenue": "866.89",
+      "unit_price": "3.64"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-22",
+      "cups": "298",
+      "item_revenue": "1066.35",
+      "unit_price": "3.58"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-24",
+      "cups": "901",
+      "item_revenue": "3087.03",
+      "unit_price": "3.43"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-24",
+      "cups": "651",
+      "item_revenue": "2399.70",
+      "unit_price": "3.69"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-24",
+      "cups": "659",
+      "item_revenue": "2415.25",
+      "unit_price": "3.67"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-25",
+      "cups": "1141",
+      "item_revenue": "3897.38",
+      "unit_price": "3.42"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-25",
+      "cups": "751",
+      "item_revenue": "2698.74",
+      "unit_price": "3.59"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-25",
+      "cups": "789",
+      "item_revenue": "2799.20",
+      "unit_price": "3.55"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-26",
+      "cups": "1256",
+      "item_revenue": "4151.88",
+      "unit_price": "3.31"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-26",
+      "cups": "873",
+      "item_revenue": "3162.83",
+      "unit_price": "3.62"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-26",
+      "cups": "785",
+      "item_revenue": "2804.56",
+      "unit_price": "3.57"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-27",
+      "cups": "1109",
+      "item_revenue": "3651.50",
+      "unit_price": "3.29"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-27",
+      "cups": "723",
+      "item_revenue": "2629.56",
+      "unit_price": "3.64"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-27",
+      "cups": "755",
+      "item_revenue": "2731.62",
+      "unit_price": "3.62"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-02-28",
+      "cups": "817",
+      "item_revenue": "2616.01",
+      "unit_price": "3.20"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-02-28",
+      "cups": "573",
+      "item_revenue": "2028.37",
+      "unit_price": "3.54"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-02-28",
+      "cups": "535",
+      "item_revenue": "1882.02",
+      "unit_price": "3.52"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-03-01",
+      "cups": "657",
+      "item_revenue": "2052.61",
+      "unit_price": "3.12"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-03-01",
+      "cups": "450",
+      "item_revenue": "1586.08",
+      "unit_price": "3.52"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-03-01",
+      "cups": "463",
+      "item_revenue": "1570.47",
+      "unit_price": "3.39"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-03-02",
+      "cups": "1092",
+      "item_revenue": "3551.35",
+      "unit_price": "3.25"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-03-02",
+      "cups": "746",
+      "item_revenue": "2681.61",
+      "unit_price": "3.59"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-03-02",
+      "cups": "698",
+      "item_revenue": "2447.60",
+      "unit_price": "3.51"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-03-03",
+      "cups": "1001",
+      "item_revenue": "3272.60",
+      "unit_price": "3.27"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-03-03",
+      "cups": "698",
+      "item_revenue": "2546.00",
+      "unit_price": "3.65"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-03-03",
+      "cups": "727",
+      "item_revenue": "2636.13",
+      "unit_price": "3.63"
+    },
+    {
+      "grp": "对照组3",
+      "dt": "2026-03-04",
+      "cups": "1198",
+      "item_revenue": "3915.22",
+      "unit_price": "3.27"
+    },
+    {
+      "grp": "涨价组1",
+      "dt": "2026-03-04",
+      "cups": "932",
+      "item_revenue": "3328.57",
+      "unit_price": "3.57"
+    },
+    {
+      "grp": "涨价组2",
+      "dt": "2026-03-04",
+      "cups": "888",
+      "item_revenue": "3099.42",
+      "unit_price": "3.49"
+    }
+  ],
+  "Q5": [
+    {
+      "grp": "对照组3",
+      "period_order_users": "6656",
+      "period_order_cnt": "14795",
+      "period_revenue": "69738.62"
+    },
+    {
+      "grp": "涨价组1",
+      "period_order_users": "4665",
+      "period_order_cnt": "10284",
+      "period_revenue": "52493.91"
+    },
+    {
+      "grp": "涨价组2",
+      "period_order_users": "4640",
+      "period_order_cnt": "10078",
+      "period_revenue": "51034.90"
+    }
+  ],
+  "Q6": [
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-12",
+      "day_buyers": "938",
+      "repurchase_users": "267",
+      "repurchase_rate_3d": "28.46"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-12",
+      "day_buyers": "634",
+      "repurchase_users": "170",
+      "repurchase_rate_3d": "26.81"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-12",
+      "day_buyers": "697",
+      "repurchase_users": "197",
+      "repurchase_rate_3d": "28.26"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-13",
+      "day_buyers": "823",
+      "repurchase_users": "192",
+      "repurchase_rate_3d": "23.33"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-13",
+      "day_buyers": "576",
+      "repurchase_users": "129",
+      "repurchase_rate_3d": "22.40"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-13",
+      "day_buyers": "571",
+      "repurchase_users": "133",
+      "repurchase_rate_3d": "23.29"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-14",
+      "day_buyers": "590",
+      "repurchase_users": "175",
+      "repurchase_rate_3d": "29.66"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-14",
+      "day_buyers": "401",
+      "repurchase_users": "140",
+      "repurchase_rate_3d": "34.91"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-14",
+      "day_buyers": "417",
+      "repurchase_users": "116",
+      "repurchase_rate_3d": "27.82"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-15",
+      "day_buyers": "473",
+      "repurchase_users": "144",
+      "repurchase_rate_3d": "30.44"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-15",
+      "day_buyers": "319",
+      "repurchase_users": "102",
+      "repurchase_rate_3d": "31.97"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-15",
+      "day_buyers": "322",
+      "repurchase_users": "94",
+      "repurchase_rate_3d": "29.19"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-16",
+      "day_buyers": "516",
+      "repurchase_users": "175",
+      "repurchase_rate_3d": "33.91"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-16",
+      "day_buyers": "358",
+      "repurchase_users": "138",
+      "repurchase_rate_3d": "38.55"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-16",
+      "day_buyers": "358",
+      "repurchase_users": "121",
+      "repurchase_rate_3d": "33.80"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-17",
+      "day_buyers": "832",
+      "repurchase_users": "346",
+      "repurchase_rate_3d": "41.59"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-17",
+      "day_buyers": "627",
+      "repurchase_users": "247",
+      "repurchase_rate_3d": "39.39"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-17",
+      "day_buyers": "605",
+      "repurchase_users": "247",
+      "repurchase_rate_3d": "40.83"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-18",
+      "day_buyers": "906",
+      "repurchase_users": "349",
+      "repurchase_rate_3d": "38.52"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-18",
+      "day_buyers": "628",
+      "repurchase_users": "249",
+      "repurchase_rate_3d": "39.65"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-18",
+      "day_buyers": "564",
+      "repurchase_users": "201",
+      "repurchase_rate_3d": "35.64"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-19",
+      "day_buyers": "866",
+      "repurchase_users": "222",
+      "repurchase_rate_3d": "25.64"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-19",
+      "day_buyers": "639",
+      "repurchase_users": "157",
+      "repurchase_rate_3d": "24.57"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-19",
+      "day_buyers": "628",
+      "repurchase_users": "138",
+      "repurchase_rate_3d": "21.97"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-20",
+      "day_buyers": "588",
+      "repurchase_users": "114",
+      "repurchase_rate_3d": "19.39"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-20",
+      "day_buyers": "431",
+      "repurchase_users": "73",
+      "repurchase_rate_3d": "16.94"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-20",
+      "day_buyers": "376",
+      "repurchase_users": "69",
+      "repurchase_rate_3d": "18.35"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-21",
+      "day_buyers": "587",
+      "repurchase_users": "128",
+      "repurchase_rate_3d": "21.81"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-21",
+      "day_buyers": "387",
+      "repurchase_users": "97",
+      "repurchase_rate_3d": "25.06"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-21",
+      "day_buyers": "351",
+      "repurchase_users": "83",
+      "repurchase_rate_3d": "23.65"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-22",
+      "day_buyers": "279",
+      "repurchase_users": "71",
+      "repurchase_rate_3d": "25.45"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-22",
+      "day_buyers": "171",
+      "repurchase_users": "53",
+      "repurchase_rate_3d": "30.99"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-22",
+      "day_buyers": "196",
+      "repurchase_users": "48",
+      "repurchase_rate_3d": "24.49"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-24",
+      "day_buyers": "668",
+      "repurchase_users": "315",
+      "repurchase_rate_3d": "47.16"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-24",
+      "day_buyers": "485",
+      "repurchase_users": "207",
+      "repurchase_rate_3d": "42.68"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-24",
+      "day_buyers": "482",
+      "repurchase_users": "240",
+      "repurchase_rate_3d": "49.79"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-25",
+      "day_buyers": "852",
+      "repurchase_users": "329",
+      "repurchase_rate_3d": "38.62"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-25",
+      "day_buyers": "566",
+      "repurchase_users": "204",
+      "repurchase_rate_3d": "36.04"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-25",
+      "day_buyers": "577",
+      "repurchase_users": "223",
+      "repurchase_rate_3d": "38.65"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-26",
+      "day_buyers": "974",
+      "repurchase_users": "264",
+      "repurchase_rate_3d": "27.10"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-26",
+      "day_buyers": "652",
+      "repurchase_users": "184",
+      "repurchase_rate_3d": "28.22"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-26",
+      "day_buyers": "613",
+      "repurchase_users": "168",
+      "repurchase_rate_3d": "27.41"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-27",
+      "day_buyers": "826",
+      "repurchase_users": "257",
+      "repurchase_rate_3d": "31.11"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-27",
+      "day_buyers": "548",
+      "repurchase_users": "193",
+      "repurchase_rate_3d": "35.22"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-27",
+      "day_buyers": "549",
+      "repurchase_users": "165",
+      "repurchase_rate_3d": "30.05"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-28",
+      "day_buyers": "590",
+      "repurchase_users": "180",
+      "repurchase_rate_3d": "30.51"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-28",
+      "day_buyers": "393",
+      "repurchase_users": "117",
+      "repurchase_rate_3d": "29.77"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-28",
+      "day_buyers": "375",
+      "repurchase_users": "107",
+      "repurchase_rate_3d": "28.53"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-03-01",
+      "day_buyers": "458",
+      "repurchase_users": "141",
+      "repurchase_rate_3d": "30.79"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-03-01",
+      "day_buyers": "325",
+      "repurchase_users": "102",
+      "repurchase_rate_3d": "31.38"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-03-01",
+      "day_buyers": "330",
+      "repurchase_users": "100",
+      "repurchase_rate_3d": "30.30"
+    }
+  ],
+  "Q7": [
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-12",
+      "day_buyers": "938",
+      "repurchase_users": "538",
+      "repurchase_rate_7d": "57.36"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-12",
+      "day_buyers": "634",
+      "repurchase_users": "354",
+      "repurchase_rate_7d": "55.84"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-12",
+      "day_buyers": "697",
+      "repurchase_users": "388",
+      "repurchase_rate_7d": "55.67"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-13",
+      "day_buyers": "823",
+      "repurchase_users": "442",
+      "repurchase_rate_7d": "53.71"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-13",
+      "day_buyers": "576",
+      "repurchase_users": "295",
+      "repurchase_rate_7d": "51.22"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-13",
+      "day_buyers": "571",
+      "repurchase_users": "304",
+      "repurchase_rate_7d": "53.24"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-14",
+      "day_buyers": "590",
+      "repurchase_users": "262",
+      "repurchase_rate_7d": "44.41"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-14",
+      "day_buyers": "401",
+      "repurchase_users": "210",
+      "repurchase_rate_7d": "52.37"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-14",
+      "day_buyers": "417",
+      "repurchase_users": "190",
+      "repurchase_rate_7d": "45.56"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-15",
+      "day_buyers": "473",
+      "repurchase_users": "222",
+      "repurchase_rate_7d": "46.93"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-15",
+      "day_buyers": "319",
+      "repurchase_users": "153",
+      "repurchase_rate_7d": "47.96"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-15",
+      "day_buyers": "322",
+      "repurchase_users": "148",
+      "repurchase_rate_7d": "45.96"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-16",
+      "day_buyers": "516",
+      "repurchase_users": "253",
+      "repurchase_rate_7d": "49.03"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-16",
+      "day_buyers": "358",
+      "repurchase_users": "166",
+      "repurchase_rate_7d": "46.37"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-16",
+      "day_buyers": "358",
+      "repurchase_users": "159",
+      "repurchase_rate_7d": "44.41"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-17",
+      "day_buyers": "832",
+      "repurchase_users": "405",
+      "repurchase_rate_7d": "48.68"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-17",
+      "day_buyers": "627",
+      "repurchase_users": "295",
+      "repurchase_rate_7d": "47.05"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-17",
+      "day_buyers": "605",
+      "repurchase_users": "289",
+      "repurchase_rate_7d": "47.77"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-18",
+      "day_buyers": "906",
+      "repurchase_users": "488",
+      "repurchase_rate_7d": "53.86"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-18",
+      "day_buyers": "628",
+      "repurchase_users": "326",
+      "repurchase_rate_7d": "51.91"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-18",
+      "day_buyers": "564",
+      "repurchase_users": "276",
+      "repurchase_rate_7d": "48.94"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-19",
+      "day_buyers": "866",
+      "repurchase_users": "497",
+      "repurchase_rate_7d": "57.39"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-19",
+      "day_buyers": "639",
+      "repurchase_users": "336",
+      "repurchase_rate_7d": "52.58"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-19",
+      "day_buyers": "628",
+      "repurchase_users": "296",
+      "repurchase_rate_7d": "47.13"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-20",
+      "day_buyers": "588",
+      "repurchase_users": "359",
+      "repurchase_rate_7d": "61.05"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-20",
+      "day_buyers": "431",
+      "repurchase_users": "247",
+      "repurchase_rate_7d": "57.31"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-20",
+      "day_buyers": "376",
+      "repurchase_users": "219",
+      "repurchase_rate_7d": "58.24"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-21",
+      "day_buyers": "587",
+      "repurchase_users": "258",
+      "repurchase_rate_7d": "43.95"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-21",
+      "day_buyers": "387",
+      "repurchase_users": "173",
+      "repurchase_rate_7d": "44.70"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-21",
+      "day_buyers": "351",
+      "repurchase_users": "165",
+      "repurchase_rate_7d": "47.01"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-22",
+      "day_buyers": "279",
+      "repurchase_users": "140",
+      "repurchase_rate_7d": "50.18"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-22",
+      "day_buyers": "171",
+      "repurchase_users": "104",
+      "repurchase_rate_7d": "60.82"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-22",
+      "day_buyers": "196",
+      "repurchase_users": "104",
+      "repurchase_rate_7d": "53.06"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-24",
+      "day_buyers": "668",
+      "repurchase_users": "417",
+      "repurchase_rate_7d": "62.43"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-24",
+      "day_buyers": "485",
+      "repurchase_users": "282",
+      "repurchase_rate_7d": "58.14"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-24",
+      "day_buyers": "482",
+      "repurchase_users": "299",
+      "repurchase_rate_7d": "62.03"
+    },
+    {
+      "grp": "对照组3",
+      "order_date": "2026-02-25",
+      "day_buyers": "852",
+      "repurchase_users": "509",
+      "repurchase_rate_7d": "59.74"
+    },
+    {
+      "grp": "涨价组1",
+      "order_date": "2026-02-25",
+      "day_buyers": "566",
+      "repurchase_users": "332",
+      "repurchase_rate_7d": "58.66"
+    },
+    {
+      "grp": "涨价组2",
+      "order_date": "2026-02-25",
+      "day_buyers": "577",
+      "repurchase_users": "344",
+      "repurchase_rate_7d": "59.62"
+    }
+  ]
+}
