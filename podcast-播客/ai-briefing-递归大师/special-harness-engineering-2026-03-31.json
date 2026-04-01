@@ -1,0 +1,23 @@
+{
+  "slug": "2026-03-30-special-harness-engineering",
+  "title": "特别版｜Harness Engineering：程序员不再写代码后，真正要掌舵的是什么",
+  "description": "这期特别版只讲一个正在快速变大的新概念：Harness Engineering。OpenAI 用 Codex 做了一个极端实验，五个月、零手写代码、百万行级别产出，人类工程师不再亲自敲代码，而是把精力转向环境设计、反馈回路、可观测性、知识地图和架构护栏。本期我们不谈口号，只拆核心问题：为什么 Prompt Engineering 已经不够了，真正决定 Agent 能不能持续产出的，是你给它搭了什么样的 Harness。",
+  "script_path": "special-harness-engineering-script-2026-03-31.json",
+  "analysis_path": "special-harness-engineering-2026-03-31.md",
+  "notify_feishu": false,
+  "remote_touch": "202603302358.00",
+  "topics": [
+    {
+      "grade": "S",
+      "title": "Harness Engineering：从写代码到掌舵 Agent 的角色换挡"
+    },
+    {
+      "grade": "S",
+      "title": "可观测性、闭环测试、知识地图：让 Agent 真正可持续工作的执行环境"
+    },
+    {
+      "grade": "S",
+      "title": "架构围栏、质量评分与垃圾回收：Agent 时代的软件秩序维护"
+    }
+  ]
+}

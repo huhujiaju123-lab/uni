@@ -1,0 +1,272 @@
+[
+  {
+    "speaker": "递归",
+    "text": "大家好，我是递归。今天这期不做日更拼盘，我们只讲一件事：Claude Code 误泄露的源码快照，到底让整个 Builder 圈看见了什么。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "对，这期更像一堂拆机课。重点不是看热闹，也不是猜八卦，而是借这个窗口，看一个顶级 Agent 系统到底怎么搭起来。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "我先说一个直觉。很多人第一反应是，哦，Claude Code 源码泄露了。可真正值得讲的，不是“泄露”本身，而是我们第一次近距离看到，Agent 产品的执行骨架长什么样。",
+    "new_topic": true
+  },
+  {
+    "speaker": "大师",
+    "text": "没错。先定性一下，Claude Code——Anthropic 出品的编码 Agent——不是模型本身。模型还在 Anthropic 服务器上。被看见的，更像是它的客户端操作系统，也就是本地 harness，负责调度模型、工具、权限、任务和上下文。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "也就是说，这次曝光出来的，不是“大脑”，而是“神经系统加手脚协调系统”。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "这个类比很准。普通聊天机器人，重点是大脑够不够聪明。可到了 Claude Code 这种产品，真正拉开差距的，是它怎么观察环境、怎么下决策、怎么安全地动手、怎么把历史记住又不被历史拖死。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "那这篇分析文章一上来就列了十几个章节，从技术栈、启动流程，到 QueryEngine、工具系统、权限系统、多 Agent、上下文压缩、Memdir、MCP、IDE Bridge、状态管理。这个目录本身已经说明一件事了：它根本不是一个 prompt 工程项目。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "对，它更像一台机器。你可以记一个最核心的判断：强 Agent 不是“会回答问题的模型”，而是“会持续完成任务的系统”。这两个东西差一整层架构。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "好，那我们从第一层开始拆。文章里说 Claude Code——Anthropic 出品的 CLI Agent 工具——用 Bun、TypeScript strict、React 加 Ink、ripgrep、MCP SDK、Anthropic SDK、OpenTelemetry、GrowthBook 这些东西拼出来。为什么这一串技术栈值得讲？",
+    "new_topic": true
+  },
+  {
+    "speaker": "大师",
+    "text": "因为它透露出产品定位。它不是网页玩具，不是浏览器里套个聊天框，而是一个长期运行在终端里的工程执行器。用 Bun 是为了启动更快，用 strict TypeScript 是为了把复杂状态压进类型系统，用 Ink 是为了在终端里也保持组件化 UI。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "也就是它从第一天就按“生产工具”在做，而不是按“演示 Demo”在做。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "对，而且这里有个容易被忽略的信号。OpenTelemetry 说明它在认真做可观测性，GrowthBook 说明它在认真做功能门控和实验。换句话说，它不是只想着能跑，而是想着怎么长期迭代。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "这个细节很能说明问题。一个产品什么时候开始像系统？就是当它不只关心输出结果，还关心监控、灰度、回退和版本演进。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "对。再往下一层，你会发现它最核心的词不是 prompt，而是 query。文章把 `query()` 叫作心脏，这个判断非常关键。因为真正的 Agent 不是问一次答一次，而是一个循环。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "等等，这里很容易听抽象。你说的循环，能不能用白话讲？",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "可以。普通聊天像你问一句，我答一句。Agent 循环像一个实习生在工位上干活：先看任务，再读文件，再开命令，再看结果，发现不对再改，必要时再问你确认。它是一整套“观察、判断、执行、回读、再判断”的连续执行链。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "这一下就清楚了。也就是说，模型只是循环里负责思考的一环，不是整个机器。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "没错。所以真正难的地方，不只是模型够不够强，而是这个循环怎么稳定、怎么少犯错、怎么可恢复、怎么让每一步都能被追踪。这也是为什么文章里会单独拆 QueryEngine 和对话生命周期管理。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "好，到了这里，我觉得很多人会问一个问题：那 Claude Code 的工具系统——也就是它那套统一的手脚接口——是不是它真正厉害的地方？",
+    "new_topic": true
+  },
+  {
+    "speaker": "大师",
+    "text": "可以这么说，而且要加两个字，叫“制度化工具系统”。文章和仓库线索里能看到大量 Tool 模块，不只是 Bash、读文件、写文件，还有 AgentTool、PlanMode、Worktree、Config、Bridge 这一类。说明工具不是零散外挂，而是统一注册、统一描述、统一权限、统一返回格式。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "这背后其实是一个认知升级。以前我们做 Agent，容易把工具理解成“给模型开几个 function calling”。但在这里，工具更像操作系统里的系统调用。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "而且统一工具层还有一个好处，叫可替换。今天底层是 Bash，明天也可以接 IDE、浏览器、远端运行时，甚至接子 Agent。只要都说同一种协议，主循环就不用重写。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "这就像插排标准统一以后，你换电器不用重装修电路。很多 Builder 卡住，不是模型不够聪明，而是每加一个工具都像重新接一根裸线。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "非常对。你可以记一个锚点：function calling 更像“给模型几个按钮”；而 Claude Code 这种 Tool System，更像“给 Agent 一套受约束的手和脚”。按钮和肢体，复杂度完全不是一个量级。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "那工具一多，危险也会跟着上来。删文件、跑命令、改配置，这些动作只要做错一次，代价就很大。所以文章里为什么把权限系统单列一章？",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "因为权限不是补丁，而是底盘。强 Agent 一旦能动手，就必须回答三个问题：什么能直接做，什么必须确认，什么永远不能做。没有这一层，模型越强，事故半径越大。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "也就是说，权限系统不是为了“限制智能”，而是为了“让智能可以进生产”。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "对，而且这里还有一个更细的点。文章里提到默认、plan、auto 这类模式切换，本质上是在把“自主程度”做成可配置变量。不是永远放权，也不是永远锁死，而是按任务上下文调整代理自由度。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "好，下面来到最让我兴奋的一节，多 Agent 协调。文章里说到 Coordinator、Swarm，还有一个特别工程化的词：Git Worktree 隔离。",
+    "new_topic": true
+  },
+  {
+    "speaker": "大师",
+    "text": "这个点太值钱了。多 Agent 协调——说白了就是让一群子 Agent 同时施工——很多人一听就想到“并行更快”。但真正的难点从来不是快，而是别互相踩。两个子 Agent 同时改同一个工作区，最容易出现的不是智能不够，而是文件冲突、状态污染和上下文串味。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "所以 worktree 的本质，不是 Git 技巧，而是给每个子 Agent 单独分一个工位。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "没错。你把它想成共享办公室就行。Coordinator 是项目经理，Worker 是执行人，worktree 是每个人自己的桌子。桌子分开，草稿不混，最后再汇总，这样并行才有意义。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "这也解释了为什么顶级 Agent 产品会认真处理 isolation，而不是只在 prompt 里说一句“你们分别负责不同文件”。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "对。系统级约束永远比口头约束更可靠。普通 Builder 这里最该学的，不是立刻造 swarm，而是先明白：一旦你想让多个 Agent 协作，就必须先设计隔离边界、合并边界和责任边界。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "好，接下来进入我觉得最像“内功”的一段，上下文管理和压缩。文章里列出 Microcompact、Snip Compact、Context Collapse、Auto Compact、Reactive Compact、Session Memory 这整套分级策略。为什么这事这么关键？",
+    "new_topic": true
+  },
+  {
+    "speaker": "大师",
+    "text": "因为上下文是 Agent 时代真正的稀缺资源。很多人以为模型升级以后，上下文问题会自动消失。其实不会。任务一长，历史消息、工具结果、文件片段、计划状态会一起膨胀。你不是缺 token，你是缺“高质量可用上下文”。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "这句话特别重要。不是上下文越多越好，而是有用的上下文要留下，没用的噪音要被制度化清理掉。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "对。文章里这套分级压缩，厉害就厉害在它不是到了爆窗才慌张删东西，而是提前定义好多档策略。轻度时微压缩工具结果，中度时裁旧消息，重度时让模型自己生成摘要，最重时再进入紧急压缩和会话记忆外存。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "换成白话，就是它把“忘记”这件事工程化了。不是临时失忆，而是有计划地遗忘。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "是的。真正成熟的 Agent，不只是会记住，还得会忘掉。因为如果什么都塞着不动，最后模型不是更聪明，而是更糊涂。你可以记一个锚点：压缩不是降级，而是主动提纯。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "文章后面紧接着就是 Memdir，里面有 user、project、feedback、reference 这些记忆类型，还有按天累积再蒸馏的 KAIROS 模式。这个设计又说明了什么？",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "说明 Claude Code 把“记忆”分成了短期工作记忆和长期结构记忆。前者服务当前任务，后者服务未来协作。比如用户偏好、项目约定、上次被指出的错误，这些东西不该每轮都重讲，但又不能彻底丢掉。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "也就是说，聊天历史不是记忆，整理过的、可引用的、分类好的知识，才是记忆。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "完全正确。这是很多 Agent 产品会踩的坑：把 transcript 当 memory。前者像流水账，后者像归档后的知识卡片。流水账能回放，知识卡片才能长期复用。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "最后一组，我们把 MCP、IDE Bridge、状态管理放在一起讲。因为听到这里，我已经强烈感觉到：这玩意儿越来越不像一个聊天工具了。",
+    "new_topic": true
+  },
+  {
+    "speaker": "大师",
+    "text": "对，越来越像操作系统。MCP——也就是 Model Context Protocol——是标准协议层，等于给外部工具留了统一插槽；IDE Bridge 把终端、编辑器、权限回调、诊断信息连成一体；状态管理则把 UI、模型、任务、工具、桥接、记忆统一收口。它们一起解决的是“整个系统怎么协同运转”。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "所以 MCP 更像 USB-C，Bridge 更像数据总线，State 更像控制面板。三者一组合，Agent 才不是一个会说话的插件，而是一套能接外设、能管状态、能跨界面的运行环境。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "这也是我最建议 Builder 记住的总判断：下一代 Agent 产品的竞争，不只是模型能力竞争，而是执行架构竞争。谁把循环、工具、权限、隔离、压缩、记忆、协议、桥接组织得更好，谁就更接近真正可持续的生产力工具。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "好，收个尾。今天这期特别版，我觉得至少能带走五个设计锚点。第一，Agent 的心脏是循环，不是 prompt。第二，工具必须制度化。第三，权限是底盘，不是装饰。第四，多 Agent 一定先做隔离。第五，上下文和记忆要分层管理。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "我再补一个总括。Claude Code 这次最值得学的，不是某个单点技巧，而是它把一堆本来零散的问题，做成了互相咬合的系统。你单抄 worktree 没用，单抄 memory 也没用，真正厉害的是这些部件能一起工作。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "给大家三个落地动作。第一，回头审视你自己的 Agent 项目，有没有明确的主循环。第二，看你的工具调用有没有统一权限边界。第三，别再把聊天记录直接当长期记忆，开始做压缩和分层。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "这期就到这儿。它不是新闻快评，而是一份架构样本。越早把它听成系统课，而不是热搜课，你越能从里面拿走真正长期有用的东西。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "我是递归，我们下期见。",
+    "new_topic": false
+  },
+  {
+    "speaker": "大师",
+    "text": "我是大师，下期见。",
+    "new_topic": false
+  }
+]
