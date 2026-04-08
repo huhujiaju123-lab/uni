@@ -1,0 +1,45 @@
+<!--components/invite-modal/invite-modal.wxml-->
+<view class="modal-mask" wx:if="{{show}}" bindtap="onMaskTap">
+  <view class="modal-container" catchtap="preventBubble">
+    <!-- 关闭按钮 -->
+    <view class="close-btn" bindtap="onClose">×</view>
+
+    <!-- 标题 -->
+    <view class="modal-title">成为高级会员</view>
+
+    <!-- 说明 -->
+    <view class="modal-desc">请输入6位邀请码</view>
+
+    <!-- 输入框 -->
+    <view class="input-wrap">
+      <input
+        class="invite-input"
+        type="text"
+        maxlength="6"
+        placeholder="请输入邀请码"
+        placeholder-class="input-placeholder"
+        value="{{inviteCode}}"
+        bindinput="onInput"
+        focus="{{show}}"
+      />
+    </view>
+
+    <!-- 验证中的邀请人信息 -->
+    <view class="inviter-info" wx:if="{{inviterInfo}}">
+      <image class="inviter-avatar" src="{{inviterInfo.avatar}}" mode="aspectFill"></image>
+      <text class="inviter-name">{{inviterInfo.nickname}} 邀请你</text>
+    </view>
+
+    <!-- 确认按钮 -->
+    <button
+      class="confirm-btn {{isValidCode ? 'active' : ''}}"
+      disabled="{{!isValidCode || isLoading}}"
+      bindtap="onConfirm"
+    >
+      {{isLoading ? '验证中...' : '确认升级'}}
+    </button>
+
+    <!-- 稍后再说 -->
+    <view class="later-btn" bindtap="onClose">稍后再说</view>
+  </view>
+</view>

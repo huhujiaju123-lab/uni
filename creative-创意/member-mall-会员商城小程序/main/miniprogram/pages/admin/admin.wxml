@@ -1,0 +1,218 @@
+<!--pages/admin/admin.wxml-->
+<view class="container">
+  <!-- Tab 导航 -->
+  <view class="tabs">
+    <view 
+      class="tab-item {{currentTab === index ? 'active' : ''}}" 
+      wx:for="{{tabs}}" 
+      wx:key="index"
+      data-tab="{{index}}"
+      bindtap="switchTab"
+    >{{item}}</view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{isLoading}}">加载中...</view>
+
+  <!-- 概览 Tab -->
+  <view class="tab-content" wx:if="{{currentTab === 0}}">
+    <view class="stats-grid">
+      <view class="stat-card">
+        <text class="stat-value">{{statistics.totalUsers}}</text>
+        <text class="stat-label">总用户</text>
+      </view>
+      <view class="stat-card premium">
+        <text class="stat-value">{{statistics.premiumUsers}}</text>
+        <text class="stat-label">高级会员</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-value">{{statistics.normalUsers}}</text>
+        <text class="stat-label">普通会员</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-value">{{statistics.totalProducts}}</text>
+        <text class="stat-label">商品数量</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-value">{{statistics.activeInviteCodes}}</text>
+        <text class="stat-label">有效邀请码</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-value">{{statistics.welfareUsers}}</text>
+        <text class="stat-label">已生成福利码</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 商品 Tab -->
+  <view class="tab-content" wx:if="{{currentTab === 1}}">
+    <view class="action-bar">
+      <button class="add-btn" bindtap="showAddProduct">+ 添加商品</button>
+    </view>
+    <view class="list">
+      <view class="list-item" wx:for="{{products}}" wx:key="_id">
+        <image class="item-image" src="{{item.images[0] || '/images/placeholder.png'}}" mode="aspectFill"></image>
+        <view class="item-info">
+          <text class="item-title">{{item.name}}</text>
+          <view class="item-prices">
+            <text class="price-original">原价: ¥{{item.price_original / 100}}</text>
+            <text class="price-member">会员价: ¥{{item.price_member / 100}}</text>
+          </view>
+          <text class="item-status {{item.status === 'on' ? 'on' : 'off'}}">{{item.status === 'on' ? '上架' : '下架'}}</text>
+        </view>
+        <view class="item-actions">
+          <text class="action-btn edit" bindtap="showEditProduct" data-product="{{item}}">编辑</text>
+          <text class="action-btn delete" bindtap="deleteProduct" data-id="{{item._id}}">删除</text>
+        </view>
+      </view>
+      <view class="empty" wx:if="{{products.length === 0}}">暂无商品</view>
+    </view>
+  </view>
+
+  <!-- 会员 Tab -->
+  <view class="tab-content" wx:if="{{currentTab === 2}}">
+    <view class="filter-bar">
+      <text class="filter-item {{userFilter === '' ? 'active' : ''}}" bindtap="filterUsers" data-filter="">全部</text>
+      <text class="filter-item {{userFilter === 'premium' ? 'active' : ''}}" bindtap="filterUsers" data-filter="premium">高级会员</text>
+      <text class="filter-item {{userFilter === 'normal' ? 'active' : ''}}" bindtap="filterUsers" data-filter="normal">普通会员</text>
+    </view>
+    <view class="list">
+      <view class="user-item" wx:for="{{users}}" wx:key="_id">
+        <view class="user-info">
+          <text class="user-name">{{item.nickname}}</text>
+          <text class="user-badge {{item.role}}">{{item.role === 'premium' ? '高级' : '普通'}}</text>
+        </view>
+        <view class="user-codes" wx:if="{{item.role === 'premium'}}">
+          <view class="code-row">
+            <text class="code-label">邀请码:</text>
+            <text class="code-value" bindtap="copyCode" data-code="{{item.invite_code}}">{{item.invite_code || '--'}}</text>
+            <text class="copy-hint">(点击复制)</text>
+          </view>
+          <view class="code-row" wx:if="{{item.welfare_code}}">
+            <text class="code-label">福利码:</text>
+            <text class="code-value" bindtap="copyCode" data-code="{{item.welfare_code}}">{{item.welfare_code}}</text>
+          </view>
+          <view class="code-row" wx:if="{{item.taobao_nickname}}">
+            <text class="code-label">淘宝昵称:</text>
+            <text class="taobao-name">{{item.taobao_nickname}}</text>
+          </view>
+        </view>
+        <view class="user-meta">
+          <text>已邀请: {{item.invited_count || 0}} 人</text>
+        </view>
+      </view>
+      <view class="empty" wx:if="{{users.length === 0}}">暂无用户</view>
+    </view>
+  </view>
+
+  <!-- 邀请码 Tab -->
+  <view class="tab-content" wx:if="{{currentTab === 3}}">
+    <view class="action-bar">
+      <button class="add-btn" bindtap="showAddInviteCode">+ 生成官方邀请码</button>
+    </view>
+    <view class="list">
+      <view class="code-item" wx:for="{{inviteCodes}}" wx:key="_id">
+        <view class="code-main">
+          <text class="code-big" bindtap="copyCode" data-code="{{item.code}}">{{item.code}}</text>
+          <text class="code-status {{item.status}}">{{item.status === 'active' ? '有效' : '已停用'}}</text>
+        </view>
+        <view class="code-detail">
+          <text>备注: {{item.remark || '无'}}</text>
+          <text>已使用: {{item.used_count || 0}} 次</text>
+        </view>
+        <view class="code-actions">
+          <text class="action-btn" bindtap="toggleInviteCodeStatus" data-id="{{item._id}}" data-status="{{item.status}}">
+            {{item.status === 'active' ? '停用' : '启用'}}
+          </text>
+          <text class="action-btn delete" bindtap="deleteInviteCode" data-id="{{item._id}}">删除</text>
+        </view>
+      </view>
+      <view class="empty" wx:if="{{inviteCodes.length === 0}}">暂无官方邀请码</view>
+    </view>
+  </view>
+
+  <!-- 福利码 Tab -->
+  <view class="tab-content" wx:if="{{currentTab === 4}}">
+    <view class="list">
+      <view class="welfare-item" wx:for="{{welfareCodes}}" wx:key="_id">
+        <view class="welfare-row">
+          <text class="welfare-label">会员昵称</text>
+          <text class="welfare-value">{{item.nickname}}</text>
+        </view>
+        <view class="welfare-row">
+          <text class="welfare-label">福利码</text>
+          <text class="welfare-code" bindtap="copyCode" data-code="{{item.welfare_code}}">{{item.welfare_code}}</text>
+        </view>
+        <view class="welfare-row">
+          <text class="welfare-label">淘宝昵称</text>
+          <text class="welfare-value highlight">{{item.taobao_nickname}}</text>
+        </view>
+      </view>
+      <view class="empty" wx:if="{{welfareCodes.length === 0}}">暂无福利码记录</view>
+    </view>
+  </view>
+</view>
+
+<!-- 商品编辑弹窗 -->
+<view class="modal-mask" wx:if="{{showProductModal}}" bindtap="closeProductModal"></view>
+<view class="modal-container product-modal" wx:if="{{showProductModal}}">
+  <view class="modal-header">
+    <text class="modal-title">{{editingProduct ? '编辑商品' : '添加商品'}}</text>
+    <text class="modal-close" bindtap="closeProductModal">×</text>
+  </view>
+  <scroll-view class="modal-body" scroll-y>
+    <view class="form-item">
+      <text class="form-label">商品名称 *</text>
+      <input class="form-input" placeholder="请输入商品名称" value="{{newProduct.name}}" data-field="name" bindinput="onProductInput"/>
+    </view>
+    <view class="form-item">
+      <text class="form-label">商品描述</text>
+      <textarea class="form-textarea" placeholder="请输入商品描述" value="{{newProduct.description}}" data-field="description" bindinput="onProductInput"/>
+    </view>
+    <view class="form-item">
+      <text class="form-label">商品图片</text>
+      <view class="image-list">
+        <view class="image-item" wx:for="{{newProduct.images}}" wx:key="index">
+          <image src="{{item}}" mode="aspectFill"></image>
+          <text class="remove-btn" bindtap="removeImage" data-index="{{index}}">×</text>
+        </view>
+        <view class="image-add" bindtap="chooseImage">+</view>
+      </view>
+    </view>
+    <view class="form-item">
+      <text class="form-label">原价 (元) *</text>
+      <input class="form-input" type="digit" placeholder="如: 99.00" value="{{newProduct.price_original}}" data-field="price_original" bindinput="onProductInput"/>
+    </view>
+    <view class="form-item">
+      <text class="form-label">会员价 (元) *</text>
+      <input class="form-input" type="digit" placeholder="如: 79.00" value="{{newProduct.price_member}}" data-field="price_member" bindinput="onProductInput"/>
+    </view>
+    <view class="form-item">
+      <text class="form-label">库存</text>
+      <input class="form-input" type="number" placeholder="请输入库存" value="{{newProduct.stock}}" data-field="stock" bindinput="onProductInput"/>
+    </view>
+  </scroll-view>
+  <view class="modal-footer">
+    <button class="btn-cancel" bindtap="closeProductModal">取消</button>
+    <button class="btn-confirm" bindtap="saveProduct">保存</button>
+  </view>
+</view>
+
+<!-- 邀请码生成弹窗 -->
+<view class="modal-mask" wx:if="{{showInviteCodeModal}}" bindtap="closeInviteCodeModal"></view>
+<view class="modal-container small-modal" wx:if="{{showInviteCodeModal}}">
+  <view class="modal-header">
+    <text class="modal-title">生成官方邀请码</text>
+    <text class="modal-close" bindtap="closeInviteCodeModal">×</text>
+  </view>
+  <view class="modal-body">
+    <view class="form-item">
+      <text class="form-label">备注 (可选)</text>
+      <input class="form-input" placeholder="如: 活动专用" value="{{inviteCodeRemark}}" bindinput="onRemarkInput"/>
+    </view>
+  </view>
+  <view class="modal-footer">
+    <button class="btn-cancel" bindtap="closeInviteCodeModal">取消</button>
+    <button class="btn-confirm" bindtap="generateInviteCode">生成</button>
+  </view>
+</view>

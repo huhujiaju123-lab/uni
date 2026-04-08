@@ -1,0 +1,29 @@
+---
+description: 实验与数据分析工作流规则
+globs: "{operations-运营分析,experiments-实验}/**/*.{sql,md}"
+alwaysApply: false
+---
+
+# 分析工作流规则（v1）
+
+## 适用范围
+
+- 本规则仅在 `operations-运营分析` 与 `experiments-实验` 下的 `sql/md` 文件生效。
+- 一次只处理一个分析目标，避免把无关任务混在同一轮修改中。
+
+## 分支与提交
+
+- 不在 `main` 直接开发，统一使用 `analysis/<topic>-<date_or_week>`。
+- 一个分支只承载一个分析主题。
+- 每完成一个口径定义（logical checkpoint）提交一次。
+
+## SQL 与输出
+
+- 每个分析目标独立一个 SQL 文件，如 `sql/exp_timeslot.sql`。
+- 公共逻辑提取到 `sql/common_*.sql`，避免复制漂移。
+- 结果统一放在 `output/`，命名使用 `topic_YYYYMMDD.csv`。
+
+## 口径变更记录
+
+- 口径发生变化时必须记录：字段、时间窗、人群范围、去重规则、版本号、变更原因。
+- 未记录口径变更，不进入“分析完成”状态。

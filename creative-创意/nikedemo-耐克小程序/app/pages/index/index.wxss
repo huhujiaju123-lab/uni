@@ -1,0 +1,19 @@
+.container { padding: 30rpx; }
+
+/* 头部卡片 */
+.header-card { border-radius: 24rpx; padding: 40rpx; margin-bottom: 60rpx; color: #fff; transition: all 0.3s; }
+.bg-gray { background: #999; } /* 普通会员背景 */
+.bg-black { background: #000; box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.3); } /* 高级会员背景 */
+
+.user-info { display: flex; align-items: center; }
+.avatar { width: 100rpx; height: 100rpx; border-radius: 50%; margin-right: 30rpx; background: #eee; }
+.nickname { font-size: 36rpx; font-weight: bold; margin-bottom: 10rpx; }
+.badge { font-size: 24rpx; opacity: 0.8; letter-spacing: 2rpx; }
+
+/* 操作区 */
+.section-title { font-size: 32rpx; font-weight: bold; margin-bottom: 30rpx; }
+.input-box input { background: #f6f6f6; padding: 30rpx; border-radius: 12rpx; margin-bottom: 40rpx; }
+
+.btn-main { background: #000; color: #fff; border-radius: 50rpx; font-weight: bold; padding: 20rpx 0; }
+.vip-card { background: #FFF5E5; color: #FA5400; padding: 30rpx; border-radius: 12rpx; margin-bottom: 40rpx; font-weight: bold; }
+

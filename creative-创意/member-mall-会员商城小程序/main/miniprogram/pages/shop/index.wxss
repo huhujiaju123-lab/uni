@@ -1,0 +1,115 @@
+/* pages/shop/index.wxss */
+/* 小店商品页面样式 */
+
+.container {
+  min-height: 100vh;
+  background-color: #F6F6F6;
+  padding-bottom: 40rpx;
+}
+
+/* 区块通用样式 */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32rpx 32rpx 16rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #000000;
+}
+
+.member-tag {
+  font-size: 22rpx;
+  color: #FA5400;
+  background-color: #FFF3EE;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+/* 优惠券区域 */
+.coupon-section {
+  background-color: #FFFFFF;
+  margin: 24rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+}
+
+.coupon-card {
+  padding: 0 24rpx 24rpx;
+}
+
+/* 升级提示卡片 */
+.upgrade-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32rpx;
+  background: linear-gradient(135deg, #FFF8F5 0%, #FFEFE8 100%);
+  margin: 0 24rpx 24rpx;
+  border-radius: 16rpx;
+}
+
+.upgrade-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.upgrade-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 8rpx;
+}
+
+.upgrade-desc {
+  font-size: 24rpx;
+  color: #666666;
+}
+
+.upgrade-btn {
+  background-color: #FA5400;
+  color: #FFFFFF;
+  font-size: 26rpx;
+  font-weight: 500;
+  padding: 16rpx 32rpx;
+  border-radius: 32rpx;
+}
+
+/* 登录提示 */
+.login-tip {
+  padding: 40rpx 32rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: #999999;
+}
+
+/* 商品区域 */
+.product-section {
+  background-color: #FFFFFF;
+  margin: 24rpx;
+  border-radius: 24rpx;
+  padding-bottom: 24rpx;
+}
+
+.product-list {
+  padding: 0 24rpx;
+}
+
+.product-item {
+  margin-bottom: 24rpx;
+}
+
+.product-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 底部提示 */
+.footer-tip {
+  text-align: center;
+  padding: 32rpx;
+  font-size: 24rpx;
+  color: #999999;
+}

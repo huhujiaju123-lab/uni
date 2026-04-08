@@ -1,0 +1,33 @@
+<view class="container">
+  <!-- 头部卡片 -->
+  <view class="header-card {{userLevel === 'premium' ? 'bg-black' : 'bg-gray'}}">
+    <view class="user-info">
+      <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
+      <view class="text-info">
+        <view class="nickname">{{userInfo.nickName}}</view>
+        <view class="badge">{{userLevel === 'premium' ? '高级会员 PREMIUM' : '普通会员 NORMAL'}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作区域 -->
+  <view class="action-area">
+    <!-- 场景A：如果是普通会员，显示升级入口 -->
+    <block wx:if="{{userLevel === 'normal'}}">
+      <view class="section-title">解锁权益</view>
+      <view class="input-box">
+        <input placeholder="请输入邀请码 (试一试 888888)" bindinput="onInputCode" />
+      </view>
+      <button class="btn-main" bindtap="handleUpgrade">立即升级</button>
+    </block>
+
+    <!-- 场景B：如果是高级会员，显示邀请入口 -->
+    <block wx:else>
+      <view class="section-title">尊贵权益</view>
+      <view class="vip-card">
+        <text>🎉 您已享受全场 VIP 折扣</text>
+      </view>
+      <button class="btn-main" bindtap="handleInvite">生成我的邀请码</button>
+    </block>
+  </view>
+</view>

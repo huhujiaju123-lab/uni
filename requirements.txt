@@ -1,0 +1,10 @@
+requests
+pandas
+openpyxl
+matplotlib
+scipy
+jinja2
+python-pptx
+edge-tts
+lark-oapi
+python-docx

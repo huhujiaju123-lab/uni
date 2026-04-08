@@ -196,9 +196,132 @@ EN: "For simple tasks, sequential operations, single-file edits → work directl
 
 ---
 
+## 七、交互式教程精华（Ch4/5/6/8）
+
+### Ch4：数据与指令分离（Separating Data and Instructions）
+
+**核心问题**：当 prompt 里混入用户的输入内容（variable input），Claude 会搞不清哪部分是指令、哪部分是数据。
+
+**解法：XML 标签隔离变量**
+
+```
+中（错误）：
+  "把这封邮件改写得更专业：Yo Claude 你好..."
+  → Claude 以为"Yo Claude"是邮件内容的一部分
+
+中（正确）：
+  "把下面这封邮件改写得更专业：
+  <email>Yo Claude 你好...</email>"
+  → Claude 清楚知道 <email> 标签内才是数据
+
+EN: Wrap variable input in XML tags to clearly separate it from instructions.
+```
+
+**关键洞察**：
+- Prompt 模板（template）+ 变量替换（variable substitution）是工程化 prompt 的基础
+- 细节很重要：prompt 里的错别字、格式问题，会直接影响 Claude 的输出——Claude 对模式敏感，你写得乱它也容易乱
+- XML 标签是 Claude 专门训练过的结构化机制，是分隔符的首选
+
+---
+
+### Ch5：格式化输出（Formatting Output）
+
+**核心技巧 1：用 XML 标签包裹输出**
+
+```
+中："把诗写在 <poem> 标签里"
+EN: "Put the poem in <poem> tags"
+→ 好处：下游程序可以精确提取标签内容，不受前言废话影响
+```
+
+**核心技巧 2：预填充回复（Prefilling / Speaking for Claude）**
+
+把 Claude 应该说的开头放进 `assistant` 消息里，Claude 会从那里接着说：
+
+```python
+# 中：强迫 Claude 直接输出 JSON，跳过任何前言
+messages = [
+    {"role": "user", "content": "给我一个用户信息的 JSON"},
+    {"role": "assistant", "content": "{"}   # ← 预填充，Claude 接着补完
+]
+
+# EN: Prefill assistant turn to constrain output format
+```
+
+**注意（Claude 4.6 更新）**：prefill 在最新模型里已废弃，改用直接在指令里说"直接输出 JSON，不要前言"。
+
+**停止序列（Stop Sequences）**：API 调用时可以设置 `stop_sequences=["</answer>"]`，让 Claude 输出到指定标签就停，节省 token。
+
+---
+
+### Ch6：预认知 / 逐步思考（Precognition / Chain-of-Thought）
+
+**核心洞察**：Claude 和人一样，被突然叫醒立刻答题会出错。给它「先想再答」的空间，准确率显著提升。
+
+**关键规则：思考必须是显式输出（think out loud）**
+
+```
+中（无效）："请思考后给我答案"（但只输出答案）
+中（有效）："先在 <thinking> 标签里逐步分析，再给出结论"
+EN: "Think step by step in <brainstorm> tags, then give your answer"
+→ 没有写出来的思考 = 没有思考
+```
+
+**顺序敏感性（Order Sensitivity）**：
+- Claude 倾向于选择两个选项中的**第二个**（训练数据里第二个答案更常是正确的）
+- 实践意义：如果你列了两个方案让 Claude 评判，它可能偏向后者——用 CoT 可以抵消这个偏差
+
+**中英对照示例**：
+```
+中：
+  ❌ "这个评论是正面还是负面的？"（直接问，可能出错）
+  ✅ "先在 <分析> 标签里列出评论中的正面和负面信号，再给出最终判断"
+
+EN:
+  ❌ "Is this review positive or negative?"
+  ✅ "First list positive and negative signals in <analysis> tags, then give your verdict"
+```
+
+---
+
+### Ch8：避免幻觉（Avoiding Hallucinations）
+
+**幻觉（Hallucination）**：Claude 为了"有帮助"而编造不存在的信息。
+
+**三个解法：**
+
+**解法 1：给 Claude 一个「退出口」（Give Claude an Out）**
+```
+中：
+  ❌ "非洲最大的河马叫什么名字？"
+  ✅ "非洲最大的河马叫什么名字？如果你不确定，直接说不知道。"
+
+EN: "If you're not sure, say 'I don't know' rather than guessing."
+→ Claude 有了不回答的许可，就不会强行编造
+```
+
+**解法 2：先找证据再回答（Evidence Before Answer）**
+```
+中："先从文档中引用与问题相关的原文（放在 <引用> 标签里），
+    再基于这些引用给出答案。如果找不到相关引用，说明文档中没有该信息。"
+
+EN: "First extract relevant quotes in <quotes> tags, then answer based only on those quotes."
+→ 迫使 Claude 锚定到真实文本，无法凭空生成
+```
+
+**解法 3：降低 Temperature**
+- Temperature = 0：最一致、最保守，接近确定性输出
+- Temperature = 1：最有创意、最不可预测
+- 减少幻觉 → 降低 temperature（趋向 0）
+- 需要创意 → 提高 temperature
+
+**与你的规则对照**：你已有的「Verification-Loop 4 步验证」+ 「先内搜再外搜」，本质就是在执行「evidence before answer」的工程化版本。
+
+---
+
 ## 学习进度
 
 - [x] 资源 1：Anthropic Prompt Engineering 文档
-- [ ] 资源 2：Anthropic 交互式教程（Ch4/5/6/8 重点）
+- [x] 资源 2：Anthropic 交互式教程（Ch4/5/6/8 重点）
 - [ ] 资源 3：OpenAI Prompt Engineering Guide（对比读）
 - [x] 练手：对照最佳实践改一版 Cursor 规则（新增任务边界提示）

@@ -1,0 +1,43 @@
+{
+  "pages": [
+    "pages/benefits/benefits",
+    "pages/profile/profile",
+    "pages/invite/invite",
+    "pages/product/detail",
+    "pages/admin/admin",
+    "pages/shop/index"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTitleText": "会员中心",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F6F6F6",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#000000",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/benefits/benefits",
+        "text": "福利",
+        "iconPath": "images/tab-benefits.png",
+        "selectedIconPath": "images/tab-benefits-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/tab-profile.png",
+        "selectedIconPath": "images/tab-profile-active.png"
+      }
+    ]
+  },
+  "usingComponents": {
+    "invite-modal": "/components/invite-modal/invite-modal"
+  },
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents",
+  "libVersion": "3.8.3"
+}

@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "我的",
+  "usingComponents": {
+    "invite-modal": "/components/invite-modal/invite-modal"
+  }
+}

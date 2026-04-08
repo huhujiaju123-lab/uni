@@ -1,0 +1,71 @@
+<!--pages/shop/index.wxml-->
+<!--小店商品页面 - 使用微信原生组件-->
+
+<view class="container">
+  <!-- 会员优惠券区域 -->
+  <view class="coupon-section">
+    <!-- 高级会员显示优惠券 -->
+    <block wx:if="{{isPremium}}">
+      <view class="section-header">
+        <text class="section-title">会员专属优惠</text>
+        <text class="member-tag">高级会员</text>
+      </view>
+      <!-- 优惠券组件 -->
+      <view class="coupon-card">
+        <store-coupon
+          appid="{{shopAppid}}"
+          coupon-id="{{couponId}}"
+          custom-style="{{couponStyle}}"
+          bind:entersuccess="onCouponEnterSuccess"
+          bind:entererror="onCouponEnterError"
+        />
+      </view>
+    </block>
+
+    <!-- 普通会员显示升级提示 -->
+    <block wx:elif="{{isLoggedIn}}">
+      <view class="upgrade-card" bindtap="goToUpgrade">
+        <view class="upgrade-content">
+          <text class="upgrade-title">升级高级会员</text>
+          <text class="upgrade-desc">享受专属8折优惠</text>
+        </view>
+        <view class="upgrade-btn">立即升级</view>
+      </view>
+    </block>
+
+    <!-- 未登录显示登录提示 -->
+    <block wx:else>
+      <view class="login-tip">
+        <text>登录后查看会员专属优惠</text>
+      </view>
+    </block>
+  </view>
+
+  <!-- 商品列表 -->
+  <view class="product-section">
+    <view class="section-header">
+      <text class="section-title">精选商品</text>
+    </view>
+
+    <view class="product-list">
+      <view
+        class="product-item"
+        wx:for="{{productIds}}"
+        wx:key="*this"
+      >
+        <store-product
+          appid="{{shopAppid}}"
+          product-id="{{item}}"
+          custom-style="{{productStyle}}"
+          bindentersuccess="onProductEnterSuccess"
+          bindentererror="onProductEnterError"
+        />
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部提示 -->
+  <view class="footer-tip">
+    <text>点击商品即可跳转至微信小店购买</text>
+  </view>
+</view>

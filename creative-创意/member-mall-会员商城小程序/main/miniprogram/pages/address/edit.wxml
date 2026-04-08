@@ -1,0 +1,7 @@
+<!--pages/address/edit.wxml-->
+<view class="container">
+  <view class="empty-state">
+    <text class="empty-text">编辑地址</text>
+    <text class="empty-sub">测试模式暂不支持</text>
+  </view>
+</view>

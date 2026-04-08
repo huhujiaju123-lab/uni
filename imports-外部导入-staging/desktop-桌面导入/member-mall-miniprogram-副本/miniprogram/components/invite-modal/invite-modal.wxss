@@ -1,0 +1,128 @@
+/* components/invite-modal/invite-modal.wxss */
+
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  position: relative;
+  width: 600rpx;
+  background-color: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 60rpx 40rpx 40rpx;
+}
+
+.close-btn {
+  position: absolute;
+  top: 20rpx;
+  right: 24rpx;
+  width: 48rpx;
+  height: 48rpx;
+  font-size: 40rpx;
+  color: #CCCCCC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-title {
+  text-align: center;
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 16rpx;
+}
+
+.modal-desc {
+  text-align: center;
+  font-size: 26rpx;
+  color: #999999;
+  margin-bottom: 40rpx;
+}
+
+.input-wrap {
+  margin-bottom: 32rpx;
+}
+
+.invite-input {
+  width: 100%;
+  height: 96rpx;
+  padding: 0 32rpx;
+  background-color: #F6F6F6;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  color: #000000;
+  text-align: center;
+  letter-spacing: 8rpx;
+  text-transform: uppercase;
+}
+
+.input-placeholder {
+  color: #CCCCCC;
+  letter-spacing: 0;
+}
+
+.inviter-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32rpx;
+  padding: 20rpx;
+  background-color: #F6F6F6;
+  border-radius: 12rpx;
+}
+
+.inviter-avatar {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 24rpx;
+  margin-right: 12rpx;
+}
+
+.inviter-name {
+  font-size: 26rpx;
+  color: #666666;
+}
+
+.confirm-btn {
+  width: 100%;
+  height: 96rpx;
+  background-color: #CCCCCC;
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: 600;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24rpx;
+}
+
+.confirm-btn::after {
+  display: none;
+}
+
+.confirm-btn.active {
+  background-color: #000000;
+}
+
+.confirm-btn[disabled] {
+  background-color: #CCCCCC;
+  color: #FFFFFF;
+}
+
+.later-btn {
+  text-align: center;
+  font-size: 28rpx;
+  color: #999999;
+  padding: 16rpx 0;
+}

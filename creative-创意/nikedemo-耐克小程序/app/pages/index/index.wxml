@@ -1,0 +1,34 @@
+<view class="container">
+  <!-- 顶部搜索 -->
+  <view class="search-bar">
+    <view class="search-input">🔍 搜索潮流单品</view>
+  </view>
+
+  <!-- 商品列表 -->
+  <view class="product-list">
+    <block wx:for="{{products}}" wx:key="id">
+      <view class="product-card">
+        <view class="img-placeholder">商品图</view>
+        <view class="info">
+          <text class="title">{{item.name}}</text>
+          
+          <!-- 价格逻辑核心 -->
+          <view class="price-row">
+            <!-- 如果是高级会员，显示橙色会员价 -->
+            <view wx:if="{{userLevel === 'premium'}}" class="price-premium">
+              ¥{{item.price_vip}} <text class="tag">VIP</text>
+            </view>
+            
+            <!-- 如果是普通会员，显示原价，会员价带锁 -->
+            <view wx:else class="price-normal">
+              ¥{{item.price_origin}}
+              <view class="locked-price">
+                🔒 会员价 ¥{{item.price_vip}}
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>

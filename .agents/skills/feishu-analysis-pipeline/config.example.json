@@ -1,0 +1,5 @@
+{
+  "airy_chat_id": "fill-your-airy-chat-id",
+  "airy_receive_id_type": "chat_id",
+  "airy_prompt_template": "请基于这份原始分析材料，产出一版适合业务汇报的可视化飞书文档，并做排版美化。\\n\\n标题：{title}\\n原始材料：{resource_url}\\n\\n要求：\\n- 保留数据口径和核心结论\\n- 结构清晰，适合直接转发汇报\\n- 原始数据尽量整理成易读表格\\n- 高亮关键结论和建议\\n- 输出新的飞书文档链接"
+}

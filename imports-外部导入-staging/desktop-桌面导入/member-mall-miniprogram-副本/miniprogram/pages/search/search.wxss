@@ -1,0 +1,164 @@
+/* pages/search/search.wxss */
+
+.container {
+  min-height: 100vh;
+  background-color: #FFFFFF;
+}
+
+/* 搜索栏 */
+.search-bar {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 32rpx;
+  background-color: #FFFFFF;
+}
+
+.search-input-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 72rpx;
+  padding: 0 24rpx;
+  background-color: #F6F6F6;
+  border-radius: 36rpx;
+}
+
+.search-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 12rpx;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #000000;
+}
+
+.search-placeholder {
+  color: #999999;
+}
+
+.clear-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-left: 12rpx;
+}
+
+.cancel-btn {
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: #000000;
+}
+
+/* 搜索结果 */
+.result-list {
+  height: calc(100vh - 104rpx);
+  padding: 16rpx;
+}
+
+.product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.product-item {
+  width: calc(50% - 8rpx);
+  background-color: #FFFFFF;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.product-image {
+  width: 100%;
+  height: 340rpx;
+  background-color: #F6F6F6;
+}
+
+.product-info {
+  padding: 16rpx;
+}
+
+.product-name {
+  font-size: 26rpx;
+  color: #000000;
+  line-height: 1.4;
+  height: 72rpx;
+}
+
+.price-section {
+  margin-top: 12rpx;
+}
+
+.price-main {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #FA5400;
+}
+
+/* 空结果 */
+.empty-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 0;
+}
+
+.empty-image {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999999;
+}
+
+/* 加载更多 */
+.loading-more {
+  display: flex;
+  justify-content: center;
+  padding: 32rpx;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+/* 搜索历史 */
+.history-section {
+  padding: 32rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #000000;
+}
+
+.clear-history {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.history-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.history-tag {
+  padding: 12rpx 24rpx;
+  background-color: #F6F6F6;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  color: #666666;
+}

@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>育儿成长助手</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-page: #F5F5F7;
+            --bg-card: #FFFFFF;
+            --bg-dark: #1D1D1F;
+            --bg-glass: rgba(255,255,255,0.72);
+            --text-primary: #1D1D1F;
+            --text-secondary: #6E6E73;
+            --text-tertiary: #AEAEB2;
+            --text-on-dark: #F5F5F7;
+            --accent: #0071E3;
+            --accent-hover: #0077ED;
+            --success: #30D158;
+            --warning: #FF9F0A;
+            --border: rgba(0,0,0,0.06);
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 32px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'PingFang SC', sans-serif;
+            background: var(--bg-page);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.47;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-glass);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 0.5px solid var(--border);
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 52px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .logo svg {
+            color: var(--success);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-meta {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .header-meta strong {
+            color: var(--text-primary);
+        }
+
+        .header-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 980px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .header-btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+        }
+
+        .header-btn-ghost:hover {
+            background: rgba(0,0,0,0.04);
+        }
+
+        .header-btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .header-btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Main Container */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px 64px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 48px 0 40px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: rgba(0,113,227,0.08);
+            border-radius: 980px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            font-size: 19px;
+            color: var(--text-secondary);
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 16px;
+        }
+
+        .bento-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+        }
+
+        .bento-card-dark {
+            background: var(--bg-dark);
+            color: var(--text-on-dark);
+        }
+
+        /* Card Sizes */
+        .col-span-8 { grid-column: span 8; }
+        .col-span-6 { grid-column: span 6; }
+        .col-span-4 { grid-column: span 4; }
+        .col-span-3 { grid-column: span 3; }
+        .col-span-12 { grid-column: span 12; }
+
+        /* Card Header */
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-icon-blue { background: rgba(0,113,227,0.1); color: var(--accent); }
+        .card-icon-green { background: rgba(48,209,88,0.1); color: var(--success); }
+        .card-icon-gold { background: rgba(255,159,10,0.15); color: var(--warning); }
+        .card-icon-dark { background: rgba(255,255,255,0.1); color: white; }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .bento-card-dark .card-subtitle {
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Input Card */
+        .input-area {
+            margin-bottom: 20px;
+        }
+
+        .input-area textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-family: inherit;
+            line-height: 1.5;
+            resize: none;
+            background: var(--bg-page);
+            transition: all 0.2s;
+        }
+
+        .input-area textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(0,113,227,0.1);
+        }
+
+        .input-area textarea::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .input-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tag-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            border-radius: 980px;
+            background: white;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tag-btn:hover {
+            border-color: var(--text-tertiary);
+            background: var(--bg-page);
+        }
+
+        .tag-btn.active {
+            border-color: var(--accent);
+            background: rgba(0,113,227,0.06);
+            color: var(--accent);
+        }
+
+        .tag-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .submit-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 980px;
+            background: var(--accent);
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.02);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 16px;
+            background: rgba(255,255,255,0.06);
+            border-radius: var(--radius-md);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 4px;
+        }
+
+        /* Timeline */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 360px;
+            overflow-y: auto;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 14px;
+            padding: 14px;
+            background: var(--bg-page);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .timeline-item:hover {
+            background: rgba(0,0,0,0.04);
+        }
+
+        .timeline-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: rgba(0,113,227,0.1);
+            color: var(--accent);
+        }
+
+        .timeline-icon.insight {
+            background: rgba(48,209,88,0.1);
+            color: var(--success);
+        }
+
+        .timeline-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .timeline-text {
+            font-size: 14px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .timeline-meta {
+            display: flex;
+            gap: 12px;
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .timeline-tag {
+            padding: 2px 8px;
+            background: white;
+            border-radius: 6px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-tertiary);
+        }
+
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+            opacity: 0.3;
+        }
+
+        /* AI Chat Card */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 420px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 4px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 90%;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+            align-self: flex-end;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .message.ai .message-avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .message.user .message-avatar {
+            background: var(--bg-page);
+            color: var(--text-secondary);
+        }
+
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message.ai .message-bubble {
+            background: var(--bg-page);
+            border-bottom-left-radius: 6px;
+        }
+
+        .message.user .message-bubble {
+            background: var(--accent);
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .chat-input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: var(--bg-page);
+            border-radius: 24px;
+            padding: 4px 4px 4px 16px;
+        }
+
+        .chat-input-wrapper input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .chat-input-wrapper input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .chat-send-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .chat-send-btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.05);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .quick-action-btn {
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            border-radius: 980px;
+            background: white;
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-action-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Milestone Card */
+        .milestone-highlight {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            background: rgba(255,255,255,0.08);
+            border-radius: var(--radius-md);
+            margin-top: 16px;
+        }
+
+        .milestone-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #FFD60A 0%, #FF9F0A 100%);
+            color: white;
+        }
+
+        .milestone-content h4 {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .milestone-content p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            margin-top: 4px;
+        }
+
+        /* Date Display */
+        .date-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        /* Insight Card */
+        .insight-input-card {
+            background: linear-gradient(135deg, rgba(48,209,88,0.06) 0%, rgba(0,113,227,0.06) 100%);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            width: 90%;
+            max-width: 480px;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.95) translateY(10px);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 50%;
+            background: var(--bg-page);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(0,0,0,0.08);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-family: inherit;
+            background: var(--bg-page);
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(0,113,227,0.1);
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .form-hint a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 14px;
+            border-radius: 980px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel {
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text-primary);
+        }
+
+        .btn-cancel:hover {
+            background: var(--bg-page);
+        }
+
+        .btn-save {
+            border: none;
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Model Selector */
+        .model-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .model-option {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: white;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .model-option:hover {
+            border-color: var(--text-tertiary);
+        }
+
+        .model-option.selected {
+            border-color: var(--accent);
+            background: rgba(0,113,227,0.06);
+        }
+
+        .model-option h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .model-option p {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .col-span-8, .col-span-6, .col-span-4, .col-span-3 {
+                grid-column: span 6;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .col-span-8, .col-span-6, .col-span-4, .col-span-3 {
+                grid-column: span 12;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .bento-card {
+                padding: 20px;
+            }
+
+            .tag-group {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.15);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0,0,0,0.25);
+        }
+
+        /* Loading */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 8px 0;
+        }
+
+        .typing-indicator span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--text-tertiary);
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* History Modal */
+        .history-modal .modal {
+            max-width: 640px;
+        }
+
+        .history-filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .history-filters input {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-family: inherit;
+            background: var(--bg-page);
+        }
+
+        .history-filters input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            gap: 14px;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-date {
+            flex-shrink: 0;
+            text-align: right;
+            width: 80px;
+        }
+
+        .history-date .day {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .history-date .time {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        .history-content {
+            flex: 1;
+        }
+
+        .history-text {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+
+        .history-type {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .history-type.growth {
+            background: rgba(0,113,227,0.1);
+            color: var(--accent);
+        }
+
+        .history-type.insight {
+            background: rgba(48,209,88,0.1);
+            color: var(--success);
+        }
+
+        .history-stats {
+            display: flex;
+            gap: 20px;
+            padding: 16px;
+            background: var(--bg-page);
+            border-radius: var(--radius-sm);
+            margin-bottom: 16px;
+        }
+
+        .history-stat {
+            text-align: center;
+        }
+
+        .history-stat-value {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .history-stat-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        .export-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 980px;
+            background: white;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .export-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/>
+                </svg>
+                育儿成长助手
+            </div>
+            <div class="header-right">
+                <div class="header-meta" id="childAge">宝宝 2岁1个月</div>
+                <div class="header-meta">连续记录 <strong id="streakDays">0</strong> 天</div>
+                <button class="header-btn header-btn-ghost" onclick="openHistoryModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    历史记录
+                </button>
+                <button class="header-btn header-btn-primary" onclick="openSettingsModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                    设置
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>
+                </svg>
+                AI 智能育儿助手
+            </div>
+            <h1>记录成长，洞见未来</h1>
+            <p>每一个小进步，都值得被记录和理解</p>
+        </section>
+
+        <!-- Bento Grid -->
+        <div class="bento-grid">
+            <!-- Record Input Card -->
+            <div class="bento-card col-span-8">
+                <div class="card-header">
+                    <div class="card-icon card-icon-blue">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="card-title">今日成长记录</div>
+                        <div class="card-subtitle" id="currentDate"></div>
+                    </div>
+                </div>
+                <div class="input-area">
+                    <textarea id="diaryInput" placeholder="今天宝宝有什么新发现？学会了什么新技能？情绪如何？"></textarea>
+                </div>
+                <div class="input-footer">
+                    <div class="tag-group">
+                        <button class="tag-btn" onclick="addDiaryTag('行为')" data-tag="行为">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 6.5-6C14 2 15.5 5 15.5 8c0 2.5-1 3.5-1 5.62V16"/><path d="M8 16v2h8v-2"/><path d="M12 16v6"/>
+                            </svg>
+                            行为
+                        </button>
+                        <button class="tag-btn" onclick="addDiaryTag('语言')" data-tag="语言">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                            语言
+                        </button>
+                        <button class="tag-btn" onclick="addDiaryTag('情绪')" data-tag="情绪">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                            </svg>
+                            情绪
+                        </button>
+                        <button class="tag-btn" onclick="addDiaryTag('里程碑')" data-tag="里程碑">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+                            </svg>
+                            里程碑
+                        </button>
+                    </div>
+                    <button class="submit-btn" onclick="saveDiaryEntry()">
+                        保存记录
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Card (Dark) -->
+            <div class="bento-card bento-card-dark col-span-4">
+                <div class="card-header">
+                    <div class="card-icon card-icon-dark">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="card-title">成长统计</div>
+                        <div class="card-subtitle">数据追踪</div>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalRecords">0</div>
+                        <div class="stat-label">总记录</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="thisMonth">0</div>
+                        <div class="stat-label">本月</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="milestones">0</div>
+                        <div class="stat-label">里程碑</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="insights">0</div>
+                        <div class="stat-label">心得</div>
+                    </div>
+                </div>
+                <div class="milestone-highlight" id="latestMilestone" style="display: none;">
+                    <div class="milestone-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+                        </svg>
+                    </div>
+                    <div class="milestone-content">
+                        <h4 id="milestoneTitle">最新里程碑</h4>
+                        <p id="milestoneDate">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Chat Card -->
+            <div class="bento-card col-span-6">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, rgba(102,126,234,0.15) 0%, rgba(118,75,162,0.15) 100%); color: #764ba2;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="card-title">AI 智能分析</div>
+                        <div class="card-subtitle">已加载 <span id="contextCount">0</span> 条记录作为参考</div>
+                    </div>
+                </div>
+                <div class="chat-container">
+                    <div class="quick-actions">
+                        <button class="quick-action-btn" onclick="insertQuickText('请帮我总结一下最近的成长记录')">总结近期</button>
+                        <button class="quick-action-btn" onclick="insertQuickText('请分析宝宝最近的行为模式')">行为分析</button>
+                        <button class="quick-action-btn" onclick="requestWeeklyReport()">周报告</button>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message ai">
+                            <div class="message-avatar">AI</div>
+                            <div class="message-bubble">
+                                <p>你好！我是你的育儿助手。我会基于你记录的成长日记来分析和讨论宝宝的发展。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <div class="chat-input-wrapper">
+                            <input type="text" id="userInput" placeholder="和 AI 探讨育儿问题..." onkeydown="handleKeyDown(event)">
+                            <button class="chat-send-btn" onclick="sendMessage()" id="sendBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Records Card -->
+            <div class="bento-card col-span-6">
+                <div class="card-header">
+                    <div class="card-icon card-icon-green">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="card-title">最近记录</div>
+                        <div class="card-subtitle">成长轨迹</div>
+                    </div>
+                </div>
+                <div class="timeline" id="timeline">
+                    <div class="empty-state">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
+                        </svg>
+                        <p>暂无记录<br>开始记录宝宝的成长吧</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insight Card -->
+            <div class="bento-card insight-input-card col-span-12">
+                <div class="card-header">
+                    <div class="card-icon card-icon-green">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="card-title">心得想法</div>
+                        <div class="card-subtitle">记录与 AI 交流后的思考和育儿感悟</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 16px; align-items: flex-end;">
+                    <div class="input-area" style="flex: 1; margin-bottom: 0;">
+                        <textarea id="insightInput" placeholder="通过今天的观察和思考，我意识到..." rows="2" style="min-height: 60px;"></textarea>
+                    </div>
+                    <button class="submit-btn" onclick="saveInsightEntry()" style="background: var(--success);">
+                        保存心得
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>设置</h3>
+                <button class="modal-close" onclick="closeSettingsModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label>宝宝出生日期</label>
+                <input type="date" id="childBirthDate">
+                <p class="form-hint">设置后将自动计算宝宝的月龄</p>
+            </div>
+
+            <div class="form-group">
+                <label>AI 模型</label>
+                <div class="model-selector">
+                    <div class="model-option" data-model="gpt-4o" onclick="selectModel('gpt-4o')">
+                        <h4>GPT-4o</h4>
+                        <p>OpenAI 最强</p>
+                    </div>
+                    <div class="model-option selected" data-model="deepseek-chat" onclick="selectModel('deepseek-chat')">
+                        <h4>DeepSeek Chat</h4>
+                        <p>均衡型</p>
+                    </div>
+                    <div class="model-option" data-model="deepseek-reasoner" onclick="selectModel('deepseek-reasoner')">
+                        <h4>DeepSeek R1</h4>
+                        <p>深度推理</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>OpenAI API Key</label>
+                <input type="password" id="openaiKeyInput" placeholder="sk-proj-...">
+                <p class="form-hint">用于 GPT-4o 模型。<a href="https://platform.openai.com/api-keys" target="_blank">获取 API Key →</a></p>
+            </div>
+
+            <div class="form-group">
+                <label>DeepSeek API Key</label>
+                <input type="password" id="apiKeyInput" placeholder="sk-...">
+                <p class="form-hint">用于 DeepSeek 模型。<a href="https://platform.deepseek.com/api_keys" target="_blank">获取 API Key →</a></p>
+            </div>
+
+            <div class="form-group">
+                <label>DeepSeek API 地址（可选）</label>
+                <input type="text" id="apiBaseInput" placeholder="https://api.deepseek.com">
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeSettingsModal()">取消</button>
+                <button class="btn-save" onclick="saveSettings()">保存设置</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div class="modal-overlay history-modal" id="historyModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>历史记录</h3>
+                <button class="modal-close" onclick="closeHistoryModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="history-stats">
+                <div class="history-stat">
+                    <div class="history-stat-value" id="historyTotal">0</div>
+                    <div class="history-stat-label">总记录</div>
+                </div>
+                <div class="history-stat">
+                    <div class="history-stat-value" id="historyFiltered">0</div>
+                    <div class="history-stat-label">筛选结果</div>
+                </div>
+                <div class="history-stat">
+                    <div class="history-stat-value" id="historyThisWeek">0</div>
+                    <div class="history-stat-label">本周</div>
+                </div>
+                <button class="export-btn" onclick="exportToExcel()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    导出
+                </button>
+            </div>
+
+            <div class="history-filters">
+                <input type="date" id="historyStartDate" placeholder="开始日期" onchange="filterHistory()">
+                <input type="date" id="historyEndDate" placeholder="结束日期" onchange="filterHistory()">
+                <input type="text" id="historySearch" placeholder="搜索记录..." oninput="filterHistory()">
+            </div>
+
+            <div class="history-list" id="historyList">
+                <div class="empty-state">暂无记录</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <script>
+        // ==================== Configuration ====================
+        const SYSTEM_PROMPT_BASE = `你是一位专业的育儿顾问和儿童发展专家。你的角色是帮助家长基于长期积累的成长记录，分析孩子的发展并提供育儿建议。
+
+## 你的核心职责：
+1. **基于记录分析**：基于家长的成长日记和心得想法来分析孩子的发展模式。
+2. **发展阶段判断**：基于儿童发展心理学和实际记录，判断孩子当前所处的发展阶段。
+3. **行动建议**：给出具体、可操作的育儿建议。
+4. **灵魂提问**：适时提出启发性问题，帮助家长反思。
+5. **趋势追踪**：帮助发现记录中的发展趋势和规律。
+
+## 回复要求：
+1. 温和、专业的语气
+2. 回复有结构，使用标题、列表
+3. 每次回复包含：分析 + 建议 + 一个灵魂提问
+4. 引用具体的历史记录
+5. 简洁实用，用中文回复`;
+
+        // ==================== State ====================
+        let apiKey = localStorage.getItem('deepseek_api_key') || '';
+        let openaiKey = localStorage.getItem('openai_api_key') || 'OPENAI_API_KEY_REDACTED';
+        let apiBase = localStorage.getItem('deepseek_api_base') || 'https://api.deepseek.com';
+        let selectedModel = localStorage.getItem('deepseek_model') || 'deepseek-chat';
+        let childBirthDate = localStorage.getItem('child_birth_date') || '';
+        let growthRecords = JSON.parse(localStorage.getItem('growthRecords') || '[]');
+        let insightRecords = JSON.parse(localStorage.getItem('insightRecords') || '[]');
+        let goals = JSON.parse(localStorage.getItem('parentingGoals') || '[]');
+        let conversationHistory = [];
+        let isLoading = false;
+        let currentDiaryTags = [];
+        let filteredRecords = [];
+
+        // ==================== Initialize ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('zh-CN', {
+                year: 'numeric', month: 'long', day: 'numeric', weekday: 'long'
+            });
+
+            document.getElementById('apiKeyInput').value = apiKey;
+            document.getElementById('openaiKeyInput').value = openaiKey;
+            document.getElementById('apiBaseInput').value = apiBase === 'https://api.deepseek.com' ? '' : apiBase;
+            document.getElementById('childBirthDate').value = childBirthDate;
+
+            document.querySelectorAll('.model-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.model === selectedModel);
+            });
+
+            updateChildAge();
+            updateStats();
+            updateContextCount();
+            renderTimeline();
+            updateLatestMilestone();
+        });
+
+        // ==================== Child Age ====================
+        function calculateChildAge(birthDateStr) {
+            if (!birthDateStr) return null;
+            const birthDate = new Date(birthDateStr);
+            const today = new Date();
+            if (isNaN(birthDate.getTime()) || birthDate > today) return null;
+
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+            if (today.getDate() < birthDate.getDate()) months--;
+            if (months < 0) { years--; months += 12; }
+            return { years, months };
+        }
+
+        function updateChildAge() {
+            const age = calculateChildAge(childBirthDate);
+            let text = '宝宝';
+            if (age) {
+                if (age.years === 0) text = `宝宝 ${age.months}个月`;
+                else if (age.months === 0) text = `宝宝 ${age.years}岁`;
+                else text = `宝宝 ${age.years}岁${age.months}个月`;
+            }
+            document.getElementById('childAge').textContent = text;
+        }
+
+        // ==================== Context ====================
+        function buildContextFromRecords() {
+            const recentGrowth = growthRecords.slice(-30);
+            const recentInsights = insightRecords.slice(-20);
+            let context = '';
+
+            const age = calculateChildAge(childBirthDate);
+            if (age) context += `\n## 宝宝信息：\n- 年龄：${age.years}岁${age.months}个月\n`;
+
+            if (recentGrowth.length > 0) {
+                context += '\n## 近期成长记录：\n';
+                recentGrowth.forEach(r => {
+                    const date = new Date(r.timestamp).toLocaleDateString('zh-CN');
+                    const tags = r.tags && r.tags.length > 0 ? `[${r.tags.join(', ')}]` : '';
+                    context += `- ${date} ${tags}: ${r.text}\n`;
+                });
+            }
+
+            if (recentInsights.length > 0) {
+                context += '\n## 家长心得：\n';
+                recentInsights.forEach(r => {
+                    const date = new Date(r.timestamp).toLocaleDateString('zh-CN');
+                    context += `- ${date}: ${r.text}\n`;
+                });
+            }
+            return context;
+        }
+
+        function getFullSystemPrompt() {
+            return SYSTEM_PROMPT_BASE + buildContextFromRecords();
+        }
+
+        function updateContextCount() {
+            document.getElementById('contextCount').textContent = growthRecords.length + insightRecords.length;
+        }
+
+        // ==================== Diary Tags ====================
+        function addDiaryTag(tag) {
+            const btn = document.querySelector(`.tag-btn[data-tag="${tag}"]`);
+            if (currentDiaryTags.includes(tag)) {
+                currentDiaryTags = currentDiaryTags.filter(t => t !== tag);
+                btn.classList.remove('active');
+            } else {
+                currentDiaryTags.push(tag);
+                btn.classList.add('active');
+            }
+        }
+
+        // ==================== Save Records ====================
+        function saveDiaryEntry() {
+            const input = document.getElementById('diaryInput');
+            const text = input.value.trim();
+            if (!text) { showToast('请输入记录内容'); return; }
+
+            const entry = {
+                id: Date.now(),
+                text: text,
+                tags: [...currentDiaryTags],
+                type: 'growth',
+                timestamp: new Date().toISOString()
+            };
+
+            growthRecords.push(entry);
+            localStorage.setItem('growthRecords', JSON.stringify(growthRecords));
+
+            input.value = '';
+            currentDiaryTags = [];
+            document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
+
+            updateStats();
+            updateContextCount();
+            renderTimeline();
+            updateLatestMilestone();
+            showToast('记录已保存');
+        }
+
+        function saveInsightEntry() {
+            const input = document.getElementById('insightInput');
+            const text = input.value.trim();
+            if (!text) { showToast('请输入心得内容'); return; }
+
+            const entry = {
+                id: Date.now(),
+                text: text,
+                type: 'insight',
+                timestamp: new Date().toISOString()
+            };
+
+            insightRecords.push(entry);
+            localStorage.setItem('insightRecords', JSON.stringify(insightRecords));
+            input.value = '';
+
+            updateStats();
+            updateContextCount();
+            renderTimeline();
+            showToast('心得已保存');
+        }
+
+        // ==================== Stats ====================
+        function updateStats() {
+            const allRecords = [...growthRecords, ...insightRecords];
+            const total = allRecords.length;
+            const now = new Date();
+
+            const thisMonth = allRecords.filter(r => {
+                const d = new Date(r.timestamp);
+                return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+            }).length;
+
+            const milestones = growthRecords.filter(r => r.tags && r.tags.includes('里程碑')).length;
+            const insights = insightRecords.length;
+
+            document.getElementById('totalRecords').textContent = total;
+            document.getElementById('thisMonth').textContent = thisMonth;
+            document.getElementById('milestones').textContent = milestones;
+            document.getElementById('insights').textContent = insights;
+
+            updateStreak();
+        }
+
+        function updateStreak() {
+            const allRecords = [...growthRecords, ...insightRecords];
+            if (allRecords.length === 0) {
+                document.getElementById('streakDays').textContent = '0';
+                return;
+            }
+
+            const recordDates = new Set(allRecords.map(r => new Date(r.timestamp).toISOString().split('T')[0]));
+            let streak = 0;
+            let checkDate = new Date();
+            const todayStr = checkDate.toISOString().split('T')[0];
+            if (!recordDates.has(todayStr)) checkDate.setDate(checkDate.getDate() - 1);
+
+            while (true) {
+                const dateStr = checkDate.toISOString().split('T')[0];
+                if (recordDates.has(dateStr)) {
+                    streak++;
+                    checkDate.setDate(checkDate.getDate() - 1);
+                } else break;
+            }
+            document.getElementById('streakDays').textContent = streak;
+        }
+
+        function updateLatestMilestone() {
+            const milestoneRecords = growthRecords.filter(r => r.tags && r.tags.includes('里程碑'));
+            const container = document.getElementById('latestMilestone');
+
+            if (milestoneRecords.length > 0) {
+                const latest = milestoneRecords[milestoneRecords.length - 1];
+                document.getElementById('milestoneTitle').textContent = latest.text.substring(0, 30) + (latest.text.length > 30 ? '...' : '');
+                document.getElementById('milestoneDate').textContent = new Date(latest.timestamp).toLocaleDateString('zh-CN');
+                container.style.display = 'flex';
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        // ==================== Timeline ====================
+        function renderTimeline() {
+            const timeline = document.getElementById('timeline');
+            const allRecords = [
+                ...growthRecords.map(r => ({...r, recordType: 'growth'})),
+                ...insightRecords.map(r => ({...r, recordType: 'insight'}))
+            ].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0, 10);
+
+            if (allRecords.length === 0) {
+                timeline.innerHTML = `<div class="empty-state">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                    <p>暂无记录<br>开始记录宝宝的成长吧</p>
+                </div>`;
+                return;
+            }
+
+            timeline.innerHTML = allRecords.map(r => {
+                const date = new Date(r.timestamp);
+                const today = new Date();
+                const diffDays = Math.floor((today - date) / (1000 * 60 * 60 * 24));
+                let dateStr;
+                if (diffDays === 0) dateStr = '今天';
+                else if (diffDays === 1) dateStr = '昨天';
+                else if (diffDays < 7) dateStr = `${diffDays}天前`;
+                else dateStr = date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' });
+
+                const iconClass = r.recordType === 'insight' ? 'insight' : '';
+                const icon = r.recordType === 'growth'
+                    ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>'
+                    : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>';
+                const tags = r.tags ? r.tags.map(t => `<span class="timeline-tag">${t}</span>`).join('') : '';
+
+                return `<div class="timeline-item">
+                    <div class="timeline-icon ${iconClass}">${icon}</div>
+                    <div class="timeline-content">
+                        <div class="timeline-text">${escapeHtml(r.text)}</div>
+                        <div class="timeline-meta"><span>${dateStr}</span>${tags}</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // ==================== Chat ====================
+        function handleKeyDown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function insertQuickText(text) {
+            document.getElementById('userInput').value = text;
+            document.getElementById('userInput').focus();
+        }
+
+        function requestWeeklyReport() {
+            insertQuickText('请根据最近一周的成长记录，生成一份周报告');
+            sendMessage();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const text = input.value.trim();
+            if (!text || isLoading) return;
+
+            // Check API key based on selected model
+            const isOpenAI = selectedModel === 'gpt-4o';
+            const currentKey = isOpenAI ? openaiKey : apiKey;
+
+            if (!currentKey) {
+                showToast(isOpenAI ? '请先配置 OpenAI API Key' : '请先配置 DeepSeek API Key');
+                openSettingsModal();
+                return;
+            }
+
+            conversationHistory.push({ role: 'user', content: text });
+            appendMessage('user', text);
+            input.value = '';
+
+            showTypingIndicator();
+            isLoading = true;
+            document.getElementById('sendBtn').disabled = true;
+
+            try {
+                const messages = [
+                    { role: 'system', content: getFullSystemPrompt() },
+                    ...conversationHistory.slice(-10)
+                ];
+
+                // Use different API endpoint based on model
+                const apiUrl = isOpenAI ? 'https://api.openai.com/v1/chat/completions' : `${apiBase}/v1/chat/completions`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentKey}`
+                    },
+                    body: JSON.stringify({
+                        model: selectedModel,
+                        messages: messages,
+                        temperature: 0.7,
+                        max_tokens: 2000
+                    })
+                });
+
+                const data = await response.json();
+                if (data.error) throw new Error(data.error.message);
+
+                const aiResponse = data.choices[0].message.content;
+                conversationHistory.push({ role: 'assistant', content: aiResponse });
+                removeTypingIndicator();
+                appendMessage('ai', aiResponse);
+            } catch (error) {
+                removeTypingIndicator();
+                appendMessage('ai', `抱歉，出现了错误：${error.message}`);
+            } finally {
+                isLoading = false;
+                document.getElementById('sendBtn').disabled = false;
+            }
+        }
+
+        function appendMessage(type, content) {
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = `message ${type}`;
+            div.innerHTML = `
+                <div class="message-avatar">${type === 'ai' ? 'AI' : '我'}</div>
+                <div class="message-bubble">${type === 'ai' ? formatMarkdown(content) : escapeHtml(content)}</div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'message ai';
+            div.id = 'typingIndicator';
+            div.innerHTML = `
+                <div class="message-avatar">AI</div>
+                <div class="message-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+
+        function formatMarkdown(text) {
+            return text
+                .replace(/### (.*)/g, '<h4>$1</h4>')
+                .replace(/## (.*)/g, '<h4>$1</h4>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/^\d+\. (.*)/gm, '<li>$1</li>')
+                .replace(/^- (.*)/gm, '<li>$1</li>')
+                .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+                .replace(/\n/g, '<br>');
+        }
+
+        // ==================== Settings ====================
+        function openSettingsModal() {
+            document.getElementById('settingsModal').classList.add('active');
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+
+        function selectModel(model) {
+            selectedModel = model;
+            document.querySelectorAll('.model-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.model === model);
+            });
+        }
+
+        function saveSettings() {
+            apiKey = document.getElementById('apiKeyInput').value.trim();
+            openaiKey = document.getElementById('openaiKeyInput').value.trim();
+            const baseInput = document.getElementById('apiBaseInput').value.trim();
+            apiBase = baseInput || 'https://api.deepseek.com';
+            childBirthDate = document.getElementById('childBirthDate').value;
+
+            localStorage.setItem('deepseek_api_key', apiKey);
+            localStorage.setItem('openai_api_key', openaiKey);
+            localStorage.setItem('deepseek_api_base', apiBase);
+            localStorage.setItem('deepseek_model', selectedModel);
+            localStorage.setItem('child_birth_date', childBirthDate);
+
+            updateChildAge();
+            closeSettingsModal();
+            showToast('设置已保存');
+        }
+
+        // ==================== History ====================
+        function openHistoryModal() {
+            document.getElementById('historyModal').classList.add('active');
+            filterHistory();
+        }
+
+        function closeHistoryModal() {
+            document.getElementById('historyModal').classList.remove('active');
+        }
+
+        function filterHistory() {
+            const startDate = document.getElementById('historyStartDate').value;
+            const endDate = document.getElementById('historyEndDate').value;
+            const searchText = document.getElementById('historySearch').value.toLowerCase();
+
+            const allRecords = [
+                ...growthRecords.map(r => ({...r, recordType: 'growth'})),
+                ...insightRecords.map(r => ({...r, recordType: 'insight'}))
+            ];
+
+            filteredRecords = allRecords.filter(r => {
+                const recordDate = new Date(r.timestamp).toISOString().split('T')[0];
+                if (startDate && recordDate < startDate) return false;
+                if (endDate && recordDate > endDate) return false;
+                if (searchText && !r.text.toLowerCase().includes(searchText)) return false;
+                return true;
+            }).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            updateHistoryStats();
+            renderHistoryList();
+        }
+
+        function updateHistoryStats() {
+            const allRecords = [...growthRecords, ...insightRecords];
+            document.getElementById('historyTotal').textContent = allRecords.length;
+            document.getElementById('historyFiltered').textContent = filteredRecords.length;
+
+            const now = new Date();
+            const weekStart = new Date(now);
+            weekStart.setDate(now.getDate() - now.getDay());
+            weekStart.setHours(0, 0, 0, 0);
+            const thisWeekCount = allRecords.filter(r => new Date(r.timestamp) >= weekStart).length;
+            document.getElementById('historyThisWeek').textContent = thisWeekCount;
+        }
+
+        function renderHistoryList() {
+            const container = document.getElementById('historyList');
+            if (filteredRecords.length === 0) {
+                container.innerHTML = '<div class="empty-state">暂无记录</div>';
+                return;
+            }
+
+            container.innerHTML = filteredRecords.slice(0, 50).map(r => {
+                const date = new Date(r.timestamp);
+                const typeClass = r.recordType === 'growth' ? 'growth' : 'insight';
+                const typeLabel = r.recordType === 'growth' ? '成长记录' : '心得想法';
+
+                return `<div class="history-item">
+                    <div class="history-date">
+                        <div class="day">${date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })}</div>
+                        <div class="time">${date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}</div>
+                    </div>
+                    <div class="history-content">
+                        <div class="history-text">${escapeHtml(r.text)}</div>
+                        <span class="history-type ${typeClass}">${typeLabel}</span>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function exportToExcel() {
+            if (filteredRecords.length === 0) {
+                showToast('没有可导出的记录');
+                return;
+            }
+
+            const exportData = filteredRecords.map(r => ({
+                '日期': new Date(r.timestamp).toLocaleDateString('zh-CN'),
+                '时间': new Date(r.timestamp).toLocaleTimeString('zh-CN'),
+                '类型': r.recordType === 'growth' ? '成长记录' : '心得想法',
+                '标签': r.tags ? r.tags.join(', ') : '',
+                '内容': r.text
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, '育儿记录');
+            ws['!cols'] = [{ wch: 12 }, { wch: 10 }, { wch: 10 }, { wch: 15 }, { wch: 60 }];
+            XLSX.writeFile(wb, `育儿记录_${new Date().toISOString().split('T')[0]}.xlsx`);
+        }
+
+        // ==================== Utilities ====================
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+                background: var(--bg-dark); color: white; padding: 14px 28px;
+                border-radius: 980px; font-size: 14px; font-weight: 500; z-index: 2000;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        // Close modals on outside click
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>0119 新客涨价实验分析</title>
+<style>
+@page { size: landscape; margin: 12mm; }
+body { font-family: -apple-system, 'Segoe UI', sans-serif; margin: 24px auto; max-width: 1200px; font-size: 13px; color: #333; line-height: 1.6; }
+h1 { color: #1a1a2e; font-size: 20px; border-bottom: 2px solid #e94560; padding-bottom: 8px; margin-bottom: 4px; }
+h2 { color: #0f3460; font-size: 15px; margin: 20px 0 8px 0; border-left: 4px solid #e94560; padding-left: 10px; }
+h3 { color: #16213e; font-size: 13px; margin: 14px 0 6px 0; }
+.meta { color: #666; font-size: 12px; margin: 2px 0 16px; }
+table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+th, td { border: 1px solid #ddd; padding: 6px 10px; text-align: right; font-size: 12px; }
+th { background: #f0f0f0; font-weight: 600; text-align: center; }
+td:first-child { text-align: left; font-weight: 500; }
+.pos { color: #D32F2F; font-weight: 600; }
+.neg { color: #2E7D32; font-weight: 600; }
+.warn { color: #E65100; font-weight: 600; }
+.grpA { background: #E3F2FD; }
+.grpB { background: #FFF3E0; }
+.alert-box { border-left: 4px solid #E65100; border-radius: 4px; padding: 12px 16px; margin: 12px 0; }
+.alert-solved { background: #E8F5E9; border-left-color: #2E7D32; }
+.alert-warn { background: #FFF3E0; }
+.conclusion { background: #f8f9fa; border-radius: 6px; padding: 12px 16px; margin: 10px 0; }
+.conclusion ul { margin: 4px 0; padding-left: 20px; }
+.conclusion li { margin: 3px 0; font-size: 12px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 10px 0; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 10px 0; }
+.card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px; }
+.card-title { font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 4px; }
+.card-value { font-size: 22px; font-weight: 700; color: #1a1a2e; }
+.card-diff { font-size: 12px; margin-top: 2px; }
+.chart-bar { display: flex; align-items: center; margin: 3px 0; }
+.chart-label { width: 80px; font-size: 11px; text-align: right; padding-right: 8px; }
+.chart-track { flex: 1; height: 22px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
+.chart-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 6px; font-size: 10px; color: #fff; font-weight: 600; }
+.fill-a { background: #42A5F5; }
+.fill-b { background: #FF9800; }
+small { font-size: 10px; color: #999; }
+.note { font-size: 11px; color: #999; margin-top: 12px; border-top: 1px solid #eee; padding-top: 8px; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+.tag-up { background: #FFEBEE; color: #D32F2F; }
+.tag-down { background: #E8F5E9; color: #2E7D32; }
+.tag-warn { background: #FFF3E0; color: #E65100; }
+.tag-ok { background: #E8F5E9; color: #2E7D32; }
+.section-old { opacity: 0.65; }
+.strikethrough { text-decoration: line-through; color: #999; }
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.compare-col { padding: 10px 14px; }
+.compare-col:first-child { border-right: 2px dashed #ddd; }
+.compare-header { text-align: center; font-size: 13px; font-weight: 600; margin-bottom: 8px; padding: 4px; border-radius: 4px; }
+</style></head><body>
+
+<h1>0119 新客涨价实验分析</h1>
+<p class="meta">实验周期: 2026-01-19 ~ 2026-03-01（42天）&nbsp;|&nbsp; $2.99 对照组 vs $3.99 涨价组 &nbsp;|&nbsp; 弹层发券</p>
+
+<!-- ========================================= -->
+<!-- Part 0: 数据问题定位 -->
+<!-- ========================================= -->
+<h2>0. 数据质量排查</h2>
+
+<div class="alert-box alert-solved">
+<b>✅ 问题已定位：$2.99组混入了2025年11月老用户</b>
+<p style="margin:6px 0 0;font-size:12px">
+$2.99 活动（LKUSCA118314788899184640）在 2025-11-13 ~ 11-20 期间已发放过 <b>1,468 张券</b>，这批用户不属于本次实验。
+剔除后，两组人数几乎一致（8,282 vs 8,296），转化率差异从 10.49pp 降至 <b>0.26pp</b>。
+</p>
+</div>
+
+<div class="grid">
+<div class="card">
+<h3>每日领券人数趋势（摘要）</h3>
+<table>
+<tr><th>日期段</th><th>$2.99组</th><th>$3.99组</th><th>说明</th></tr>
+<tr style="background:#FFEBEE"><td>2025-11-13 ~ 11-20</td><td><b>1,468</b></td><td>0</td><td class="warn">⚠️ 历史遗留</td></tr>
+<tr><td>2026-01-19 ~ 01-21</td><td>588</td><td>620</td><td>实验前3天</td></tr>
+<tr><td>2026-01-22 ~ 03-01</td><td>8,282</td><td>8,296</td><td><span class="tag tag-ok">均匀</span></td></tr>
+</table>
+</div>
+<div class="card">
+<h3>其他基线检查</h3>
+<table>
+<tr><th>检验项</th><th>$2.99组</th><th>$3.99组</th><th>结论</th></tr>
+<tr><td>用户重叠</td><td colspan="2" style="text-align:center">0 人</td><td><span class="tag tag-ok">✅ 无重叠</span></td></tr>
+<tr><td>渠道: iOS</td><td>90.5%</td><td>90.6%</td><td><span class="tag tag-ok">✅ 均匀</span></td></tr>
+<tr><td>渠道: Android</td><td>9.5%</td><td>9.4%</td><td><span class="tag tag-ok">✅ 均匀</span></td></tr>
+<tr><td>领券→首购时间</td><td>13.9h</td><td>7.0h</td><td><span class="tag tag-warn">差异大*</span></td></tr>
+</table>
+<p style="font-size:10px;color:#999;margin-top:4px">* 领券→首购时间差异受11月老用户拖长影响。剔除后预计差异缩小。</p>
+</div>
+</div>
+
+<!-- ========================================= -->
+<!-- Part 1: Clean comparison -->
+<!-- ========================================= -->
+<h2>1. 修正后实验效果（1/22 起，剔除历史用户）</h2>
+
+<div class="grid4">
+  <div class="card">
+    <div class="card-title">转化率差异</div>
+    <div class="card-value" style="color:#2E7D32">+0.26pp</div>
+    <div class="card-diff">86.28% → 86.54% <span class="tag tag-ok">基本持平</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">单杯实收变化</div>
+    <div class="card-value">+4.2%</div>
+    <div class="card-diff">$2.88 → $3.00 <span class="pos">(+$0.12)</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">总收入变化</div>
+    <div class="card-value" style="color:#D32F2F">+4.5%</div>
+    <div class="card-diff">$46,958 → $49,052 <span class="pos">(+$2,094)</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">非首单客单价</div>
+    <div class="card-value">+15.3%</div>
+    <div class="card-diff">$4.50 → $5.19 <span class="pos">(+$0.69)</span></div>
+  </div>
+</div>
+
+<table>
+<tr><th>指标</th><th>$2.99组（对照）</th><th>$3.99组（涨价）</th><th>差异</th></tr>
+<tr class="grpA"><td>总用户数</td><td>8,282</td><td>8,296</td><td>+0.2% <span class="tag tag-ok">均匀</span></td></tr>
+<tr class="grpA"><td>有购用户</td><td>7,146</td><td>7,179</td><td>+0.5%</td></tr>
+<tr><td><b>转化率</b></td><td>86.28%</td><td>86.54%</td><td><b>+0.26pp</b></td></tr>
+<tr><td>订单数</td><td>11,551</td><td>11,410</td><td>-1.2%</td></tr>
+<tr><td><b>总收入</b></td><td>$46,958</td><td>$49,052</td><td><span class="pos">+4.5%</span></td></tr>
+<tr><td><b>客单价</b></td><td>$4.07</td><td>$4.30</td><td><span class="pos">+5.7%</span></td></tr>
+<tr><td><b>单杯实收</b></td><td>$2.88</td><td>$3.00</td><td><span class="pos">+4.2%</span></td></tr>
+<tr><td>总杯量</td><td>14,967</td><td>15,028</td><td>+0.4%</td></tr>
+</table>
+
+<h3>首单 vs 非首单</h3>
+<table>
+<tr><th>指标</th><th>$2.99组</th><th>$3.99组</th><th>差异</th></tr>
+<tr><td>首单客单价</td><td>$3.80</td><td>$3.77</td><td>-0.8%</td></tr>
+<tr><td><b>非首单客单价</b></td><td>$4.50</td><td>$5.19</td><td><span class="pos"><b>+15.3%</b></span></td></tr>
+<tr><td>首单占比</td><td>61.9%</td><td>62.9%</td><td>+1.0pp</td></tr>
+<tr><td>非首单订单数</td><td>4,405</td><td>4,231</td><td>-4.0%</td></tr>
+</table>
+
+<!-- ========================================= -->
+<!-- Part 2: Repurchase -->
+<!-- ========================================= -->
+<h2>2. 复购率对比（1/22 起）</h2>
+
+<table>
+<tr><th>复购窗口</th><th>$2.99组</th><th>$3.99组</th><th>差异</th><th>影响</th></tr>
+<tr><td><b>D3 复购率</b></td><td>11.89% <small>(775/6,518)</small></td><td>11.47% <small>(749/6,528)</small></td><td><span class="neg">-0.42pp</span></td><td><span class="tag tag-ok">极小</span></td></tr>
+<tr><td><b>D7 复购率</b></td><td>20.83% <small>(1,180/5,666)</small></td><td>18.67% <small>(1,057/5,662)</small></td><td><span class="neg">-2.16pp</span></td><td><span class="tag tag-warn">注意</span></td></tr>
+<tr><td><b>D14 复购率</b></td><td>26.93% <small>(1,208/4,485)</small></td><td>23.96% <small>(1,069/4,462)</small></td><td><span class="neg">-2.97pp</span></td><td><span class="tag tag-warn">注意</span></td></tr>
+<tr><td><b>D30 复购率</b></td><td>30.71% <small>(414/1,348)</small></td><td>29.44% <small>(391/1,328)</small></td><td><span class="neg">-1.27pp</span></td><td><span class="tag tag-ok">可控</span></td></tr>
+</table>
+
+<div style="margin: 12px 0;">
+<div style="font-size:11px;color:#888;margin-bottom:6px;">复购率对比可视化</div>
+<div class="chart-bar">
+  <div class="chart-label">D3</div>
+  <div class="chart-track"><div class="chart-fill fill-a" style="width:39%">11.89%</div></div>
+  <div style="width:8px"></div>
+  <div class="chart-track"><div class="chart-fill fill-b" style="width:37%">11.47%</div></div>
+  <div style="width:55px;font-size:11px;padding-left:6px;color:#888">-0.42pp</div>
+</div>
+<div class="chart-bar">
+  <div class="chart-label">D7</div>
+  <div class="chart-track"><div class="chart-fill fill-a" style="width:68%">20.83%</div></div>
+  <div style="width:8px"></div>
+  <div class="chart-track"><div class="chart-fill fill-b" style="width:61%">18.67%</div></div>
+  <div style="width:55px;font-size:11px;padding-left:6px;color:#E65100">-2.16pp</div>
+</div>
+<div class="chart-bar">
+  <div class="chart-label">D14</div>
+  <div class="chart-track"><div class="chart-fill fill-a" style="width:88%">26.93%</div></div>
+  <div style="width:8px"></div>
+  <div class="chart-track"><div class="chart-fill fill-b" style="width:78%">23.96%</div></div>
+  <div style="width:55px;font-size:11px;padding-left:6px;color:#E65100">-2.97pp</div>
+</div>
+<div class="chart-bar">
+  <div class="chart-label">D30</div>
+  <div class="chart-track"><div class="chart-fill fill-a" style="width:100%">30.71%</div></div>
+  <div style="width:8px"></div>
+  <div class="chart-track"><div class="chart-fill fill-b" style="width:96%">29.44%</div></div>
+  <div style="width:55px;font-size:11px;padding-left:6px;color:#888">-1.27pp</div>
+</div>
+<div style="font-size:10px;color:#aaa;margin-top:4px">
+  <span style="display:inline-block;width:12px;height:12px;background:#42A5F5;border-radius:2px;vertical-align:middle"></span> $2.99组 &nbsp;
+  <span style="display:inline-block;width:12px;height:12px;background:#FF9800;border-radius:2px;vertical-align:middle"></span> $3.99组 &nbsp;| D30 样本量较小（~1,340人/组），差距收窄可能与样本有关
+</div>
+</div>
+
+<!-- ========================================= -->
+<!-- Part 3: LTV -->
+<!-- ========================================= -->
+<h2>3. LTV 对比（1/22 起，按领券后天数计算）</h2>
+
+<table>
+<tr><th>LTV 窗口</th><th>$2.99组</th><th>$3.99组</th><th>差异</th></tr>
+<tr><td>LTV 7天</td><td>$4.354</td><td>$4.470</td><td><span class="pos">+2.7%</span></td></tr>
+<tr><td>LTV 14天</td><td>$5.002</td><td>$5.128</td><td><span class="pos">+2.5%</span></td></tr>
+<tr><td>LTV 30天</td><td>$5.617</td><td>$5.852</td><td><span class="pos">+4.2%</span></td></tr>
+<tr><td><b>LTV 全期</b></td><td>$5.670</td><td>$5.912</td><td><span class="pos"><b>+4.3%</b></span></td></tr>
+</table>
+<p style="font-size:12px">LTV = 总收入 / 总用户数（含未转化用户）。$3.99组在所有时间窗口上 LTV 均高于对照组，转化率持平的情况下更高的客单价直接转化为 LTV 提升。</p>
+
+<!-- ========================================= -->
+<!-- Part 4: Coupon -->
+<!-- ========================================= -->
+<h2>4. 券包核销率（全量）</h2>
+
+<div class="grid">
+<div class="card">
+<h3 style="color:#42A5F5">$2.99组 券包（10,338人）</h3>
+<table>
+<tr><th>券名</th><th>面额</th><th>核销率</th></tr>
+<tr><td>New Friend Surprise Treat</td><td>首杯价</td><td><b>19.31%</b></td></tr>
+<tr><td>Active 1 day after sign-up</td><td>$1.99</td><td><b>17.01%</b></td></tr>
+<tr><td>New Friend Surprise Treat</td><td>$2.99</td><td>8.07%</td></tr>
+</table>
+</div>
+<div class="card">
+<h3 style="color:#FF9800">$3.99组 券包（8,916人）</h3>
+<table>
+<tr><th>券名</th><th>面额</th><th>核销率</th></tr>
+<tr><td>Surprise Treat</td><td>首杯价</td><td><b>23.33%</b></td></tr>
+<tr><td>Active 1 day after collection</td><td>$2.99</td><td>11.93%</td></tr>
+<tr><td>Surprise Treat</td><td>$3.99</td><td><span class="warn">1.99%</span></td></tr>
+</table>
+</div>
+</div>
+<p style="font-size:12px"><b>发现</b>：$3.99 面额券核销率仅 1.99%（vs $2.99 面额 8.07%），该价位超出新客接受度。但首杯弹层券核销率 $3.99组反而更高（23.33% vs 19.31%），首杯场景下 $3.99 可被接受。</p>
+
+<!-- ========================================= -->
+<!-- Part 5: Conclusion -->
+<!-- ========================================= -->
+<h2>5. 结论与建议</h2>
+
+<div class="conclusion" style="background:#E8F5E9; border: 1px solid #A5D6A7;">
+<b style="color:#2E7D32; font-size:14px;">结论：新客首杯涨价至 $3.99 整体可行，收入正向，转化无损。</b>
+<ul>
+<li><b>转化率不受影响</b>：修正后两组转化率 86.28% vs 86.54%（+0.26pp），价格提升未阻碍新客首购决策</li>
+<li><b>收入全面提升</b>：总收入 +4.5%，客单价 +5.7%，单杯实收 +4.2%，LTV全期 +4.3%</li>
+<li><b>复购率有一定代价</b>：D7 -2.16pp、D14 -2.97pp，但 D30 收窄至 -1.27pp（样本有限需持续观察）</li>
+<li><b>高价首杯筛选高价值用户</b>：非首单客单价 +15.3%（$4.50→$5.19），$3.99 用户后续消费力显著更强</li>
+<li><b>券策略需优化</b>：$3.99 面额券核销率仅 1.99%，建议降至 $2.99~$3.49 或改用折扣券</li>
+</ul>
+</div>
+
+<div class="conclusion" style="background:#FFF8E1; border: 1px solid #FFE082;">
+<b>后续建议</b>
+<ul>
+<li><b>① 推荐全量 $3.99</b>：转化无损 + 收入提升 + LTV 正向，建议作为新客默认定价</li>
+<li><b>② 持续监控 D30+ 复购</b>：当前 D30 样本仅~1,300人/组，需更多数据确认长期复购趋势是否收窄</li>
+<li><b>③ 优化后续券包</b>：$3.99 面额券失效，第二张券建议调为 $2.99 或 5折，降低流失</li>
+<li><b>④ 数据清洗</b>：$2.99 活动需剔除 2025年11月历史发券用户（1,468人），避免后续分析失真</li>
+</ul>
+</div>
+
+<!-- ========================================= -->
+<!-- Appendix: Before vs After -->
+<!-- ========================================= -->
+<h2 style="font-size:13px; color:#999;">附录：修正前后对比</h2>
+<table style="font-size:11px;">
+<tr><th>指标</th><th colspan="2">修正前（含11月用户）</th><th colspan="2">修正后（1/22起）</th></tr>
+<tr><th></th><th>$2.99</th><th>$3.99</th><th>$2.99</th><th>$3.99</th></tr>
+<tr><td>用户数</td><td>10,338</td><td>8,916 <small class="warn">(-13.8%)</small></td><td>8,282</td><td>8,296 <small>(+0.2%)</small></td></tr>
+<tr><td>转化率</td><td>76.21%</td><td>86.70% <small class="warn">(+10.49pp)</small></td><td>86.28%</td><td>86.54% <small>(+0.26pp)</small></td></tr>
+<tr><td>单杯实收</td><td>$2.94</td><td>$3.01 <small>(+2.4%)</small></td><td>$2.88</td><td>$3.00 <small class="pos">(+4.2%)</small></td></tr>
+<tr><td>D7复购</td><td>21.03%</td><td>18.68% <small>(-2.35pp)</small></td><td>20.83%</td><td>18.67% <small>(-2.16pp)</small></td></tr>
+<tr><td>D30复购</td><td>34.39%</td><td>29.40% <small class="warn">(-4.99pp)</small></td><td>30.71%</td><td>29.44% <small>(-1.27pp)</small></td></tr>
+</table>
+
+<p class="note">
+数据来源：CyberData | 分析时间：2026-03-02 | 修正分析起始日：2026-01-22（剔除11月历史用户 + 实验前3天不稳定期）<br>
+转化率 = 有购用户 / 总领券用户 | 复购率 = N天内有复购 / 满N天的首购用户 | LTV = 总收入 / 总用户数<br>
+$2.99组 activity_no: LKUSCA118314788899184640 | $3.99组 activity_no: LKUSCA118703120581779456
+</p>
+
+</body></html>

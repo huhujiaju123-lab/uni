@@ -1,0 +1,177 @@
+/* 弹窗整体样式（Chrome插件弹窗默认宽度有限，设置最大宽度） */
+body {
+  width: 700px;
+  max-height: 600px;
+  padding: 10px;
+  font-family: "Microsoft YaHei", sans-serif;
+  margin: 0;
+  overflow-y: auto;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* 自动监控区域 */
+.auto-monitor-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 15px;
+  border-radius: 8px;
+  color: white;
+}
+
+.monitor-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.monitor-btn {
+  width: 100%;
+  padding: 12px;
+  background: white;
+  color: #667eea;
+  font-weight: bold;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.monitor-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.monitor-btn.active {
+  background: #52c41a;
+  color: white;
+}
+
+.monitor-tip {
+  margin: 8px 0 0 0;
+  font-size: 12px;
+  opacity: 0.9;
+  text-align: center;
+}
+
+/* 按钮组样式 */
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* 按钮样式 */
+button {
+  padding: 8px 16px;
+  background-color: #ff2442;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #e01e37;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* 标签切换按钮 */
+.tab-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.tab-btn {
+  padding: 6px 12px;
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+  font-size: 13px;
+}
+
+.tab-btn.active {
+  background-color: #ff2442;
+  color: white;
+  border-color: #ff2442;
+}
+
+.tab-btn:hover {
+  background-color: #ffdddd;
+  color: #333;
+}
+
+.tab-btn.active:hover {
+  background-color: #e01e37;
+  color: white;
+}
+
+/* 数据展示区域 */
+.data-container {
+  margin-top: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+/* 链接样式 */
+td a {
+  color: #1677ff;
+  text-decoration: none;
+  word-break: break-all; /* 长链接自动换行 */
+}
+
+td a:hover {
+  text-decoration: underline;
+}
+
+/* 查看按钮样式 */
+.view-btn {
+  padding: 4px 10px;
+  background-color: #52c41a;
+  font-size: 12px;
+}
+
+.view-btn:hover {
+  background-color: #389e0d;
+}
+
+/* 清空按钮样式（危险操作，使用深红色） */
+.clear-btn {
+  background-color: #cf1322;
+  border: 2px solid #cf1322;
+}
+
+.clear-btn:hover {
+  background-color: #a8071a;
+  border-color: #a8071a;
+  transform: scale(1.02);
+}

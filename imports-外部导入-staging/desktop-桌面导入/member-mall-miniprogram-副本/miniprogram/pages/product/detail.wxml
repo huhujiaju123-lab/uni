@@ -1,0 +1,67 @@
+<!--pages/product/detail.wxml-->
+<view class="container" wx:if="{{product}}">
+  <!-- 商品图片轮播 -->
+  <view class="image-section">
+    <swiper
+      class="image-swiper"
+      indicator-dots="{{false}}"
+      autoplay="{{false}}"
+      bindchange="onSwiperChange"
+    >
+      <swiper-item wx:for="{{product.images}}" wx:key="index">
+        <image
+          class="product-image"
+          src="{{item}}"
+          mode="aspectFill"
+          bindtap="previewImage"
+        ></image>
+      </swiper-item>
+    </swiper>
+    <view class="image-indicator" wx:if="{{product.images.length > 1}}">
+      {{currentImageIndex + 1}} / {{product.images.length}}
+    </view>
+  </view>
+
+  <!-- 商品信息 -->
+  <view class="info-section">
+    <view class="product-name">{{product.name}}</view>
+
+    <!-- 价格区域 -->
+    <view class="price-section">
+      <view class="price-row">
+        <text class="price-label">会员价</text>
+        <text class="member-price {{isPremium ? 'active' : 'disabled'}}">¥{{product.memberPrice}}</text>
+        <text class="member-tag {{isPremium ? 'active' : ''}}">{{isPremium ? '已生效' : '仅高级会员'}}</text>
+      </view>
+      <view class="original-price-row">
+        <text class="price-label">原价</text>
+        <text class="original-price">¥{{product.originalPrice}}</text>
+      </view>
+    </view>
+
+    <!-- 升级提示（非高级会员显示） -->
+    <view class="upgrade-tip" wx:if="{{!isPremium}}">
+      <view class="tip-content">
+        <text class="tip-icon">★</text>
+        <text class="tip-text">升级高级会员，立享专属会员价</text>
+      </view>
+      <view class="tip-btn" bindtap="goToBenefits">去升级</view>
+    </view>
+  </view>
+
+  <!-- 商品描述 -->
+  <view class="desc-section">
+    <view class="section-title">商品介绍</view>
+    <view class="desc-content">{{product.description || '暂无商品描述'}}</view>
+  </view>
+
+  <!-- 底部提示 -->
+  <view class="bottom-notice">
+    <text class="notice-text">本页面仅展示商品信息，暂不支持下单</text>
+  </view>
+</view>
+
+<!-- 加载中 -->
+<view class="loading-container" wx:if="{{!product}}">
+  <text class="loading-text">加载中...</text>
+</view>

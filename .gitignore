@@ -2,6 +2,18 @@
 node_modules/
 .vercel/
 *.log
+logs/
+
+# 外部导入与知识库的应用状态
+**/.obsidian/
+metadata.db
+notes.db
+.calnotes/
+project.private.config.json
+imports-外部导入-staging/private-configs-私有配置/
+tools-工具/cloudwork-云端Claude/config/.env
+tools-工具/cloudwork-云端Claude/data/
+tools-工具/cloudwork-云端Claude/workspace/
 
 # Claude Code 本地配置
 .claude/*.local.*
@@ -14,6 +26,7 @@ CLAUDE.local.md
 auth.json
 credentials.json
 secrets/
+feishu_config.json
 
 # 数据分析临时文件
 *.csv
@@ -21,8 +34,10 @@ secrets/
 result_*.csv
 daily_*.csv
 weekly_*.csv
+*.sqlite
+*.db
 
 # 播客工具生成文件
-podcast-tool/output/
+podcast-播客/viz-tool-可视化工具/output/
 __pycache__/
 *.pyc

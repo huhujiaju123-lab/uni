@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>图标生成器</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      margin: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>小红书笔记抓取工具 - 图标生成器</h1>
+
+  <div id="canvases"></div>
+
+  <div>
+    <button onclick="downloadAll()">下载所有图标</button>
+  </div>
+
+  <script>
+    const sizes = [16, 32, 48, 128];
+    const canvasContainer = document.getElementById('canvases');
+
+    sizes.forEach(size => {
+      // 创建canvas
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      canvas.id = `icon${size}`;
+
+      const ctx = canvas.getContext('2d');
+
+      // 绘制渐变背景
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#ff2442');
+      gradient.addColorStop(1, '#ff6b6b');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, size, size);
+
+      // 绘制圆角
+      ctx.globalCompositeOperation = 'destination-in';
+      ctx.beginPath();
+      ctx.roundRect(0, 0, size, size, size * 0.15);
+      ctx.fill();
+      ctx.globalCompositeOperation = 'source-over';
+
+      // 绘制文字
+      ctx.fillStyle = 'white';
+      ctx.font = `bold ${size * 0.4}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('笔', size / 2, size / 2);
+
+      // 添加标签
+      const label = document.createElement('div');
+      label.textContent = `${size}x${size}`;
+      label.style.textAlign = 'center';
+
+      const wrapper = document.createElement('div');
+      wrapper.style.display = 'inline-block';
+      wrapper.style.margin = '10px';
+      wrapper.appendChild(canvas);
+      wrapper.appendChild(label);
+
+      canvasContainer.appendChild(wrapper);
+    });
+
+    function downloadAll() {
+      sizes.forEach(size => {
+        const canvas = document.getElementById(`icon${size}`);
+        const link = document.createElement('a');
+        link.download = `icon${size}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+      alert('所有图标已下载！请将它们放到 icons/ 文件夹中。');
+    }
+  </script>
+</body>
+</html>

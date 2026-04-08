@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>小红书抓取工具</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h2>小红书笔记抓取</h2>
+
+    <!-- 自动监控开关 -->
+    <div class="auto-monitor-section">
+      <div class="monitor-status">
+        <span id="statusText">自动监控：未启动</span>
+        <span id="pageTypeText"></span>
+      </div>
+      <button id="toggleMonitorBtn" class="monitor-btn">🚀 启动自动监控</button>
+      <p class="monitor-tip">启动后将自动抓取你浏览的所有笔记（列表+详情）</p>
+    </div>
+
+    <!-- 功能按钮区 -->
+    <div class="button-group">
+      <button id="crawlBtn">手动抓取列表页</button>
+      <button id="crawlDetailBtn">手动抓取详情页</button>
+      <button id="downloadBtn">下载所有数据</button>
+    </div>
+
+    <!-- 数据展示区域 -->
+    <div class="data-container">
+      <h3>已保存的笔记数据：</h3>
+      <div class="tab-buttons">
+        <button id="tabListBtn" class="tab-btn active">列表数据</button>
+        <button id="tabDetailBtn" class="tab-btn">详情数据</button>
+      </div>
+
+      <!-- 列表数据表格 -->
+      <div id="listDataSection">
+        <table id="dataTable">
+          <thead>
+            <tr>
+              <th>作者</th>
+              <th>点赞数</th>
+              <th>标题</th>
+              <th>链接</th>
+            </tr>
+          </thead>
+          <tbody id="dataBody"></tbody>
+        </table>
+      </div>
+
+      <!-- 详情数据表格 -->
+      <div id="detailDataSection" style="display: none;">
+        <table id="detailTable">
+          <thead>
+            <tr>
+              <th>正文标题</th>
+              <th>正文内容</th>
+              <th>评论数</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="detailBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

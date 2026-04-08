@@ -1,0 +1,212 @@
+<svg width="1680" height="1220" viewBox="0 0 1680 1220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font: 700 24px 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #20242b; }
+      .group-title { font: 700 20px 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #d9363e; }
+      .label { font: 700 16px 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #20242b; }
+      .small { font: 500 14px 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #20242b; }
+      .day { font: 500 14px 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #5b6472; }
+      .price { font: 700 16px 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #e53935; }
+      .muted { fill: #6f7785; }
+      .grid { stroke: #e6e9ef; stroke-width: 1; }
+      .axis { stroke: #cfd6df; stroke-width: 1.5; }
+    </style>
+  </defs>
+
+  <rect width="1680" height="1220" fill="#ffffff"/>
+  <text x="56" y="52" class="title">美国新客循环滚动塞券策略图</text>
+  <text x="56" y="82" class="small muted">参考当前美国新客券包与滚动节点设计，仅展示循环塞券，不含触达动作</text>
+
+  <!-- Shared top geometry -->
+  <!-- Column origin = 190, step = 38 -->
+
+  <!-- Group A -->
+  <g transform="translate(0,120)">
+    <text x="56" y="0" class="group-title">组A（1-2单 10.9 / 9.9，2-3单 3.8折 / 10.9）</text>
+    <rect x="56" y="14" width="130" height="30" fill="#ffe84d"/>
+    <text x="69" y="35" class="label">首单后滚动天数</text>
+
+    <!-- Days -->
+    <g>
+      <text x="190" y="35" class="day">0</text>
+      <text x="228" y="35" class="day">1</text>
+      <text x="266" y="35" class="day">2</text>
+      <text x="304" y="35" class="day">3</text>
+      <text x="342" y="35" class="day">4</text>
+      <text x="380" y="35" class="day">5</text>
+      <text x="418" y="35" class="day">6</text>
+      <text x="456" y="35" class="day">7</text>
+      <text x="494" y="35" class="day">8</text>
+      <text x="532" y="35" class="day">9</text>
+      <text x="566" y="35" class="day">10</text>
+      <text x="604" y="35" class="day">11</text>
+      <text x="642" y="35" class="day">12</text>
+      <text x="680" y="35" class="day">13</text>
+      <text x="718" y="35" class="day">14</text>
+      <text x="756" y="35" class="day">15</text>
+      <text x="794" y="35" class="day">16</text>
+      <text x="832" y="35" class="day">17</text>
+      <text x="870" y="35" class="day">18</text>
+      <text x="908" y="35" class="day">19</text>
+      <text x="946" y="35" class="day">20</text>
+      <text x="984" y="35" class="day">21</text>
+      <text x="1022" y="35" class="day">22</text>
+      <text x="1060" y="35" class="day">23</text>
+      <text x="1098" y="35" class="day">24</text>
+      <text x="1136" y="35" class="day">25</text>
+      <text x="1174" y="35" class="day">26</text>
+      <text x="1212" y="35" class="day">27</text>
+      <text x="1250" y="35" class="day">28</text>
+      <text x="1288" y="35" class="day">29</text>
+      <text x="1326" y="35" class="day">30</text>
+      <text x="1364" y="35" class="day">31</text>
+      <text x="1402" y="35" class="day">32</text>
+      <text x="1440" y="35" class="day">33</text>
+      <text x="1478" y="35" class="day">34</text>
+      <text x="1516" y="35" class="day">35</text>
+    </g>
+
+    <!-- Stair area -->
+    <polygon points="190,56 342,56 380,146 532,146 570,266 1098,266 1136,386 1364,386 1402,476 1588,476 1588,520 190,520"
+      fill="#eef0f3"/>
+
+    <rect x="140" y="56" width="48" height="464" fill="#fbe7ab"/>
+    <text x="164" y="293" text-anchor="middle" class="label">下首单</text>
+
+    <!-- Row labels -->
+    <text x="56" y="112" class="label">首单后T+3</text>
+    <text x="56" y="202" class="label">首单后T+7</text>
+    <text x="56" y="322" class="label">首单后T+14</text>
+    <text x="56" y="442" class="label">首单后T+28</text>
+    <text x="56" y="502" class="label">首单后T+35</text>
+
+    <!-- Content A -->
+    <text x="204" y="98" class="small">
+      <tspan>①T1~3未下单，T4用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">10.9</tspan>
+    </text>
+    <text x="204" y="126" class="small">
+      <tspan>②T0~3累计2单，T4用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">3.8折</tspan>
+    </text>
+
+    <text x="204" y="188" class="small">
+      <tspan>①T1~7未下单，T8用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">10.9</tspan>
+    </text>
+    <text x="204" y="216" class="small">
+      <tspan>②T0~7累计2单，T8用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">3.8折</tspan>
+    </text>
+
+    <text x="326" y="278" class="small">
+      <tspan>①T1~14未下单，T15用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">10.9</tspan>
+    </text>
+    <text x="326" y="306" class="small">
+      <tspan>②T0~14累计2单，T15用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">3.8折</tspan>
+    </text>
+
+    <text x="602" y="398" class="small">
+      <tspan>①T1~28未下单，T29用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">9.9</tspan>
+    </text>
+    <text x="602" y="426" class="small">
+      <tspan>②T0~28累计2单，T29用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">10.9</tspan>
+    </text>
+
+    <text x="720" y="488" class="small">
+      <tspan>①T1~35未下单，T36用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">9.9</tspan>
+    </text>
+    <text x="720" y="516" class="small">
+      <tspan>②T0~35累计2单，T36用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">10.9</tspan>
+    </text>
+  </g>
+
+  <!-- Group B -->
+  <g transform="translate(0,650)">
+    <text x="56" y="0" class="group-title">组B（1-2单 10.9 / 9.9，2-3单 4.2折 / 3.8折）</text>
+    <rect x="56" y="14" width="130" height="30" fill="#ffe84d"/>
+    <text x="69" y="35" class="label">首单后滚动天数</text>
+
+    <g>
+      <text x="190" y="35" class="day">0</text>
+      <text x="228" y="35" class="day">1</text>
+      <text x="266" y="35" class="day">2</text>
+      <text x="304" y="35" class="day">3</text>
+      <text x="342" y="35" class="day">4</text>
+      <text x="380" y="35" class="day">5</text>
+      <text x="418" y="35" class="day">6</text>
+      <text x="456" y="35" class="day">7</text>
+      <text x="494" y="35" class="day">8</text>
+      <text x="532" y="35" class="day">9</text>
+      <text x="566" y="35" class="day">10</text>
+      <text x="604" y="35" class="day">11</text>
+      <text x="642" y="35" class="day">12</text>
+      <text x="680" y="35" class="day">13</text>
+      <text x="718" y="35" class="day">14</text>
+      <text x="756" y="35" class="day">15</text>
+      <text x="794" y="35" class="day">16</text>
+      <text x="832" y="35" class="day">17</text>
+      <text x="870" y="35" class="day">18</text>
+      <text x="908" y="35" class="day">19</text>
+      <text x="946" y="35" class="day">20</text>
+      <text x="984" y="35" class="day">21</text>
+      <text x="1022" y="35" class="day">22</text>
+      <text x="1060" y="35" class="day">23</text>
+      <text x="1098" y="35" class="day">24</text>
+      <text x="1136" y="35" class="day">25</text>
+      <text x="1174" y="35" class="day">26</text>
+      <text x="1212" y="35" class="day">27</text>
+      <text x="1250" y="35" class="day">28</text>
+      <text x="1288" y="35" class="day">29</text>
+      <text x="1326" y="35" class="day">30</text>
+      <text x="1364" y="35" class="day">31</text>
+      <text x="1402" y="35" class="day">32</text>
+      <text x="1440" y="35" class="day">33</text>
+      <text x="1478" y="35" class="day">34</text>
+      <text x="1516" y="35" class="day">35</text>
+    </g>
+
+    <polygon points="190,56 342,56 380,146 532,146 570,266 1098,266 1136,386 1364,386 1402,476 1588,476 1588,520 190,520"
+      fill="#eef0f3"/>
+
+    <rect x="140" y="56" width="48" height="464" fill="#fbe7ab"/>
+    <text x="164" y="293" text-anchor="middle" class="label">下首单</text>
+
+    <text x="56" y="112" class="label">首单后T+3</text>
+    <text x="56" y="202" class="label">首单后T+7</text>
+    <text x="56" y="322" class="label">首单后T+14</text>
+    <text x="56" y="442" class="label">首单后T+28</text>
+    <text x="56" y="502" class="label">首单后T+35</text>
+
+    <text x="204" y="98" class="small">
+      <tspan>①T1~3未下单，T4用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">10.9</tspan>
+    </text>
+    <text x="204" y="126" class="small">
+      <tspan>②T0~3累计2单，T4用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">4.2折</tspan>
+    </text>
+
+    <text x="204" y="188" class="small">
+      <tspan>①T1~7未下单，T8用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">10.9</tspan>
+    </text>
+    <text x="204" y="216" class="small">
+      <tspan>②T0~7累计2单，T8用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">4.2折</tspan>
+    </text>
+
+    <text x="326" y="278" class="small">
+      <tspan>①T1~14未下单，T15用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">10.9</tspan>
+    </text>
+    <text x="326" y="306" class="small">
+      <tspan>②T0~14累计2单，T15用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">4.2折</tspan>
+    </text>
+
+    <text x="602" y="398" class="small">
+      <tspan>①T1~28未下单，T29用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">9.9</tspan>
+    </text>
+    <text x="602" y="426" class="small">
+      <tspan>②T0~28累计2单，T29用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">3.8折</tspan>
+    </text>
+
+    <text x="720" y="488" class="small">
+      <tspan>①T1~35未下单，T36用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">9.9</tspan>
+    </text>
+    <text x="720" y="516" class="small">
+      <tspan>②T0~35累计2单，T36用券提醒（≤4.2）/ 券劳</tspan><tspan class="price">3.8折</tspan>
+    </text>
+  </g>
+</svg>

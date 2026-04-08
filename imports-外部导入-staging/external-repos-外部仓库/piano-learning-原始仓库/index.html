@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>音乐学习软件 V11</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0a0a15 0%, #151528 100%);
+      min-height: 100vh;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: rgba(0,0,0,0.3);
+      border-bottom: 1px solid #222;
+    }
+    
+    .logo {
+      font-size: 18px;
+      font-weight: bold;
+      background: linear-gradient(90deg, #4ecdc4, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .mode-tabs {
+      display: flex;
+      gap: 4px;
+      background: rgba(255,255,255,0.05);
+      padding: 4px;
+      border-radius: 8px;
+    }
+    
+    .mode-tab {
+      padding: 6px 14px;
+      border: none;
+      background: transparent;
+      color: #888;
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+    
+    .mode-tab:hover { color: #fff; }
+    .mode-tab.active {
+      background: linear-gradient(135deg, #4ecdc4, #44a08d);
+      color: #fff;
+    }
+    
+    .info-display {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .current-info { text-align: center; }
+    .current-note-label { font-size: 9px; color: #666; }
+    .current-note-value { font-size: 18px; font-weight: bold; color: #4ecdc4; }
+    .current-chord-value { font-size: 16px; color: #a855f7; }
+    
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 15px;
+      overflow-y: auto;
+    }
+    
+    /* 和弦练习面板 */
+    .chord-practice-panel {
+      display: none;
+      width: 100%;
+      max-width: 700px;
+      margin-bottom: 10px;
+    }
+    .chord-practice-panel.active { display: block; }
+    
+    .practice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .practice-title {
+      font-size: 14px;
+      color: #888;
+    }
+    
+    .practice-progress {
+      font-size: 12px;
+      color: #4ecdc4;
+    }
+    
+    .target-chord-display {
+      background: rgba(78,205,196,0.1);
+      border: 2px solid #4ecdc4;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      margin-bottom: 10px;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 10px rgba(78,205,196,0.3); }
+      50% { box-shadow: 0 0 25px rgba(78,205,196,0.6); }
+    }
+    
+    .target-chord-display.success {
+      background: rgba(34,197,94,0.2);
+      border-color: #22c55e;
+      animation: successPulse 0.5s ease;
+    }
+    
+    @keyframes successPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .target-chord-name {
+      font-size: 36px;
+      font-weight: bold;
+      color: #4ecdc4;
+    }
+    
+    .target-chord-display.success .target-chord-name {
+      color: #22c55e;
+    }
+    
+    .target-chord-notes {
+      font-size: 14px;
+      color: #888;
+      margin-top: 5px;
+    }
+    
+    .target-chord-keys {
+      font-size: 12px;
+      color: #666;
+      margin-top: 8px;
+    }
+    
+    .target-chord-keys kbd {
+      background: rgba(255,255,255,0.1);
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin: 0 3px;
+      color: #4ecdc4;
+    }
+    
+    .practice-hint {
+      font-size: 13px;
+      color: #a855f7;
+      margin-top: 8px;
+    }
+    
+    .repeat-indicator {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+    
+    .repeat-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: 2px solid #444;
+      transition: all 0.3s;
+    }
+    
+    .repeat-dot.completed {
+      background: #22c55e;
+      border-color: #22c55e;
+      box-shadow: 0 0 8px rgba(34,197,94,0.6);
+    }
+    
+    .repeat-count {
+      font-size: 16px;
+      color: #4ecdc4;
+      margin-top: 8px;
+      font-weight: bold;
+    }
+    
+    .practice-controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    
+    .practice-btn {
+      padding: 8px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+    
+    .practice-btn.start {
+      background: linear-gradient(135deg, #4ecdc4, #44a08d);
+      color: #fff;
+    }
+    
+    .practice-btn.listen {
+      background: rgba(168,85,247,0.2);
+      border: 1px solid #a855f7;
+      color: #a855f7;
+    }
+    
+    .practice-btn.skip {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid #444;
+      color: #888;
+    }
+    
+    .practice-btn:hover { transform: scale(1.05); }
+    .practice-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    .mastered-chords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    
+    .mastered-chord {
+      padding: 4px 10px;
+      background: rgba(34,197,94,0.2);
+      border: 1px solid #22c55e;
+      border-radius: 15px;
+      font-size: 11px;
+      color: #22c55e;
+    }
+    
+    /* 乐谱练习面板 */
+    .score-panel { 
+      display: none; 
+      width: 100%;
+      max-width: 800px;
+      margin-bottom: 10px;
+    }
+    .score-panel.active { display: block; }
+    
+    .score-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .score-mode-indicator {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .mode-badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    
+    .mode-badge.follow {
+      background: rgba(78,205,196,0.2);
+      color: #4ecdc4;
+      border: 1px solid #4ecdc4;
+    }
+    
+    .mode-badge.challenge {
+      background: rgba(251,191,36,0.2);
+      color: #fbbf24;
+      border: 1px solid #fbbf24;
+    }
+    
+    .mode-badge.exam {
+      background: rgba(239,68,68,0.2);
+      color: #ef4444;
+      border: 1px solid #ef4444;
+    }
+    
+    .score-stats {
+      display: flex;
+      gap: 15px;
+      font-size: 11px;
+      color: #888;
+    }
+    
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .stat-value {
+      font-size: 18px;
+      font-weight: bold;
+      color: #4ecdc4;
+    }
+    
+    .stat-value.error { color: #ef4444; }
+    .stat-value.time { color: #a855f7; }
+    
+    /* 乐谱显示区 */
+    .score-display {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 12px;
+      min-height: 100px;
+    }
+    
+    .song-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #4ecdc4;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    
+    .notation-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 0;
+    }
+    
+    .note-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.05);
+      border: 2px solid #333;
+      border-radius: 8px;
+      min-width: 50px;
+      transition: all 0.3s;
+    }
+    
+    .note-item.current {
+      background: rgba(78,205,196,0.2);
+      border-color: #4ecdc4;
+      box-shadow: 0 0 15px rgba(78,205,196,0.4);
+      transform: scale(1.15);
+    }
+    
+    .note-item.completed {
+      background: rgba(34,197,94,0.15);
+      border-color: #22c55e;
+      opacity: 0.6;
+    }
+    
+    .note-item.error {
+      background: rgba(239,68,68,0.2);
+      border-color: #ef4444;
+      animation: shake 0.3s;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    
+    .note-number {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+    }
+    
+    .note-name {
+      font-size: 10px;
+      color: #888;
+      margin-top: 2px;
+    }
+    
+    .note-key {
+      font-size: 9px;
+      color: #666;
+      background: rgba(255,255,255,0.05);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-top: 3px;
+    }
+    
+    .note-item.current .note-key {
+      color: #4ecdc4;
+      background: rgba(78,205,196,0.2);
+    }
+    
+    /* 隐藏模式样式 */
+    .score-display.hide-highlight .note-item.current {
+      background: rgba(255,255,255,0.05);
+      border-color: #555;
+      box-shadow: none;
+      transform: scale(1);
+    }
+    
+    .score-display.hide-all .note-key,
+    .score-display.hide-all .note-name {
+      opacity: 0;
+    }
+    
+    .score-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .score-btn {
+      padding: 8px 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    
+    .score-btn.primary {
+      background: linear-gradient(135deg, #4ecdc4, #44a08d);
+      color: #fff;
+    }
+    
+    .score-btn.secondary {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid #555;
+      color: #aaa;
+    }
+    
+    .score-btn.warning {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #000;
+    }
+    
+    .score-btn.danger {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #fff;
+    }
+    
+    .score-btn:hover { transform: scale(1.05); }
+    .score-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    
+    .song-select {
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid #555;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 12px;
+    }
+    
+    /* 结果面板 */
+    .result-panel {
+      background: rgba(78,205,196,0.1);
+      border: 2px solid #4ecdc4;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 15px;
+      display: none;
+    }
+    
+    .result-panel.show { display: block; }
+    
+    .result-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4ecdc4;
+      margin-bottom: 15px;
+    }
+    
+    .result-stats {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin: 15px 0;
+    }
+    
+    .result-stat {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .result-stat-label {
+      font-size: 11px;
+      color: #888;
+    }
+    
+    .result-stat-value {
+      font-size: 28px;
+      font-weight: bold;
+      color: #4ecdc4;
+    }
+    
+    .result-message {
+      font-size: 14px;
+      color: #888;
+      margin-top: 10px;
+    }
+    
+    /* 钢琴 */
+    .piano-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 10px;
+    }
+    
+    .visualization-area {
+      height: 100px;
+      background: linear-gradient(180deg, #0a0a12 0%, #0f0f18 100%);
+      border: 1px solid #1a1a2a;
+      border-radius: 10px 10px 0 0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .piano-container {
+      background: linear-gradient(180deg, #151520 0%, #0d0d15 100%);
+      padding: 10px;
+      padding-top: 0;
+      border-radius: 0 0 10px 10px;
+      border: 1px solid #1a1a2a;
+      border-top: 2px solid #333;
+    }
+    
+    .piano {
+      position: relative;
+      height: 120px;
+    }
+    
+    .white-key {
+      position: absolute;
+      width: 46px;
+      height: 120px;
+      background: linear-gradient(180deg, #fefefe 0%, #e5e5e5 100%);
+      border-radius: 0 0 6px 6px;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+      transition: all 0.04s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 5px;
+      z-index: 1;
+    }
+    
+    .white-key:hover { background: linear-gradient(180deg, #fff 0%, #f0f0f0 100%); }
+    
+    .white-key.pressed {
+      background: linear-gradient(180deg, #d0d0d0 0%, #b8b8b8 100%);
+      transform: translateY(2px);
+    }
+    
+    .white-key.target {
+      background: linear-gradient(180deg, #a7f3d0 0%, #6ee7b7 100%);
+      box-shadow: 0 0 15px rgba(34,197,94,0.5);
+    }
+    
+    .white-key.target.pressed {
+      background: linear-gradient(180deg, #86efac 0%, #4ade80 100%);
+    }
+    
+    .white-key .note-label {
+      font-size: 9px;
+      color: #888;
+      font-weight: 600;
+    }
+    
+    .white-key .note-label.c-note { color: #e11d48; }
+    
+    .white-key .scale-number {
+      font-size: 16px;
+      font-weight: bold;
+      color: #4ecdc4;
+      margin-bottom: 1px;
+    }
+    
+    .white-key .key-hint {
+      font-size: 9px;
+      color: #999;
+      background: rgba(0,0,0,0.12);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-top: 2px;
+    }
+    
+    .black-key {
+      position: absolute;
+      width: 28px;
+      height: 75px;
+      background: linear-gradient(180deg, #2a2a2a 0%, #0a0a0a 100%);
+      border-radius: 0 0 4px 4px;
+      cursor: pointer;
+      box-shadow: 0 3px 5px rgba(0,0,0,0.5);
+      transition: all 0.04s ease;
+      z-index: 2;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 5px;
+    }
+    
+    .black-key:hover { background: linear-gradient(180deg, #3a3a3a 0%, #1a1a1a 100%); }
+    
+    .black-key.pressed {
+      background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
+      transform: translateY(2px);
+    }
+    
+    .black-key.target {
+      background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+      box-shadow: 0 0 12px rgba(34,197,94,0.6);
+    }
+    
+    .black-key .key-hint {
+      font-size: 8px;
+      color: #888;
+      background: rgba(255,255,255,0.1);
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+    
+    .note-bar {
+      position: absolute;
+      bottom: 0;
+      border-radius: 5px 5px 0 0;
+      transition: all 0.06s ease-out;
+      opacity: 0;
+      transform: scaleY(0);
+      transform-origin: bottom;
+    }
+    
+    .note-bar.active {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+    
+    .chord-display {
+      position: fixed;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10,10,20,0.95);
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 10px 25px;
+      text-align: center;
+      z-index: 100;
+      display: none;
+    }
+    
+    .chord-display-name {
+      font-size: 24px;
+      font-weight: bold;
+      background: linear-gradient(90deg, #4ecdc4, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .chord-display-notes { font-size: 11px; color: #888; margin-top: 3px; }
+    
+    .feedback-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px 40px;
+      border-radius: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      z-index: 200;
+      display: none;
+      animation: popIn 0.3s ease;
+    }
+    
+    .feedback-message.success {
+      background: rgba(34,197,94,0.95);
+      color: #fff;
+    }
+    
+    .feedback-message.error {
+      background: rgba(239,68,68,0.95);
+      color: #fff;
+    }
+    
+    @keyframes popIn {
+      from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+      to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+    
+    .help-tip {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #555;
+      text-align: center;
+    }
+    
+    .help-tip kbd {
+      background: rgba(255,255,255,0.1);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin: 0 2px;
+      color: #888;
+    }
+    
+    .version {
+      position: fixed;
+      bottom: 5px;
+      right: 10px;
+      font-size: 10px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <div class="logo">🎹 音乐学习软件 V11</div>
+    
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-mode="free">自由弹奏</button>
+      <button class="mode-tab" data-mode="chord">和弦练习</button>
+      <button class="mode-tab" data-mode="score">乐谱练习</button>
+    </div>
+    
+    <div class="info-display">
+      <div class="current-info">
+        <div class="current-note-label">当前</div>
+        <div class="current-note-value" id="currentNote">-</div>
+      </div>
+      <div class="current-info">
+        <div class="current-note-label">和弦</div>
+        <div class="current-chord-value" id="currentChord">-</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="main-content">
+    <!-- 和弦练习面板 -->
+    <div class="chord-practice-panel" id="chordPracticePanel">
+      <div class="practice-header">
+        <div class="practice-title">🎯 和弦引导练习 (每个和弦弹5次)</div>
+        <div class="practice-progress" id="practiceProgress">进度: 0/7</div>
+      </div>
+      
+      <div class="target-chord-display" id="targetChordDisplay">
+        <div class="target-chord-name" id="targetChordName">C</div>
+        <div class="target-chord-notes" id="targetChordNotes">C - E - G (1 - 3 - 5)</div>
+        <div class="target-chord-keys" id="targetChordKeys">
+          按下: <kbd>F</kbd> + <kbd>H</kbd> + <kbd>J</kbd>
+        </div>
+        <div class="practice-hint" id="practiceHint">同时按下高亮的琴键</div>
+        
+        <div class="repeat-indicator" id="repeatIndicator">
+          <div class="repeat-dot"></div>
+          <div class="repeat-dot"></div>
+          <div class="repeat-dot"></div>
+          <div class="repeat-dot"></div>
+          <div class="repeat-dot"></div>
+        </div>
+        <div class="repeat-count" id="repeatCount">0 / 5 次</div>
+      </div>
+      
+      <div class="practice-controls">
+        <button class="practice-btn start" id="startPractice">▶ 开始练习</button>
+        <button class="practice-btn listen" id="listenChord">🔊 听一下</button>
+        <button class="practice-btn skip" id="skipChord">跳过 →</button>
+      </div>
+      
+      <div class="practice-header">
+        <div class="practice-title">✅ 已掌握的和弦</div>
+      </div>
+      <div class="mastered-chords" id="masteredChords">
+        <span style="color:#666;font-size:11px;">还没有掌握的和弦，开始练习吧！</span>
+      </div>
+    </div>
+    
+    <!-- 乐谱练习面板 -->
+    <div class="score-panel" id="scorePanel">
+      <div class="score-header">
+        <div class="score-mode-indicator">
+          <span class="mode-badge follow" id="modeBadge">跟弹模式</span>
+        </div>
+        <div class="score-stats">
+          <div class="stat-item">
+            <span class="stat-value" id="correctCount">0</span>
+            <span class="stat-label">正确</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value error" id="errorCount">0</span>
+            <span class="stat-label">错误</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value time" id="timeCount">0s</span>
+            <span class="stat-label">用时</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="score-display" id="scoreDisplay">
+        <div class="song-title" id="songTitle">选择一首曲子开始练习</div>
+        <div class="notation-line" id="notationLine"></div>
+      </div>
+      
+      <div class="result-panel" id="resultPanel">
+        <div class="result-title" id="resultTitle">🎉 完成！</div>
+        <div class="result-stats">
+          <div class="result-stat">
+            <span class="result-stat-label">准确率</span>
+            <span class="result-stat-value" id="resultAccuracy">100%</span>
+          </div>
+          <div class="result-stat">
+            <span class="result-stat-label">用时</span>
+            <span class="result-stat-value" id="resultTime">45s</span>
+          </div>
+          <div class="result-stat">
+            <span class="result-stat-label">错误</span>
+            <span class="result-stat-value error" id="resultErrors">0</span>
+          </div>
+        </div>
+        <div class="result-message" id="resultMessage">太棒了！</div>
+      </div>
+      
+      <div class="score-controls">
+        <select class="song-select" id="songSelect">
+          <option value="">选择曲子</option>
+          <option value="twinkle">小星星 (简单)</option>
+          <option value="ode">欢乐颂 (中等)</option>
+          <option value="littleStar2">小星星和弦版 (困难)</option>
+        </select>
+        <button class="score-btn primary" id="startFollow">跟弹模式</button>
+        <button class="score-btn warning" id="startChallenge" disabled>挑战模式</button>
+        <button class="score-btn danger" id="startExam" disabled>考核模式</button>
+        <button class="score-btn secondary" id="resetScore">重置</button>
+      </div>
+    </div>
+    
+    <!-- 钢琴 -->
+    <div class="piano-wrapper" id="pianoWrapper">
+      <div class="visualization-area" id="visArea"></div>
+      <div class="piano-container">
+        <div class="piano" id="piano"></div>
+      </div>
+    </div>
+    
+    <div class="help-tip">
+      <kbd>A</kbd>=5 <kbd>S</kbd>=6 <kbd>D</kbd>=7 <kbd>F</kbd>=1 <kbd>G</kbd>=2 <kbd>H</kbd>=3 <kbd>J</kbd>=4 <kbd>K</kbd>=5 | 点击页面激活声音
+    </div>
+  </div>
+  
+  <div class="chord-display" id="chordDisplay">
+    <div class="chord-display-name" id="chordDisplayName">C</div>
+    <div class="chord-display-notes" id="chordDisplayNotes">C - E - G</div>
+  </div>
+  
+  <div class="feedback-message" id="feedbackMessage">✓</div>
+  
+  <div class="version">V11 - 2024</div>
+
+  <script>
+    // 音频系统
+    let audioCtx = null;
+    let masterGain = null;
+    
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        masterGain = audioCtx.createGain();
+        masterGain.gain.value = 0.4;
+        masterGain.connect(audioCtx.destination);
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+    
+    document.addEventListener('click', initAudio);
+    document.addEventListener('keydown', initAudio);
+    
+    // 常量
+    const WHITE_KEY_WIDTH = 46;
+    const WHITE_KEY_GAP = 3;
+    const WHITE_KEY_TOTAL = WHITE_KEY_WIDTH + WHITE_KEY_GAP;
+    const BLACK_KEY_WIDTH = 28;
+    
+    const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const scaleNumbers = { 'C': '1', 'D': '2', 'E': '3', 'F': '4', 'G': '5', 'A': '6', 'B': '7' };
+    
+    // G3到D5 (18个音)
+    const allNotes = [];
+    const startMidi = 55;
+    const totalKeys = 18;
+    
+    for (let i = 0; i < totalKeys; i++) {
+      const midiNote = startMidi + i;
+      const octave = Math.floor(midiNote / 12) - 1;
+      const noteIndex = midiNote % 12;
+      const noteName = noteNames[noteIndex];
+      const fullName = noteName + octave;
+      const freq = 440 * Math.pow(2, (midiNote - 69) / 12);
+      const isWhite = !noteName.includes('#');
+      
+      allNotes.push({
+        name: fullName,
+        noteName: noteName,
+        octave: octave,
+        freq: freq,
+        white: isWhite,
+        midiNote: midiNote,
+        index: i,
+        keyboardKey: null,
+        scaleNum: isWhite ? scaleNumbers[noteName] : null
+      });
+    }
+    
+    // 键盘映射: A=G3(5)开始
+    const whiteKeys = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'"];
+    const blackKeys = ['w', 'e', 'r', 't', 'y', 'u', 'i', 'o'];
+    
+    let wIdx = 0, bIdx = 0;
+    allNotes.forEach(note => {
+      if (note.white && wIdx < whiteKeys.length) {
+        note.keyboardKey = whiteKeys[wIdx++];
+      } else if (!note.white && bIdx < blackKeys.length) {
+        note.keyboardKey = blackKeys[bIdx++];
+      }
+    });
+    
+    const keyToNoteIndex = {};
+    allNotes.forEach((note, idx) => {
+      if (note.keyboardKey) keyToNoteIndex[note.keyboardKey] = idx;
+    });
+    
+    // 和弦数据
+    const chordTypes = {
+      major: { intervals: [0, 4, 7], name: '大三和弦', symbol: '' },
+      minor: { intervals: [0, 3, 7], name: '小三和弦', symbol: 'm' },
+      dom7: { intervals: [0, 4, 7, 10], name: '属七和弦', symbol: '7' }
+    };
+    
+    const practiceChordList = [
+      { root: 'C', type: 'major', name: 'C', desc: 'C大三和弦' },
+      { root: 'G', type: 'major', name: 'G', desc: 'G大三和弦' },
+      { root: 'F', type: 'major', name: 'F', desc: 'F大三和弦' },
+      { root: 'A', type: 'minor', name: 'Am', desc: 'A小三和弦' },
+      { root: 'D', type: 'minor', name: 'Dm', desc: 'D小三和弦' },
+      { root: 'E', type: 'minor', name: 'Em', desc: 'E小三和弦' },
+      { root: 'G', type: 'dom7', name: 'G7', desc: 'G属七和弦' }
+    ];
+    
+    const REPEAT_REQUIRED = 5;
+    
+    // 乐谱数据
+    const songs = {
+      twinkle: {
+        name: '小星星',
+        notes: ['C4','C4','G4','G4','A4','A4','G4','F4','F4','E4','E4','D4','D4','C4']
+      },
+      ode: {
+        name: '欢乐颂',
+        notes: ['E4','E4','F4','G4','G4','F4','E4','D4','C4','C4','D4','E4','E4','D4','D4']
+      },
+      littleStar2: {
+        name: '小星星和弦版',
+        notes: ['C4','E4','G4','C4','E4','G4','F4','A4','C5','C4','E4','G4']
+      }
+    };
+    
+    // 状态
+    const activeNotes = {};
+    const pressedKeys = new Set();
+    let currentMode = 'free';
+    
+    // 和弦练习状态
+    let practiceActive = false;
+    let currentChordIndex = 0;
+    let currentRepeatCount = 0;
+    let masteredChords = [];
+    let targetChordNotes = [];
+    let isWaitingForRelease = false;
+    
+    // 乐谱练习状态
+    let scoreMode = null;
+    let currentSong = null;
+    let currentNoteIndex = 0;
+    let correctCount = 0;
+    let errorCount = 0;
+    let startTime = 0;
+    let timerInterval = null;
+    let followCompleted = false;
+    let challengeCompleted = false;
+    
+    // 颜色系统
+    function getNoteColor(index) {
+      const ratio = index / (totalKeys - 1);
+      return `hsl(${280 - ratio * 130}, 80%, ${40 + ratio * 30}%)`;
+    }
+    
+    function getNoteHeight(index) {
+      return 30 + (index / (totalKeys - 1)) * 65;
+    }
+    
+    // 计算位置
+    function calculatePositions() {
+      let whiteIndex = 0;
+      allNotes.forEach(note => {
+        if (note.white) {
+          note.xPos = whiteIndex * WHITE_KEY_TOTAL;
+          note.centerX = note.xPos + WHITE_KEY_WIDTH / 2;
+          whiteIndex++;
+        }
+      });
+      allNotes.forEach((note, idx) => {
+        if (!note.white) {
+          for (let i = idx - 1; i >= 0; i--) {
+            if (allNotes[i].white) {
+              note.xPos = allNotes[i].xPos + WHITE_KEY_WIDTH - BLACK_KEY_WIDTH / 2 + 1;
+              note.centerX = note.xPos + BLACK_KEY_WIDTH / 2;
+              break;
+            }
+          }
+        }
+      });
+      return whiteIndex;
+    }
+    
+    // 创建钢琴
+    function createPiano() {
+      const piano = document.getElementById('piano');
+      const visArea = document.getElementById('visArea');
+      
+      const whiteCount = calculatePositions();
+      const totalWidth = whiteCount * WHITE_KEY_TOTAL - WHITE_KEY_GAP;
+      
+      document.getElementById('pianoWrapper').style.width = totalWidth + 'px';
+      visArea.style.width = totalWidth + 'px';
+      piano.style.width = totalWidth + 'px';
+      
+      allNotes.forEach((note, idx) => {
+        const bar = document.createElement('div');
+        bar.className = 'note-bar';
+        bar.id = `bar-${idx}`;
+        bar.style.backgroundColor = getNoteColor(idx);
+        bar.style.height = getNoteHeight(idx) + 'px';
+        bar.style.boxShadow = `0 0 10px ${getNoteColor(idx)}`;
+        bar.style.left = (note.centerX - (note.white ? 18 : 10)) + 'px';
+        bar.style.width = (note.white ? 36 : 20) + 'px';
+        visArea.appendChild(bar);
+        
+        const key = document.createElement('div');
+        key.className = note.white ? 'white-key' : 'black-key';
+        key.id = `key-${idx}`;
+        key.style.left = note.xPos + 'px';
+        
+        if (note.white && note.scaleNum) {
+          const scaleNum = document.createElement('span');
+          scaleNum.className = 'scale-number';
+          scaleNum.textContent = note.scaleNum;
+          key.appendChild(scaleNum);
+          
+          const label = document.createElement('span');
+          label.className = 'note-label' + (note.noteName === 'C' ? ' c-note' : '');
+          label.textContent = note.name;
+          key.appendChild(label);
+        }
+        
+        if (note.keyboardKey) {
+          const hint = document.createElement('span');
+          hint.className = 'key-hint';
+          hint.textContent = note.keyboardKey.toUpperCase();
+          key.appendChild(hint);
+        }
+        
+        key.onmousedown = e => { e.preventDefault(); playNote(idx); };
+        key.onmouseup = () => stopNote(idx);
+        key.onmouseleave = () => stopNote(idx);
+        key.ontouchstart = e => { e.preventDefault(); playNote(idx); };
+        key.ontouchend = e => { e.preventDefault(); stopNote(idx); };
+        
+        piano.appendChild(key);
+      });
+    }
+    
+    // 播放音符
+    function playNote(index) {
+      initAudio();
+      if (activeNotes[index]) {
+        try { activeNotes[index].osc.stop(); } catch(e) {}
+        delete activeNotes[index];
+      }
+      if (!audioCtx) return;
+      
+      const note = allNotes[index];
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      
+      osc.type = 'triangle';
+      osc.frequency.value = note.freq;
+      gain.gain.value = 0.4;
+      
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.start();
+      
+      activeNotes[index] = { osc, gain };
+      
+      document.getElementById(`key-${index}`)?.classList.add('pressed');
+      document.getElementById(`bar-${index}`)?.classList.add('active');
+      
+      const scaleDisplay = note.scaleNum ? ` (${note.scaleNum})` : '';
+      document.getElementById('currentNote').textContent = note.name + scaleDisplay;
+      document.getElementById('currentNote').style.color = getNoteColor(index);
+      
+      detectChord();
+      
+      if (practiceActive && !isWaitingForRelease) checkPracticeChord();
+      if (scoreMode) checkScoreNote(note.name);
+    }
+    
+    function stopNote(index) {
+      const active = activeNotes[index];
+      if (!active) return;
+      
+      try {
+        active.gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+        setTimeout(() => { try { active.osc.stop(); } catch(e) {} }, 120);
+      } catch(e) {}
+      
+      delete activeNotes[index];
+      document.getElementById(`key-${index}`)?.classList.remove('pressed');
+      document.getElementById(`bar-${index}`)?.classList.remove('active');
+      detectChord();
+      
+      if (practiceActive && isWaitingForRelease && Object.keys(activeNotes).length === 0) {
+        isWaitingForRelease = false;
+        document.getElementById('practiceHint').textContent = '再弹一次！';
+        document.getElementById('targetChordDisplay').classList.remove('success');
+      }
+    }
+    
+    function stopAllNotes() {
+      Object.keys(activeNotes).forEach(idx => stopNote(parseInt(idx)));
+      pressedKeys.clear();
+    }
+    
+    // 和弦识别
+    function detectChord() {
+      const playing = Object.keys(activeNotes).map(Number);
+      const chordDisplay = document.getElementById('chordDisplay');
+      
+      if (playing.length < 3) {
+        chordDisplay.style.display = 'none';
+        document.getElementById('currentChord').textContent = '-';
+        return;
+      }
+      
+      const notes = [...new Set(playing.map(i => allNotes[i].noteName))];
+      
+      for (const root of notes) {
+        for (const [type, data] of Object.entries(chordTypes)) {
+          const rootIdx = noteNames.indexOf(root);
+          const expected = data.intervals.map(i => noteNames[(rootIdx + i) % 12]);
+          
+          if (expected.every(n => notes.includes(n))) {
+            const name = root + data.symbol;
+            document.getElementById('currentChord').textContent = name;
+            document.getElementById('chordDisplayName').textContent = name;
+            document.getElementById('chordDisplayNotes').textContent = expected.join(' - ');
+            chordDisplay.style.display = 'block';
+            return;
+          }
+        }
+      }
+      
+      chordDisplay.style.display = 'none';
+      document.getElementById('currentChord').textContent = '?';
+    }
+    
+    // ========== 和弦练习 ==========
+    function getChordNoteIndices(root, type) {
+      const data = chordTypes[type];
+      const rootNote = allNotes.find(n => n.noteName === root && n.octave === 4) ||
+                      allNotes.find(n => n.noteName === root);
+      if (!rootNote) return [];
+      
+      const indices = [];
+      data.intervals.forEach(interval => {
+        const targetMidi = rootNote.midiNote + interval;
+        const note = allNotes.find(n => n.midiNote === targetMidi);
+        if (note) indices.push(note.index);
+      });
+      return indices;
+    }
+    
+    function highlightTargetKeys(indices) {
+      allNotes.forEach((_, idx) => {
+        document.getElementById(`key-${idx}`)?.classList.remove('target');
+      });
+      indices.forEach(idx => {
+        document.getElementById(`key-${idx}`)?.classList.add('target');
+      });
+    }
+    
+    function updateRepeatIndicator(count) {
+      const dots = document.querySelectorAll('.repeat-dot');
+      dots.forEach((dot, idx) => {
+        if (idx < count) {
+          dot.classList.add('completed');
+        } else {
+          dot.classList.remove('completed');
+        }
+      });
+      document.getElementById('repeatCount').textContent = `${count} / ${REPEAT_REQUIRED} 次`;
+    }
+    
+    function startChordPractice() {
+      practiceActive = true;
+      currentChordIndex = 0;
+      currentRepeatCount = 0;
+      showNextChord();
+      document.getElementById('startPractice').textContent = '练习中...';
+      document.getElementById('startPractice').disabled = true;
+    }
+    
+    function showNextChord() {
+      if (currentChordIndex >= practiceChordList.length) {
+        practiceActive = false;
+        document.getElementById('targetChordName').textContent = '🎉 完成!';
+        document.getElementById('targetChordNotes').textContent = '你已掌握所有基础和弦';
+        document.getElementById('targetChordKeys').textContent = '';
+        document.getElementById('practiceHint').textContent = '太棒了！去乐谱练习试试吧';
+        document.getElementById('repeatIndicator').style.display = 'none';
+        document.getElementById('repeatCount').style.display = 'none';
+        highlightTargetKeys([]);
+        document.getElementById('startPractice').textContent = '▶ 重新开始';
+        document.getElementById('startPractice').disabled = false;
+        return;
+      }
+      
+      currentRepeatCount = 0;
+      isWaitingForRelease = false;
+      
+      const chord = practiceChordList[currentChordIndex];
+      targetChordNotes = getChordNoteIndices(chord.root, chord.type);
+      
+      const noteInfo = targetChordNotes.map(idx => {
+        const n = allNotes[idx];
+        return `${n.noteName}(${n.scaleNum || '#'})`;
+      }).join(' - ');
+      
+      const keyInfo = targetChordNotes.map(idx => {
+        const k = allNotes[idx].keyboardKey;
+        return k ? `<kbd>${k.toUpperCase()}</kbd>` : '';
+      }).filter(k => k).join(' + ');
+      
+      document.getElementById('targetChordName').textContent = chord.name;
+      document.getElementById('targetChordNotes').textContent = noteInfo;
+      document.getElementById('targetChordKeys').innerHTML = '按下: ' + keyInfo;
+      document.getElementById('practiceHint').textContent = `同时按下高亮的琴键 (需要弹${REPEAT_REQUIRED}次)`;
+      document.getElementById('targetChordDisplay').classList.remove('success');
+      document.getElementById('practiceProgress').textContent = `和弦进度: ${currentChordIndex + 1}/${practiceChordList.length}`;
+      document.getElementById('repeatIndicator').style.display = 'flex';
+      document.getElementById('repeatCount').style.display = 'block';
+      
+      updateRepeatIndicator(0);
+      highlightTargetKeys(targetChordNotes);
+    }
+    
+    function checkPracticeChord() {
+      if (!practiceActive || targetChordNotes.length === 0 || isWaitingForRelease) return;
+      
+      const playing = Object.keys(activeNotes).map(Number).sort((a,b) => a-b);
+      const target = [...targetChordNotes].sort((a,b) => a-b);
+      
+      if (playing.length === target.length && playing.every((v, i) => v === target[i])) {
+        currentRepeatCount++;
+        isWaitingForRelease = true;
+        
+        document.getElementById('targetChordDisplay').classList.add('success');
+        updateRepeatIndicator(currentRepeatCount);
+        
+        if (currentRepeatCount >= REPEAT_REQUIRED) {
+          document.getElementById('practiceHint').textContent = `✓ 完美！已掌握 ${practiceChordList[currentChordIndex].name}`;
+          
+          showFeedback('success', `✓ 掌握 ${practiceChordList[currentChordIndex].name}!`);
+          
+          setTimeout(() => {
+            const chord = practiceChordList[currentChordIndex];
+            if (!masteredChords.includes(chord.name)) {
+              masteredChords.push(chord.name);
+              updateMasteredDisplay();
+            }
+            
+            currentChordIndex++;
+            showNextChord();
+          }, 1500);
+        } else {
+          document.getElementById('practiceHint').textContent = `✓ 正确！松开后再弹 (${currentRepeatCount}/${REPEAT_REQUIRED})`;
+        }
+      }
+    }
+    
+    function updateMasteredDisplay() {
+      const container = document.getElementById('masteredChords');
+      if (masteredChords.length === 0) {
+        container.innerHTML = '<span style="color:#666;font-size:11px;">还没有掌握的和弦</span>';
+      } else {
+        container.innerHTML = masteredChords.map(c => 
+          `<span class="mastered-chord">${c}</span>`
+        ).join('');
+      }
+    }
+    
+    function listenChord() {
+      if (targetChordNotes.length === 0) return;
+      stopAllNotes();
+      targetChordNotes.forEach(idx => playNote(idx));
+      setTimeout(stopAllNotes, 1500);
+    }
+    
+    function skipChord() {
+      if (!practiceActive) return;
+      currentChordIndex++;
+      showNextChord();
+    }
+    
+    // ========== 乐谱练习 ==========
+    function displayScore(songKey) {
+      const song = songs[songKey];
+      if (!song) return;
+      
+      currentSong = song;
+      document.getElementById('songTitle').textContent = song.name;
+      
+      const notationLine = document.getElementById('notationLine');
+      notationLine.innerHTML = '';
+      
+      song.notes.forEach((noteName, idx) => {
+        const note = allNotes.find(n => n.name === noteName);
+        if (!note) return;
+        
+        const noteItem = document.createElement('div');
+        noteItem.className = 'note-item';
+        noteItem.id = `note-item-${idx}`;
+        
+        const number = document.createElement('div');
+        number.className = 'note-number';
+        number.textContent = note.scaleNum || '♯';
+        noteItem.appendChild(number);
+        
+        const name = document.createElement('div');
+        name.className = 'note-name';
+        name.textContent = noteName;
+        noteItem.appendChild(name);
+        
+        if (note.keyboardKey) {
+          const key = document.createElement('div');
+          key.className = 'note-key';
+          key.textContent = note.keyboardKey.toUpperCase();
+          noteItem.appendChild(key);
+        }
+        
+        notationLine.appendChild(noteItem);
+      });
+    }
+    
+    function startScorePractice(mode) {
+      const songKey = document.getElementById('songSelect').value;
+      if (!songKey) {
+        alert('请先选择一首曲子');
+        return;
+      }
+      
+      scoreMode = mode;
+      currentNoteIndex = 0;
+      correctCount = 0;
+      errorCount = 0;
+      startTime = Date.now();
+      
+      displayScore(songKey);
+      updateScoreStats();
+      
+      const display = document.getElementById('scoreDisplay');
+      const badge = document.getElementById('modeBadge');
+      
+      display.classList.remove('hide-highlight', 'hide-all');
+      
+      if (mode === 'follow') {
+        badge.textContent = '跟弹模式';
+        badge.className = 'mode-badge follow';
+      } else if (mode === 'challenge') {
+        badge.textContent = '挑战模式';
+        badge.className = 'mode-badge challenge';
+        display.classList.add('hide-highlight');
+      } else if (mode === 'exam') {
+        badge.textContent = '考核模式';
+        badge.className = 'mode-badge exam';
+        display.classList.add('hide-all');
+      }
+      
+      highlightCurrentNote();
+      document.getElementById('resultPanel').classList.remove('show');
+      
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(updateTimer, 100);
+    }
+    
+    function highlightCurrentNote() {
+      document.querySelectorAll('.note-item').forEach(item => {
+        item.classList.remove('current', 'error');
+      });
+      
+      if (currentNoteIndex < currentSong.notes.length) {
+        const item = document.getElementById(`note-item-${currentNoteIndex}`);
+        if (item) item.classList.add('current');
+        
+        if (scoreMode === 'follow') {
+          const targetNoteName = currentSong.notes[currentNoteIndex];
+          const targetNote = allNotes.find(n => n.name === targetNoteName);
+          if (targetNote) {
+            highlightTargetKeys([targetNote.index]);
+          }
+        } else {
+          highlightTargetKeys([]);
+        }
+      }
+    }
+    
+    function checkScoreNote(playedNoteName) {
+      if (!scoreMode || !currentSong) return;
+      if (currentNoteIndex >= currentSong.notes.length) return;
+      
+      const expectedNote = currentSong.notes[currentNoteIndex];
+      const item = document.getElementById(`note-item-${currentNoteIndex}`);
+      
+      if (playedNoteName === expectedNote) {
+        correctCount++;
+        if (item) {
+          item.classList.add('completed');
+          item.classList.remove('current', 'error');
+        }
+        showFeedback('success', '✓');
+        
+        currentNoteIndex++;
+        
+        if (currentNoteIndex >= currentSong.notes.length) {
+          finishScorePractice();
+        } else {
+          highlightCurrentNote();
+        }
+      } else {
+        errorCount++;
+        if (item) {
+          item.classList.add('error');
+          setTimeout(() => item.classList.remove('error'), 500);
+        }
+        showFeedback('error', `✗ 应该是 ${expectedNote}`);
+      }
+      
+      updateScoreStats();
+    }
+    
+    function updateScoreStats() {
+      document.getElementById('correctCount').textContent = correctCount;
+      document.getElementById('errorCount').textContent = errorCount;
+    }
+    
+    function updateTimer() {
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      document.getElementById('timeCount').textContent = elapsed + 's';
+    }
+    
+    function finishScorePractice() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      
+      highlightTargetKeys([]);
+      
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const total = correctCount + errorCount;
+      const accuracy = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+      
+      document.getElementById('resultAccuracy').textContent = accuracy + '%';
+      document.getElementById('resultTime').textContent = elapsed + 's';
+      document.getElementById('resultErrors').textContent = errorCount;
+      
+      let message = '';
+      
+      if (scoreMode === 'follow') {
+        followCompleted = true;
+        document.getElementById('startChallenge').disabled = false;
+        document.getElementById('resultTitle').textContent = '🎉 完成跟弹模式！';
+        message = accuracy >= 90 ? '太棒了！准备进入挑战模式？' : '不错！可以再练习一次或进入挑战模式';
+      } else if (scoreMode === 'challenge') {
+        challengeCompleted = true;
+        document.getElementById('startExam').disabled = false;
+        document.getElementById('resultTitle').textContent = '🎉 完成挑战模式！';
+        message = accuracy >= 85 ? '很好！准备进入考核模式？' : '继续加油！可以再挑战一次';
+      } else if (scoreMode === 'exam') {
+        document.getElementById('resultTitle').textContent = '🎉 完成考核！';
+        if (accuracy >= 95 && errorCount <= 2) {
+          message = '完美！你已经完全掌握这首曲子了！';
+        } else if (accuracy >= 80) {
+          message = '很好！继续练习会更熟练';
+        } else {
+          message = '继续加油！多练习几次会更好';
+        }
+      }
+      
+      document.getElementById('resultMessage').textContent = message;
+      document.getElementById('resultPanel').classList.add('show');
+      
+      scoreMode = null;
+    }
+    
+    function resetScore() {
+      scoreMode = null;
+      currentSong = null;
+      currentNoteIndex = 0;
+      document.getElementById('resultPanel').classList.remove('show');
+    }
+  </script>
+</body>
+</html>

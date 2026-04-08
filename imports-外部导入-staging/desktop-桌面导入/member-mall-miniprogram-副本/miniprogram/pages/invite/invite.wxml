@@ -1,0 +1,57 @@
+<!--pages/invite/invite.wxml-->
+<view class="container">
+  <!-- 头部信息 -->
+  <view class="header">
+    <view class="invite-card">
+      <view class="card-title">我的邀请码</view>
+      <view class="invite-code">{{inviteCode}}</view>
+      <view class="invite-count">已成功邀请 {{inviteCount}} 人</view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="actions">
+    <button class="action-btn copy" bindtap="copyCode">
+      <text class="btn-text">复制邀请码</text>
+    </button>
+    <button class="action-btn share" open-type="share">
+      <text class="btn-text">分享给好友</text>
+    </button>
+  </view>
+
+  <!-- 邀请说明 -->
+  <view class="section">
+    <view class="section-title">邀请规则</view>
+    <view class="rules">
+      <view class="rule-item">
+        <text class="rule-num">1</text>
+        <text class="rule-text">将邀请码分享给好友</text>
+      </view>
+      <view class="rule-item">
+        <text class="rule-num">2</text>
+        <text class="rule-text">好友输入邀请码或通过分享链接注册</text>
+      </view>
+      <view class="rule-item">
+        <text class="rule-num">3</text>
+        <text class="rule-text">好友自动成为高级会员，享受专属折扣</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 邀请记录 -->
+  <view class="section">
+    <view class="section-title">邀请记录</view>
+    <view class="record-list" wx:if="{{records.length > 0}}">
+      <view class="record-item" wx:for="{{records}}" wx:key="_id">
+        <image class="record-avatar" src="{{item.avatar_url || '/images/avatar-default.png'}}" mode="aspectFill"></image>
+        <view class="record-info">
+          <text class="record-name">{{item.nickname}}</text>
+          <text class="record-time">{{item.timeText}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="empty-records" wx:else>
+      <text>暂无邀请记录，快去邀请好友吧</text>
+    </view>
+  </view>
+</view>

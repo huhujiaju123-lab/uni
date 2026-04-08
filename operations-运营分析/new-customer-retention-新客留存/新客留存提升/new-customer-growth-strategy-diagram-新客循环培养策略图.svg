@@ -1,0 +1,105 @@
+<svg width="1400" height="1140" viewBox="0 0 1400 1140" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .f { font-family: "STKaiti","华文楷体","Kaiti SC","KaiTi",serif; fill:#222; }
+    .title { font-size:26px; font-weight:700; }
+    .sub { font-size:14px; font-weight:600; fill:#666; }
+    .group { font-size:15px; font-weight:700; fill:#d8432e; }
+    .axis { font-size:15px; font-weight:700; }
+    .num { font-size:13px; font-weight:600; fill:#555; }
+    .stage { font-size:17px; font-weight:700; }
+    .lane { font-size:20px; font-weight:700; text-anchor:middle; dominant-baseline:middle; }
+    .txt { font-size:13px; font-weight:600; }
+    .note { font-size:12px; font-weight:600; fill:#555; }
+  </style>
+
+  <text x="28" y="38" class="f title">美国新客循环培养策略主链路（T+60）</text>
+  <text x="28" y="65" class="f sub">单组主链路示意 ｜ 目标：首单后 T+60 内稳定承接到第 3 单</text>
+
+  <rect x="0" y="120" width="155" height="34" fill="#fff0bf"/>
+  <text x="8" y="143" class="f axis">首单后滚动天数</text>
+
+  <g class="f num">
+    <text x="130" y="182">1</text>
+    <text x="185" y="182">2</text>
+    <text x="240" y="182">3</text>
+    <text x="295" y="182">4</text>
+    <text x="350" y="182">5</text>
+    <text x="405" y="182">6</text>
+    <text x="460" y="182">7</text>
+    <text x="560" y="182">14</text>
+    <text x="720" y="182">30</text>
+    <text x="950" y="182">60</text>
+  </g>
+
+  <g class="f stage">
+    <text x="0" y="220">首单后T+3</text>
+    <text x="0" y="305">首单后T+7</text>
+    <text x="0" y="390">首单后T+14</text>
+    <text x="0" y="475">首单后T+30</text>
+    <text x="0" y="560">首单后T+60</text>
+  </g>
+
+  <rect x="92" y="170" width="44" height="405" fill="#fff0bf"/>
+  <text x="114" y="372.5" class="f lane" transform="rotate(-90 114 372.5)">1→2单</text>
+
+  <polygon points="136,190 268,190 318,275 136,275" fill="#efefef"/>
+  <text x="150" y="216" class="f txt">① T1~3 未下2单，T4 用券提醒</text>
+  <text x="150" y="240" class="f txt">（2.99 / 5折）</text>
+
+  <polygon points="136,275 408,275 458,360 136,360" fill="#efefef"/>
+  <text x="150" y="301" class="f txt">② T0~7 累计未达2单，T8 用券提醒</text>
+  <text x="150" y="325" class="f txt">（2.99 / 5折）</text>
+
+  <polygon points="136,360 578,360 628,445 136,445" fill="#efefef"/>
+  <text x="238" y="387" class="f txt">③ T1~14 未下2单，T15 用券提醒（2.99 / 5折）</text>
+
+  <polygon points="136,445 828,445 878,530 136,530" fill="#efefef"/>
+  <text x="368" y="472" class="f txt">④ T1~30 未下2单，T31 用券提醒（2.99 / 5折）</text>
+
+  <polygon points="136,530 1028,530 1078,615 136,615" fill="#efefef"/>
+  <text x="558" y="557" class="f txt">⑤ T1~60 未下2单，持续观察主链路</text>
+
+  <text x="12" y="686" class="f note">统一规则：每天检查1次 ｜ 首周最多提醒2次 ｜ 第二周起每周最多提醒1次</text>
+
+  <rect x="0" y="704" width="155" height="34" fill="#fff0bf"/>
+  <text x="8" y="727" class="f axis">二单后滚动天数</text>
+
+  <g class="f num">
+    <text x="130" y="766">1</text>
+    <text x="185" y="766">2</text>
+    <text x="240" y="766">3</text>
+    <text x="295" y="766">4</text>
+    <text x="350" y="766">5</text>
+    <text x="405" y="766">6</text>
+    <text x="460" y="766">7</text>
+    <text x="560" y="766">14</text>
+    <text x="720" y="766">30</text>
+    <text x="950" y="766">60</text>
+  </g>
+
+  <g class="f stage">
+    <text x="0" y="806">二单后T+3</text>
+    <text x="0" y="866">二单后T+7</text>
+    <text x="0" y="926">二单后T+14</text>
+    <text x="0" y="986">二单后T+30</text>
+    <text x="0" y="1046">二单后T+60</text>
+  </g>
+
+  <rect x="92" y="754" width="44" height="274" fill="#fff0bf"/>
+  <text x="114" y="891" class="f lane" transform="rotate(-90 114 891)">2→3单</text>
+
+  <polygon points="136,776 268,776 318,836 136,836" fill="#efefef"/>
+  <text x="150" y="802" class="f txt">① T1~3 未下3单，T4 用券提醒（6折）</text>
+
+  <polygon points="136,836 408,836 458,896 136,896" fill="#efefef"/>
+  <text x="150" y="862" class="f txt">② T0~7 累计未达3单，T8 用券提醒（6折）</text>
+
+  <polygon points="136,896 578,896 628,956 136,956" fill="#efefef"/>
+  <text x="238" y="922" class="f txt">③ T1~14 未下3单，T15 用券提醒（6折）</text>
+
+  <polygon points="136,956 828,956 878,1016 136,1016" fill="#efefef"/>
+  <text x="368" y="982" class="f txt">④ T1~30 未下3单，T31 用券提醒（6折）</text>
+
+  <polygon points="136,1016 1028,1016 1078,1076 136,1076" fill="#efefef"/>
+  <text x="558" y="1042" class="f txt">⑤ T1~60 未下3单，持续观察主链路</text>
+</svg>

@@ -1,0 +1,133 @@
+<!--pages/profile/profile.wxml-->
+<view class="container">
+  <!-- 用户信息区 -->
+  <view class="user-section">
+    <!-- 未登录状态 -->
+    <view class="user-info" wx:if="{{!isLoggedIn}}" bindtap="onLogin">
+      <image class="avatar default" src="/images/avatar-default.png" mode="aspectFill"></image>
+      <view class="user-detail">
+        <text class="nickname">点击登录</text>
+        <text class="login-hint">登录后享受更多服务</text>
+      </view>
+    </view>
+
+    <!-- 已登录状态 -->
+    <view class="user-info" wx:else>
+      <image class="avatar" src="{{userInfo.avatar_url || '/images/avatar-default.png'}}" mode="aspectFill"></image>
+      <view class="user-detail">
+        <view class="name-row">
+          <text class="nickname">{{userInfo.nickname || '会员用户'}}</text>
+          <view class="member-badge {{isPremium ? 'premium' : ''}}">
+            {{isPremium ? 'Premium' : 'Normal'}}
+          </view>
+        </view>
+        <text class="user-id" wx:if="{{isPremium}}">邀请码: {{userInfo.invite_code || '--'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 核心行动按钮 -->
+  <view class="action-section" wx:if="{{isLoggedIn}}">
+    <!-- 普通会员 - 升级入口 -->
+    <button class="action-btn upgrade" wx:if="{{!isPremium}}" bindtap="onUpgrade">
+      <text class="action-text">输入邀请码，升级高级会员</text>
+      <text class="action-arrow">></text>
+    </button>
+
+    <!-- 高级会员 - 邀请入口 -->
+    <button class="action-btn invite" wx:else bindtap="onInvite">
+      <view class="action-left">
+        <text class="action-text">邀请好友</text>
+        <text class="action-sub">已邀请 {{userInfo.invited_count || 0}} 人</text>
+      </view>
+      <text class="action-arrow">></text>
+    </button>
+  </view>
+
+  <!-- 我的订单 -->
+  <view class="section">
+    <view class="section-header" bindtap="goToOrders">
+      <text class="section-title">我的订单</text>
+      <view class="section-more">
+        <text>全部</text>
+        <text class="arrow">></text>
+      </view>
+    </view>
+
+    <view class="order-tabs">
+      <view class="order-tab" bindtap="goToOrders" data-status="pending">
+        <view class="tab-icon-wrap">
+          <image class="tab-icon" src="/images/order-pending.png" mode="aspectFit"></image>
+          <view class="tab-badge" wx:if="{{orderCounts.pending > 0}}">{{orderCounts.pending}}</view>
+        </view>
+        <text class="tab-text">待付款</text>
+      </view>
+
+      <view class="order-tab" bindtap="goToOrders" data-status="paid">
+        <view class="tab-icon-wrap">
+          <image class="tab-icon" src="/images/order-paid.png" mode="aspectFit"></image>
+          <view class="tab-badge" wx:if="{{orderCounts.paid > 0}}">{{orderCounts.paid}}</view>
+        </view>
+        <text class="tab-text">待发货</text>
+      </view>
+
+      <view class="order-tab" bindtap="goToOrders" data-status="shipped">
+        <view class="tab-icon-wrap">
+          <image class="tab-icon" src="/images/order-shipped.png" mode="aspectFit"></image>
+          <view class="tab-badge" wx:if="{{orderCounts.shipped > 0}}">{{orderCounts.shipped}}</view>
+        </view>
+        <text class="tab-text">待收货</text>
+      </view>
+
+      <view class="order-tab" bindtap="goToOrders" data-status="completed">
+        <view class="tab-icon-wrap">
+          <image class="tab-icon" src="/images/order-completed.png" mode="aspectFit"></image>
+        </view>
+        <text class="tab-text">已完成</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="section">
+    <view class="menu-list">
+      <view class="menu-item" bindtap="goToAddress">
+        <image class="menu-icon" src="/images/menu-address.png" mode="aspectFit"></image>
+        <text class="menu-text">收货地址</text>
+        <text class="menu-arrow">></text>
+      </view>
+
+      <view class="menu-item" bindtap="onContactService">
+        <image class="menu-icon" src="/images/menu-service.png" mode="aspectFit"></image>
+        <text class="menu-text">联系客服</text>
+        <text class="menu-arrow">></text>
+      </view>
+
+      <view class="menu-item" bindtap="goToAbout">
+        <image class="menu-icon" src="/images/menu-about.png" mode="aspectFit"></image>
+        <text class="menu-text">关于我们</text>
+        <text class="menu-arrow">></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 登录/退出区域 -->
+  <view class="section" wx:if="{{isLoggedIn}}">
+    <view class="logout-btn" bindtap="onLogout">
+      退出登录
+    </view>
+  </view>
+
+  <view class="section" wx:if="{{!isLoggedIn}}">
+    <view class="login-btn" bindtap="onLogin">
+      立即登录
+    </view>
+  </view>
+</view>
+
+<!-- 邀请码弹窗 -->
+<invite-modal
+  show="{{showInviteModal}}"
+  bind:close="onModalClose"
+  bind:success="onUpgradeSuccess"
+></invite-modal>

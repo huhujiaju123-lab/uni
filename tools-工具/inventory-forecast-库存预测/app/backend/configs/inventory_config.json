@@ -1,0 +1,38 @@
+{
+  "module_name": "现状库存计算",
+  "version": "1.0",
+  "description": "计算当前各SKU的库存状态",
+  "parameters": {
+    "safety_stock_days": 7,
+    "warehouse_list": ["主仓", "分仓A", "分仓B"],
+    "stock_types": {
+      "available": "可用库存",
+      "reserved": "预留库存",
+      "damaged": "残次品",
+      "in_transit": "在途库存"
+    },
+    "include_in_transit": true,
+    "calculation_date": null
+  },
+  "input_files": {
+    "current_stock": {
+      "description": "当前库存数据",
+      "required": true,
+      "columns": ["sku_code", "warehouse", "quantity", "stock_type"]
+    },
+    "pending_orders": {
+      "description": "在途订单数据",
+      "required": false,
+      "columns": ["sku_code", "expected_date", "quantity"]
+    },
+    "reserved_stock": {
+      "description": "预留库存数据",
+      "required": false,
+      "columns": ["sku_code", "reserved_quantity", "reason"]
+    }
+  },
+  "output_files": {
+    "inventory_summary": "库存汇总表",
+    "inventory_detail": "库存明细表"
+  }
+}

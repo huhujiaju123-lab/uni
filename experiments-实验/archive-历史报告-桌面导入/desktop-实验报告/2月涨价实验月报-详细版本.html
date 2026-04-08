@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>2月涨价实验月报</title>
+<style>
+body { font-family: -apple-system, 'Segoe UI', sans-serif; margin: 24px; font-size: 13px; color: #333; line-height: 1.6; }
+h1 { color: #1a1a2e; font-size: 20px; border-bottom: 2px solid #e94560; padding-bottom: 8px; }
+h2 { color: #16213e; font-size: 16px; margin-top: 32px; border-left: 4px solid #e94560; padding-left: 12px; }
+h3 { color: #0f3460; font-size: 14px; margin-top: 24px; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+th, td { border: 1px solid #ddd; padding: 7px 10px; text-align: right; white-space: nowrap; font-size: 12px; }
+th { background: #f0f0f0; font-weight: 600; text-align: center; }
+td:first-child { text-align: left; font-weight: 500; }
+tr:hover { background: #f9f9f9; }
+.positive { color: #D32F2F; } .negative { color: #2E7D32; }
+.sig { color: #2E7D32; font-weight: 600; } .not-sig { color: #999; }
+.grp1 { background: #FFF3E0; } .grp2 { background: #E3F2FD; } .ctrl { background: #E8F5E9; }
+.strategy-cell { font-size: 11px; color: #666; background: #fafafa; text-align: center !important; white-space: normal; min-width: 100px; }
+.section-box { background: #f8f9fa; border-radius: 8px; padding: 16px; margin: 16px 0; }
+.kpi-card { display: inline-block; border: 1px solid #ddd; border-radius: 8px; padding: 12px 20px; margin: 6px; text-align: center; min-width: 120px; }
+.kpi-card .value { font-size: 20px; font-weight: 700; color: #1a1a2e; }
+.kpi-card .label { font-size: 11px; color: #666; margin-top: 4px; }
+.kpi-card .diff { font-size: 12px; margin-top: 2px; }
+.note { font-size: 11px; color: #999; margin-top: 8px; }
+small { font-size: 10px; color: #888; }
+</style></head><body>
+
+<h1>2月老客涨价策略实验月报</h1>
+<p style="color:#666">实验时间: 2026-02-12 ~ 2026-02-28 | 报告日期: 2026-03-01</p>
+
+<h2>一、实验概述</h2>
+<div class="section-box">
+<p><b>实验目的</b>：验证老客提价空间，测试不同折扣梯度对转化率、复购率和收入的影响。</p>
+<p><b>分组设计</b>：</p>
+<table style="width:auto">
+<tr><th>组别</th><th>人群占比</th><th>人数</th><th>核心策略</th></tr>
+<tr><td>涨价组1</td><td>30%</td><td>38,093</td><td>75折系（更贵）：整体折扣力度最小</td></tr>
+<tr><td>涨价组2</td><td>30%</td><td>38,058</td><td>7折系（中等）：折扣介于组1和对照之间</td></tr>
+<tr><td>对照组3</td><td>40%</td><td>50,295</td><td>原价策略：维持现有折扣水平</td></tr>
+</table></div>
+<h2>二、整体效果（大实验）</h2>
+<h3>涨价组1 vs 对照组</h3><div><div class="kpi-card"><div class="value">10.79%</div><div class="label">转化率</div><div class="diff"><span class="negative">-0.83pp</span></div></div><div class="kpi-card"><div class="value">$3.61</div><div class="label">单杯实收</div><div class="diff"><span class="positive">+9.39%</span></div></div><div class="kpi-card"><div class="value">50.73%</div><div class="label">7日复购</div><div class="diff"><span class="negative">-0.91pp</span></div></div><div class="kpi-card"><div class="value">$0.491</div><div class="label">LTV 7天</div><div class="diff"><span class="negative">-2.96%</span></div></div><div class="kpi-card"><div class="value">$0.864</div><div class="label">LTV 14天</div><div class="diff"><span class="negative">-2.26%</span></div></div><div class="kpi-card"><div class="value">$54,720</div><div class="label">拉齐实收</div><div class="diff"><span class="negative">-1.94%</span></div></div></div>
+<h3>涨价组2 vs 对照组</h3><div><div class="kpi-card"><div class="value">10.62%</div><div class="label">转化率</div><div class="diff"><span class="negative">-1.00pp</span></div></div><div class="kpi-card"><div class="value">$3.56</div><div class="label">单杯实收</div><div class="diff"><span class="positive">+7.88%</span></div></div><div class="kpi-card"><div class="value">49.39%</div><div class="label">7日复购</div><div class="diff"><span class="negative">-2.25pp</span></div></div><div class="kpi-card"><div class="value">$0.483</div><div class="label">LTV 7天</div><div class="diff"><span class="negative">-4.55%</span></div></div><div class="kpi-card"><div class="value">$0.849</div><div class="label">LTV 14天</div><div class="diff"><span class="negative">-3.96%</span></div></div><div class="kpi-card"><div class="value">$53,403</div><div class="label">拉齐实收</div><div class="diff"><span class="negative">-4.30%</span></div></div></div>
+<h3>核心指标对比表</h3>
+<table>
+<tr><th>组别</th><th>实验人数</th><th>下单用户</th><th>转化率</th><th>杯量</th><th>单杯实收</th><th>3日复购</th><th>7日复购</th><th>ARPU</th><th>LTV 7天</th><th>LTV 14天</th></tr>
+<tr class="grp1"><td><b>涨价组1</b></td><td>38,093</td><td>4,112</td><td>10.79% <small>(<span class="negative">-0.83pp</span>)</small></td><td>10,556</td><td>$3.61 <small>(<span class="positive">+9.39%</span>)</small></td><td>31.54% <small>(<span class="positive">+0.46pp</span>)</small></td><td>50.73% <small>(<span class="negative">-0.91pp</span>)</small></td><td>$1.088 <small>(<span class="negative">-1.98%</span>)</small></td><td>$0.491 <small>(<span class="negative">-2.96%</span>)</small></td><td>$0.864 <small>(<span class="negative">-2.26%</span>)</small></td></tr>
+<tr class="grp2"><td><b>涨价组2</b></td><td>38,058</td><td>4,043</td><td>10.62% <small>(<span class="negative">-1.00pp</span>)</small></td><td>10,430</td><td>$3.56 <small>(<span class="positive">+7.88%</span>)</small></td><td>30.44% <small>(<span class="negative">-0.64pp</span>)</small></td><td>49.39% <small>(<span class="negative">-2.25pp</span>)</small></td><td>$1.062 <small>(<span class="negative">-4.32%</span>)</small></td><td>$0.483 <small>(<span class="negative">-4.55%</span>)</small></td><td>$0.849 <small>(<span class="negative">-3.96%</span>)</small></td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td>50,295</td><td>5,843</td><td>11.62%</td><td>15,508</td><td>$3.30</td><td>31.08%</td><td>51.64%</td><td>$1.110</td><td>$0.506</td><td>$0.884</td></tr>
+</table>
+<h3>拉齐后对比（按对照组人数归一化）</h3>
+<table>
+<tr><th>组别</th><th>下单用户</th><th>杯量</th><th>实收</th><th>LTV 7天</th><th>LTV 14天</th></tr>
+<tr class="grp1"><td><b>涨价组1 (拉齐)</b></td><td>5,429 <small>(<span class="negative">-7.08%</span>)</small></td><td>13,937 <small>(<span class="negative">-10.13%</span>)</small></td><td>$54,720.24 <small>(<span class="negative">-1.94%</span>)</small></td><td>$0.491 <small>(<span class="negative">-2.96%</span>)</small></td><td>$0.864 <small>(<span class="negative">-2.26%</span>)</small></td></tr>
+<tr class="grp2"><td><b>涨价组2 (拉齐)</b></td><td>5,342 <small>(<span class="negative">-8.56%</span>)</small></td><td>13,783 <small>(<span class="negative">-11.12%</span>)</small></td><td>$53,402.96 <small>(<span class="negative">-4.30%</span>)</small></td><td>$0.483 <small>(<span class="negative">-4.55%</span>)</small></td><td>$0.849 <small>(<span class="negative">-3.96%</span>)</small></td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td>5,843</td><td>15,508</td><td>$55,803.70</td><td>$0.506</td><td>$0.884</td></tr>
+</table>
+<h2>三、分群策略效果（小实验）</h2>
+<p>按用户生命周期分段，对比各组在不同段的策略效果。每个表格中实验组为行。</p>
+<h3>0-15天（占比 0.4%）</h3>
+<table>
+<tr><th>组别</th><th>策略</th><th>用户数</th><th>转化率</th><th>单杯实收</th><th>3日复购</th><th>7日复购</th><th>转化显著性</th></tr>
+<tr class="grp1"><td><b>涨价组1</b></td><td class="strategy-cell">75折全品 + 75折全品</td><td>128</td><td>23.44% <small>(<span class="negative">-6.00pp</span>)</small></td><td>$3.69 <small>(<span class="negative">-2.38%</span>)</small></td><td>25.93% <small>(<span class="negative">-6.68pp</span>)</small></td><td>34.78% <small>(<span class="negative">-12.72pp</span>)</small></td><td><span class="not-sig">不显著 (p=0.242)</span></td></tr>
+<tr class="grp2"><td><b>涨价组2</b></td><td class="strategy-cell">7折全品 + 7折全品</td><td>148</td><td>30.41% <small>(<span class="positive">+0.97pp</span>)</small></td><td>$3.67 <small>(<span class="negative">-2.91%</span>)</small></td><td>35.90% <small>(<span class="positive">+3.29pp</span>)</small></td><td>45.45% <small>(<span class="negative">-2.05pp</span>)</small></td><td><span class="not-sig">不显著 (p=0.850)</span></td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td class="strategy-cell">6折限品 + 7折全品</td><td>180</td><td>29.44%</td><td>$3.78</td><td>32.61%</td><td>47.50%</td><td>-</td></tr>
+</table>
+<h3>16-30天（占比 5.0%）</h3>
+<table>
+<tr><th>组别</th><th>策略</th><th>用户数</th><th>转化率</th><th>单杯实收</th><th>3日复购</th><th>7日复购</th><th>转化显著性</th></tr>
+<tr class="grp1"><td><b>涨价组1</b></td><td class="strategy-cell">5折</td><td>1,896</td><td>16.19% <small>(<span class="negative">-0.85pp</span>)</small></td><td>$3.67 <small>(<span class="positive">+5.76%</span>)</small></td><td>29.21% <small>(<span class="negative">-4.03pp</span>)</small></td><td>39.92% <small>(<span class="negative">-4.89pp</span>)</small></td><td><span class="not-sig">不显著 (p=0.456)</span></td></tr>
+<tr class="grp2"><td><b>涨价组2</b></td><td class="strategy-cell">5折</td><td>2,050</td><td>17.95% <small>(<span class="positive">+0.91pp</span>)</small></td><td>$3.68 <small>(<span class="positive">+6.05%</span>)</small></td><td>27.05% <small>(<span class="negative">-6.19pp</span>)</small></td><td>40.75% <small>(<span class="negative">-4.06pp</span>)</small></td><td><span class="not-sig">不显著 (p=0.418)</span></td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td class="strategy-cell">4折</td><td>2,518</td><td>17.04%</td><td>$3.47</td><td>33.24%</td><td>44.81%</td><td>-</td></tr>
+</table>
+<h3>31天+（占比 94.6%）</h3>
+<table>
+<tr><th>组别</th><th>策略</th><th>用户数</th><th>转化率</th><th>单杯实收</th><th>3日复购</th><th>7日复购</th><th>转化显著性</th></tr>
+<tr class="grp1"><td><b>涨价组1</b></td><td class="strategy-cell">4折 + $2.99 + 7折(t7)</td><td>36,069</td><td>10.47% <small>(<span class="negative">-0.79pp</span>)</small></td><td>$3.60 <small>(<span class="positive">+9.76%</span>)</small></td><td>25.50% <small>(<span class="negative">-0.63pp</span>)</small></td><td>38.65% <small>(<span class="negative">-0.59pp</span>)</small></td><td><span class="sig">显著 (p=0.000)</span></td></tr>
+<tr class="grp2"><td><b>涨价组2</b></td><td class="strategy-cell">4折(t7) + $2.99 + 6折(t7)</td><td>35,860</td><td>10.12% <small>(<span class="negative">-1.14pp</span>)</small></td><td>$3.54 <small>(<span class="positive">+7.93%</span>)</small></td><td>25.23% <small>(<span class="negative">-0.90pp</span>)</small></td><td>37.71% <small>(<span class="negative">-1.53pp</span>)</small></td><td><span class="sig">显著 (p=0.000)</span></td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td class="strategy-cell">3折(t7) + $2.99(t7) + 5折(t7)</td><td>47,597</td><td>11.26%</td><td>$3.28</td><td>26.13%</td><td>39.24%</td><td>-</td></tr>
+</table>
+<h3>来访未购（占比 2.2%）</h3>
+<table>
+<tr><th>组别</th><th>策略</th><th>用户数</th><th>转化率</th><th>单杯实收</th><th>3日复购</th><th>7日复购</th><th>转化显著性</th></tr>
+<tr class="grp1"><td><b>涨价组1</b></td><td class="strategy-cell">6折</td><td>837</td><td>50.42% <small>(<span class="negative">-4.42pp</span>)</small></td><td>$3.65 <small>(<span class="positive">+8.31%</span>)</small></td><td>25.34% <small>(<span class="positive">+3.90pp</span>)</small></td><td>0.00% <small>(<span class="">+0.00pp</span>)</small></td><td><span class="not-sig">不显著 (p=0.054)</span></td></tr>
+<tr class="grp2"><td><b>涨价组2</b></td><td class="strategy-cell">55折</td><td>836</td><td>47.49% <small>(<span class="negative">-7.35pp</span>)</small></td><td>$3.65 <small>(<span class="positive">+8.31%</span>)</small></td><td>24.58% <small>(<span class="positive">+3.14pp</span>)</small></td><td>0.00% <small>(<span class="">+0.00pp</span>)</small></td><td><span class="sig">显著 (p=0.001)</span></td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td class="strategy-cell">5折</td><td>1,096</td><td>54.84%</td><td>$3.37</td><td>21.44%</td><td>0.00%</td><td>-</td></tr>
+</table>
+<h3>周六日消费（占比 4.1%）</h3>
+<table>
+<tr><th>组别</th><th>策略</th><th>用户数</th><th>转化率</th><th>单杯实收</th><th>3日复购</th><th>7日复购</th><th>转化显著性</th></tr>
+<tr class="grp1"><td><b>涨价组1</b></td><td class="strategy-cell">6折</td><td>1,383</td><td>91.83% <small>(<span class="negative">-0.53pp</span>)</small></td><td>$3.65 <small>(<span class="positive">+9.28%</span>)</small></td><td>38.11% <small>(<span class="positive">+1.09pp</span>)</small></td><td>0.00% <small>(<span class="">+0.00pp</span>)</small></td><td><span class="not-sig">不显著 (p=0.571)</span></td></tr>
+<tr class="grp2"><td><b>涨价组2</b></td><td class="strategy-cell">55折</td><td>1,404</td><td>90.60% <small>(<span class="negative">-1.76pp</span>)</small></td><td>$3.58 <small>(<span class="positive">+7.19%</span>)</small></td><td>36.71% <small>(<span class="negative">-0.31pp</span>)</small></td><td>0.00% <small>(<span class="">+0.00pp</span>)</small></td><td><span class="not-sig">不显著 (p=0.066)</span></td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td class="strategy-cell">5折</td><td>2,042</td><td>92.36%</td><td>$3.34</td><td>37.02%</td><td>0.00%</td><td>-</td></tr>
+</table>
+<h2>四、券核销对比</h2>
+<p>各组主要券的核销率对比（组为行）。</p>
+<table>
+<tr><th>组别</th><th style="white-space:normal;min-width:70px;font-size:11px">$2.99 Any Drink</th><th style="white-space:normal;min-width:70px;font-size:11px">25% Off Any Drink</th><th style="white-space:normal;min-width:70px;font-size:11px">30% Off Any Drink</th><th style="white-space:normal;min-width:70px;font-size:11px">40% Off Any Drink</th><th style="white-space:normal;min-width:70px;font-size:11px">40% Off Selected</th><th style="white-space:normal;min-width:70px;font-size:11px">45% Off Any Drink</th><th style="white-space:normal;min-width:70px;font-size:11px">50% OFF Any Drink</th><th style="white-space:normal;min-width:70px;font-size:11px">60% Off Any Drink</th><th style="white-space:normal;min-width:70px;font-size:11px">70% Off Any Drink</th><th style="white-space:normal;min-width:70px;font-size:11px">Coffee Pass</th><th style="white-space:normal;min-width:70px;font-size:11px">Luck In Love: Free...</th><th style="white-space:normal;min-width:70px;font-size:11px">Luckin Day - Wedne...</th><th style="white-space:normal;min-width:70px;font-size:11px">Lunch Break Specia...</th><th style="white-space:normal;min-width:70px;font-size:11px">Share The Luck Rew...</th><th style="white-space:normal;min-width:70px;font-size:11px">Weekday Deals</th><th style="white-space:normal;min-width:70px;font-size:11px">学生专属权益</th></tr>
+<tr class="grp1"><td><b>涨价组1</b></td><td style="font-size:11px">173 (0.2%)</td><td style="font-size:11px">1,524 (1.1%)</td><td style="font-size:11px">197 (0.2%)</td><td style="font-size:11px">70 (0.2%)</td><td>-</td><td>-</td><td style="font-size:11px">868 (1.7%)</td><td style="font-size:11px">1,514 (1.2%)</td><td>-</td><td style="font-size:11px">23 (51.1%)</td><td style="font-size:11px">29 (51.8%)</td><td style="font-size:11px">69 (0.1%)</td><td style="font-size:11px">240 (8.8%)</td><td style="font-size:11px">46 (45.1%)</td><td style="font-size:11px">375 (25.6%)</td><td style="font-size:11px">699 (0.5%)</td></tr>
+<tr class="grp2"><td><b>涨价组2</b></td><td style="font-size:11px">165 (0.2%)</td><td>-</td><td style="font-size:11px">1,889 (1.3%)</td><td style="font-size:11px">19 (0.0%)</td><td style="font-size:11px">177 (4.0%)</td><td style="font-size:11px">71 (2.8%)</td><td style="font-size:11px">810 (1.7%)</td><td style="font-size:11px">1,431 (1.5%)</td><td style="font-size:11px">103 (0.3%)</td><td style="font-size:11px">30 (54.5%)</td><td style="font-size:11px">22 (44.0%)</td><td style="font-size:11px">77 (0.1%)</td><td style="font-size:11px">197 (7.2%)</td><td style="font-size:11px">38 (37.6%)</td><td style="font-size:11px">406 (27.8%)</td><td style="font-size:11px">585 (0.4%)</td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td style="font-size:11px">146 (0.1%)</td><td style="font-size:11px">0 (0.0%)</td><td style="font-size:11px">1,019 (1.0%)</td><td style="font-size:11px">0 (0.0%)</td><td style="font-size:11px">2,320 (2.2%)</td><td style="font-size:11px">0 (0.0%)</td><td style="font-size:11px">217 (0.2%)</td><td style="font-size:11px">1,316 (2.2%)</td><td style="font-size:11px">2,198 (1.4%)</td><td style="font-size:11px">20 (57.1%)</td><td style="font-size:11px">42 (61.8%)</td><td style="font-size:11px">94 (0.1%)</td><td style="font-size:11px">239 (6.1%)</td><td style="font-size:11px">69 (43.7%)</td><td style="font-size:11px">869 (39.5%)</td><td style="font-size:11px">841 (0.5%)</td></tr>
+</table>
+<h3>周六日消费 Weekday Deals 券核销</h3>
+<table>
+<tr><th>组别</th><th>发放数</th><th>使用数</th><th>核销率</th><th>核销用户</th></tr>
+<tr class="grp1"><td><b>涨价组1</b></td><td>1,717</td><td>378</td><td>22.02%</td><td>300</td></tr>
+<tr class="grp2"><td><b>涨价组2</b></td><td>1,727</td><td>410</td><td>23.74%</td><td>324</td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td>2,549</td><td>881</td><td>34.56%</td><td>673</td></tr>
+</table>
+<h3>4.5 非实验券干扰检验</h3>
+<div class="section-box">
+<p>验证非实验券是否干扰实验结果。</p>
+<table style="width:auto">
+<tr><th>组别</th><th>总用券次数</th><th>人均用券</th><th>实验券占比</th><th>共享券使用</th><th>共享券人均</th></tr>
+<tr class="grp1"><td><b>涨价组1</b></td><td>6,603</td><td>0.173</td><td>75.6%</td><td>1,614</td><td>0.0424</td></tr>
+<tr class="grp2"><td><b>涨价组2</b></td><td>6,568</td><td>0.173</td><td>78.2%</td><td>1,430</td><td>0.0376</td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td>10,094</td><td>0.201</td><td>80.6%</td><td>1,956</td><td>0.0389</td></tr>
+</table>
+<p><b>结论：</b>共享券人均使用差异 13%（<30%为均匀），实验券占主导（74-80%），非实验券不构成干扰。</p>
+</div>
+
+<h2>五、结论与建议</h2>
+<h3>5.1 核心问题：价格能不能涨？涨价的代价是什么？</h3>
+<div class="section-box">
+<p><b>结论：可以涨，且涨价组1（75折系）是更优方案。</b></p>
+<table style="width:auto">
+<tr><th>组别</th><th>单杯实收</th><th>转化率</th><th>7日复购率</th><th>拉齐总实收</th><th>LTV 7天</th><th>LTV 14天</th><th>3日复购率</th></tr>
+<tr class="grp1"><td><b>涨价组1 (75折系)</b></td><td>$3.61 <small>(<span class="positive">+9.39%</span>)</small></td><td>10.79% <small>(<span class="negative">-0.83pp</span>)</small></td><td>50.73% <small>(<span class="negative">-0.91pp</span>)</small></td><td>$54,720.24 <small>(<span class="negative">-1.94%</span>)</small></td><td>$0.491 <small>(<span class="negative">-2.96%</span>)</small></td><td>$0.864 <small>(<span class="negative">-2.26%</span>)</small></td><td>31.54% <small>(<span class="positive">+0.46pp</span>)</small></td></tr>
+<tr class="grp2"><td><b>涨价组2 (7折系)</b></td><td>$3.56 <small>(<span class="positive">+7.88%</span>)</small></td><td>10.62% <small>(<span class="negative">-1.00pp</span>)</small></td><td>49.39% <small>(<span class="negative">-2.25pp</span>)</small></td><td>$53,402.96 <small>(<span class="negative">-4.30%</span>)</small></td><td>$0.483 <small>(<span class="negative">-4.55%</span>)</small></td><td>$0.849 <small>(<span class="negative">-3.96%</span>)</small></td><td>30.44% <small>(<span class="negative">-0.64pp</span>)</small></td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td>$3.30</td><td>11.62%</td><td>51.64%</td><td>$55,804</td><td>$0.506</td><td>$0.884</td><td>31.08%</td></tr>
+</table>
+<p style="margin-top:12px"><b>显著性检验：</b></p>
+<table style="width:auto">
+<tr><th>组别</th><th>转化率</th><th>单杯实收</th><th>7日复购率</th><th>ARPU</th></tr>
+<tr class="grp1"><td><b>涨价组1 vs 对照</b></td><td><span class="sig">显著 (p=0.000)</span></td><td><span class="sig">显著 (p=0.000)</span></td><td><span class="not-sig">不显著 (p=0.374)</span></td><td><span class="not-sig">不显著 (p=0.148)</span></td></tr>
+<tr class="grp2"><td><b>涨价组2 vs 对照</b></td><td><span class="sig">显著 (p=0.000)</span></td><td><span class="sig">显著 (p=0.000)</span></td><td><span class="sig">显著 (p=0.027)</span></td><td><span class="sig">显著 (p=0.001)</span></td></tr>
+</table>
+
+<p style="margin-top:12px"><b>涨价收益：</b>两组单杯实收均显著提升（组1 <span class="positive">+9.39%</span>、组2 <span class="positive">+7.88%</span>），验证了用户对提价有耐受空间。</p>
+<p><b>涨价代价：</b></p>
+<ul>
+<li><b>转化率</b>：组1 <span class="negative">-0.83pp</span>、组2 <span class="negative">-1.00pp</span> — 每提价1%单杯，约损失 8.8% 的转化率，代价可控</li>
+<li><b>7日复购</b>：组1 <span class="negative">-0.91pp</span>、组2 <span class="negative">-2.25pp</span> — 组1对留存影响极小，组2则更明显</li>
+<li><b>总实收</b>：组1 <span class="negative">-1.94%</span>、组2 <span class="negative">-4.30%</span> — 单杯涨幅未能完全弥补转化损失，但组1仅损失约2%实收</li>
+<li><b>LTV趋势</b>：LTV 7天组1 <span class="negative">-2.96%</span>、组2 <span class="negative">-4.55%</span>；LTV 14天组1 <span class="negative">-2.26%</span>、组2 <span class="negative">-3.96%</span> — 组1短期价值损失可控，组2损失更大</li>
+</ul>
+<p><b>关键发现：涨价组1定价更高但表现反而更好。</b>折扣深度并非越深越好——组2折扣更深但总实收反而损失更大。涨价组1在<b>单杯提升幅度、转化率损失控制、7日留存维护</b>三个维度上均优于组2，是更均衡的涨价方案。</p>
+</div>
+<h3>5.2 用户洞察：不同人群对涨价的耐受度差异巨大</h3>
+<div class="section-box">
+<p>本次实验揭示了一个核心规律：<b>用户对价格的敏感度与其生命周期阶段高度相关</b>。</p>
+<table style="width:auto">
+<tr><th>用户分群</th><th>用户占比</th><th>转化率变化(组1)</th><th>单杯实收变化(组1)</th><th>价格弹性</th><th>每涨$0.10单杯的代价</th><th>LTV变化(组1)</th><th>判断</th></tr>
+<tr><td>周六日消费</td><td>4.1%</td><td><span class="negative">-0.53pp</span></td><td><span class="positive">+9.28%</span></td><td>低弹性 (0.06)</td><td>转化率 -0.17pp</td><td><span class="positive">+8.09%</span></td><td><span class="sig">可大胆涨价</span></td></tr>
+<tr><td>31天+</td><td>94.6%</td><td><span class="negative">-0.79pp</span></td><td><span class="positive">+9.76%</span></td><td>低弹性 (0.08)</td><td>转化率 -0.25pp</td><td><span class="positive">+0.01%</span></td><td><span class="sig">可大胆涨价</span></td></tr>
+<tr><td>16-30天</td><td>5.0%</td><td><span class="negative">-0.85pp</span></td><td><span class="positive">+5.76%</span></td><td>低弹性 (0.15)</td><td>转化率 -0.42pp</td><td><span class="negative">-16.96%</span></td><td><span class="sig">可大胆涨价</span></td></tr>
+<tr><td>来访未购</td><td>2.2%</td><td><span class="negative">-4.42pp</span></td><td><span class="positive">+8.31%</span></td><td>中弹性 (0.53)</td><td>转化率 -1.58pp</td><td><span class="negative">-1.56%</span></td><td><span style="color:#F57F17;font-weight:600">适度涨价</span></td></tr>
+<tr><td>0-15天</td><td>0.4%</td><td><span class="negative">-6.00pp</span></td><td><span class="negative">-2.38%</span></td><td>高弹性 (2.52)</td><td>转化率 +6.67pp</td><td><span class="negative">-31.65%</span></td><td><span style="color:#D32F2F;font-weight:600">谨慎涨价</span></td></tr>
+</table>
+<p style="margin-top:12px"><b>LTV 观察（整体）：</b></p>
+<table style="width:auto">
+<tr><th>组别</th><th>LTV 7天</th><th>vs 对照</th><th>LTV 14天</th><th>vs 对照</th></tr>
+<tr class="grp1"><td><b>涨价组1</b></td><td>$0.491</td><td><span class="negative">-2.96%</span></td><td>$0.864</td><td><span class="negative">-2.26%</span></td></tr>
+<tr class="grp2"><td><b>涨价组2</b></td><td>$0.483</td><td><span class="negative">-4.55%</span></td><td>$0.849</td><td><span class="negative">-3.96%</span></td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td>$0.506</td><td>-</td><td>$0.884</td><td>-</td></tr>
+</table>
+<p><b>LTV 结论：</b></p>
+<ul>
+<li><b>LTV 7天</b>：组1 $0.491（<span class="negative">-2.96%</span>）、组2 $0.483（<span class="negative">-4.55%</span>）— 短期用户价值组1更接近对照组</li>
+<li><b>LTV 14天</b>：组1 $0.864（<span class="negative">-2.26%</span>）、组2 $0.849（<span class="negative">-3.96%</span>）— 随时间推移，差距收窄（组1）收窄（组2）</li>
+<li><b>趋势判断</b>：组1的LTV损失随时间收窄，说明涨价对长期价值影响有限；组2的LTV损失随时间收窄</li>
+</ul>
+<p style="font-size:11px;color:#666"><b>价格弹性解读：</b>弹性系数 = |转化率变化pp ÷ 单杯变化%|。<b>「每涨$0.10单杯的代价」</b>显示单杯实收每提高$0.10时转化率变化。LTV变化为该分段期间人均消费额变化。</p>
+<p style="margin-top:12px"><b>关键洞察：</b></p>
+<ul>
+<li><b>周六日消费用户</b>是最佳涨价目标：转化率几乎不受影响（90%+），习惯性消费使其对价格不敏感</li>
+<li><b>31天+成熟用户</b>（占比94%+）：对提价耐受度较好，是涨价的核心基本盘</li>
+<li><b>来访未购用户</b>：对价格高度敏感，需维持深折扣拉转化</li>
+<li><b>0-15天新客</b>：样本量小结论不稳定，首单价格锚点影响大，不建议涨价</li>
+</ul>
+</div>
+<h3>5.3 分策略洞察：各生命周期段的策略效果</h3>
+<div class="section-box" style="margin-top:16px">
+<p><b>0-15天 — 新客破冰期（占比 0.4%）</b></p>
+<p style="font-size:11px;color:#666">策略：组1: 75折全品×2 | 组2: 7折全品×2 | 对照: 6折限品+7折全品</p>
+<table style="width:auto">
+<tr><th>组别</th><th>转化率</th><th>单杯实收</th><th>3日复购</th><th>7日复购</th></tr>
+<tr class="grp1"><td><b>涨价组1</b></td><td>23.44% <small>(<span class="negative">-6.00pp</span>)</small></td><td>$3.69 <small>(<span class="negative">-2.38%</span>)</small></td><td>25.93% <small>(<span class="negative">-6.68pp</span>)</small></td><td>34.78% <small>(<span class="negative">-12.72pp</span>)</small></td></tr>
+<tr class="grp2"><td><b>涨价组2</b></td><td>30.41% <small>(<span class="positive">+0.97pp</span>)</small></td><td>$3.67 <small>(<span class="negative">-2.91%</span>)</small></td><td>35.90% <small>(<span class="positive">+3.29pp</span>)</small></td><td>45.45% <small>(<span class="negative">-2.05pp</span>)</small></td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td>29.44%</td><td>$3.78</td><td>32.61%</td><td>47.50%</td></tr>
+</table>
+<p><b>洞察：</b>样本量较小（组1仅128人），结论仅供参考。组1的75折全品对新客偏贵（转化<span class="negative">-6.00pp</span>）。<b>新客首单价格锚点对后续消费有塑造作用，建议维持较深折扣。</b></p></div>
+<div class="section-box" style="margin-top:16px">
+<p><b>16-30天 — 培养期（占比 5.0%）</b></p>
+<p style="font-size:11px;color:#666">策略：组1&2: 5折 | 对照: 4折</p>
+<table style="width:auto">
+<tr><th>组别</th><th>转化率</th><th>单杯实收</th><th>3日复购</th><th>7日复购</th></tr>
+<tr class="grp1"><td><b>涨价组1</b></td><td>16.19% <small>(<span class="negative">-0.85pp</span>)</small></td><td>$3.67 <small>(<span class="positive">+5.76%</span>)</small></td><td>29.21% <small>(<span class="negative">-4.03pp</span>)</small></td><td>39.92% <small>(<span class="negative">-4.89pp</span>)</small></td></tr>
+<tr class="grp2"><td><b>涨价组2</b></td><td>17.95% <small>(<span class="positive">+0.91pp</span>)</small></td><td>$3.68 <small>(<span class="positive">+6.05%</span>)</small></td><td>27.05% <small>(<span class="negative">-6.19pp</span>)</small></td><td>40.75% <small>(<span class="negative">-4.06pp</span>)</small></td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td>17.04%</td><td>$3.47</td><td>33.24%</td><td>44.81%</td></tr>
+</table>
+<p><b>洞察：</b>两涨价组策略相同（均为5折 vs 对照4折），转化差异不大。单杯实收提升<span class="positive">+5.76%</span>，<b>从4折提到5折用户可以接受</b>。</p></div>
+<div class="section-box" style="margin-top:16px">
+<p><b>31天+ — 成熟期（核心用户）（占比 94.6%）</b></p>
+<p style="font-size:11px;color:#666">策略：组1: 4折+$2.99+7折(t7) | 组2: 4折(t7)+$2.99+6折(t7) | 对照: 3折(t7)+$2.99(t7)+5折(t7)</p>
+<table style="width:auto">
+<tr><th>组别</th><th>转化率</th><th>单杯实收</th><th>3日复购</th><th>7日复购</th></tr>
+<tr class="grp1"><td><b>涨价组1</b></td><td>10.47% <small>(<span class="negative">-0.79pp</span>)</small></td><td>$3.60 <small>(<span class="positive">+9.76%</span>)</small></td><td>25.50% <small>(<span class="negative">-0.63pp</span>)</small></td><td>38.65% <small>(<span class="negative">-0.59pp</span>)</small></td></tr>
+<tr class="grp2"><td><b>涨价组2</b></td><td>10.12% <small>(<span class="negative">-1.14pp</span>)</small></td><td>$3.54 <small>(<span class="positive">+7.93%</span>)</small></td><td>25.23% <small>(<span class="negative">-0.90pp</span>)</small></td><td>37.71% <small>(<span class="negative">-1.53pp</span>)</small></td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td>11.26%</td><td>$3.28</td><td>26.13%</td><td>39.24%</td></tr>
+</table>
+<p><b>洞察：</b>核心段（占比95%+）。组1转化仅降<span class="negative">-0.79pp</span>但单杯升<span class="positive">+9.76%</span>，涨价效率最优。组2折扣更深但实收损失更大（转化<span class="negative">-1.14pp</span>）。<b>成熟用户耐受度较高，建议在组1方案基础上进一步试探更浅折扣。</b></p></div>
+<div class="section-box" style="margin-top:16px">
+<p><b>来访未购 — 沉默唤醒（占比 2.2%）</b></p>
+<p style="font-size:11px;color:#666">策略：组1: 6折 | 组2: 55折 | 对照: 5折</p>
+<table style="width:auto">
+<tr><th>组别</th><th>转化率</th><th>单杯实收</th><th>3日复购</th><th>7日复购</th></tr>
+<tr class="grp1"><td><b>涨价组1</b></td><td>50.42% <small>(<span class="negative">-4.42pp</span>)</small></td><td>$3.65 <small>(<span class="positive">+8.31%</span>)</small></td><td>25.34% <small>(<span class="positive">+3.90pp</span>)</small></td><td>0.00% <small>(<span class="">+0.00pp</span>)</small></td></tr>
+<tr class="grp2"><td><b>涨价组2</b></td><td>47.49% <small>(<span class="negative">-7.35pp</span>)</small></td><td>$3.65 <small>(<span class="positive">+8.31%</span>)</small></td><td>24.58% <small>(<span class="positive">+3.14pp</span>)</small></td><td>0.00% <small>(<span class="">+0.00pp</span>)</small></td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td>54.84%</td><td>$3.37</td><td>21.44%</td><td>0.00%</td></tr>
+</table>
+<p><b>洞察：</b>两组转化均显著下降（组1 <span class="negative">-4.42pp</span>、组2 <span class="negative">-7.35pp</span>），来访未购用户本质是<b>价格驱动型</b>。<b>建议维持深折扣（5折或更低）保障转化。</b></p></div>
+<div class="section-box" style="margin-top:16px">
+<p><b>周六日消费 — 周末高频用户（占比 4.1%）</b></p>
+<p style="font-size:11px;color:#666">策略：组1: 6折 | 组2: 55折 | 对照: 5折</p>
+<table style="width:auto">
+<tr><th>组别</th><th>转化率</th><th>单杯实收</th><th>3日复购</th><th>7日复购</th></tr>
+<tr class="grp1"><td><b>涨价组1</b></td><td>91.83% <small>(<span class="negative">-0.53pp</span>)</small></td><td>$3.65 <small>(<span class="positive">+9.28%</span>)</small></td><td>38.11% <small>(<span class="positive">+1.09pp</span>)</small></td><td>0.00% <small>(<span class="">+0.00pp</span>)</small></td></tr>
+<tr class="grp2"><td><b>涨价组2</b></td><td>90.60% <small>(<span class="negative">-1.76pp</span>)</small></td><td>$3.58 <small>(<span class="positive">+7.19%</span>)</small></td><td>36.71% <small>(<span class="negative">-0.31pp</span>)</small></td><td>0.00% <small>(<span class="">+0.00pp</span>)</small></td></tr>
+<tr class="ctrl"><td><b>对照组3</b></td><td>92.36%</td><td>$3.34</td><td>37.02%</td><td>0.00%</td></tr>
+</table>
+<p><b>洞察：</b>三组转化率均在90%以上，用户高度忠诚。提价后券核销率从34.6%降至~23%，但单杯实收提升<span class="positive">+9.28%</span>。<b>购买动力来自消费习惯而非折扣，最适合涨价，可进一步测试更浅折扣。</b></p></div>
+<h3>5.4 定价调整建议</h3>
+<div class="section-box">
+<p>基于各分段的价格弹性和策略效果，对下一轮实验的定价建议如下：</p>
+<table>
+<tr><th>用户分段</th><th>涨价组1（75折系）</th><th>涨价组2（7折系）</th><th>建议调整方向</th></tr>
+<tr><td>31天+<br><span style="font-size:11px;color:#666">占比94%+</span></td><td style="font-size:11px;white-space:normal"><b>4折 + $2.99 + 7折(t7)</b><br>单杯<span class="positive">+9.76%</span>，转化<span class="negative">-0.79pp</span></td><td style="font-size:11px;white-space:normal"><b>4折(t7) + $2.99 + 6折(t7)</b><br>单杯<span class="positive">+7.93%</span>，转化<span class="negative">-1.14pp</span></td><td style="font-size:11px;white-space:normal">维持当前组1策略，可进一步探索45折替代4折，试探更浅折扣天花板</td></tr>
+<tr><td>周六日消费<br><span style="font-size:11px;color:#666">占比4%</span></td><td style="font-size:11px;white-space:normal"><b>6折</b><br>单杯<span class="positive">+9.28%</span>，转化<span class="negative">-0.53pp</span></td><td style="font-size:11px;white-space:normal"><b>55折</b><br>单杯<span class="positive">+7.19%</span>，转化<span class="negative">-1.76pp</span></td><td style="font-size:11px;white-space:normal">可以激进涨价，从6折提到65折或7折。习惯型用户对折扣不敏感</td></tr>
+<tr><td>16-30天<br><span style="font-size:11px;color:#666">占比5%</span></td><td style="font-size:11px;white-space:normal"><b>5折</b><br>单杯<span class="positive">+5.76%</span>，转化<span class="negative">-0.85pp</span></td><td style="font-size:11px;white-space:normal"><b>5折</b><br>单杯<span class="positive">+6.05%</span>，转化<span class="positive">+0.91pp</span></td><td style="font-size:11px;white-space:normal">当前5折合理，可小幅测试55折。培养期用户正在形成消费习惯</td></tr>
+<tr><td>来访未购<br><span style="font-size:11px;color:#666">占比2%</span></td><td style="font-size:11px;white-space:normal"><b>6折</b><br>单杯<span class="positive">+8.31%</span>，转化<span class="negative">-4.42pp</span></td><td style="font-size:11px;white-space:normal"><b>55折</b><br>单杯<span class="positive">+8.31%</span>，转化<span class="negative">-7.35pp</span></td><td style="font-size:11px;white-space:normal">定价偏高，建议回调到5折或更低。价格敏感型用户需深折扣拉回</td></tr>
+<tr><td>0-15天<br><span style="font-size:11px;color:#666">占比0.4%</span></td><td style="font-size:11px;white-space:normal"><b>75折全品 + 75折全品</b><br>单杯<span class="negative">-2.38%</span>，转化<span class="negative">-6.00pp</span></td><td style="font-size:11px;white-space:normal"><b>7折全品 + 7折全品</b><br>单杯<span class="negative">-2.91%</span>，转化<span class="positive">+0.97pp</span></td><td style="font-size:11px;white-space:normal">定价偏高，建议新客维持6折或更深折扣。首单价格锚点影响长期价值</td></tr>
+</table>
+
+<p style="margin-top:16px"><b>总结：</b></p>
+<ul>
+<li><b>整体可以涨价</b>，推荐以涨价组1（75折系）为基础方案，在 31天+ 和周六日消费两个核心人群先行推广</li>
+<li><b>折扣深度并非越深越好</b>：组2折扣更深但实收损失更大，说明过度折扣的边际收益递减。组1在转化损失和单杯提升之间找到了更优平衡点</li>
+<li><b>差异化定价是关键</b>：成熟用户和习惯型用户可以涨价，新客和沉默用户仍需深折扣</li>
+<li><b>LTV趋势</b>：组1的7天LTV <span class="negative">-2.96%</span>、14天LTV <span class="negative">-2.26%</span>，损失可控且趋势收窄；组2的14天LTV <span class="negative">-3.96%</span>，损失更大</li>
+<li><b>下一步</b>：① 延长实验至30天+观察长期留存和LTV ② 在推荐方案基础上分段微调（31天+试探45折、周六日试探65-7折）③ 扩大新客段样本量做独立验证</li>
+</ul>
+</div>
+
+<p class="note">* 3日复购统计截至 2026-02-25，7日复购统计截至 2026-02-21，确保观察窗口完整。<br>
+* LTV 7天截至 2026-02-18（实验前7天），LTV 14天截至 2026-02-25（实验前14天）。<br>
+* 转化率 = 期间下单用户 / 实验总用户数。拉齐 = 按对照组人数归一化。<br>
+* 显著性检验：转化率用比例 z 检验，单杯实收用均值 z 检验，p &lt; 0.05 为显著。</p>
+</body></html>

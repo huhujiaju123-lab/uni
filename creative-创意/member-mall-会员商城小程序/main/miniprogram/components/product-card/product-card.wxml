@@ -1,0 +1,27 @@
+<!--components/product-card/product-card.wxml-->
+<view class="product-card" bindtap="onTap">
+  <image
+    class="product-image"
+    src="{{product.images[0] || '/images/placeholder.png'}}"
+    mode="aspectFill"
+    lazy-load
+  ></image>
+
+  <view class="product-info">
+    <text class="product-name ellipsis-2">{{product.name}}</text>
+
+    <!-- 价格显示 - 高级会员 -->
+    <view class="price-section" wx:if="{{userRole === 'premium'}}">
+      <text class="price-member">¥{{memberPrice}}</text>
+      <text class="price-original">¥{{originalPrice}}</text>
+    </view>
+
+    <!-- 价格显示 - 普通会员 -->
+    <view class="price-section" wx:else>
+      <text class="price-normal">¥{{originalPrice}}</text>
+      <view class="member-hint">
+        <text>高级会员 ¥{{memberPrice}}</text>
+      </view>
+    </view>
+  </view>
+</view>

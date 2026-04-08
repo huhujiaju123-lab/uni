@@ -1,0 +1,336 @@
+// 育儿成长记录系统 - 数据库 Schema
+// 支持 PostgreSQL + pgvector
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [vector]
+}
+
+// ============================================
+// 1. 事实层 (Event Store) - 永远可追溯
+// ============================================
+
+// 原始日志条目
+model Entry {
+  id           String    @id @default(cuid())
+  rawText      String    @db.Text // 用户原始输入
+  entryDate    DateTime  // 事件发生日期
+  childAge     String?   // 年龄快照，如 "2岁3个月"
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // 关联
+  factCard     FactCard?
+
+  @@index([entryDate])
+  @@index([createdAt])
+}
+
+// Recorder Agent 输出的结构化事实卡
+model FactCard {
+  id              String   @id @default(cuid())
+  entryId         String   @unique
+  entry           Entry    @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  // 结构化数据
+  oneLine         String   // 一句话摘要
+  events          Json     // 事件列表 [{type, description, emotion, context}]
+  tags            String[] // 标签数组
+  missingInfo     String[] // 缺失信息提示
+  ageBucket       String?  // 年龄段分桶: "0-6m", "6-12m", "1-2y", "2-3y", "3-4y", "4-5y", "5-6y"
+
+  // 向量嵌入用于语义检索
+  embedding       Unsupported("vector(1536)")?
+
+  // Expert 分析结果
+  expertAnalysis  ExpertAnalysis?
+
+  createdAt       DateTime @default(now())
+
+  @@index([tags])
+  @@index([ageBucket])
+}
+
+// Expert Agent 输出的专家分析
+model ExpertAnalysis {
+  id            String   @id @default(cuid())
+  factCardId    String   @unique
+  factCard      FactCard @relation(fields: [factCardId], references: [id], onDelete: Cascade)
+
+  interpretation String  @db.Text // 专家解读
+  suggestions    Json    // 建议列表 [{category, content, priority}]
+  patterns       Json?   // 识别的模式 [{pattern, evidence}]
+  riskFlags      String[] // 风险提示
+
+  createdAt      DateTime @default(now())
+}
+
+// ============================================
+// 2. Prompt Registry - Agent Prompt 版本管理
+// ============================================
+
+model AgentPrompt {
+  id            String   @id @default(cuid())
+  agentName     String   // recorder / expert / values / orchestrator
+  version       String   // v1.0.0, v1.0.1...
+  systemPrompt  String   @db.Text
+  enabled       Boolean  @default(true)
+  releaseNotes  String?  @db.Text
+
+  createdAt     DateTime @default(now())
+
+  @@unique([agentName, version])
+  @@index([agentName, enabled])
+}
+
+// ============================================
+// 3. 周期摘要层
+// ============================================
+
+model WeeklySummary {
+  id          String   @id @default(cuid())
+  weekStart   DateTime // 周起始日期
+  weekEnd     DateTime
+
+  highlights  Json     // 本周亮点 [{type, description}]
+  concerns    Json     // 关注点
+  progress    Json     // 进步
+  patterns    Json     // 识别的模式
+  entryIds    String[] // 引用的 Entry ID 列表
+
+  createdAt   DateTime @default(now())
+
+  @@unique([weekStart])
+  @@index([weekStart])
+}
+
+model MonthlySummary {
+  id           String   @id @default(cuid())
+  monthStart   DateTime
+  monthEnd     DateTime
+
+  milestones   Json     // 里程碑
+  themes       Json     // 主题
+  growth       Json     // 成长概述
+  nextFocus    Json     // 下月关注点
+  entryIds     String[] // 引用的 Entry ID 列表
+
+  createdAt    DateTime @default(now())
+
+  @@unique([monthStart])
+}
+
+// ============================================
+// 4. 原则库
+// ============================================
+
+// 策略库 - 什么方法有效/无效
+model Strategy {
+  id          String   @id @default(cuid())
+  category    String   // sleep, emotion, behavior, feeding...
+  description String   @db.Text
+  conditions  String?  @db.Text // 适用条件
+  evidence    String[] // 引用的 Entry ID
+  status      String   @default("active") // active / deprecated
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category, status])
+}
+
+// 价值观原则库
+model ValuesPrinciple {
+  id          String   @id @default(cuid())
+  version     String   // V1, V2...
+  principle   String   @db.Text
+  reason      String?  @db.Text // 修改原因
+  isActive    Boolean  @default(true)
+
+  createdAt   DateTime @default(now())
+
+  @@index([isActive])
+}
+
+// ============================================
+// 5. 配置
+// ============================================
+
+model ChildProfile {
+  id          String    @id @default(cuid())
+  name        String
+  birthday    DateTime
+  timezone    String    @default("Asia/Shanghai")
+  focusAreas  String[]  // 关注领域: sleep, emotion, social...
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// ============================================
+// 6. 对话系统
+// ============================================
+
+// 对话会话
+model Conversation {
+  id          String    @id @default(cuid())
+  title       String?   // 对话标题（可自动生成）
+  summary     String?   @db.Text // 对话摘要（用于后续检索）
+  status      String    @default("active") // active / archived
+
+  // 关联到日志（每条日志一个对话窗口）
+  entryId     String?   @unique
+
+  messages    Message[]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([entryId])
+}
+
+// 对话消息
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  role           String       // user / assistant
+  content        String       @db.Text
+
+  // 记录这条回复参考了哪些数据
+  referencedEntryIds String[] // 引用的日志 ID
+
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId])
+}
+
+// ============================================
+// 7. 育儿问题追踪系统
+// ============================================
+
+// 育儿问题
+model ParentingQuestion {
+  id                String   @id @default(cuid())
+
+  question          String   @db.Text // 问题描述
+  stage             String   @default("observing") // observing | experimenting | internalized
+  currentConclusion String?  @db.Text // 当前结论
+  conclusionSource  String?  // ai | user | ai_modified
+
+  displayOrder      Int      @default(0) // 显示顺序（支持拖动排序）
+
+  relatedEntryIds   String[] // 关联的日志ID
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // 关联
+  observations      QuestionObservation[]
+  discussions       QuestionDiscussion[]
+
+  @@index([stage])
+  @@index([displayOrder])
+}
+
+// 问题观察记录
+model QuestionObservation {
+  id          String   @id @default(cuid())
+  questionId  String
+  question    ParentingQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  content     String   @db.Text // 观察内容
+  source      String   // entry | manual (来自日志自动关联 或 手动添加)
+  entryId     String?  // 关联的日志ID（如有）
+
+  createdAt   DateTime @default(now())
+
+  @@index([questionId])
+  @@index([createdAt])
+}
+
+// 问题讨论记录
+model QuestionDiscussion {
+  id          String   @id @default(cuid())
+  questionId  String
+  question    ParentingQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  role        String   // user | assistant
+  content     String   @db.Text
+
+  createdAt   DateTime @default(now())
+
+  @@index([questionId])
+  @@index([createdAt])
+}
+
+// ============================================
+// 8. 递归上下文系统
+// ============================================
+
+// 每日沉淀 - 递归积累的核心
+model DailyDigest {
+  id              String   @id @default(cuid())
+  date            DateTime @unique @db.Date // 日期，每天一条
+
+  // AI 生成，用户可编辑的内容
+  // 每个数组项: {id, content, source: "ai"|"user", deleted: boolean}
+  recordSummary     Json     @default("[]") // 记录摘要
+  aiAnalysis        Json     @default("[]") // AI 分析要点
+  discussionPoints  Json     @default("[]") // 讨论要点
+  conclusions       Json     @default("[]") // 今日结论
+
+  // 开放问题（待后续跟进）
+  openQuestions     Json     @default("[]") // [{id, content, resolved: boolean}]
+
+  // 关联
+  entryIds          String[] // 关联的日志 ID
+  relatedDigestIds  String[] // 关联的历史沉淀 ID
+  learningIds       String[] // 产生的认知 ID
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([date])
+}
+
+// 认知库 - 长期积累的认知
+model Learning {
+  id            String   @id @default(cuid())
+
+  topic         String   // 主题标签（如：睡眠、情绪、饮食）
+  insight       String   @db.Text // 认知内容
+
+  // 状态管理
+  status        String   @default("hypothesis")
+                // hypothesis(假设中) | validated(已验证) | invalidated(已否定)
+  confidence    Float    @default(0.5) // 0-1 信心度
+
+  // 证据链
+  // [{id, date, type: "observation"|"experiment"|"discussion", content, entryId?, digestId?}]
+  evidence      Json     @default("[]")
+
+  // 否定原因（当 status = invalidated 时）
+  invalidReason String?  @db.Text
+
+  // 来源追踪
+  source        String   @default("ai") // ai | user
+  sourceDigestId String? // 首次产生这个认知的 DailyDigest
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([status])
+  @@index([topic])
+  @@index([confidence])
+}

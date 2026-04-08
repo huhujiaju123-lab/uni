@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>0312 分享有礼弹层实验报告 - 对外版</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg: #f2efe8;
+      --paper: rgba(255, 252, 245, 0.84);
+      --panel: rgba(255, 248, 236, 0.78);
+      --ink: #1f1b19;
+      --muted: #6e625c;
+      --line: rgba(31, 27, 25, 0.12);
+      --accent: #c4472d;
+      --accent-soft: rgba(196, 71, 45, 0.10);
+      --navy: #21364a;
+      --navy-soft: rgba(33, 54, 74, 0.10);
+      --gold: #ba8a22;
+      --gold-soft: rgba(186, 138, 34, 0.12);
+      --green: #25634a;
+      --green-soft: rgba(37, 99, 74, 0.12);
+      --shadow: 0 24px 80px rgba(44, 28, 12, 0.12);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(196, 71, 45, 0.12), transparent 32%),
+        radial-gradient(circle at top right, rgba(33, 54, 74, 0.12), transparent 28%),
+        linear-gradient(180deg, #ece7de 0%, #f4f0e8 44%, #ede7db 100%);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(31, 27, 25, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(31, 27, 25, 0.02) 1px, transparent 1px);
+      background-size: 26px 26px;
+      opacity: 0.3;
+    }
+
+    .page {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 24px auto 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero,
+    .section {
+      background: var(--paper);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-xl);
+    }
+
+    .hero {
+      padding: 30px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      right: -120px;
+      top: -120px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(196, 71, 45, 0.16) 0%, rgba(196, 71, 45, 0.02) 62%, transparent 72%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.42);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow strong { color: var(--navy); }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.95fr;
+      gap: 28px;
+      margin-top: 20px;
+      align-items: end;
+    }
+
+    .headline {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(48px, 10vw, 108px);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      margin: 16px 0 18px;
+      max-width: 9ch;
+    }
+
+    .summary {
+      font-size: 17px;
+      line-height: 1.8;
+      color: #342d2a;
+      max-width: 58ch;
+    }
+
+    .hero-notes {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .note-card {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.54);
+      border: 1px solid var(--line);
+    }
+
+    .note-card .k {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .note-card .v {
+      font-size: 15px;
+      line-height: 1.55;
+      font-weight: 600;
+    }
+
+    .signal-card {
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(165deg, rgba(255,255,255,0.88), rgba(253,246,234,0.9)),
+        var(--paper);
+      border: 1px solid rgba(31, 27, 25, 0.10);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      min-height: 100%;
+    }
+
+    .signal-badge {
+      align-self: flex-start;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--gold-soft);
+      color: #8b6416;
+      border: 1px solid rgba(186, 138, 34, 0.18);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .signal-title {
+      font-size: 28px;
+      line-height: 1.12;
+      font-weight: 700;
+      max-width: 10ch;
+    }
+
+    .signal-copy {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .signal-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .signal-metric {
+      padding: 14px;
+      border-radius: 14px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(196, 71, 45, 0.16);
+    }
+
+    .signal-metric:nth-child(2n) {
+      background: var(--navy-soft);
+      border-color: rgba(33, 54, 74, 0.12);
+    }
+
+    .signal-metric .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .signal-metric .value {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+    .section {
+      margin-top: 22px;
+      padding: 26px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    .section-title {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 42px;
+      line-height: 0.95;
+      letter-spacing: 0.04em;
+      margin: 0;
+    }
+
+    .section-desc {
+      max-width: 54ch;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .assumption-grid,
+    .kpi-grid,
+    .recommend-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .assumption-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-bottom: 22px;
+    }
+
+    .assumption {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: var(--panel);
+      border: 1px solid var(--line);
+    }
+
+    .assumption .label,
+    .mini-table caption,
+    .metric-tag {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .assumption .value {
+      margin-top: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .kpi-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-bottom: 20px;
+    }
+
+    .kpi-card {
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.46);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -14px -14px auto;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(196, 71, 45, 0.08);
+    }
+
+    .kpi-card .metric-tag { display: block; margin-bottom: 10px; }
+    .kpi-card .metric-value {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 34px;
+      font-weight: 500;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .kpi-card .metric-sub { font-size: 14px; color: var(--muted); }
+    .lift-up { color: var(--green); }
+    .lift-flat { color: var(--gold); }
+
+    .data-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.46);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 820px;
+    }
+
+    th, td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(33, 54, 74, 0.04);
+    }
+
+    td.num, th.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .chart-card {
+      padding: 20px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.44);
+    }
+
+    .chart-card h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+
+    .chart-card p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .metric-compare {
+      display: grid;
+      gap: 16px;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: 132px 1fr 78px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .metric-name {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .compare-track {
+      display: flex;
+      gap: 10px;
+      align-items: end;
+      height: 58px;
+    }
+
+    .compare-bar {
+      flex: 1;
+      border-radius: 14px 14px 6px 6px;
+      position: relative;
+      min-height: 8px;
+    }
+
+    .compare-bar.exp {
+      background: linear-gradient(180deg, #d55c41 0%, #b23b24 100%);
+    }
+
+    .compare-bar.ctrl {
+      background: linear-gradient(180deg, #3f5870 0%, #26394d 100%);
+    }
+
+    .compare-bar span {
+      position: absolute;
+      top: -22px;
+      left: 0;
+      font-size: 12px;
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    .metric-lift {
+      text-align: right;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 13px;
+      color: var(--green);
+      font-weight: 500;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      align-items: end;
+      gap: 10px;
+      height: 220px;
+      padding-top: 16px;
+    }
+
+    .day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .day-bars {
+      height: 150px;
+      width: 100%;
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .day-bar {
+      width: 22px;
+      border-radius: 12px 12px 4px 4px;
+      position: relative;
+    }
+
+    .day-bar.exp {
+      background: linear-gradient(180deg, #da6347 0%, #b33b24 100%);
+    }
+
+    .day-bar.ctrl {
+      background: linear-gradient(180deg, #5c7690 0%, #32485d 100%);
+    }
+
+    .day-bar small {
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .day-label {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .insight-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .quote-panel,
+    .detail-panel {
+      padding: 22px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.42);
+    }
+
+    .quote-panel blockquote {
+      margin: 0;
+      font-size: 27px;
+      line-height: 1.3;
+      font-weight: 700;
+      max-width: 18ch;
+    }
+
+    .quote-panel .caption {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .detail-item {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+    }
+
+    .detail-item strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .detail-item span {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .recommend-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 18px;
+    }
+
+    .recommend-card {
+      padding: 20px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.50);
+    }
+
+    .recommend-card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .recommend-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .footer {
+      margin-top: 18px;
+      padding: 0 2px;
+      color: var(--muted);
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .chart-grid,
+      .insight-grid,
+      .assumption-grid,
+      .kpi-grid,
+      .recommend-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .headline { max-width: none; }
+      .timeline { grid-template-columns: repeat(3, minmax(0, 1fr)); height: auto; row-gap: 22px; }
+      .day-bars { height: 126px; }
+    }
+
+    @media (max-width: 720px) {
+      .page { width: min(100vw - 18px, 100%); margin: 10px auto 28px; }
+      .hero, .section { padding: 18px; border-radius: 22px; }
+      .headline { font-size: 56px; }
+      .hero-notes, .signal-metrics { grid-template-columns: 1fr; }
+      .metric-row { grid-template-columns: 1fr; }
+      .compare-track { height: 46px; }
+      .timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .section-title { font-size: 34px; }
+      .quote-panel blockquote { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="eyebrow">
+        <span>AB Experiment</span>
+        <strong>External Report</strong>
+      </div>
+      <div class="hero-grid">
+        <div>
+          <h1 class="headline">POP-UP SHARE TEST REPORT</h1>
+          <p class="summary">
+            本报告基于 <strong>2026-03-12 至 2026-03-17</strong> 的已完结实验数据，展示“分享有礼弹层”对分享行为、邀请注册和后续转化的影响。整体方向为正，但统计上尚未形成显著证据，因此本次汇报以<strong>方向判断</strong>为主，不将结果表述为已验证收益。
+          </p>
+          <div class="hero-notes">
+            <div class="note-card">
+              <div class="k">实验对象</div>
+              <div class="v">实验组展示分享弹层；对照组不展示弹层。</div>
+            </div>
+            <div class="note-card">
+              <div class="k">核心结论</div>
+              <div class="v">分享率、邀请率、成功转化率均高于对照组，但主指标 <code>p=0.455</code>。</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="signal-card">
+          <div class="signal-badge">Direction Positive / Not Significant</div>
+          <div class="signal-title">方向成立，但证据强度不足以支持强结论。</div>
+          <div class="signal-copy">
+            对外表述建议聚焦“弹层方案在本轮测试中呈现正向趋势”，避免使用“显著提升”“已验证收益”等强判断。
+          </div>
+          <div class="signal-metrics">
+            <div class="signal-metric">
+              <div class="label">分享率 Lift</div>
+              <div class="value">+11.9%</div>
+            </div>
+            <div class="signal-metric">
+              <div class="label">成功转化率 Lift</div>
+              <div class="value">+17.5%</div>
+            </div>
+            <div class="signal-metric">
+              <div class="label">主指标 p-value</div>
+              <div class="value">0.455</div>
+            </div>
+            <div class="signal-metric">
+              <div class="label">实验样本</div>
+              <div class="value">5,673</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">01 / 数据总览</h2>
+          <div class="section-desc">原始数字单独展示，不在本段做结论判断。数据源为实验结果总表，时间窗固定为 2026-03-12 至 2026-03-17。</div>
+        </div>
+      </div>
+
+      <div class="assumption-grid">
+        <div class="assumption">
+          <div class="label">数据文件</div>
+          <div class="value">0312分享有礼弹层实验分析.xlsx</div>
+        </div>
+        <div class="assumption">
+          <div class="label">时间窗</div>
+          <div class="value">2026-03-12 至 2026-03-17</div>
+        </div>
+        <div class="assumption">
+          <div class="label">实验状态</div>
+          <div class="value">已结束 / 数据完整</div>
+        </div>
+        <div class="assumption">
+          <div class="label">使用场景</div>
+          <div class="value">对外汇报版</div>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <span class="metric-tag">分享率</span>
+          <div class="metric-value">1.62%</div>
+          <div class="metric-sub">实验组 vs 对照组 1.45% <span class="lift-up">+0.17pp</span></div>
+        </div>
+        <div class="kpi-card">
+          <span class="metric-tag">邀请率</span>
+          <div class="metric-value">1.78%</div>
+          <div class="metric-sub">实验组 vs 对照组 1.61% <span class="lift-up">+0.17pp</span></div>
+        </div>
+        <div class="kpi-card">
+          <span class="metric-tag">成功转化率</span>
+          <div class="metric-value">1.13%</div>
+          <div class="metric-sub">实验组 vs 对照组 0.96% <span class="lift-up">+0.17pp</span></div>
+        </div>
+        <div class="kpi-card">
+          <span class="metric-tag">D7 转化率</span>
+          <div class="metric-value">63.4%</div>
+          <div class="metric-sub">被邀请用户口径 vs 对照组 59.8% <span class="lift-up">+3.6pp</span></div>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>指标</th>
+              <th class="num">实验组</th>
+              <th class="num">对照组</th>
+              <th class="num">差值</th>
+              <th class="num">相对变化</th>
+              <th class="num">p-value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>入组人数</td>
+              <td class="num">5,673</td>
+              <td class="num">5,726</td>
+              <td class="num">-53</td>
+              <td class="num">-</td>
+              <td class="num">-</td>
+            </tr>
+            <tr>
+              <td>分享人数</td>
+              <td class="num">92</td>
+              <td class="num">83</td>
+              <td class="num">+9</td>
+              <td class="num">+10.8%</td>
+              <td class="num">-</td>
+            </tr>
+            <tr>
+              <td>分享率</td>
+              <td class="num">1.62%</td>
+              <td class="num">1.45%</td>
+              <td class="num">+0.17pp</td>
+              <td class="num">+11.9%</td>
+              <td class="num">0.455</td>
+            </tr>
+            <tr>
+              <td>邀请注册人数</td>
+              <td class="num">101</td>
+              <td class="num">92</td>
+              <td class="num">+9</td>
+              <td class="num">+9.8%</td>
+              <td class="num">-</td>
+            </tr>
+            <tr>
+              <td>邀请率（邀请注册/入组）</td>
+              <td class="num">1.78%</td>
+              <td class="num">1.61%</td>
+              <td class="num">+0.17pp</td>
+              <td class="num">+10.8%</td>
+              <td class="num">0.472</td>
+            </tr>
+            <tr>
+              <td>成功转化人数</td>
+              <td class="num">64</td>
+              <td class="num">55</td>
+              <td class="num">+9</td>
+              <td class="num">+16.4%</td>
+              <td class="num">-</td>
+            </tr>
+            <tr>
+              <td>成功转化率（成功转化/入组）</td>
+              <td class="num">1.13%</td>
+              <td class="num">0.96%</td>
+              <td class="num">+0.17pp</td>
+              <td class="num">+17.5%</td>
+              <td class="num">0.379</td>
+            </tr>
+            <tr>
+              <td>D7 转化率（被邀请用户口径）</td>
+              <td class="num">63.4%</td>
+              <td class="num">59.8%</td>
+              <td class="num">+3.6pp</td>
+              <td class="num">+6.0%</td>
+              <td class="num">0.609</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h3>核心指标对比</h3>
+          <p>按比例指标比较实验组与对照组。页面只展示原始差异，不在此处延伸解释收益。</p>
+          <div class="metric-compare" id="metricCompare"></div>
+        </div>
+
+        <div class="chart-card">
+          <h3>每日分享人数</h3>
+          <p>按日展示分享人数。2026-03-17 当天数据在源表中已纳入完整结果文件，本页按既定时间窗直接呈现。</p>
+          <div class="timeline" id="dailyTrend"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">02 / 分析与解读</h2>
+          <div class="section-desc">本段才做解释。按照规则，<code>p &gt; 0.1</code> 的结果只描述方向，不折算成稳定收益或绝对回报。</div>
+        </div>
+      </div>
+
+      <div class="insight-grid">
+        <div class="quote-panel">
+          <blockquote>弹层方案在本轮测试中呈现正向趋势，但统计显著性不足，当前更适合作为方向性信号，而非最终定版依据。</blockquote>
+          <div class="caption">
+            主指标分享率从 <strong>1.45%</strong> 提升至 <strong>1.62%</strong>，方向向上；邀请率、成功转化率以及被邀请用户 D0/D3/D7 转化率也均高于对照组。但主指标 <code>p=0.455</code>，其余核心比例指标的 <code>p-value</code> 也都高于 0.1，因此本轮结果不能表述为“显著提升”。
+          </div>
+        </div>
+
+        <div class="detail-panel">
+          <div class="detail-list">
+            <div class="detail-item">
+              <strong>1. 分享链路方向正向</strong>
+              <span>分享率、邀请率、成功转化率均高于对照组，说明弹层没有破坏分享路径，且对行为触发存在一定帮助。</span>
+            </div>
+            <div class="detail-item">
+              <strong>2. 新增流量质量未见明显变差</strong>
+              <span>被邀请用户的 D0、D3、D7 转化率均高于对照组，说明实验组带来的新增注册用户质量至少没有出现恶化迹象。</span>
+            </div>
+            <div class="detail-item">
+              <strong>3. 当前证据不足以支撑强结论</strong>
+              <span>本轮样本仍偏小，主指标置信区间跨过 0，现阶段只能说“方向成立”，不能说“效果已被验证”。</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="data-table-wrap" style="margin-top: 18px;">
+        <table>
+          <thead>
+            <tr>
+              <th>被邀请用户转化窗口</th>
+              <th class="num">实验组</th>
+              <th class="num">对照组</th>
+              <th class="num">差值</th>
+              <th class="num">p-value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>D0 转化率</td>
+              <td class="num">58.4%</td>
+              <td class="num">54.3%</td>
+              <td class="num">+4.1pp</td>
+              <td class="num">0.569</td>
+            </tr>
+            <tr>
+              <td>D3 转化率</td>
+              <td class="num">62.4%</td>
+              <td class="num">59.8%</td>
+              <td class="num">+2.6pp</td>
+              <td class="num">0.712</td>
+            </tr>
+            <tr>
+              <td>D7 转化率</td>
+              <td class="num">63.4%</td>
+              <td class="num">59.8%</td>
+              <td class="num">+3.6pp</td>
+              <td class="num">0.609</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">03 / 建议</h2>
+          <div class="section-desc">对外汇报的建议重点是口径管理和决策边界，而不是把不显著结果包装成收益证明。</div>
+        </div>
+      </div>
+
+      <div class="recommend-grid">
+        <div class="recommend-card">
+          <h3>对外口径</h3>
+          <p>建议统一表述为：“本轮测试中，弹层方案在分享和后续转化指标上均呈现正向趋势，但由于统计显著性不足，当前结论以方向性观察为主。”</p>
+        </div>
+        <div class="recommend-card">
+          <h3>决策边界</h3>
+          <p>不建议基于本轮结果对外宣称“显著提升”或“已验证收益”。当前更适合作为下一轮优化与复测的依据，而非最终结论。</p>
+        </div>
+        <div class="recommend-card">
+          <h3>后续动作</h3>
+          <p>后续若继续验证，优先扩大样本并保持同一口径，重点看分享率、成功转化率以及被邀请用户 D7 转化率是否仍保持同方向变化。</p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span>Source: 0312分享有礼弹层实验分析.xlsx</span>
+        <span>Window: 2026-03-12 to 2026-03-17</span>
+        <span>Generated for external presentation</span>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const compareMetrics = [
+      { name: "分享率", exp: 1.62, ctrl: 1.45, lift: "+11.9%" },
+      { name: "邀请率", exp: 1.78, ctrl: 1.61, lift: "+10.8%" },
+      { name: "成功转化率", exp: 1.13, ctrl: 0.96, lift: "+17.5%" },
+      { name: "D7 转化率", exp: 63.4, ctrl: 59.8, lift: "+6.0%" }
+    ];
+
+    const dailyTrend = [
+      { day: "03-12", exp: 29, ctrl: 26 },
+      { day: "03-13", exp: 30, ctrl: 24 },
+      { day: "03-14", exp: 9, ctrl: 12 },
+      { day: "03-15", exp: 11, ctrl: 7 },
+      { day: "03-16", exp: 16, ctrl: 15 },
+      { day: "03-17", exp: 2, ctrl: 1 }
+    ];
+
+    const compareRoot = document.getElementById("metricCompare");
+    const compareMax = Math.max(...compareMetrics.flatMap(item => [item.exp, item.ctrl]));
+
+    compareMetrics.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "metric-row";
+      row.innerHTML = `
+        <div class="metric-name">${item.name}</div>
+        <div class="compare-track">
+          <div class="compare-bar exp" style="height:${Math.max(item.exp / compareMax * 100, 12)}%">
+            <span>${item.exp}%</span>
+          </div>
+          <div class="compare-bar ctrl" style="height:${Math.max(item.ctrl / compareMax * 100, 12)}%">
+            <span>${item.ctrl}%</span>
+          </div>
+        </div>
+        <div class="metric-lift">${item.lift}</div>
+      `;
+      compareRoot.appendChild(row);
+    });
+
+    const trendRoot = document.getElementById("dailyTrend");
+    const trendMax = Math.max(...dailyTrend.flatMap(item => [item.exp, item.ctrl]));
+
+    dailyTrend.forEach(item => {
+      const wrap = document.createElement("div");
+      wrap.className = "day";
+      wrap.innerHTML = `
+        <div class="day-bars">
+          <div class="day-bar exp" style="height:${Math.max(item.exp / trendMax * 100, 8)}%">
+            <small>${item.exp}</small>
+          </div>
+          <div class="day-bar ctrl" style="height:${Math.max(item.ctrl / trendMax * 100, 8)}%">
+            <small>${item.ctrl}</small>
+          </div>
+        </div>
+        <div class="day-label">${item.day}<br>实验 / 对照</div>
+      `;
+      trendRoot.appendChild(wrap);
+    });
+  </script>
+</body>
+</html>

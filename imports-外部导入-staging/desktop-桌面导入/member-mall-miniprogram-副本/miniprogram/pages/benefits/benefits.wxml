@@ -1,0 +1,190 @@
+<!--pages/benefits/benefits.wxml-->
+<view class="container">
+
+  <!-- ========== 普通会员视图 ========== -->
+  <view class="normal-member-view" wx:if="{{!isPremium}}">
+    <!-- 输入邀请码区域 -->
+    <view class="upgrade-card main">
+      <view class="upgrade-header">
+        <view class="upgrade-icon">★</view>
+        <view class="upgrade-title">输入邀请码，成为高级会员</view>
+      </view>
+
+      <view class="input-section">
+        <input
+          class="code-input"
+          type="text"
+          maxlength="6"
+          placeholder="请输入6位邀请码"
+          placeholder-class="input-placeholder"
+          value="{{inviteCode}}"
+          bindinput="onInputCode"
+        />
+      </view>
+
+      <button class="upgrade-btn {{inviteCode.length === 6 ? 'active' : ''}}" bindtap="onUpgrade">
+        确认升级
+      </button>
+
+      <view class="upgrade-hint">
+        <text class="hint-icon">💡</text>
+        <text class="hint-text">没有邀请码？向已是高级会员的好友索要吧</text>
+      </view>
+    </view>
+
+    <!-- 权益预览 -->
+    <view class="preview-section">
+      <view class="preview-title">升级后可享受</view>
+      <view class="preview-list">
+        <view class="preview-item">
+          <text class="preview-icon">✓</text>
+          <text class="preview-text">专属会员折扣价</text>
+        </view>
+        <view class="preview-item">
+          <text class="preview-icon">✓</text>
+          <text class="preview-text">生成专属福利码</text>
+        </view>
+        <view class="preview-item">
+          <text class="preview-icon">✓</text>
+          <text class="preview-text">邀请好友得奖励</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 商品展示模块 - 普通会员（价格置灰） -->
+    <view class="products-section">
+      <view class="section-header">
+        <text class="section-title">会员专享价商品</text>
+        <text class="section-tag">升级后生效</text>
+      </view>
+      <view class="products-list">
+        <view
+          class="product-item"
+          wx:for="{{products}}"
+          wx:key="_id"
+          bindtap="goToProductDetail"
+          data-id="{{item._id}}"
+        >
+          <image class="product-image" src="{{item.images[0]}}" mode="aspectFill"></image>
+          <view class="product-info">
+            <text class="product-name ellipsis">{{item.name}}</text>
+            <view class="product-price-row">
+              <text class="product-price disabled">¥{{item.memberPrice}}</text>
+              <text class="product-tag">仅高级会员</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 高级会员视图 ========== -->
+  <view class="premium-member-view" wx:else>
+    <!-- 会员卡片 -->
+    <view class="member-card">
+      <view class="card-badge">Premium</view>
+      <view class="card-info">
+        <view class="card-title-row">
+          <text class="card-name">高级会员</text>
+        </view>
+        <view class="card-code">邀请码: {{userInviteCode}}</view>
+      </view>
+    </view>
+
+    <!-- 福利码 -->
+    <view class="section">
+      <view class="section-title">我的福利码</view>
+      <!-- 未生成福利码 -->
+      <view class="welfare-card generate" wx:if="{{!welfareCode}}" bindtap="openWelfareModal">
+        <view class="welfare-left">
+          <text class="welfare-icon">🎫</text>
+          <view class="welfare-info">
+            <text class="welfare-title">生成专属福利码</text>
+            <text class="welfare-desc">需填写淘宝昵称，生成后不可更改</text>
+          </view>
+        </view>
+        <text class="welfare-arrow">></text>
+      </view>
+      <!-- 已生成福利码 -->
+      <view class="welfare-card display" wx:else>
+        <view class="welfare-code-info">
+          <view class="welfare-code-row">
+            <text class="welfare-label">福利码</text>
+            <text class="welfare-code-value">{{welfareCode}}</text>
+            <view class="welfare-copy-btn" bindtap="copyWelfareCode">复制</view>
+          </view>
+          <view class="welfare-taobao-row">
+            <text class="welfare-label">淘宝昵称</text>
+            <text class="welfare-taobao-value">{{taobaoNickname}}</text>
+          </view>
+        </view>
+        <view class="welfare-usage-hint">
+          <text class="usage-hint-text">复制福利码，前往天猫店联系客服使用</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 邀请好友 -->
+    <view class="section">
+      <view class="section-title">邀请好友</view>
+      <view class="invite-card" bindtap="goToInvite">
+        <view class="invite-left">
+          <text class="invite-title">分享邀请码给好友</text>
+          <text class="invite-desc">已邀请 {{invitedCount}} 人</text>
+        </view>
+        <text class="invite-arrow">></text>
+      </view>
+    </view>
+
+    <!-- 商品展示模块 - 高级会员（价格生效） -->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">会员专享价商品</text>
+        <text class="section-tag active">已生效</text>
+      </view>
+      <view class="products-list">
+        <view
+          class="product-item"
+          wx:for="{{products}}"
+          wx:key="_id"
+          bindtap="goToProductDetail"
+          data-id="{{item._id}}"
+        >
+          <image class="product-image" src="{{item.images[0]}}" mode="aspectFill"></image>
+          <view class="product-info">
+            <text class="product-name ellipsis">{{item.name}}</text>
+            <view class="product-price-row">
+              <text class="product-price active">¥{{item.memberPrice}}</text>
+              <text class="product-price-original">¥{{item.originalPrice}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</view>
+
+<!-- 福利码生成弹窗 -->
+<view class="modal-mask" wx:if="{{showWelfareModal}}" bindtap="closeWelfareModal"></view>
+<view class="modal-container" wx:if="{{showWelfareModal}}">
+  <view class="modal-content">
+    <view class="modal-title">生成福利码</view>
+    <view class="modal-desc">请填写您的淘宝昵称，福利码生成后将与该昵称绑定，不可更改</view>
+    <view class="modal-input-wrap">
+      <input
+        class="modal-input"
+        type="text"
+        placeholder="请输入淘宝昵称"
+        placeholder-class="modal-input-placeholder"
+        value="{{inputTaobaoNickname}}"
+        bindinput="onInputTaobaoNickname"
+        maxlength="20"
+      />
+    </view>
+    <view class="modal-btns">
+      <view class="modal-btn cancel" bindtap="closeWelfareModal">取消</view>
+      <view class="modal-btn confirm {{inputTaobaoNickname.length > 0 ? 'active' : ''}}" bindtap="generateWelfareCode">确认生成</view>
+    </view>
+  </view>
+</view>

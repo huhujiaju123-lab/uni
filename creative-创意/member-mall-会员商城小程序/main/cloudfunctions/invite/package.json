@@ -1,0 +1,9 @@
+{
+  "name": "invite",
+  "version": "1.0.0",
+  "description": "邀请模块云函数",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

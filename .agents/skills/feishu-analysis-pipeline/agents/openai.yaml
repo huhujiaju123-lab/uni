@@ -1,0 +1,4 @@
+interface:
+  display_name: "飞书分析直出"
+  short_description: "分析结果自动发飞书文档并交给 Airy 美化"
+  default_prompt: "Use $feishu-analysis-pipeline to publish my analysis draft to Feishu and automatically hand it off to Airy."

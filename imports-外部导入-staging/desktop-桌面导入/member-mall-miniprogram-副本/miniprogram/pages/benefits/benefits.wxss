@@ -1,0 +1,656 @@
+/* pages/benefits/benefits.wxss */
+
+.container {
+  min-height: 100vh;
+  background-color: #F6F6F6;
+  padding-bottom: 40rpx;
+}
+
+/* ==================== 普通会员视图 ==================== */
+
+.normal-member-view {
+  padding: 40rpx 32rpx;
+}
+
+/* 顶部图标区 */
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 0 40rpx;
+}
+
+.hero-icon {
+  width: 100rpx;
+  height: 100rpx;
+  background: linear-gradient(135deg, #000000 0%, #333333 100%);
+  border-radius: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  color: #FA5400;
+  margin-bottom: 24rpx;
+}
+
+.hero-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 12rpx;
+}
+
+.hero-desc {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+/* ==================== 商品展示模块 ==================== */
+
+.products-section {
+  background-color: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #000000;
+}
+
+.section-tag {
+  font-size: 22rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  background-color: #F6F6F6;
+  color: #999999;
+}
+
+.section-tag.active {
+  background-color: rgba(7, 193, 96, 0.1);
+  color: #07C160;
+}
+
+.products-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.product-item {
+  display: flex;
+  padding: 20rpx;
+  background-color: #FAFAFA;
+  border-radius: 16rpx;
+}
+
+.product-image {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  background-color: #F0F0F0;
+  flex-shrink: 0;
+}
+
+.product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: 24rpx;
+  padding: 8rpx 0;
+}
+
+.product-name {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #000000;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.product-price-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.product-price {
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.product-price.disabled {
+  color: #CCCCCC;
+}
+
+.product-price.active {
+  color: #FA5400;
+}
+
+.product-price-original {
+  font-size: 24rpx;
+  color: #CCCCCC;
+  text-decoration: line-through;
+}
+
+.product-tag {
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  background-color: #F0F0F0;
+  color: #999999;
+  border-radius: 4rpx;
+}
+
+/* 升级卡片 */
+.upgrade-card {
+  background-color: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 40rpx 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.upgrade-card.main {
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #333333 100%);
+}
+
+.upgrade-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32rpx;
+}
+
+.upgrade-icon {
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(250, 84, 0, 0.2);
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  color: #FA5400;
+  margin-bottom: 20rpx;
+}
+
+.upgrade-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.upgrade-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.1);
+}
+
+.hint-icon {
+  font-size: 28rpx;
+  margin-right: 8rpx;
+}
+
+.upgrade-hint .hint-text {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #000000;
+  text-align: center;
+  margin-bottom: 32rpx;
+}
+
+.input-section {
+  margin-bottom: 32rpx;
+}
+
+.code-input {
+  width: 100%;
+  height: 100rpx;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 12rpx;
+  padding: 0 32rpx;
+  font-size: 36rpx;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 16rpx;
+  text-transform: uppercase;
+  box-sizing: border-box;
+  color: #FFFFFF;
+}
+
+.input-placeholder {
+  font-size: 28rpx;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0;
+}
+
+.upgrade-btn {
+  width: 100%;
+  height: 96rpx;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 32rpx;
+  font-weight: 600;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.upgrade-btn::after {
+  display: none;
+}
+
+.upgrade-btn.active {
+  background-color: #FA5400;
+  color: #FFFFFF;
+}
+
+/* 提示文字 */
+.hint-section {
+  text-align: center;
+  padding: 16rpx 0 32rpx;
+}
+
+.hint-text {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+/* 权益预览 */
+.preview-section {
+  background-color: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 32rpx;
+}
+
+.preview-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 24rpx;
+}
+
+.preview-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.preview-item {
+  display: flex;
+  align-items: center;
+}
+
+.preview-icon {
+  width: 40rpx;
+  height: 40rpx;
+  background-color: #F6F6F6;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: #07C160;
+  margin-right: 16rpx;
+}
+
+.preview-text {
+  font-size: 28rpx;
+  color: #666666;
+}
+
+/* ==================== 高级会员视图 ==================== */
+
+.premium-member-view {
+  padding: 32rpx;
+}
+
+/* 会员卡片 */
+.member-card {
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #333333 100%);
+  border-radius: 24rpx;
+  padding: 40rpx 32rpx;
+  margin-bottom: 32rpx;
+}
+
+.card-badge {
+  display: inline-block;
+  padding: 8rpx 20rpx;
+  background-color: rgba(250, 84, 0, 0.2);
+  border: 1rpx solid #FA5400;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #FA5400;
+  margin-bottom: 24rpx;
+}
+
+.card-info {
+  color: #FFFFFF;
+}
+
+.card-title-row {
+  margin-bottom: 12rpx;
+}
+
+.card-name {
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.card-code {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Section */
+.section {
+  background-color: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+
+/* 权益列表 */
+.benefits-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #F6F6F6;
+}
+
+.benefit-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.benefit-icon {
+  width: 72rpx;
+  height: 72rpx;
+  background-color: #F6F6F6;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  margin-right: 20rpx;
+}
+
+.benefit-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.benefit-name {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #000000;
+  margin-bottom: 4rpx;
+}
+
+.benefit-desc {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.benefit-status {
+  font-size: 24rpx;
+  color: #07C160;
+}
+
+/* 邀请卡片 */
+.invite-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx;
+  background-color: #F6F6F6;
+  border-radius: 16rpx;
+}
+
+.invite-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.invite-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #000000;
+  margin-bottom: 8rpx;
+}
+
+.invite-desc {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.invite-arrow {
+  font-size: 28rpx;
+  color: #CCCCCC;
+}
+
+/* 通用 ellipsis */
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ==================== 福利码模块 ==================== */
+
+.welfare-card {
+  padding: 24rpx;
+  background-color: #F6F6F6;
+  border-radius: 16rpx;
+}
+
+.welfare-card.generate {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.welfare-left {
+  display: flex;
+  align-items: center;
+}
+
+.welfare-icon {
+  font-size: 40rpx;
+  margin-right: 20rpx;
+}
+
+.welfare-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.welfare-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #000000;
+  margin-bottom: 4rpx;
+}
+
+.welfare-desc {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.welfare-arrow {
+  font-size: 28rpx;
+  color: #CCCCCC;
+}
+
+/* 已生成福利码样式 */
+.welfare-code-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.welfare-code-row,
+.welfare-taobao-row {
+  display: flex;
+  align-items: center;
+}
+
+.welfare-label {
+  font-size: 26rpx;
+  color: #999999;
+  width: 140rpx;
+}
+
+.welfare-code-value {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #FA5400;
+  letter-spacing: 4rpx;
+  flex: 1;
+}
+
+.welfare-taobao-value {
+  font-size: 28rpx;
+  color: #333333;
+  flex: 1;
+}
+
+.welfare-copy-btn {
+  font-size: 24rpx;
+  color: #FFFFFF;
+  background-color: #000000;
+  padding: 8rpx 24rpx;
+  border-radius: 20rpx;
+}
+
+.welfare-usage-hint {
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #EEEEEE;
+}
+
+.usage-hint-text {
+  font-size: 24rpx;
+  color: #FA5400;
+}
+
+/* ==================== 福利码弹窗 ==================== */
+
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 101;
+  width: 600rpx;
+}
+
+.modal-content {
+  background-color: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 48rpx 32rpx 32rpx;
+}
+
+.modal-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #000000;
+  text-align: center;
+  margin-bottom: 16rpx;
+}
+
+.modal-desc {
+  font-size: 26rpx;
+  color: #999999;
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 32rpx;
+}
+
+.modal-input-wrap {
+  margin-bottom: 32rpx;
+}
+
+.modal-input {
+  width: 100%;
+  height: 96rpx;
+  background-color: #F6F6F6;
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+  font-size: 30rpx;
+  box-sizing: border-box;
+}
+
+.modal-input-placeholder {
+  color: #CCCCCC;
+}
+
+.modal-btns {
+  display: flex;
+  gap: 24rpx;
+}
+
+.modal-btn {
+  flex: 1;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+}
+
+.modal-btn.cancel {
+  background-color: #F6F6F6;
+  color: #666666;
+}
+
+.modal-btn.confirm {
+  background-color: #CCCCCC;
+  color: #FFFFFF;
+}
+
+.modal-btn.confirm.active {
+  background-color: #000000;
+}

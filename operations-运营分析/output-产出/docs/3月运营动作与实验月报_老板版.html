@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3月运营动作与实验月报 - 老板版</title>
+<style>
+@page { size: 1440px 810px; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  width: 1440px;
+  height: 810px;
+  overflow: hidden;
+  font-family: "SF Pro Display", "PingFang SC", sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(34,39,115,0.14), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(15,52,96,0.12), transparent 28%),
+    linear-gradient(180deg, #f5f7fb 0%, #eef2f7 100%);
+  color: #132238;
+}
+.page { padding: 24px 40px 18px; height: 100%; display: flex; flex-direction: column; }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #dbe2ea;
+}
+.title h1 { font-size: 28px; font-weight: 800; color: #0f3460; }
+.title .sub { font-size: 11px; color: #66758a; margin-top: 4px; }
+.verdict {
+  background: linear-gradient(135deg, #0f3460, #222773);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.main { display: flex; gap: 22px; padding-top: 18px; flex: 1; }
+.left { width: 520px; display: flex; flex-direction: column; gap: 12px; }
+.right { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+.card {
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(15,52,96,0.08);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(18,35,56,0.06);
+}
+.hero {
+  padding: 18px 20px;
+  background: linear-gradient(135deg, #0f3460, #222773);
+  color: #fff;
+}
+.hero .headline { font-size: 18px; line-height: 1.45; font-weight: 700; }
+.hero .desc { font-size: 11px; line-height: 1.55; opacity: 0.86; margin-top: 8px; }
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.kpi {
+  padding: 14px 16px;
+}
+.kpi .label { font-size: 10px; color: #6f7f93; text-transform: uppercase; letter-spacing: .05em; }
+.kpi .value { font-size: 28px; font-weight: 800; color: #0f3460; margin-top: 6px; }
+.kpi .note { font-size: 11px; color: #556476; margin-top: 4px; line-height: 1.4; }
+.section { padding: 14px 18px; }
+.section .stitle { font-size: 13px; font-weight: 800; color: #0f3460; margin-bottom: 10px; }
+.timeline-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 86px;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #eef2f6;
+}
+.timeline-row:last-child { border-bottom: none; }
+.timeline-row .name { font-size: 11px; font-weight: 700; color: #21364a; }
+.timeline-row .body { font-size: 11px; color: #556476; line-height: 1.45; }
+.timeline-row .tag {
+  align-self: center;
+  justify-self: end;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 5px 10px;
+  border-radius: 999px;
+}
+.tag.keep { background: #e8f4ec; color: #25634a; }
+.tag.watch { background: #fff4df; color: #9a6500; }
+.tag.stop { background: #fdebec; color: #c4472d; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mini {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f7f9fc;
+}
+.mini .mtitle { font-size: 11px; font-weight: 800; color: #21364a; margin-bottom: 6px; }
+.mini .mline { font-size: 11px; color: #5c6b7f; line-height: 1.45; }
+.insight-row {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef2f6;
+}
+.insight-row:last-child { border-bottom: none; }
+.num {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: #0f3460;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+}
+.insight-row .txt { font-size: 11px; line-height: 1.5; color: #556476; }
+.insight-row b { color: #132238; }
+.footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: #92a0b1;
+  padding-top: 8px;
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="title">
+      <h1>3月运营动作与实验月报</h1>
+      <div class="sub">老板版 | 窗口按当前已落数 | 范围仅含运营动作与实验</div>
+    </div>
+    <div class="verdict">有效方向已分清，4月以收敛为主</div>
+  </div>
+
+  <div class="main">
+    <div class="left">
+      <div class="card hero">
+        <div class="headline">3月最重要的结果，不是多做了动作，而是把“该继续的”和“该收口的”初步分清了。</div>
+        <div class="desc">时间优化和资源位优化表现更优；周末提频支付返弹窗与低频任务当前版本未成立；上月新客召回在 MTD 留存口径上跑出持续正向改善。</div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="card kpi">
+          <div class="label">分享有礼</div>
+          <div class="value">5.20%</div>
+          <div class="note">3/1-3/23 拉新占比，与2月基本持平；注册日均 +26%</div>
+        </div>
+        <div class="card kpi">
+          <div class="label">时段实验</div>
+          <div class="value">9点胜出</div>
+          <div class="note">周末 9 点优于 10 点；工作日 8 点略优于 9 点</div>
+        </div>
+        <div class="card kpi">
+          <div class="label">新客召回</div>
+          <div class="value">+2.92pp</div>
+          <div class="note">3/26-3/28 对比上月同期，MTD 次月留存平均提升</div>
+        </div>
+        <div class="card kpi">
+          <div class="label">弱策略</div>
+          <div class="value">2条</div>
+          <div class="note">周末提频支付返弹窗、一周3杯任务当前版本不建议放量</div>
+        </div>
+      </div>
+
+      <div class="card section">
+        <div class="stitle">本月动作总览</div>
+        <div class="timeline-row">
+          <div class="name">分享有礼</div>
+          <div class="body">完成 4 个资源位更新，弹窗承担主要流量引导；弹层实验方向正向但未显著。</div>
+          <div class="tag keep">继续</div>
+        </div>
+        <div class="timeline-row">
+          <div class="name">0326时段实验</div>
+          <div class="body">工作日 8 点略优于 9 点，周末 9 点优于 10 点，已具备继续迭代价值。</div>
+          <div class="tag keep">继续</div>
+        </div>
+        <div class="timeline-row">
+          <div class="name">周末提频弹窗</div>
+          <div class="body">相对分享有礼支付后弹窗更弱，到访和下单均未赢。</div>
+          <div class="tag stop">收口</div>
+        </div>
+        <div class="timeline-row">
+          <div class="name">低频任务</div>
+          <div class="body">7天3杯对当前人群门槛过高，领取和使用链路明显偏弱。</div>
+          <div class="tag stop">收口</div>
+        </div>
+        <div class="timeline-row">
+          <div class="name">上月新客召回</div>
+          <div class="body">MTD 次月留存连续优于上月同期，方向正向，适合继续补验证。</div>
+          <div class="tag watch">观察</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="card section">
+        <div class="stitle">重点项目结果</div>
+        <div class="two-col">
+          <div class="mini">
+            <div class="mtitle">分享有礼</div>
+            <div class="mline">注册被邀请人 1,406，日均 61.1，较 2 月 +26%。</div>
+            <div class="mline">拉新占比 5.20%，D0 转化 57.3%，人均邀请 1.09。</div>
+            <div class="mline">弹窗 CTR 61.5%，前链路明显改善，但裂变深度未突破。</div>
+          </div>
+          <div class="mini">
+            <div class="mtitle">0312弹层实验</div>
+            <div class="mline">分享率 +11.9%，成功转化率 +17.5%。</div>
+            <div class="mline">主指标 p=0.455，统计上不显著。</div>
+            <div class="mline">适合表述为方向正向，不宜表述为已验证收益。</div>
+          </div>
+          <div class="mini">
+            <div class="mtitle">周末提频支付返弹窗</div>
+            <div class="mline">相对分享有礼支付后弹窗，到访率 -3.81pp，p=0.020。</div>
+            <div class="mline">下单率 -2.67pp，p=0.052；ITT 人均实收 -24.3%。</div>
+            <div class="mline">当前版本不建议继续放量。</div>
+          </div>
+          <div class="mini">
+            <div class="mtitle">低频任务一周3杯</div>
+            <div class="mline">下单率 17.09%，低于对照组 17.71%。</div>
+            <div class="mline">领券率 1.42%，使用率 0.07%。</div>
+            <div class="mline">问题在门槛和人群冷度，不只是奖励力度。</div>
+          </div>
+          <div class="mini">
+            <div class="mtitle">上月新客召回</div>
+            <div class="mline">3/26-3/28 对比上月同期，MTD 次月留存平均 +2.92pp。</div>
+            <div class="mline">3/29 MTD 达 23.19%。</div>
+            <div class="mline">是 3 月最值得继续打磨的召回动作。</div>
+          </div>
+          <div class="mini">
+            <div class="mtitle">上月消费本月未消费新客 AB</div>
+            <div class="mline">实验组 1/2 指标方向略正，但均未显著。</div>
+            <div class="mline">实验组2购买质量最好，适合继续观察。</div>
+            <div class="mline">当前不足以下强结论。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card section">
+        <div class="stitle">本月判断</div>
+        <div class="insight-row">
+          <div class="num">1</div>
+          <div class="txt"><b>低摩擦优化更容易跑出结果。</b> 时间优化和资源位优化都优于需要用户额外理解规则的任务或返券弹窗。</div>
+        </div>
+        <div class="insight-row">
+          <div class="num">2</div>
+          <div class="txt"><b>分享有礼仍是拉新工具，不是留存工具。</b> 3 月前链路更顺，但人均邀请没有抬升，说明核心瓶颈仍在裂变深度。</div>
+        </div>
+        <div class="insight-row">
+          <div class="num">3</div>
+          <div class="txt"><b>召回方向优于提频玩法。</b> 上月新客召回已在 MTD 留存口径上看到持续改善，而周末提频和低频任务当前版本都未成立。</div>
+        </div>
+      </div>
+
+      <div class="card section">
+        <div class="stitle">4月重点</div>
+        <div class="insight-row">
+          <div class="num">A</div>
+          <div class="txt">继续收敛 `0326/0401时段实验`，尽快明确工作日与周末推荐时段。</div>
+        </div>
+        <div class="insight-row">
+          <div class="num">B</div>
+          <div class="txt">继续跑 `上月新客召回`，补更硬的验证口径，把方向正向变成更稳结论。</div>
+        </div>
+        <div class="insight-row">
+          <div class="num">C</div>
+          <div class="txt">快速收口 `周末提频支付返弹窗` 和 `一周3杯任务` 当前版本，减少无效动作占用。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>Lucky US Growth · March Ops Monthly Review</div>
+    <div>Generated on 2026-04-01</div>
+  </div>
+</div>
+</body>
+</html>

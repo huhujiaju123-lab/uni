@@ -1,0 +1,4 @@
+interface:
+  display_name: "飞书文档发布"
+  short_description: "将本地内容发布成可分享的飞书在线文档"
+  default_prompt: "Use $feishu-doc-publisher to publish my draft as a Feishu doc, set tenant-readable permissions, and return the link."

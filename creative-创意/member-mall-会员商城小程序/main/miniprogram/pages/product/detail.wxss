@@ -1,0 +1,192 @@
+/* pages/product/detail.wxss */
+
+.container {
+  min-height: 100vh;
+  background-color: #F6F6F6;
+  padding-bottom: 120rpx;
+}
+
+/* 图片轮播 */
+.image-section {
+  position: relative;
+  background-color: #FFFFFF;
+}
+
+.image-swiper {
+  width: 100%;
+  height: 750rpx;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+}
+
+.image-indicator {
+  position: absolute;
+  bottom: 24rpx;
+  right: 24rpx;
+  padding: 8rpx 20rpx;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  color: #FFFFFF;
+}
+
+/* 商品信息 */
+.info-section {
+  background-color: #FFFFFF;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.product-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #000000;
+  line-height: 1.4;
+  margin-bottom: 24rpx;
+}
+
+/* 价格区域 */
+.price-section {
+  padding: 24rpx;
+  background-color: #FAFAFA;
+  border-radius: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.price-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.price-label {
+  font-size: 26rpx;
+  color: #999999;
+  width: 100rpx;
+}
+
+.member-price {
+  font-size: 44rpx;
+  font-weight: 700;
+  margin-right: 16rpx;
+}
+
+.member-price.disabled {
+  color: #CCCCCC;
+}
+
+.member-price.active {
+  color: #FA5400;
+}
+
+.member-tag {
+  font-size: 22rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 4rpx;
+  background-color: #F0F0F0;
+  color: #999999;
+}
+
+.member-tag.active {
+  background-color: rgba(7, 193, 96, 0.1);
+  color: #07C160;
+}
+
+.original-price-row {
+  display: flex;
+  align-items: center;
+}
+
+.original-price {
+  font-size: 30rpx;
+  color: #CCCCCC;
+  text-decoration: line-through;
+}
+
+/* 升级提示 */
+.upgrade-tip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx;
+  background: linear-gradient(135deg, #000000 0%, #333333 100%);
+  border-radius: 16rpx;
+}
+
+.tip-content {
+  display: flex;
+  align-items: center;
+}
+
+.tip-icon {
+  font-size: 32rpx;
+  color: #FA5400;
+  margin-right: 12rpx;
+}
+
+.tip-text {
+  font-size: 26rpx;
+  color: #FFFFFF;
+}
+
+.tip-btn {
+  padding: 12rpx 32rpx;
+  background-color: #FA5400;
+  border-radius: 24rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+/* 商品描述 */
+.desc-section {
+  background-color: #FFFFFF;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 20rpx;
+}
+
+.desc-content {
+  font-size: 28rpx;
+  color: #666666;
+  line-height: 1.6;
+}
+
+/* 底部提示 */
+.bottom-notice {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24rpx;
+  background-color: #FFFFFF;
+  text-align: center;
+  border-top: 1rpx solid #F0F0F0;
+}
+
+.notice-text {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+/* 加载中 */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #999999;
+}

@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tyrion 周策略复盘 | 03-31 → 04-06</title>
+  <style>
+    :root {
+      --bg-deep: #1a1a2e;
+      --bg-card: #16213e;
+      --bg-card-alt: #1c2a4a;
+      --bg-surface: #0f3460;
+      --text-primary: #e8e8e8;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --accent-warm: #f59e0b;
+      --accent-gold: #fbbf24;
+      --green-bright: #34d399;
+      --green-mid: #6ee7b7;
+      --yellow: #fbbf24;
+      --orange: #f97316;
+      --red-soft: #ef8c6b;
+      --border: rgba(255, 255, 255, 0.06);
+      --radius: 12px;
+      --font-stack: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+    }
+
+    section {
+      margin-bottom: 72px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 80px;
+      padding-top: 20px;
+    }
+
+    .header-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 4px 16px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .header .date-range {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .header .summary-line {
+      margin-top: 20px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .section-number {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--accent-warm);
+      margin-bottom: 8px;
+      opacity: 0.8;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 28px;
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent-gold);
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+    }
+
+    .energy-chart {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 8px;
+      height: 240px;
+      padding: 0 4px;
+      margin-bottom: 12px;
+    }
+
+    .bar-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      max-width: 72px;
+    }
+
+    .bar-score {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bar {
+      width: 100%;
+      border-radius: 6px 6px 3px 3px;
+      min-height: 8px;
+      position: relative;
+      transition: opacity 0.2s;
+    }
+
+    .bar.pending {
+      background: linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.03));
+      border: 1px dashed rgba(255,255,255,0.18);
+      box-shadow: none;
+    }
+
+    .bar-group:hover .bar {
+      opacity: 0.85;
+    }
+
+    .bar-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .bar-keyword {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 2px;
+      opacity: 0.7;
+    }
+
+    .chart-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      gap: 16px;
+    }
+
+    .chart-meta span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .chart-meta .avg {
+      color: var(--accent-warm);
+      font-weight: 600;
+    }
+
+    .data-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 14px;
+    }
+
+    .data-table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-top: 28px;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table thead th {
+      background: var(--bg-card);
+      color: var(--text-muted);
+      text-align: left;
+      padding: 12px 14px;
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table tbody td {
+      padding: 14px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.65;
+    }
+
+    .data-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table tbody td:first-child {
+      color: var(--accent-warm);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .score-cell {
+      color: var(--text-primary);
+      font-weight: 600;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .pending-score {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .insight-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .insight-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .insight-list li {
+      position: relative;
+      padding-left: 24px;
+      margin-bottom: 14px;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .insight-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .insight-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .insight-list.positive li::before {
+      background: var(--green-bright);
+      box-shadow: 0 0 8px rgba(52, 211, 153, 0.3);
+    }
+
+    .insight-list.negative li::before {
+      background: var(--red-soft);
+      box-shadow: 0 0 8px rgba(239, 140, 107, 0.2);
+    }
+
+    .highlight {
+      color: var(--accent-gold);
+      font-weight: 500;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.9rem;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .comparison-table thead th {
+      padding: 14px 18px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    .comparison-table thead th:first-child {
+      background: var(--bg-card);
+      color: var(--text-muted);
+      width: 80px;
+    }
+
+    .comparison-table thead th:nth-child(2) {
+      background: rgba(239, 140, 107, 0.1);
+      color: var(--red-soft);
+    }
+
+    .comparison-table thead th:nth-child(3) {
+      background: rgba(52, 211, 153, 0.1);
+      color: var(--green-bright);
+    }
+
+    .comparison-table tbody td {
+      padding: 14px 18px;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.6;
+    }
+
+    .comparison-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comparison-table tbody td:first-child {
+      background: var(--bg-card);
+      color: var(--accent-warm);
+      font-weight: 600;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .comparison-table tbody td:nth-child(2) {
+      background: rgba(239, 140, 107, 0.03);
+      color: var(--text-muted);
+    }
+
+    .comparison-table tbody td:nth-child(3) {
+      background: rgba(52, 211, 153, 0.04);
+      color: var(--text-secondary);
+    }
+
+    .evolution-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .evolution-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .evolution-card-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+    }
+
+    .evolution-card-title {
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .evolution-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .evolution-card.before {
+      border-color: rgba(239, 140, 107, 0.15);
+    }
+
+    .evolution-card.after {
+      border-color: rgba(52, 211, 153, 0.15);
+    }
+
+    .evolution-card.before .evolution-card-label {
+      color: var(--red-soft);
+    }
+
+    .evolution-card.after .evolution-card-label {
+      color: var(--green-bright);
+    }
+
+    .evolution-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .evolution-arrow span {
+      display: inline-block;
+      margin: 0 12px;
+      color: var(--accent-warm);
+    }
+
+    .question-box {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.06), rgba(217, 119, 6, 0.03));
+      border: 1px solid rgba(245, 158, 11, 0.15);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+    }
+
+    .question-box p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+
+    .question-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .question-highlight {
+      color: var(--accent-gold);
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    .recommend-list {
+      list-style: none;
+      margin-top: 16px;
+      padding: 0;
+    }
+
+    .recommend-list li {
+      position: relative;
+      padding-left: 22px;
+      margin-bottom: 14px;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .recommend-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .recommend-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 11px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-warm);
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
+    }
+
+    .footer {
+      text-align: center;
+      padding-top: 48px;
+      border-top: 1px solid var(--border);
+      margin-top: 0;
+    }
+
+    .footer-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+    }
+
+    .footer-divider {
+      display: inline-block;
+      width: 1px;
+      height: 10px;
+      background: var(--text-muted);
+      opacity: 0.3;
+      margin: 0 12px;
+      vertical-align: middle;
+    }
+
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0 0 72px;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 40px 18px 60px;
+      }
+
+      .header h1 {
+        font-size: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+      }
+
+      section {
+        margin-bottom: 56px;
+      }
+
+      .energy-chart {
+        height: 180px;
+        gap: 4px;
+      }
+
+      .bar-score,
+      .bar-label,
+      .bar-keyword {
+        font-size: 0.55rem;
+      }
+
+      .data-table thead th,
+      .data-table tbody td {
+        padding: 10px 10px;
+        font-size: 0.78rem;
+      }
+
+      .insight-card {
+        padding: 20px 18px;
+      }
+
+      .comparison-table {
+        font-size: 0.8rem;
+      }
+
+      .comparison-table thead th,
+      .comparison-table tbody td {
+        padding: 10px 12px;
+      }
+
+      .evolution-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .question-box {
+        padding: 24px 20px;
+      }
+
+      .chart-meta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="header">
+    <div class="header-tag">Life OS</div>
+    <h1>Tyrion 周策略复盘</h1>
+    <div class="date-range">2026.03.31 — 2026.04.06</div>
+    <p class="summary-line">7 天里，工作秩序、假期幸福感和家庭能量流动同时在线。缺了两天记录，但主线已经足够清楚。</p>
+  </header>
+
+  <section>
+    <span class="section-number">01</span>
+    <h2>数据总览</h2>
+
+    <div class="energy-chart" id="energyChart"></div>
+
+    <div class="chart-meta">
+      <span>本周 7 天中，5 天有口述归档，2 天未找到记录</span>
+      <span class="avg">本周以叙事归档为主，不补造数值</span>
+    </div>
+
+    <p class="data-note">03-31 和 04-02 在当前历史归档中未找到记录；04-01、04-03 到 04-06 为本次补录归档。本页保留缺口，不补造日记或精力分数。</p>
+
+    <div class="data-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>日期</th>
+            <th>分数</th>
+            <th>关键词</th>
+            <th>原始摘要</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>03-31</td>
+            <td class="score-cell pending-score">未找到</td>
+            <td>缺失记录</td>
+            <td>当前历史归档中未找到这一天的日记或精力记录，本页保留空位，不做内容补造。</td>
+          </tr>
+          <tr>
+            <td>04-01</td>
+            <td class="score-cell pending-score">未打分</td>
+            <td>流程重建</td>
+            <td>配置工作基本完成，重新确认自己能搭建完整工作流；中午奥森跑步 4 公里，英语浸泡和 AI 学习也一起进入正循环。</td>
+          </tr>
+          <tr>
+            <td>04-02</td>
+            <td class="score-cell pending-score">未找到</td>
+            <td>缺失记录</td>
+            <td>当前历史归档中未找到这一天的日记或精力记录，本页保留空位，不做内容补造。</td>
+          </tr>
+          <tr>
+            <td>04-03</td>
+            <td class="score-cell pending-score">未打分</td>
+            <td>高强度配置</td>
+            <td>全天高密度输出，配了上百个策略。工作量很大，但提前规划到位，节奏稳，也守住了按时下班的边界。</td>
+          </tr>
+          <tr>
+            <td>04-04</td>
+            <td class="score-cell pending-score">未打分</td>
+            <td>农场假期</td>
+            <td>清明假期第一天带孩子去嗨妈妈农场。摄影师更换、活动延期、花费超预期都没有破坏快乐，低内耗地收回了真实体验。</td>
+          </tr>
+          <tr>
+            <td>04-05</td>
+            <td class="score-cell pending-score">未打分</td>
+            <td>春日能量</td>
+            <td>大风天转入室内，孩子感冒后专注解决问题；家里有做饭被夸、陪妈妈看新房、夫妻互相欣赏，还有一顿很有季节感的“冬去春来”晚饭。</td>
+          </tr>
+          <tr>
+            <td>04-06</td>
+            <td class="score-cell pending-score">未打分</td>
+            <td>居家丰盛</td>
+            <td>孩子虽然生病，但整天精神状态不错。一家人在家玩沙子、积木、看书，不出门也过得很充实、很开心。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section>
+    <span class="section-number">02</span>
+    <h2>什么拉高了这一周？</h2>
+
+    <p style="margin-bottom: 20px;">本周真正把你抬起来的，不是单点成就，而是 <span class="highlight">秩序感</span>、<span class="highlight">低内耗</span> 和 <span class="highlight">家庭能量流动</span> 三件事一起成立。</p>
+
+    <div class="insight-card">
+      <ul class="insight-list positive">
+        <li><span class="highlight">你重新确认了自己能搭流程</span>——04-01 的工作流重建感、04-03 的上百个策略配置，都说明你不必靠混乱推进工作，秩序本身已经开始成为能力。</li>
+        <li><span class="highlight">你对不完美的耐受更高了</span>——04-04 农场出游里，摄影师更换、延期和超预算都没有把你拖入内耗，快乐并没有因为现实打折就失效。</li>
+        <li><span class="highlight">家庭内部的互相欣赏很强</span>——04-05 从做饭被夸、陪妈妈看新房，到你和老公彼此赞赏，这周最丰厚的能量并不来自任务完成，而来自关系里的流动。</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section>
+    <span class="section-number">03</span>
+    <h2>什么在消耗你？</h2>
+
+    <p style="margin-bottom: 20px;">这周的消耗并不表现为崩溃，而更像是高密度生活下始终需要处理的小拉扯。主要集中在三类：</p>
+
+    <div class="insight-card">
+      <ul class="insight-list negative">
+        <li><span class="highlight">高负荷配置日的持续输出</span>——04-03 的强度非常高，即便节奏没乱，负载本身依然很重，说明你需要继续依赖规划来维持边界。</li>
+        <li><span class="highlight">现实波动仍然会来</span>——04-04 的临场变化、04-05 孩子感冒，都不是大危机，但它们提醒你：生活不会按完美剧本展开，稳定感来自应对方式。</li>
+        <li><span class="highlight">记录链路还不完整</span>——03-31 和 04-02 的缺失本身就是一个信号：这周虽然过得不错，但记录系统还没有完全跟上生活的节奏。</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section>
+    <span class="section-number">04</span>
+    <h2>7 天里你发生了什么变化？</h2>
+
+    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>维度</th>
+            <th>03-31 附近的你</th>
+            <th>04-06 的你</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>系统</td>
+            <td>记录缺口存在，但你已经在重新把工作、身体和学习拉回一套流程里</td>
+            <td>到周末结束时，你更确认秩序可以被自己搭出来，而不是等环境赐予</td>
+          </tr>
+          <tr>
+            <td>工作</td>
+            <td>主要任务是重建工作流、恢复流程感</td>
+            <td>高强度配置日也能稳住节奏，说明你已经在从“忙”转向“可控”</td>
+          </tr>
+          <tr>
+            <td>身体</td>
+            <td>跑步和干净进食在帮你重新开机</td>
+            <td>你更能顺着身体来生活，既能外出跑步，也能接受孩子生病时一起在家慢下来</td>
+          </tr>
+          <tr>
+            <td>生活</td>
+            <td>重心更多还在工作和学习的内部秩序</td>
+            <td>生活里已经重新长出春天、家庭陪伴、季节饮食和不出门也很丰盛的感受</td>
+          </tr>
+          <tr>
+            <td>自我认知</td>
+            <td>你知道自己在变稳，但还在验证这种稳能不能持续</td>
+            <td>你更明显地相信：自己既能搭流程，也能在不完美现实里保持低内耗和幸福感</td>
+          </tr>
+          <tr>
+            <td>关系状态</td>
+            <td>更多是在自我调整和节奏恢复</td>
+            <td>你和老公、妈妈、孩子之间的欣赏和照顾都更流动，家庭成为很强的能量来源</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section>
+    <span class="section-number">05</span>
+    <h2>本周主线：秩序感回归</h2>
+
+    <p>这一周最清楚的主线，不是某个单独事件，而是你在不同场景里都在把生活重新带回秩序里。</p>
+
+    <div class="evolution-cards">
+        <div class="evolution-card before">
+        <div class="evolution-card-label">工作回路</div>
+        <div class="evolution-card-title">流程搭建 → 高压配置 → 节奏守住</div>
+        <div class="evolution-card-desc">从 04-01 的工作流感，到 04-03 的高强度配置，你越来越能先搭轨道，再把任务放进去跑。</div>
+      </div>
+      <div class="evolution-card after">
+        <div class="evolution-card-label">生活回路</div>
+        <div class="evolution-card-title">接受不完美 → 解决当下 → 关系流动</div>
+        <div class="evolution-card-desc">从农场意外、孩子感冒，到居家陪伴和春日饭桌，你不是在追求无波折，而是在波折里维持低内耗和幸福感。</div>
+      </div>
+    </div>
+
+    <div class="evolution-arrow">
+      <div>这两条线最后汇成同一个结果<span>→</span>你这周不是把自己压得更满，而是在更忙的生活里重新拿回了节奏控制权。</div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section>
+    <span class="section-number">06</span>
+    <h2>下周建议</h2>
+
+    <div class="question-box">
+      <p>这周最该保住的，不是某个漂亮结果，而是 <span class="question-highlight">秩序感不丢、幸福感不断</span> 的状态。</p>
+
+      <ul class="recommend-list">
+        <li>把记录系统补完整，至少保证本周这种“过得很好但缺了两天记录”的情况不再重复。先保留连续性，再考虑精细度。</li>
+        <li>继续坚持“高强度任务先搭框架再执行”的顺序。04-03 已经证明，规划不是额外成本，而是你守住边界的前提。</li>
+        <li>把春天里的高质量幸福继续留住：跑步、干净饮食、家庭陪伴和有季节感的生活体验，都是你这段时间最有效的充电方式。</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-text">
+      Life OS
+      <span class="footer-divider"></span>
+      Tyrion 周策略复盘
+      <span class="footer-divider"></span>
+      2026-03-31 → 2026-04-06
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  const data = [
+    { date: '03-31', score: null, keyword: '缺失记录' },
+    { date: '04-01', score: null, keyword: '流程重建' },
+    { date: '04-02', score: null, keyword: '缺失记录' },
+    { date: '04-03', score: null, keyword: '高强度配置' },
+    { date: '04-04', score: null, keyword: '农场假期' },
+    { date: '04-05', score: null, keyword: '春日能量' },
+    { date: '04-06', score: null, keyword: '居家丰盛' },
+  ];
+
+  const minScore = 4;
+  const maxScore = 10;
+  const chartHeight = 200;
+
+  function getBarColor(score) {
+    if (score >= 9) return '#34d399';
+    if (score >= 8) return '#6ee7b7';
+    if (score >= 7) return '#fbbf24';
+    if (score >= 6) return '#f97316';
+    return '#ef8c6b';
+  }
+
+  const chart = document.getElementById('energyChart');
+
+  data.forEach((d) => {
+    const group = document.createElement('div');
+    group.className = 'bar-group';
+
+    const scoreEl = document.createElement('div');
+    scoreEl.className = 'bar-score';
+    scoreEl.textContent = d.score === null ? '--' : d.score;
+
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+
+    if (d.score === null) {
+      bar.classList.add('pending');
+      bar.style.height = '54px';
+    } else {
+      const pct = ((d.score - minScore) / (maxScore - minScore)) * 100;
+      const barH = Math.max((pct * chartHeight) / 100, 8);
+      const color = getBarColor(d.score);
+      bar.style.height = barH + 'px';
+      bar.style.background = color;
+      bar.style.boxShadow = '0 0 12px ' + color + '33';
+    }
+
+    const label = document.createElement('div');
+    label.className = 'bar-label';
+    label.textContent = d.date;
+
+    const kw = document.createElement('div');
+    kw.className = 'bar-keyword';
+    kw.textContent = d.keyword;
+
+    group.appendChild(scoreEl);
+    group.appendChild(bar);
+    group.appendChild(label);
+    group.appendChild(kw);
+    chart.appendChild(group);
+  });
+</script>
+
+</body>
+</html>

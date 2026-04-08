@@ -1,0 +1,82 @@
+<!--pages/search/search.wxml-->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrap">
+      <image class="search-icon" src="/images/icon-search.png" mode="aspectFit"></image>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="搜索商品"
+        placeholder-class="search-placeholder"
+        value="{{keyword}}"
+        bindinput="onInput"
+        bindconfirm="onSearch"
+        focus="{{true}}"
+        confirm-type="search"
+      />
+      <image
+        class="clear-icon"
+        wx:if="{{keyword}}"
+        src="/images/icon-clear.png"
+        mode="aspectFit"
+        bindtap="onClear"
+      ></image>
+    </view>
+    <text class="cancel-btn" bindtap="onCancel">取消</text>
+  </view>
+
+  <!-- 搜索结果 -->
+  <scroll-view
+    class="result-list"
+    scroll-y
+    wx:if="{{hasSearched}}"
+    bindscrolltolower="onLoadMore"
+  >
+    <view class="product-grid" wx:if="{{products.length > 0}}">
+      <view
+        class="product-item"
+        wx:for="{{products}}"
+        wx:key="_id"
+        bindtap="goToDetail"
+        data-id="{{item._id}}"
+      >
+        <image class="product-image" src="{{item.images[0]}}" mode="aspectFill"></image>
+        <view class="product-info">
+          <text class="product-name ellipsis-2">{{item.name}}</text>
+          <view class="price-section">
+            <text class="price-main">¥{{item.displayPrice}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空结果 -->
+    <view class="empty-result" wx:if="{{products.length === 0 && !isLoading}}">
+      <image class="empty-image" src="/images/empty-search.png" mode="aspectFit"></image>
+      <text class="empty-text">未找到相关商品</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="loading-more" wx:if="{{isLoading}}">
+      <text>加载中...</text>
+    </view>
+  </scroll-view>
+
+  <!-- 搜索历史 -->
+  <view class="history-section" wx:if="{{!hasSearched && history.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">搜索历史</text>
+      <text class="clear-history" bindtap="clearHistory">清空</text>
+    </view>
+    <view class="history-tags">
+      <text
+        class="history-tag"
+        wx:for="{{history}}"
+        wx:key="*this"
+        bindtap="onHistoryTap"
+        data-keyword="{{item}}"
+      >{{item}}</text>
+    </view>
+  </view>
+</view>

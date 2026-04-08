@@ -1,0 +1,9 @@
+{
+  "api_key": "ntn_your_api_key_here",
+  "pages": {
+    "default": "your-default-page-id",
+    "notes": "your-notes-page-id",
+    "journal": "your-journal-page-id",
+    "projects": "your-projects-page-id"
+  }
+}

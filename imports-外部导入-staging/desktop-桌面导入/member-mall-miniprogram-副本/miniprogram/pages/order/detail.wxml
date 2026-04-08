@@ -1,0 +1,7 @@
+<!--pages/order/detail.wxml-->
+<view class="container">
+  <view class="empty-state">
+    <text class="empty-text">订单详情页</text>
+    <text class="empty-sub">测试模式暂不支持</text>
+  </view>
+</view>

@@ -1,0 +1,148 @@
+<svg width="1760" height="1260" viewBox="0 0 1760 1260" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font: 700 24px 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #20242b; }
+      .group-title { font: 700 20px 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #d9363e; }
+      .label { font: 700 16px 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #20242b; }
+      .small { font: 500 14px 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #20242b; }
+      .tiny { font: 500 12px 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #5b6472; }
+      .day { font: 500 13px 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #5b6472; }
+      .price { font: 700 16px 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #e53935; }
+      .muted { fill: #6f7785; }
+      .box-title { font: 700 14px 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #20242b; }
+      .box-text { font: 500 13px 'PingFang SC', 'Microsoft YaHei', sans-serif; fill: #20242b; }
+    </style>
+  </defs>
+
+  <rect width="1760" height="1260" fill="#ffffff"/>
+  <text x="56" y="52" class="title">美国新客循环补丁策略图（T+60）</text>
+  <text x="56" y="82" class="small muted">参考当前已确认方案，仅展示补丁发券与提醒节奏，不含触达文案</text>
+
+  <!-- Section 0->1 -->
+  <g transform="translate(0,120)">
+    <text x="56" y="0" class="group-title">阶段1（0→1单）默认首发券包 + 注册后提醒</text>
+    <rect x="56" y="14" width="130" height="30" fill="#ffe84d"/>
+    <text x="69" y="35" class="label">注册后滚动天数</text>
+
+    <text x="210" y="35" class="day">0</text>
+    <text x="260" y="35" class="day">1</text>
+    <text x="310" y="35" class="day">2</text>
+    <text x="360" y="35" class="day">3</text>
+    <text x="410" y="35" class="day">4</text>
+    <text x="460" y="35" class="day">5</text>
+    <text x="510" y="35" class="day">6</text>
+    <text x="560" y="35" class="day">7</text>
+
+    <polygon points="210,56 260,56 260,126 510,126 560,196 700,196 700,240 210,240"
+      fill="#eef0f3"/>
+
+    <rect x="150" y="56" width="48" height="184" fill="#fbe7ab"/>
+    <text x="174" y="148" text-anchor="middle" class="label">未首单</text>
+
+    <text x="56" y="112" class="label">注册后T+1</text>
+    <text x="56" y="182" class="label">注册后T+6</text>
+
+    <text x="286" y="98" class="small">仍未首单 → 触达提醒</text>
+    <text x="286" y="168" class="small">仍未首单 → 触达提醒</text>
+
+    <rect x="810" y="56" width="760" height="168" rx="12" fill="#f7f8fb" stroke="#e6e9ef"/>
+    <text x="836" y="88" class="box-title">本阶段已确认信息</text>
+    <text x="836" y="118" class="box-text">- 默认首发券包固定为 1.99 / 2.99 / 3.99 / 5折</text>
+    <text x="836" y="144" class="box-text">- 触达节点：注册后 D1、D6</text>
+    <text x="836" y="170" class="box-text">- 频控：注册后第一周累计最多 2 次提醒，同一天最多 1 次</text>
+    <text x="836" y="196" class="box-text">- 完成首单后立即退出，切到 1→2单</text>
+  </g>
+
+  <!-- Section 1->2 -->
+  <g transform="translate(0,390)">
+    <text x="56" y="0" class="group-title">阶段2（1→2单）首单后 T+60 循环补丁</text>
+    <rect x="56" y="14" width="130" height="30" fill="#ffe84d"/>
+    <text x="69" y="35" class="label">首单后滚动天数</text>
+
+    <text x="210" y="35" class="day">0</text>
+    <text x="256" y="35" class="day">1</text>
+    <text x="302" y="35" class="day">2</text>
+    <text x="348" y="35" class="day">3</text>
+    <text x="394" y="35" class="day">4</text>
+    <text x="440" y="35" class="day">5</text>
+    <text x="486" y="35" class="day">6</text>
+    <text x="532" y="35" class="day">7</text>
+    <text x="694" y="35" class="day">14</text>
+    <text x="856" y="35" class="day">21</text>
+    <text x="1090" y="35" class="day">30</text>
+    <text x="1434" y="35" class="day">45</text>
+    <text x="1715" y="35" class="day" text-anchor="end">58</text>
+
+    <polygon points="210,56 348,56 394,126 532,126 694,196 856,196 1090,266 1434,336 1700,406 1700,450 210,450"
+      fill="#eef0f3"/>
+
+    <rect x="150" y="56" width="48" height="394" fill="#fbe7ab"/>
+    <text x="174" y="253" text-anchor="middle" class="label">已首单</text>
+
+    <text x="56" y="112" class="label">首单后T+3</text>
+    <text x="56" y="182" class="label">首单后T+7</text>
+    <text x="56" y="252" class="label">首单后T+14</text>
+    <text x="56" y="322" class="label">首单后T+21</text>
+    <text x="56" y="392" class="label">首单后T+30</text>
+    <text x="56" y="432" class="label">首单后T+45 / T+58</text>
+
+    <text x="372" y="98" class="small">仍未下二单 → D3 提醒</text>
+    <text x="556" y="168" class="small">仍未下二单 → D7 提醒</text>
+    <text x="718" y="238" class="small">仍未下二单 → D14 提醒</text>
+    <text x="880" y="308" class="small">仍未下二单 → D21 提醒</text>
+    <text x="1114" y="378" class="small">仍未下二单 → D30 提醒</text>
+    <text x="1458" y="428" class="small">仍未下二单 → D45 / D58 提醒</text>
+
+    <rect x="810" y="56" width="760" height="230" rx="12" fill="#f7f8fb" stroke="#e6e9ef"/>
+    <text x="836" y="88" class="box-title">本阶段统一规则</text>
+    <text x="836" y="118" class="box-text">- 每天检查一次；若当前无有效 2.99 或 5折，则补发 1 张</text>
+    <text x="836" y="144" class="box-text">- 补券类型：2.99 或 5折，并列任选，不分阶段细拆</text>
+    <text x="836" y="170" class="box-text">- 券有效期：1天；当天过期后，若仍未下二单，次日继续循环补</text>
+    <text x="836" y="196" class="box-text">- 触达节奏：D3、D7、D14、D21、D30、D45、D58</text>
+    <text x="836" y="222" class="box-text">- 频控：若仍在注册首周内，受“首周最多2次”限制；第2周起每7天最多1次</text>
+    <text x="836" y="248" class="box-text">- 完成二单后立即退出，切到 2→3单；或到首单后 T+60 自动退出</text>
+  </g>
+
+  <!-- Section 2->3 -->
+  <g transform="translate(0,860)">
+    <text x="56" y="0" class="group-title">阶段3（2→3单）二单后循环补丁</text>
+    <rect x="56" y="14" width="130" height="30" fill="#ffe84d"/>
+    <text x="69" y="35" class="label">二单后滚动天数</text>
+
+    <text x="210" y="35" class="day">0</text>
+    <text x="260" y="35" class="day">1</text>
+    <text x="310" y="35" class="day">2</text>
+    <text x="360" y="35" class="day">3</text>
+    <text x="410" y="35" class="day">4</text>
+    <text x="460" y="35" class="day">5</text>
+    <text x="510" y="35" class="day">6</text>
+    <text x="560" y="35" class="day">7</text>
+    <text x="760" y="35" class="day">14</text>
+    <text x="960" y="35" class="day">21</text>
+    <text x="1240" y="35" class="day">30</text>
+
+    <polygon points="210,56 360,56 410,126 560,126 760,196 960,196 1240,266 1500,266 1500,310 210,310"
+      fill="#eef0f3"/>
+
+    <rect x="150" y="56" width="48" height="254" fill="#fbe7ab"/>
+    <text x="174" y="183" text-anchor="middle" class="label">已二单</text>
+
+    <text x="56" y="112" class="label">二单后T+3</text>
+    <text x="56" y="182" class="label">二单后T+7</text>
+    <text x="56" y="252" class="label">二单后T+14 / T+21 / T+30</text>
+
+    <text x="384" y="98" class="small">仍未下三单 → D3 提醒</text>
+    <text x="584" y="168" class="small">仍未下三单 → D7 提醒</text>
+    <text x="784" y="248" class="small">仍未下三单 → D14 / D21 / D30 提醒</text>
+
+    <rect x="810" y="56" width="760" height="204" rx="12" fill="#f7f8fb" stroke="#e6e9ef"/>
+    <text x="836" y="88" class="box-title">本阶段统一规则</text>
+    <text x="836" y="118" class="box-text">- 每天检查一次；若当前无有效 2.99 或 5折，则补发 1 张</text>
+    <text x="836" y="144" class="box-text">- 券有效期：1天；当天过期后，若仍未下三单，次日继续循环补</text>
+    <text x="836" y="170" class="box-text">- 触达节奏：D3、D7、D14、D21、D30</text>
+    <text x="836" y="196" class="box-text">- 整体不超过首单后 T+60；完成三单后立即退出本次新客强提醒主链路</text>
+    <text x="836" y="222" class="box-text">- 注册第2周起每7天最多1次；若切入时当周额度已满，则顺延到下个可触达日</text>
+  </g>
+
+  <text x="56" y="1210" class="tiny">注：本图只使用当前已确认方案信息；未写入任何未定文案、渠道或额外券型逻辑。</text>
+</svg>

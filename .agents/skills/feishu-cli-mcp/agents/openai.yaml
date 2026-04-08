@@ -1,0 +1,4 @@
+interface:
+  display_name: "飞书 CLI MCP"
+  short_description: "通过 aily-mcp / aily-doc 直接调飞书文档和表格"
+  default_prompt: "Use $feishu-cli-mcp to search docs, create/update Feishu docs, or read/write spreadsheets via aily-mcp and aily-doc."
