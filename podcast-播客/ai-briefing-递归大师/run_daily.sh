@@ -2,7 +2,8 @@
 # AI Builders Daily — 每日定时执行脚本
 # cron 调用入口
 
-cd "/Users/xiaoxiao/Vibe coding/podcast-播客/ai-briefing-递归大师"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR"
 
 # 设置 PATH（cron 环境没有用户 PATH）
 export PATH="/usr/local/bin:/usr/bin:/bin:/Library/Developer/CommandLineTools/usr/bin:$PATH"

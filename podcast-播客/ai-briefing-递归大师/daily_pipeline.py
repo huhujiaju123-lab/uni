@@ -26,12 +26,18 @@ import urllib.error
 # 配置
 # ============================================================
 BASE_DIR = Path(__file__).parent
-TODAY = datetime.now().strftime("%Y-%m-%d")
-DASHSCOPE_API_KEY = "sk-e1151b380b82414d9b29470dd5ec448f"
+TODAY = os.getenv("AI_BRIEFING_DATE", datetime.now().strftime("%Y-%m-%d"))
+DASHSCOPE_API_KEY = os.getenv("DASHSCOPE_API_KEY", "sk-e1151b380b82414d9b29470dd5ec448f")
 
 # follow-builders feed URLs
-FEED_X_URL = "https://raw.githubusercontent.com/zarazhangrui/follow-builders/main/feed-x.json"
-FEED_PODCAST_URL = "https://raw.githubusercontent.com/zarazhangrui/follow-builders/main/feed-podcasts.json"
+FEED_X_URL = os.getenv(
+    "AI_BRIEFING_FEED_X_URL",
+    "https://raw.githubusercontent.com/zarazhangrui/follow-builders/main/feed-x.json",
+)
+FEED_PODCAST_URL = os.getenv(
+    "AI_BRIEFING_FEED_PODCAST_URL",
+    "https://raw.githubusercontent.com/zarazhangrui/follow-builders/main/feed-podcasts.json",
+)
 
 # 服务器
 SERVER = "134.175.228.73"
