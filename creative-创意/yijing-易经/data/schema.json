@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "易经卦象数据结构",
-  "description": "每卦的完整数据结构，含经典原文、佑安解读、AI独创分析",
+  "description": "每卦的完整数据结构，含经典原文、佑安解读、延展分析",
   "type": "object",
   "required": ["meta", "guaci", "hero", "steps"],
   "properties": {
@@ -250,7 +250,7 @@
     },
     "aiInsights": {
       "type": "object",
-      "description": "AI独创分析板块",
+      "description": "延展分析板块",
       "properties": {
         "crossHexagram": {
           "type": "object",

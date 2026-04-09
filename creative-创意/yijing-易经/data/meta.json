@@ -1,6 +1,6 @@
 {
   "title": "易经六十四卦",
-  "description": "AI在佑安方法论基础上的独立创作 — 学习佑安但有自己的突破",
+  "description": "融合经典原文、佑安方法论与跨卦分析的易经六十四卦解读",
   "hexagrams": [
     { "number": 1, "name": "乾", "pinyin": "qián", "fullName": "乾为天", "upper": "乾", "lower": "乾", "xugua": "万物之始", "zagua": "刚", "lines": [1,1,1,1,1,1] },
     { "number": 2, "name": "坤", "pinyin": "kūn", "fullName": "坤为地", "upper": "坤", "lower": "坤", "xugua": "有天地然后万物生", "zagua": "柔", "lines": [0,0,0,0,0,0] },

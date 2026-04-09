@@ -99,10 +99,10 @@ def review_expert(gua):
     if len(yingshe) < 6:
         warnings.append(f"[黄线] 映射场景只有 {len(yingshe)} 个，建议覆盖六爻")
 
-    # 8. 检查AI洞察
+    # 8. 检查延展洞察
     ai = gua.get('aiInsights', {})
     if not ai:
-        warnings.append("[黄线] 缺少AI独创洞察板块")
+        warnings.append("[黄线] 缺少延展洞察板块")
     else:
         if not ai.get('crossHexagram'):
             warnings.append("[黄线] 缺少跨卦分析")
