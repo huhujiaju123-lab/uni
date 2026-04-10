@@ -1,0 +1,18 @@
+{
+  "plan_date": "2026-04-11",
+  "generated_at": "2026-04-10T23:47:06+08:00",
+  "source_plan_file": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/daily_learning_plan-每日学习计划.json",
+  "manifest_count": 2,
+  "manifests": [
+    {
+      "manifest_id": "english-show-2026-04-11",
+      "distribution_target": "english-show",
+      "path": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/program_manifests-节目骨架/2026-04-11/english-show-2026-04-11.json"
+    },
+    {
+      "manifest_id": "daily-input-show-2026-04-11",
+      "distribution_target": "daily-input-show",
+      "path": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/program_manifests-节目骨架/2026-04-11/daily-input-show-2026-04-11.json"
+    }
+  ]
+}

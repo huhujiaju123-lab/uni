@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "updated_at": "2026-04-10T00:00:00+08:00",
+  "timezone": "Asia/Shanghai",
+  "strategy": "channel_first_logical_targets",
+  "notes": "当前只定义逻辑分发目标，不绑定具体小宇宙节目 ID。",
+  "targets": {
+    "english-show": {
+      "label": "英语学习节目",
+      "platform": "xiaoyuzhou",
+      "status": "planned",
+      "publication_shape": "standalone"
+    },
+    "daily-input-show": {
+      "label": "每日输入节目",
+      "platform": "xiaoyuzhou",
+      "status": "planned",
+      "publication_shape": "merged_or_split"
+    }
+  },
+  "bindings": {
+    "english-coach": [
+      "english-show"
+    ],
+    "news-daily": [
+      "daily-input-show"
+    ],
+    "learning-digest": [
+      "daily-input-show"
+    ]
+  },
+  "publication_rules": {
+    "batch_unit": "calendar_day",
+    "allow_multiple_outputs_per_day": true,
+    "default_merge_strategy": {
+      "english-show": [
+        "english-coach"
+      ],
+      "daily-input-show": [
+        "news-daily",
+        "learning-digest"
+      ]
+    }
+  }
+}

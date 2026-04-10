@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "updated_at": "2026-04-10T00:00:00+08:00",
+  "timezone": "Asia/Shanghai",
+  "templates": {
+    "english-show": {
+      "label": "英语写稿简报",
+      "writing_goal": "把当天英语输入整理成一份可直接扩写成独立学习节目的写稿简报。",
+      "default_language": "zh",
+      "audience": "你自己",
+      "narrator_style": "清楚、克制、像私人学习教练，不做夸张鼓励。",
+      "script_shape": "单人旁白为主，必要时嵌入少量练习提示。",
+      "must_cover": [
+        "今天英语主题",
+        "关键词或核心表达",
+        "练习动作",
+        "听完后的一个最小行动"
+      ],
+      "section_writing_focus": {
+        "opening": "点明主题、适合什么时候听、今天最该关注什么。",
+        "input_focus": "概括来源内容和语境，挑出最值得学的表达或听力点。",
+        "practice_design": "给出跟读、复述、替换练习或理解检查。",
+        "closing": "压缩成一个最小复习动作，不展开说教。"
+      }
+    },
+    "daily-input-show": {
+      "label": "信息输入写稿简报",
+      "writing_goal": "把当天新闻和知识输入整理成一份可直接扩写成信息输入节目的写稿简报。",
+      "default_language": "zh",
+      "audience": "你自己",
+      "narrator_style": "信息密度高、结构清楚、不过度评论。",
+      "script_shape": "单人旁白，按主题分块推进。",
+      "must_cover": [
+        "信息来源",
+        "今天最重要的主题",
+        "你为什么值得听这期",
+        "结尾的 1-2 个记忆点"
+      ],
+      "section_writing_focus": {
+        "opening": "用一句话交代今天这期的总主题和信息价值。",
+        "news_brief": "用最少背景讲清新闻条目的关键信息和意义。",
+        "knowledge_brief": "把知识条目压缩成可听懂、可记住的输入。",
+        "closing": "收束为 1-2 个值得记住的点，不再扩展新内容。"
+      }
+    }
+  }
+}

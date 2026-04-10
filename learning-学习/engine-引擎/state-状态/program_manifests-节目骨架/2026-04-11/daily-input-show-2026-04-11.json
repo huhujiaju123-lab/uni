@@ -1,0 +1,122 @@
+{
+  "manifest_id": "daily-input-show-2026-04-11",
+  "plan_date": "2026-04-11",
+  "timezone": "Asia/Shanghai",
+  "generated_at": "2026-04-10T23:47:06+08:00",
+  "status": "outline",
+  "distribution_target": "daily-input-show",
+  "label": "每日输入节目",
+  "output_family": "merged_episode",
+  "estimated_minutes": 16,
+  "channels": [
+    "news-daily",
+    "learning-digest"
+  ],
+  "narrative_goal": "把当天新闻和知识输入整理成一条可以继续加工成信息输入节目的骨架。",
+  "tone": "信息密度高，但结构清楚，不发散",
+  "context": {
+    "project_scope": "personal_learning_only",
+    "current_goals": [
+      "提升英语能力",
+      "建立稳定的新闻输入习惯",
+      "建立稳定的知识输入习惯"
+    ],
+    "energy_today": 9.2,
+    "energy_tags": [
+      "完美迁移",
+      "文档整理",
+      "危机转机",
+      "反脆弱成长"
+    ]
+  },
+  "channel_context": {
+    "news-daily": {
+      "difficulty_level": 3,
+      "mastered_concepts": [],
+      "weak_areas": [],
+      "avg_feedback_score": null,
+      "last_feedback_score": null,
+      "last_feedback_at": null,
+      "last_feedback_note": ""
+    },
+    "learning-digest": {
+      "difficulty_level": 3,
+      "mastered_concepts": [],
+      "weak_areas": [],
+      "avg_feedback_score": null,
+      "last_feedback_score": null,
+      "last_feedback_at": null,
+      "last_feedback_note": ""
+    }
+  },
+  "section_template": [
+    {
+      "section_id": "opening",
+      "label": "开场",
+      "goal": "一句话说明今天这期的输入主题。"
+    },
+    {
+      "section_id": "news_brief",
+      "label": "新闻摘要",
+      "goal": "列出今天新闻输入部分的核心条目。"
+    },
+    {
+      "section_id": "knowledge_brief",
+      "label": "知识摘要",
+      "goal": "列出今天知识输入部分的核心条目。"
+    },
+    {
+      "section_id": "closing",
+      "label": "收尾",
+      "goal": "总结今天最值得记住的 1-2 个点。"
+    }
+  ],
+  "generation_constraints": {
+    "must_include": [
+      "信息来源",
+      "核心主题",
+      "今日重点"
+    ],
+    "must_exclude": [
+      "工作内容",
+      "瑞幸",
+      "业务分析"
+    ]
+  },
+  "preflight_requirements": [
+    {
+      "step": "fetch",
+      "item_ids": [
+        "d61351058b78"
+      ]
+    },
+    {
+      "step": "ready",
+      "item_ids": [
+        "0baa7abcad92"
+      ]
+    }
+  ],
+  "source_items": [
+    {
+      "id": "d61351058b78",
+      "source_type": "url",
+      "source_value": "https://www.bbc.com/news/articles/example",
+      "content_format": "article",
+      "suggested_channel": "news-daily",
+      "urgency": "today",
+      "status": "needs_fetch",
+      "user_note": "today news"
+    },
+    {
+      "id": "0baa7abcad92",
+      "source_type": "text",
+      "source_value": "A note about memory and learning strategies",
+      "content_format": "pasted_text",
+      "suggested_channel": "learning-digest",
+      "urgency": "today",
+      "status": "ready_for_planning",
+      "user_note": "知识 输入"
+    }
+  ]
+}

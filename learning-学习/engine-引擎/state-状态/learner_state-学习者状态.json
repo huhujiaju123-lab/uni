@@ -1,6 +1,14 @@
 {
-  "version": 1,
-  "updated_at": "2026-03-27T10:06:21",
+  "version": 2,
+  "updated_at": "2026-04-10T00:00:00+08:00",
+  "profile": {
+    "project_scope": "personal_learning_only",
+    "current_goals": [
+      "提升英语能力",
+      "建立稳定的新闻输入习惯",
+      "建立稳定的知识输入习惯"
+    ]
+  },
   "energy": {
     "today_score": 9.2,
     "today_tags": [
@@ -12,19 +20,33 @@
     "weekly_avg": 8.0,
     "source": "lifeos_sync"
   },
+  "global_preferences": {
+    "batch_timezone": "Asia/Shanghai",
+    "session_length_minutes": 15,
+    "tts_speed_ratio": 1.0,
+    "daily_intake_window": {
+      "open": "06:00",
+      "soft_cutoff": "22:00",
+      "hard_cutoff": "23:00"
+    }
+  },
   "channels": {
-    "ai-daily": {
-      "difficulty_level": 5,
-      "mastered_concepts": [
-        "AB实验",
-        "ITT分析",
-        "留存曲线",
-        "RFM分析",
-        "MCP",
-        "Agent"
-      ],
+    "news-daily": {
+      "difficulty_level": 3,
+      "mastered_concepts": [],
       "weak_areas": [],
       "avg_feedback_score": null,
+      "last_feedback_score": null,
+      "last_feedback_at": null,
+      "last_feedback_note": ""
+    },
+    "learning-digest": {
+      "difficulty_level": 3,
+      "mastered_concepts": [],
+      "weak_areas": [],
+      "avg_feedback_score": null,
+      "last_feedback_score": null,
+      "last_feedback_at": null,
       "last_feedback_note": ""
     },
     "english-coach": {
@@ -32,17 +54,38 @@
       "mastered_concepts": [],
       "weak_areas": [],
       "avg_feedback_score": null,
-      "last_feedback_note": ""
+      "last_feedback_score": null,
+      "last_feedback_at": null,
+      "last_feedback_note": "",
+      "learning_profile": {
+        "mode": "general_english",
+        "cefr_level": "B1+",
+        "pace": "normal",
+        "generalization_stage": 1
+      },
+      "content_memory": {
+        "episodes_completed": 1,
+        "learned_phrases_count": 0,
+        "recent_scenes_covered": [
+          "morning_wakeup"
+        ],
+        "scene_queue": [
+          "bath_time",
+          "mealtime_breakfast",
+          "playground",
+          "bedtime_routine",
+          "praise_encourage"
+        ]
+      },
+      "audience_profile": {
+        "child_name": "",
+        "child_age_months": 24
+      },
+      "focus_topics": [
+        "daily_routine",
+        "emotions",
+        "play_time"
+      ]
     }
-  },
-  "global_preferences": {
-    "role": "数据分析师，增长运营，Lucky US",
-    "session_length_minutes": 15,
-    "tts_speed_ratio": 1.2,
-    "example_style": "用数据分析/增长运营/AB实验场景举例",
-    "current_goals": [
-      "理解AI Agent的实际应用场景",
-      "提升英语商业表达能力"
-    ]
   }
 }

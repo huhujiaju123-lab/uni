@@ -1,0 +1,14 @@
+{
+  "batch_id": "2026-04-11",
+  "batch_timezone": "Asia/Shanghai",
+  "batch_date": "2026-04-11",
+  "opened_at": "2026-04-11T06:00:00+08:00",
+  "soft_cutoff_at": "2026-04-11T22:00:00+08:00",
+  "hard_cutoff_at": "2026-04-11T23:00:00+08:00",
+  "batch_status": "frozen",
+  "intake_count": 5,
+  "excluded_count": 1,
+  "last_captured_at": "2026-04-10T23:38:45+08:00",
+  "closed_at": "2026-04-10T23:40:01+08:00",
+  "obsidian_note_path": "/Users/xiaoxiao/Obsidian/KnowledgeOS/00-Inbox 收件箱/learning-intake-学习收件-2026-04-11.md"
+}

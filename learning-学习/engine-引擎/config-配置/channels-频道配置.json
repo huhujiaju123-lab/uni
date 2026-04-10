@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "updated_at": "2026-04-10T00:00:00+08:00",
+  "timezone": "Asia/Shanghai",
+  "global_rules": {
+    "project_scope": "personal_learning_only",
+    "excluded_work_topics": [
+      "瑞幸咖啡",
+      "数据分析",
+      "业务运营",
+      "AB实验",
+      "SQL",
+      "报表",
+      "经营分析"
+    ]
+  },
+  "channels": {
+    "english-coach": {
+      "label": "英语教练",
+      "description": "英语学习专用频道，默认单独成期。",
+      "enabled": true,
+      "target_minutes": 15,
+      "preferred_output_mode": "standalone_episode",
+      "content_scope": [
+        "英语学习",
+        "听力",
+        "口语",
+        "表达",
+        "跟读"
+      ]
+    },
+    "news-daily": {
+      "label": "新闻输入",
+      "description": "个人感兴趣的新闻和时事输入。",
+      "enabled": true,
+      "target_minutes": 8,
+      "preferred_output_mode": "mergeable",
+      "content_scope": [
+        "国际新闻",
+        "科技新闻",
+        "文化新闻",
+        "时事输入"
+      ]
+    },
+    "learning-digest": {
+      "label": "知识输入",
+      "description": "非工作导向的知识与信息输入。",
+      "enabled": true,
+      "target_minutes": 8,
+      "preferred_output_mode": "mergeable",
+      "content_scope": [
+        "认知",
+        "历史",
+        "科技",
+        "教育",
+        "个人成长"
+      ]
+    }
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "brief_id": "daily-input-show-2026-04-11",
+  "manifest_id": "daily-input-show-2026-04-11",
+  "plan_date": "2026-04-11",
+  "timezone": "Asia/Shanghai",
+  "generated_at": "2026-04-10T23:47:06+08:00",
+  "status": "ready_for_writing",
+  "label": "信息输入写稿简报",
+  "distribution_target": "daily-input-show",
+  "output_family": "merged_episode",
+  "estimated_minutes": 16,
+  "channels": [
+    "news-daily",
+    "learning-digest"
+  ],
+  "writing_goal": "把当天新闻和知识输入整理成一份可直接扩写成信息输入节目的写稿简报。",
+  "audience": "你自己",
+  "default_language": "zh",
+  "narrator_style": "信息密度高、结构清楚、不过度评论。",
+  "script_shape": "单人旁白，按主题分块推进。",
+  "context": {
+    "project_scope": "personal_learning_only",
+    "current_goals": [
+      "提升英语能力",
+      "建立稳定的新闻输入习惯",
+      "建立稳定的知识输入习惯"
+    ],
+    "energy_today": 9.2,
+    "energy_tags": [
+      "完美迁移",
+      "文档整理",
+      "危机转机",
+      "反脆弱成长"
+    ],
+    "distribution_strategy": "channel_first_logical_targets"
+  },
+  "channel_feedback": {
+    "news-daily": {
+      "avg_feedback_score": null,
+      "last_feedback_score": null,
+      "last_feedback_at": null,
+      "last_feedback_note": "",
+      "weak_areas": [],
+      "mastered_concepts": []
+    },
+    "learning-digest": {
+      "avg_feedback_score": null,
+      "last_feedback_score": null,
+      "last_feedback_at": null,
+      "last_feedback_note": "",
+      "weak_areas": [],
+      "mastered_concepts": []
+    }
+  },
+  "section_template": [
+    {
+      "section_id": "opening",
+      "label": "开场",
+      "goal": "一句话说明今天这期的输入主题。"
+    },
+    {
+      "section_id": "news_brief",
+      "label": "新闻摘要",
+      "goal": "列出今天新闻输入部分的核心条目。"
+    },
+    {
+      "section_id": "knowledge_brief",
+      "label": "知识摘要",
+      "goal": "列出今天知识输入部分的核心条目。"
+    },
+    {
+      "section_id": "closing",
+      "label": "收尾",
+      "goal": "总结今天最值得记住的 1-2 个点。"
+    }
+  ],
+  "section_writing_focus": {
+    "opening": "用一句话交代今天这期的总主题和信息价值。",
+    "news_brief": "用最少背景讲清新闻条目的关键信息和意义。",
+    "knowledge_brief": "把知识条目压缩成可听懂、可记住的输入。",
+    "closing": "收束为 1-2 个值得记住的点，不再扩展新内容。"
+  },
+  "must_cover": [
+    "信息来源",
+    "今天最重要的主题",
+    "你为什么值得听这期",
+    "结尾的 1-2 个记忆点"
+  ],
+  "generation_constraints": {
+    "must_include": [
+      "信息来源",
+      "核心主题",
+      "今日重点"
+    ],
+    "must_exclude": [
+      "工作内容",
+      "瑞幸",
+      "业务分析"
+    ]
+  },
+  "preflight_requirements": [
+    {
+      "step": "fetch",
+      "item_ids": [
+        "d61351058b78"
+      ]
+    },
+    {
+      "step": "ready",
+      "item_ids": [
+        "0baa7abcad92"
+      ]
+    }
+  ],
+  "source_summary_lines": [
+    "1. [news-daily] url / article / needs_fetch / https://www.bbc.com/news/articles/example | 备注: today news",
+    "2. [learning-digest] text / pasted_text / ready_for_planning / A note about memory and learning strategies | 备注: 知识 输入"
+  ],
+  "source_items": [
+    {
+      "id": "d61351058b78",
+      "source_type": "url",
+      "source_value": "https://www.bbc.com/news/articles/example",
+      "content_format": "article",
+      "suggested_channel": "news-daily",
+      "urgency": "today",
+      "status": "needs_fetch",
+      "user_note": "today news"
+    },
+    {
+      "id": "0baa7abcad92",
+      "source_type": "text",
+      "source_value": "A note about memory and learning strategies",
+      "content_format": "pasted_text",
+      "suggested_channel": "learning-digest",
+      "urgency": "today",
+      "status": "ready_for_planning",
+      "user_note": "知识 输入"
+    }
+  ],
+  "source_template_label": "每日输入节目"
+}

@@ -1,0 +1,116 @@
+{
+  "brief_id": "english-show-2026-04-11",
+  "manifest_id": "english-show-2026-04-11",
+  "plan_date": "2026-04-11",
+  "timezone": "Asia/Shanghai",
+  "generated_at": "2026-04-10T23:47:06+08:00",
+  "status": "ready_for_writing",
+  "label": "英语写稿简报",
+  "distribution_target": "english-show",
+  "output_family": "standalone_episode",
+  "estimated_minutes": 15,
+  "channels": [
+    "english-coach"
+  ],
+  "writing_goal": "把当天英语输入整理成一份可直接扩写成独立学习节目的写稿简报。",
+  "audience": "你自己",
+  "default_language": "zh",
+  "narrator_style": "清楚、克制、像私人学习教练，不做夸张鼓励。",
+  "script_shape": "单人旁白为主，必要时嵌入少量练习提示。",
+  "context": {
+    "project_scope": "personal_learning_only",
+    "current_goals": [
+      "提升英语能力",
+      "建立稳定的新闻输入习惯",
+      "建立稳定的知识输入习惯"
+    ],
+    "energy_today": 9.2,
+    "energy_tags": [
+      "完美迁移",
+      "文档整理",
+      "危机转机",
+      "反脆弱成长"
+    ],
+    "distribution_strategy": "channel_first_logical_targets"
+  },
+  "channel_feedback": {
+    "english-coach": {
+      "avg_feedback_score": null,
+      "last_feedback_score": null,
+      "last_feedback_at": null,
+      "last_feedback_note": "",
+      "weak_areas": [],
+      "mastered_concepts": []
+    }
+  },
+  "section_template": [
+    {
+      "section_id": "opening",
+      "label": "开场",
+      "goal": "说明今天英语节目的主题、练习重点和使用方式。"
+    },
+    {
+      "section_id": "input_focus",
+      "label": "输入焦点",
+      "goal": "提炼今天英语输入材料的主题、关键词和使用场景。"
+    },
+    {
+      "section_id": "practice_design",
+      "label": "练习设计",
+      "goal": "定义后续脚本生成要覆盖的表达、跟读和输出动作。"
+    },
+    {
+      "section_id": "closing",
+      "label": "收尾",
+      "goal": "给出今天听完后的一个最小行动。"
+    }
+  ],
+  "section_writing_focus": {
+    "opening": "点明主题、适合什么时候听、今天最该关注什么。",
+    "input_focus": "概括来源内容和语境，挑出最值得学的表达或听力点。",
+    "practice_design": "给出跟读、复述、替换练习或理解检查。",
+    "closing": "压缩成一个最小复习动作，不展开说教。"
+  },
+  "must_cover": [
+    "今天英语主题",
+    "关键词或核心表达",
+    "练习动作",
+    "听完后的一个最小行动"
+  ],
+  "generation_constraints": {
+    "must_include": [
+      "今日主题",
+      "关键词",
+      "练习动作"
+    ],
+    "must_exclude": [
+      "工作内容",
+      "运营分析",
+      "AB实验"
+    ]
+  },
+  "preflight_requirements": [
+    {
+      "step": "ready",
+      "item_ids": [
+        "1dfa8d284fa6"
+      ]
+    }
+  ],
+  "source_summary_lines": [
+    "1. [english-coach] text / pasted_text / ready_for_planning / Shadowing phrases for a customer-service style conversation in English | 备注: 英语 跟读练习"
+  ],
+  "source_items": [
+    {
+      "id": "1dfa8d284fa6",
+      "source_type": "text",
+      "source_value": "Shadowing phrases for a customer-service style conversation in English",
+      "content_format": "pasted_text",
+      "suggested_channel": "english-coach",
+      "urgency": "today",
+      "status": "ready_for_planning",
+      "user_note": "英语 跟读练习"
+    }
+  ],
+  "source_template_label": "英语学习节目"
+}

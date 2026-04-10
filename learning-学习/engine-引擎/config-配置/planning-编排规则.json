@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "updated_at": "2026-04-10T00:00:00+08:00",
+  "timezone": "Asia/Shanghai",
+  "plan_status": "draft",
+  "urgency_priority": [
+    "today",
+    "this_week",
+    "archive"
+  ],
+  "excluded_statuses": [
+    "excluded_work"
+  ],
+  "deferred_channels": [
+    "pending"
+  ],
+  "allowed_planning_statuses": [
+    "needs_fetch",
+    "needs_transcript",
+    "needs_ocr",
+    "ready_for_planning"
+  ],
+  "channel_output_rules": {
+    "english-coach": {
+      "distribution_target": "english-show",
+      "plan_mode": "standalone",
+      "max_items_per_plan": 3
+    },
+    "news-daily": {
+      "distribution_target": "daily-input-show",
+      "plan_mode": "mergeable",
+      "max_items_per_plan": 4
+    },
+    "learning-digest": {
+      "distribution_target": "daily-input-show",
+      "plan_mode": "mergeable",
+      "max_items_per_plan": 4
+    }
+  },
+  "default_output_layout": [
+    {
+      "output_id": "english-show",
+      "distribution_target": "english-show",
+      "channels": [
+        "english-coach"
+      ]
+    },
+    {
+      "output_id": "daily-input-show",
+      "distribution_target": "daily-input-show",
+      "channels": [
+        "news-daily",
+        "learning-digest"
+      ]
+    }
+  ]
+}

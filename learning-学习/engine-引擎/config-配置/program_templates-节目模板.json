@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "updated_at": "2026-04-10T00:00:00+08:00",
+  "timezone": "Asia/Shanghai",
+  "templates": {
+    "english-show": {
+      "label": "英语学习节目",
+      "output_family": "standalone_episode",
+      "narrative_goal": "把当天英语输入整理成一条可以继续加工成独立节目的英语学习骨架。",
+      "source_channels": [
+        "english-coach"
+      ],
+      "target_minutes": 15,
+      "tone": "清晰、陪伴式、强调输入和练习",
+      "section_template": [
+        {
+          "section_id": "opening",
+          "label": "开场",
+          "goal": "说明今天英语节目的主题、练习重点和使用方式。"
+        },
+        {
+          "section_id": "input_focus",
+          "label": "输入焦点",
+          "goal": "提炼今天英语输入材料的主题、关键词和使用场景。"
+        },
+        {
+          "section_id": "practice_design",
+          "label": "练习设计",
+          "goal": "定义后续脚本生成要覆盖的表达、跟读和输出动作。"
+        },
+        {
+          "section_id": "closing",
+          "label": "收尾",
+          "goal": "给出今天听完后的一个最小行动。"
+        }
+      ],
+      "generation_constraints": {
+        "must_include": [
+          "今日主题",
+          "关键词",
+          "练习动作"
+        ],
+        "must_exclude": [
+          "工作内容",
+          "运营分析",
+          "AB实验"
+        ]
+      }
+    },
+    "daily-input-show": {
+      "label": "每日输入节目",
+      "output_family": "merged_episode",
+      "narrative_goal": "把当天新闻和知识输入整理成一条可以继续加工成信息输入节目的骨架。",
+      "source_channels": [
+        "news-daily",
+        "learning-digest"
+      ],
+      "target_minutes": 16,
+      "tone": "信息密度高，但结构清楚，不发散",
+      "section_template": [
+        {
+          "section_id": "opening",
+          "label": "开场",
+          "goal": "一句话说明今天这期的输入主题。"
+        },
+        {
+          "section_id": "news_brief",
+          "label": "新闻摘要",
+          "goal": "列出今天新闻输入部分的核心条目。"
+        },
+        {
+          "section_id": "knowledge_brief",
+          "label": "知识摘要",
+          "goal": "列出今天知识输入部分的核心条目。"
+        },
+        {
+          "section_id": "closing",
+          "label": "收尾",
+          "goal": "总结今天最值得记住的 1-2 个点。"
+        }
+      ],
+      "generation_constraints": {
+        "must_include": [
+          "信息来源",
+          "核心主题",
+          "今日重点"
+        ],
+        "must_exclude": [
+          "工作内容",
+          "瑞幸",
+          "业务分析"
+        ]
+      }
+    }
+  }
+}

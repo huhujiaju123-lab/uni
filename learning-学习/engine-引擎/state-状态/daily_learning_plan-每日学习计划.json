@@ -1,0 +1,136 @@
+{
+  "plan_date": "2026-04-11",
+  "timezone": "Asia/Shanghai",
+  "source_batch_id": "2026-04-11",
+  "generated_at": "2026-04-10T23:47:06+08:00",
+  "status": "draft",
+  "inputs_summary": {
+    "total_items": 5,
+    "excluded_items": 1,
+    "ready_items": 4
+  },
+  "context": {
+    "project_scope": "personal_learning_only",
+    "current_goals": [
+      "提升英语能力",
+      "建立稳定的新闻输入习惯",
+      "建立稳定的知识输入习惯"
+    ],
+    "energy_today": 9.2,
+    "energy_tags": [
+      "完美迁移",
+      "文档整理",
+      "危机转机",
+      "反脆弱成长"
+    ],
+    "distribution_strategy": "channel_first_logical_targets"
+  },
+  "outputs": [
+    {
+      "output_id": "english-show-2026-04-11",
+      "distribution_target": "english-show",
+      "channels": [
+        "english-coach"
+      ],
+      "estimated_minutes": 15,
+      "items": [
+        {
+          "id": "1dfa8d284fa6",
+          "batch_id": "2026-04-11",
+          "captured_at": "2026-04-10T23:38:44+08:00",
+          "source_type": "text",
+          "source_value": "Shadowing phrases for a customer-service style conversation in English",
+          "content_format": "pasted_text",
+          "language_hint": "zh",
+          "suggested_channel": "english-coach",
+          "urgency": "today",
+          "status": "ready_for_planning",
+          "user_note": "英语 跟读练习",
+          "obsidian_note_path": "/Users/xiaoxiao/Obsidian/KnowledgeOS/00-Inbox 收件箱/learning-intake-学习收件-2026-04-11.md",
+          "exclusion_reason": null,
+          "asset_path": null
+        }
+      ]
+    },
+    {
+      "output_id": "daily-input-show-2026-04-11",
+      "distribution_target": "daily-input-show",
+      "channels": [
+        "news-daily",
+        "learning-digest"
+      ],
+      "estimated_minutes": 16,
+      "items": [
+        {
+          "id": "d61351058b78",
+          "batch_id": "2026-04-11",
+          "captured_at": "2026-04-10T23:38:44+08:00",
+          "source_type": "url",
+          "source_value": "https://www.bbc.com/news/articles/example",
+          "content_format": "article",
+          "language_hint": "en",
+          "suggested_channel": "news-daily",
+          "urgency": "today",
+          "status": "needs_fetch",
+          "user_note": "today news",
+          "obsidian_note_path": "/Users/xiaoxiao/Obsidian/KnowledgeOS/00-Inbox 收件箱/learning-intake-学习收件-2026-04-11.md",
+          "exclusion_reason": null,
+          "asset_path": null
+        },
+        {
+          "id": "0baa7abcad92",
+          "batch_id": "2026-04-11",
+          "captured_at": "2026-04-10T23:38:44+08:00",
+          "source_type": "text",
+          "source_value": "A note about memory and learning strategies",
+          "content_format": "pasted_text",
+          "language_hint": "zh",
+          "suggested_channel": "learning-digest",
+          "urgency": "today",
+          "status": "ready_for_planning",
+          "user_note": "知识 输入",
+          "obsidian_note_path": "/Users/xiaoxiao/Obsidian/KnowledgeOS/00-Inbox 收件箱/learning-intake-学习收件-2026-04-11.md",
+          "exclusion_reason": null,
+          "asset_path": null
+        }
+      ]
+    }
+  ],
+  "deferred_items": [
+    {
+      "id": "3fa525863088",
+      "batch_id": "2026-04-11",
+      "captured_at": "2026-04-10T23:38:45+08:00",
+      "source_type": "text",
+      "source_value": "Need to decide whether this belongs to news or knowledge",
+      "content_format": "pasted_text",
+      "language_hint": "zh",
+      "suggested_channel": "pending",
+      "urgency": "today",
+      "status": "ready_for_planning",
+      "user_note": "待定",
+      "obsidian_note_path": "/Users/xiaoxiao/Obsidian/KnowledgeOS/00-Inbox 收件箱/learning-intake-学习收件-2026-04-11.md",
+      "exclusion_reason": null,
+      "asset_path": null
+    }
+  ],
+  "excluded_items": [
+    {
+      "id": "a41f479873ab",
+      "batch_id": "2026-04-11",
+      "captured_at": "2026-04-10T23:38:45+08:00",
+      "source_type": "text",
+      "source_value": "瑞幸 AB实验 订单分析复盘",
+      "content_format": "pasted_text",
+      "language_hint": "zh",
+      "suggested_channel": "excluded",
+      "urgency": "today",
+      "status": "excluded_work",
+      "user_note": "工作内容",
+      "obsidian_note_path": "/Users/xiaoxiao/Obsidian/KnowledgeOS/00-Inbox 收件箱/learning-intake-学习收件-2026-04-11.md",
+      "exclusion_reason": "excluded_work",
+      "asset_path": null
+    }
+  ],
+  "batch_status": "frozen"
+}
