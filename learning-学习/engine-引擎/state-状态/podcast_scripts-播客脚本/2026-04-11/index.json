@@ -1,0 +1,20 @@
+{
+  "plan_date": "2026-04-11",
+  "generated_at": "2026-04-11T08:14:31+08:00",
+  "source_brief_index": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/episode_briefs-节目简报/2026-04-11/index.json",
+  "script_count": 2,
+  "scripts": [
+    {
+      "script_id": "english-show-2026-04-11",
+      "distribution_target": "english-show",
+      "path": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/podcast_scripts-播客脚本/2026-04-11/english-show-2026-04-11.json",
+      "segment_count": 9
+    },
+    {
+      "script_id": "daily-input-show-2026-04-11",
+      "distribution_target": "daily-input-show",
+      "path": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/podcast_scripts-播客脚本/2026-04-11/daily-input-show-2026-04-11.json",
+      "segment_count": 12
+    }
+  ]
+}

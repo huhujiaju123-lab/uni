@@ -1,0 +1,25 @@
+{
+  "plan_date": "2026-04-11",
+  "generated_at": "2026-04-11T08:14:46+08:00",
+  "timezone": "Asia/Shanghai",
+  "source_plan_file": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/daily_learning_plan-每日学习计划.json",
+  "source_podcast_index": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/podcast_scripts-播客脚本/2026-04-11/index.json",
+  "source_wechat_index": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/wechat_articles-公众号推文/2026-04-11/index.json",
+  "output_count": 2,
+  "outputs": [
+    {
+      "distribution_target": "english-show",
+      "podcast_script_path": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/podcast_scripts-播客脚本/2026-04-11/english-show-2026-04-11.json",
+      "podcast_segment_count": 9,
+      "wechat_article_json_path": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/wechat_articles-公众号推文/2026-04-11/english-show-2026-04-11.json",
+      "wechat_article_markdown_path": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/wechat_articles-公众号推文/2026-04-11/english-show-2026-04-11.md"
+    },
+    {
+      "distribution_target": "daily-input-show",
+      "podcast_script_path": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/podcast_scripts-播客脚本/2026-04-11/daily-input-show-2026-04-11.json",
+      "podcast_segment_count": 12,
+      "wechat_article_json_path": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/wechat_articles-公众号推文/2026-04-11/daily-input-show-2026-04-11.json",
+      "wechat_article_markdown_path": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/wechat_articles-公众号推文/2026-04-11/daily-input-show-2026-04-11.md"
+    }
+  ]
+}

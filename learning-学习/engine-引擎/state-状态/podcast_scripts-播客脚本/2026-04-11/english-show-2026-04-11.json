@@ -1,0 +1,47 @@
+[
+  {
+    "speaker": "递归",
+    "text": "今天这期是英语学习节目。我们先抓住一个主题，再做一组可以跟读和复述的练习。",
+    "new_topic": true
+  },
+  {
+    "speaker": "递归",
+    "text": "今天这期对应的输出是 english-show，目标时长大约 15 分钟。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "先说今天怎么听。 点明主题、适合什么时候听、今天最该关注什么。",
+    "new_topic": true
+  },
+  {
+    "speaker": "递归",
+    "text": "接下来抓住今天的输入焦点。 概括来源内容和语境，挑出最值得学的表达或听力点。",
+    "new_topic": true
+  },
+  {
+    "speaker": "递归",
+    "text": "来源类型是 text，格式是 pasted_text，当前处理状态是 ready_for_planning。材料是：Shadowing phrases for a customer-service style conversation in English。你的备注是：英语 跟读练习",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "现在把它变成可以练的动作。 给出跟读、复述、替换练习或理解检查。",
+    "new_topic": true
+  },
+  {
+    "speaker": "递归",
+    "text": "最后收束成一个最小复习动作。 压缩成一个最小复习动作，不展开说教。",
+    "new_topic": true
+  },
+  {
+    "speaker": "递归",
+    "text": "正式成稿前，还需要处理这些材料：ready：1dfa8d284fa6",
+    "new_topic": true
+  },
+  {
+    "speaker": "递归",
+    "text": "这期听完后，只做一件事：把今天最有用的一句话跟读三遍，再用自己的话替换一次。",
+    "new_topic": true
+  }
+]

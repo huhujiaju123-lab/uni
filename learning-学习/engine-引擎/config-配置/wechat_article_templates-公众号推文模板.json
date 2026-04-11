@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "updated_at": "2026-04-10T00:00:00+08:00",
+  "timezone": "Asia/Shanghai",
+  "templates": {
+    "english-show": {
+      "label": "英语学习公众号推文",
+      "title_prefix": "今日英语学习",
+      "subtitle": "上班路上先听播客，没听懂的地方用这篇图文补。",
+      "visual_style": "清爽学习卡片，少装饰，多留白，重点突出表达和练习步骤。",
+      "image_slots": [
+        {
+          "slot_id": "cover",
+          "label": "封面图",
+          "purpose": "标出今天英语主题和练习动作"
+        },
+        {
+          "slot_id": "expression_card",
+          "label": "表达卡片",
+          "purpose": "展示关键词、核心表达和中文解释"
+        },
+        {
+          "slot_id": "practice_flow",
+          "label": "练习流程图",
+          "purpose": "展示听、跟读、替换、复述四步"
+        }
+      ],
+      "sections": [
+        "今天先听什么",
+        "播客里最重要的表达",
+        "没听懂时看这里",
+        "今天的练习动作",
+        "复习清单"
+      ]
+    },
+    "daily-input-show": {
+      "label": "每日输入公众号推文",
+      "title_prefix": "今日信息输入",
+      "subtitle": "播客负责通勤听一遍，图文负责把背景、结构和关键词补齐。",
+      "visual_style": "信息图风格，结构清楚，有时间线、概念卡和重点框。",
+      "image_slots": [
+        {
+          "slot_id": "cover",
+          "label": "封面图",
+          "purpose": "标出今天的总主题"
+        },
+        {
+          "slot_id": "structure_map",
+          "label": "结构图",
+          "purpose": "展示新闻和知识输入之间的关系"
+        },
+        {
+          "slot_id": "concept_cards",
+          "label": "概念卡片",
+          "purpose": "解释播客里可能没听懂的关键词"
+        }
+      ],
+      "sections": [
+        "今天这期听什么",
+        "新闻输入",
+        "知识输入",
+        "听不懂的概念补充",
+        "今天记住这几点"
+      ]
+    }
+  }
+}

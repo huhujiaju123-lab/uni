@@ -1,0 +1,62 @@
+[
+  {
+    "speaker": "递归",
+    "text": "今天这期是每日输入节目。它把新闻和知识内容放在一起，帮你先听一遍结构。",
+    "new_topic": true
+  },
+  {
+    "speaker": "递归",
+    "text": "今天这期对应的输出是 daily-input-show，目标时长大约 16 分钟。",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "先给今天的总览。 用一句话交代今天这期的总主题和信息价值。",
+    "new_topic": true
+  },
+  {
+    "speaker": "递归",
+    "text": "第一部分是新闻输入。 用最少背景讲清新闻条目的关键信息和意义。",
+    "new_topic": true
+  },
+  {
+    "speaker": "递归",
+    "text": "来源类型是 url，格式是 article，当前处理状态是 needs_fetch。材料是：https://www.bbc.com/news/articles/example。你的备注是：today news",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "来源类型是 text，格式是 pasted_text，当前处理状态是 ready_for_planning。材料是：A note about memory and learning strategies。你的备注是：知识 输入",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "第二部分是知识输入。 把知识条目压缩成可听懂、可记住的输入。",
+    "new_topic": true
+  },
+  {
+    "speaker": "递归",
+    "text": "来源类型是 url，格式是 article，当前处理状态是 needs_fetch。材料是：https://www.bbc.com/news/articles/example。你的备注是：today news",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "来源类型是 text，格式是 pasted_text，当前处理状态是 ready_for_planning。材料是：A note about memory and learning strategies。你的备注是：知识 输入",
+    "new_topic": false
+  },
+  {
+    "speaker": "递归",
+    "text": "最后提炼今天最值得记住的点。 收束为 1-2 个值得记住的点，不再扩展新内容。",
+    "new_topic": true
+  },
+  {
+    "speaker": "递归",
+    "text": "正式成稿前，还需要处理这些材料：fetch：d61351058b78；ready：0baa7abcad92",
+    "new_topic": true
+  },
+  {
+    "speaker": "递归",
+    "text": "这期先听到这里。之后看图文稿时，重点补你刚才没听懂的概念和背景。",
+    "new_topic": true
+  }
+]

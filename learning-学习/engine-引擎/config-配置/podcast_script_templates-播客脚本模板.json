@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "updated_at": "2026-04-10T00:00:00+08:00",
+  "timezone": "Asia/Shanghai",
+  "templates": {
+    "english-show": {
+      "label": "英语学习播客脚本",
+      "speaker": "递归",
+      "target_minutes": 15,
+      "opening": "今天这期是英语学习节目。我们先抓住一个主题，再做一组可以跟读和复述的练习。",
+      "section_intros": {
+        "opening": "先说今天怎么听。",
+        "input_focus": "接下来抓住今天的输入焦点。",
+        "practice_design": "现在把它变成可以练的动作。",
+        "closing": "最后收束成一个最小复习动作。"
+      },
+      "closing": "这期听完后，只做一件事：把今天最有用的一句话跟读三遍，再用自己的话替换一次。"
+    },
+    "daily-input-show": {
+      "label": "每日输入播客脚本",
+      "speaker": "递归",
+      "target_minutes": 16,
+      "opening": "今天这期是每日输入节目。它把新闻和知识内容放在一起，帮你先听一遍结构。",
+      "section_intros": {
+        "opening": "先给今天的总览。",
+        "news_brief": "第一部分是新闻输入。",
+        "knowledge_brief": "第二部分是知识输入。",
+        "closing": "最后提炼今天最值得记住的点。"
+      },
+      "closing": "这期先听到这里。之后看图文稿时，重点补你刚才没听懂的概念和背景。"
+    }
+  }
+}

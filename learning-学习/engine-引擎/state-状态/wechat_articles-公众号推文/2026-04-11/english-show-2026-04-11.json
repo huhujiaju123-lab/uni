@@ -1,0 +1,32 @@
+{
+  "article_id": "english-show-2026-04-11",
+  "plan_date": "2026-04-11",
+  "generated_at": "2026-04-11T08:14:31+08:00",
+  "status": "draft",
+  "distribution_target": "english-show",
+  "title": "今日英语学习｜2026-04-11",
+  "subtitle": "上班路上先听播客，没听懂的地方用这篇图文补。",
+  "visual_style": "清爽学习卡片，少装饰，多留白，重点突出表达和练习步骤。",
+  "image_slots": [
+    {
+      "slot_id": "cover",
+      "label": "封面图",
+      "purpose": "标出今天英语主题和练习动作",
+      "prompt": "标出今天英语主题和练习动作。风格：清爽学习卡片，少装饰，多留白，重点突出表达和练习步骤。主题：把当天英语输入整理成一份可直接扩写成独立学习节目的写稿简报"
+    },
+    {
+      "slot_id": "expression_card",
+      "label": "表达卡片",
+      "purpose": "展示关键词、核心表达和中文解释",
+      "prompt": "展示关键词、核心表达和中文解释。风格：清爽学习卡片，少装饰，多留白，重点突出表达和练习步骤。主题：把当天英语输入整理成一份可直接扩写成独立学习节目的写稿简报"
+    },
+    {
+      "slot_id": "practice_flow",
+      "label": "练习流程图",
+      "purpose": "展示听、跟读、替换、复述四步",
+      "prompt": "展示听、跟读、替换、复述四步。风格：清爽学习卡片，少装饰，多留白，重点突出表达和练习步骤。主题：把当天英语输入整理成一份可直接扩写成独立学习节目的写稿简报"
+    }
+  ],
+  "source_brief_id": "english-show-2026-04-11",
+  "markdown_path": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/wechat_articles-公众号推文/2026-04-11/english-show-2026-04-11.md"
+}

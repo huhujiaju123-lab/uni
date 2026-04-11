@@ -1,0 +1,32 @@
+{
+  "article_id": "daily-input-show-2026-04-11",
+  "plan_date": "2026-04-11",
+  "generated_at": "2026-04-11T08:14:31+08:00",
+  "status": "draft",
+  "distribution_target": "daily-input-show",
+  "title": "今日信息输入｜2026-04-11",
+  "subtitle": "播客负责通勤听一遍，图文负责把背景、结构和关键词补齐。",
+  "visual_style": "信息图风格，结构清楚，有时间线、概念卡和重点框。",
+  "image_slots": [
+    {
+      "slot_id": "cover",
+      "label": "封面图",
+      "purpose": "标出今天的总主题",
+      "prompt": "标出今天的总主题。风格：信息图风格，结构清楚，有时间线、概念卡和重点框。主题：把当天新闻和知识输入整理成一份可直接扩写成信息输入节目的写稿简报"
+    },
+    {
+      "slot_id": "structure_map",
+      "label": "结构图",
+      "purpose": "展示新闻和知识输入之间的关系",
+      "prompt": "展示新闻和知识输入之间的关系。风格：信息图风格，结构清楚，有时间线、概念卡和重点框。主题：把当天新闻和知识输入整理成一份可直接扩写成信息输入节目的写稿简报"
+    },
+    {
+      "slot_id": "concept_cards",
+      "label": "概念卡片",
+      "purpose": "解释播客里可能没听懂的关键词",
+      "prompt": "解释播客里可能没听懂的关键词。风格：信息图风格，结构清楚，有时间线、概念卡和重点框。主题：把当天新闻和知识输入整理成一份可直接扩写成信息输入节目的写稿简报"
+    }
+  ],
+  "source_brief_id": "daily-input-show-2026-04-11",
+  "markdown_path": "/Users/xiaoxiao/Vibe coding/learning-学习/engine-引擎/state-状态/wechat_articles-公众号推文/2026-04-11/daily-input-show-2026-04-11.md"
+}
