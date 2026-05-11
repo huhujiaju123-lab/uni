@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>穿搭几何学 Outfit Geometry</title>
+<style>
+  :root {
+    --bg: #1a1a1a;
+    --panel-bg: #252525;
+    --text: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --accent: #d4a574;
+    --accent2: #7eb8c9;
+    --golden: #c9a96e;
+    --danger: #c97e7e;
+    --line: #444;
+    --button-bg: #333;
+    --button-hover: #444;
+    --button-active: #555;
+    --tag-bg: #2a2a2a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 24px 16px;
+  }
+  .app {
+    max-width: 1100px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .header .subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .header .model-info {
+    font-size: 12px;
+    color: #888;
+    margin-top: 8px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .model-info span {
+    background: var(--tag-bg);
+    padding: 3px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+  }
+
+  /* Main layout */
+  .main {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+  }
+  @media (max-width: 900px) {
+    .main { flex-direction: column; align-items: center; }
+  }
+
+  /* SVG canvas */
+  .canvas-wrap {
+    flex: 0 0 auto;
+    background: var(--panel-bg);
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    padding: 20px;
+    position: relative;
+  }
+  .canvas-wrap svg {
+    display: block;
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+  }
+
+  /* Right panel */
+  .panel {
+    flex: 1;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Control cards */
+  .card {
+    background: var(--panel-bg);
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    padding: 16px;
+  }
+  .card h3 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  /* Button groups */
+  .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--button-bg);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .btn:hover { background: var(--button-hover); }
+  .btn.active {
+    background: var(--accent);
+    color: #1a1a1a;
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+  .btn.color-black { background: #2a2a2a; color: #fff; }
+  .btn.color-white { background: #f0f0f0; color: #1a1a1a; }
+  .btn.color-black.active { outline: 2px solid #fff; outline-offset: 2px; }
+  .btn.color-white.active { outline: 2px solid #000; outline-offset: 2px; }
+
+  /* Info rows */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .info-item {
+    background: var(--tag-bg);
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+  }
+  .info-item .label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 3px;
+  }
+  .info-item .value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .info-item.full {
+    grid-column: 1 / -1;
+  }
+
+  /* Assessment badge */
+  .assessment {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+  .assessment.good { background: #3d6b4f; color: #a3dfb8; }
+  .assessment.ok { background: #6b5d3d; color: #dfcfa3; }
+  .assessment.warn { background: #6b3d3d; color: #dfa3a3; }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .legend-line {
+    width: 16px;
+    height: 1px;
+    flex-shrink: 0;
+  }
+
+  /* Footer note */
+  .footer-note {
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  /* Selection summary */
+  .selection-summary {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 4px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>穿搭几何学 Outfit Geometry</h1>
+    <div class="subtitle">合身正肩短袖 × 裤装几何分析系统</div>
+    <div class="model-info">
+      <span>身高 172cm</span><span>体重 63kg</span>
+      <span>上下身比 4 : 6</span><span>偏长腰</span><span>偏长颈</span>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- SVG Canvas -->
+    <div class="canvas-wrap">
+      <svg id="mainSvg" viewBox="0 0 500 820" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="panel">
+      <div class="selection-summary" id="selectionSummary">黑色短袖 × 直筒九分裤</div>
+
+      <!-- Top Color -->
+      <div class="card">
+        <h3>上衣颜色 Top Color</h3>
+        <div class="btn-row">
+          <button class="btn color-black active" onclick="setTopColor('black')">⚫ 黑色 Black</button>
+          <button class="btn color-white" onclick="setTopColor('white')">⚪ 白色 White</button>
+        </div>
+      </div>
+
+      <!-- Pant Style -->
+      <div class="card">
+        <h3>裤型 Pant Silhouette</h3>
+        <div class="btn-row" id="styleBtns">
+          <button class="btn active" data-style="straight">直筒 Straight</button>
+          <button class="btn" data-style="wide">阔腿 Wide</button>
+          <button class="btn" data-style="tapered">锥形 Tapered</button>
+          <button class="btn" data-style="slim">窄脚 Slim</button>
+          <button class="btn" data-style="flare">喇叭 Flare</button>
+          <button class="btn" data-style="cropwide">七分阔腿 Culotte</button>
+        </div>
+      </div>
+
+      <!-- Pant Length -->
+      <div class="card">
+        <h3>裤长 Pant Length</h3>
+        <div class="btn-row" id="lengthBtns">
+          <button class="btn" data-length="hotpants">超短 Hot Pants</button>
+          <button class="btn" data-length="fifth">五分 Mid-Thigh</button>
+          <button class="btn" data-length="seventh">七分 Below-Knee</button>
+          <button class="btn active" data-length="ankle">九分 Ankle</button>
+          <button class="btn" data-length="full">全长 Full</button>
+          <button class="btn" data-length="floor">拖地 Floor</button>
+        </div>
+      </div>
+
+      <!-- Geometric Data -->
+      <div class="card" id="infoCard">
+        <h3>几何数据 Geometric Data</h3>
+        <div class="info-grid" id="infoGrid">
+          <!-- dynamically filled -->
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="card">
+        <h3>图例 Legend</h3>
+        <div class="legend">
+          <div class="legend-item"><span class="legend-line" style="background:#d4a574;"></span> 分割线 Split</div>
+          <div class="legend-item"><span class="legend-line" style="background:#c9a96e;border-style:dashed;"></span> 黄金比 φ</div>
+          <div class="legend-item"><span class="legend-line" style="background:#7eb8c9;"></span> 标注 Annotation</div>
+          <div class="legend-item"><span class="legend-line" style="background:#e07070;"></span> 危险截断点 ⚠</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    几何分析工具 · 上身 4 : 下身 6 · 偏长腰 & 偏长颈 · 黄金分割参考线 φ ≈ 0.618
+  </div>
+</div>
+
+<script>
+// ============ STATE ============
+const state = {
+  topColor: 'black',
+  pantStyle: 'straight',
+  pantLength: 'ankle'
+};
+
+// ============ PROPORTIONS (based on 172cm, 4:6 ratio, longer waist & neck) ============
+// SVG: figure center x=250, top of head y=20, floor y=800, total figure height = 780px
+const TOP_Y = 20;        // top of head
+const FLOOR_Y = 800;     // floor
+const FIG_H = FLOOR_Y - TOP_Y;  // 780
+
+// Key body landmarks (y-coordinates), proportion from top of head
+function bodyY(ratio) { return TOP_Y + ratio * FIG_H; }
+
+const LANDMARKS = {
+  headTop:       bodyY(0.000),  // 20
+  chin:          bodyY(0.092),  // neck slightly long: ~9.2% of figure
+  shoulder:      bodyY(0.118),  // shoulder line
+  armpit:        bodyY(0.155),  // sleeve hem
+  bust:          bodyY(0.185),
+  waist:         bodyY(0.260),  // top hem — slightly lower for longer waist
+  hip:           bodyY(0.330),
+  crotch:        bodyY(0.400),  // the 4:6 dividing line
+  midThigh:      bodyY(0.500),
+  aboveKnee:     bodyY(0.590),
+  knee:          bodyY(0.680),
+  belowKnee:     bodyY(0.720),
+  midCalf:       bodyY(0.780),
+  lowCalf:       bodyY(0.840),
+  ankle:         bodyY(0.930),
+  floor:         bodyY(1.000),  // 800
+};
+
+// Golden ratio from shoulder to floor
+const GOLDEN_Y = LANDMARKS.shoulder + 0.618 * (FLOOR_Y - LANDMARKS.shoulder);
+
+// Pant length → hem Y coordinate
+const LENGTH_HEM = {
+  hotpants:  bodyY(0.465),   // upper thigh
+  fifth:     bodyY(0.580),   // mid-thigh, just above knee
+  seventh:   bodyY(0.715),   // below knee, upper calf
+  ankle:     bodyY(0.890),   // above ankle, exposing ankle bone
+  full:      bodyY(0.930),   // at ankle
+  floor:     bodyY(1.005),   // slightly below floor (dragging)
+};
+
+// Pant style → hem width (half-width from center, at ankle/full length)
+// Scaled; base hip half-width is ~56px
+const STYLE_HEM_WIDTH = {
+  straight:   { ankle: 54, knee: 54, floor: 54, desc: '从髋到脚口等宽，最基础的直线筒' },
+  wide:       { ankle: 72, knee: 70, floor: 78, desc: '从大腿开始放宽，脚口宽大飘逸' },
+  tapered:    { ankle: 42, knee: 48, floor: 40, desc: '上宽下窄，脚口收紧呈锥形' },
+  slim:       { ankle: 38, knee: 44, floor: 36, desc: '贴合腿型，脚口极窄' },
+  flare:      { ankle: 68, knee: 46, floor: 72, desc: '膝部收紧，膝下喇叭状散开' },
+  cropwide:   { ankle: 68, knee: 66, floor: 68, desc: '七分阔腿，小腿位置截断 + 宽口' },
+};
+
+// Pant style → hip width (half-width) — some styles start wider at hip
+const STYLE_HIP_WIDTH = {
+  straight:   56,
+  wide:       60,
+  tapered:    58,
+  slim:       54,
+  flare:      56,
+  cropwide:   62,
+};
+
+// ============ SVG NAMESPACE ============
+const SVG = 'http://www.w3.org/2000/svg';
+function el(tag, attrs = {}) {
+  const e = document.createElementNS(SVG, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  return e;
+}
+
+// ============ DRAWING FUNCTIONS ============
+
+function drawBody(svg) {
+  const cx = 250;
+  const g = el('g', { id: 'body-group' });
+
+  // -- Neck (slightly elongated) --
+  const neckTop = LANDMARKS.chin;
+  const neckBot = LANDMARKS.shoulder;
+  const neckW = 14;
+  g.appendChild(el('path', {
+    d: `M${cx - neckW} ${neckTop} L${cx - neckW} ${neckBot} Q${cx - neckW - 2} ${neckBot + 8} ${cx - 18} ${neckBot + 12} L${cx + 18} ${neckBot + 12} Q${cx + neckW + 2} ${neckBot + 8} ${cx + neckW} ${neckBot} L${cx + neckW} ${neckTop} Z`,
+    fill: '#d4a98a', stroke: 'none', opacity: '0.7'
+  }));
+
+  // -- Head --
+  const headCY = LANDMARKS.chin - 34;
+  g.appendChild(el('ellipse', {
+    cx, cy: headCY, rx: 32, ry: 42,
+    fill: '#d4a98a', stroke: 'none', opacity: '0.7'
+  }));
+
+  // -- Torso (under clothing, subtle) --
+  const torsoTop = LANDMARKS.shoulder + 10;
+  const torsoBot = LANDMARKS.crotch;
+  g.appendChild(el('path', {
+    d: `M${cx - 48} ${torsoTop} L${cx - 36} ${LANDMARKS.waist} L${cx - 54} ${LANDMARKS.hip} L${cx - 54} ${torsoBot} L${cx + 54} ${torsoBot} L${cx + 54} ${LANDMARKS.hip} L${cx + 36} ${LANDMARKS.waist} L${cx + 48} ${torsoTop} Z`,
+    fill: '#d4a98a', stroke: 'none', opacity: '0.5'
+  }));
+
+  // -- Arms (upper arms only, rest covered by sleeves) --
+  const armTop = LANDMARKS.shoulder + 10;
+  const armBot = LANDMARKS.armpit + 20;
+  g.appendChild(el('path', {
+    d: `M${cx - 48} ${armTop} Q${cx - 74} ${armTop + 5} ${cx - 76} ${armTop + 30} L${cx - 76} ${armBot} Q${cx - 70} ${armBot + 5} ${cx - 62} ${armBot} L${cx - 60} ${armTop + 30} Q${cx - 58} ${armTop + 10} ${cx - 48} ${armTop} Z`,
+    fill: '#d4a98a', stroke: 'none', opacity: '0.7'
+  }));
+  g.appendChild(el('path', {
+    d: `M${cx + 48} ${armTop} Q${cx + 74} ${armTop + 5} ${cx + 76} ${armTop + 30} L${cx + 76} ${armBot} Q${cx + 70} ${armBot + 5} ${cx + 62} ${armBot} L${cx + 60} ${armTop + 30} Q${cx + 58} ${armTop + 10} ${cx + 48} ${armTop} Z`,
+    fill: '#d4a98a', stroke: 'none', opacity: '0.7'
+  }));
+
+  // -- Hands (simplified) --
+  const handY = LANDMARKS.armpit + 20;
+  g.appendChild(el('ellipse', { cx: cx - 69, cy: handY + 18, rx: 10, ry: 16, fill: '#d4a98a', opacity: '0.7' }));
+  g.appendChild(el('ellipse', { cx: cx + 69, cy: handY + 18, rx: 10, ry: 16, fill: '#d4a98a', opacity: '0.7' }));
+
+  // -- Lower legs (exposed below pants, or base for full length) --
+  const legTop = LANDMARKS.crotch;
+  g.appendChild(el('path', {
+    d: `M${cx - 38} ${legTop} L${cx - 38} ${LANDMARKS.ankle} L${cx - 32} ${FLOOR_Y} L${cx - 18} ${FLOOR_Y} L${cx - 18} ${LANDMARKS.ankle} Q${cx - 10} ${legTop + 15} ${cx - 5} ${legTop} Z`,
+    fill: '#d4a98a', stroke: 'none', opacity: '0.5'
+  }));
+  g.appendChild(el('path', {
+    d: `M${cx + 38} ${legTop} L${cx + 38} ${LANDMARKS.ankle} L${cx + 32} ${FLOOR_Y} L${cx + 18} ${FLOOR_Y} L${cx + 18} ${LANDMARKS.ankle} Q${cx + 10} ${legTop + 15} ${cx + 5} ${legTop} Z`,
+    fill: '#d4a98a', stroke: 'none', opacity: '0.5'
+  }));
+
+  // -- Feet --
+  g.appendChild(el('ellipse', { cx: cx - 28, cy: FLOOR_Y + 3, rx: 14, ry: 6, fill: '#3a3a3a', opacity: '0.6' }));
+  g.appendChild(el('ellipse', { cx: cx + 28, cy: FLOOR_Y + 3, rx: 14, ry: 6, fill: '#3a3a3a', opacity: '0.6' }));
+
+  svg.appendChild(g);
+}
+
+function drawTop(svg) {
+  const cx = 250;
+  const g = el('g', { id: 'top-group' });
+
+  const topColor = state.topColor === 'black' ? '#1a1a1a' : '#f5f5f5';
+  const shoulderY = LANDMARKS.shoulder;
+  const waistY = LANDMARKS.waist;
+  const sleeveBot = LANDMARKS.armpit;
+
+  // Main body of the top
+  g.appendChild(el('path', {
+    d: `M${cx - 55} ${shoulderY + 12}
+        L${cx - 40} ${waistY}
+        L${cx + 40} ${waistY}
+        L${cx + 55} ${shoulderY + 12}
+        Q${cx + 30} ${shoulderY - 2} ${cx} ${shoulderY - 2}
+        Q${cx - 30} ${shoulderY - 2} ${cx - 55} ${shoulderY + 12} Z`,
+    fill: topColor, stroke: state.topColor === 'white' ? '#ccc' : '#333',
+    'stroke-width': '1.5'
+  }));
+
+  // Left sleeve
+  g.appendChild(el('path', {
+    d: `M${cx - 55} ${shoulderY + 12}
+        Q${cx - 70} ${shoulderY + 8} ${cx - 78} ${shoulderY + 18}
+        L${cx - 78} ${sleeveBot}
+        Q${cx - 70} ${sleeveBot + 6} ${cx - 60} ${sleeveBot}
+        L${cx - 52} ${shoulderY + 28}
+        Z`,
+    fill: topColor, stroke: state.topColor === 'white' ? '#ccc' : '#333',
+    'stroke-width': '1.5'
+  }));
+
+  // Right sleeve
+  g.appendChild(el('path', {
+    d: `M${cx + 55} ${shoulderY + 12}
+        Q${cx + 70} ${shoulderY + 8} ${cx + 78} ${shoulderY + 18}
+        L${cx + 78} ${sleeveBot}
+        Q${cx + 70} ${sleeveBot + 6} ${cx + 60} ${sleeveBot}
+        L${cx + 52} ${shoulderY + 28}
+        Z`,
+    fill: topColor, stroke: state.topColor === 'white' ? '#ccc' : '#333',
+    'stroke-width': '1.5'
+  }));
+
+  // Neckline (crew neck)
+  const neckCY = (LANDMARKS.shoulder + LANDMARKS.chin) / 2;
+  g.appendChild(el('ellipse', {
+    cx, cy: neckCY + 2, rx: 18, ry: 8,
+    fill: 'none', stroke: state.topColor === 'white' ? '#aaa' : '#444',
+    'stroke-width': '1.5'
+  }));
+
+  svg.appendChild(g);
+}
+
+function drawPants(svg) {
+  const cx = 250;
+  const g = el('g', { id: 'pants-group' });
+  while (g.firstChild) g.removeChild(g.firstChild);
+
+  const style = state.pantStyle;
+  const length = state.pantLength;
+  const hemY = LENGTH_HEM[length];
+
+  const hipW = STYLE_HIP_WIDTH[style];
+  const hemData = STYLE_HEM_WIDTH[style];
+  const kneeY = LANDMARKS.knee;
+  const crotchY = LANDMARKS.crotch;
+  const waistY = LANDMARKS.waist + 4;
+
+  // Determine knee width based on interpolation or style-specific
+  let kneeW;
+  if (style === 'flare') {
+    kneeW = hemData.knee; // tight at knee
+  } else if (style === 'tapered' || style === 'slim') {
+    kneeW = hemData.knee;
+  } else if (style === 'wide') {
+    kneeW = STYLE_HIP_WIDTH[style] + 5;
+  } else if (style === 'cropwide') {
+    kneeW = STYLE_HIP_WIDTH[style] + 4;
+  } else {
+    kneeW = hemData.ankle;
+  }
+
+  // Determine hem width at the actual hem position
+  let hemW;
+  if (length === 'full' || length === 'floor') {
+    hemW = hemData.ankle;
+  } else if (length === 'seventh') {
+    hemW = style === 'flare' ? hemData.knee + 8 : (style === 'wide' || style === 'cropwide' ? hemData.ankle : hemData.ankle + 2);
+  } else {
+    hemW = hemData.ankle;
+  }
+
+  // For floor length, add extra flare at bottom
+  if (length === 'floor') {
+    hemW = hemData.floor || hemData.ankle + 4;
+  }
+
+  // Interpolate widths for shorts (hem above knee)
+  let actualHemW;
+  if (length === 'hotpants') {
+    actualHemW = hipW - 4; // narrow slightly
+  } else if (length === 'fifth') {
+    actualHemW = kneeW - 4; // almost at knee width
+  } else {
+    actualHemW = (hemY >= kneeY) ? hemW : (hipW - (hipW - kneeW) * (LANDMARKS.crotch - hemY) / (LANDMARKS.crotch - kneeY));
+    // simplified: if above knee, interpolate; if below knee, use hemW
+    if (hemY < kneeY) {
+      const t = (hemY - crotchY) / (kneeY - crotchY);
+      actualHemW = hipW - (hipW - kneeW) * t;
+    } else {
+      actualHemW = hemW;
+    }
+  }
+
+  const pantColor = '#2a2a2a';
+
+  // Left leg path
+  const leftHip = cx - hipW;
+  const leftWaist = cx - hipW + 6;
+  const leftHem = cx - actualHemW;
+  const leftCrotch = cx - 6;
+
+  // Right leg path
+  const rightHip = cx + hipW;
+  const rightWaist = cx + hipW - 6;
+  const rightHem = cx + actualHemW;
+  const rightCrotch = cx + 6;
+
+  // Draw crotch curve
+  const crotchDepth = 14;
+
+  const d = [
+    `M${leftWaist} ${waistY}`,
+    `L${leftHip} ${LANDMARKS.hip}`,
+    `L${leftHip - 2} ${crotchY - 10}`,
+    `Q${leftCrotch} ${crotchY + crotchDepth} ${rightCrotch} ${crotchY + crotchDepth}`,
+    `Q${rightCrotch} ${crotchY - 10} ${rightHip + 2} ${crotchY - 10}`,
+    `L${rightHip} ${LANDMARKS.hip}`,
+    `L${rightWaist} ${waistY}`,
+    'Z',
+    // Left leg
+    `M${leftHip - 2} ${crotchY - 6}`,
+    `L${leftHem} ${hemY}`,
+    `L${leftHem + 14} ${hemY}`,
+    `L${leftCrotch} ${crotchY + crotchDepth - 6}`,
+    'Z',
+    // Right leg
+    `M${rightHip + 2} ${crotchY - 6}`,
+    `L${rightHem} ${hemY}`,
+    `L${rightHem - 14} ${hemY}`,
+    `L${rightCrotch} ${crotchY + crotchDepth - 6}`,
+    'Z',
+  ].join(' ');
+
+  g.appendChild(el('path', {
+    d,
+    fill: pantColor, stroke: '#3a3a3a', 'stroke-width': '1.5',
+    'stroke-linejoin': 'round'
+  }));
+
+  // Waistband line
+  g.appendChild(el('line', {
+    x1: leftWaist, y1: waistY, x2: rightWaist, y2: waistY,
+    stroke: '#444', 'stroke-width': '2'
+  }));
+
+  // Belt loops hint
+  g.appendChild(el('rect', { x: cx - 4, y: waistY - 2, width: 8, height: 6, rx: 2, fill: '#444' }));
+
+  // Center crease (subtle)
+  if (hemY > LANDMARKS.crotch + 20) {
+    const creaseBot = Math.min(hemY - 4, FLOOR_Y - 4);
+    g.appendChild(el('line', {
+      x1: cx - hipW/2 + 6, y1: LANDMARKS.crotch + 10,
+      x2: cx - actualHemW + 6, y2: creaseBot,
+      stroke: '#333', 'stroke-width': '0.8', opacity: '0.5'
+    }));
+    g.appendChild(el('line', {
+      x1: cx + hipW/2 - 6, y1: LANDMARKS.crotch + 10,
+      x2: cx + actualHemW - 6, y2: creaseBot,
+      stroke: '#333', 'stroke-width': '0.8', opacity: '0.5'
+    }));
+  }
+
+  // Hem line
+  g.appendChild(el('line', {
+    x1: leftHem, y1: hemY, x2: rightHem, y2: hemY,
+    stroke: '#444', 'stroke-width': '1.5'
+  }));
+
+  svg.appendChild(g);
+}
+
+function drawGuideLines(svg) {
+  const g = el('g', { id: 'guide-group' });
+  while (g.firstChild) g.removeChild(g.firstChild);
+
+  const cx = 250;
+  const leftX = 50;
+  const rightX = 450;
+  const length = state.pantLength;
+  const hemY = LENGTH_HEM[length];
+
+  // Define lines to draw: { y, label, color, dash, side }
+  const lines = [
+    { y: LANDMARKS.shoulder, label: '肩线 Shoulder', color: 'rgba(212,167,116,0.5)', dash: '4,4', side: 'left' },
+    { y: LANDMARKS.waist, label: '衣摆 Top Hem', color: 'rgba(212,167,116,0.7)', dash: '6,3', side: 'left' },
+    { y: LANDMARKS.crotch, label: '裆线 Crotch (4:6)', color: 'rgba(212,167,116,0.7)', dash: '4,4', side: 'right' },
+    { y: hemY, label: '裤口 Pant Hem', color: '#ff9966', dash: 'none', side: 'right' },
+    { y: LANDMARKS.ankle, label: '脚踝 Ankle', color: 'rgba(126,184,201,0.5)', dash: '2,6', side: 'left' },
+    { y: FLOOR_Y, label: '地面 Floor', color: 'rgba(160,160,160,0.4)', dash: '2,4', side: 'right' },
+    { y: GOLDEN_Y, label: `黄金比 φ (${(GOLDEN_Y - TOP_Y).toFixed(0)}px)`, color: 'rgba(201,169,110,0.6)', dash: '8,4,2,4', side: 'left' },
+    { y: LANDMARKS.knee, label: '膝线 Knee', color: 'rgba(160,160,160,0.35)', dash: '2,6', side: 'right' },
+  ];
+
+  lines.forEach((line, i) => {
+    const isDanger = (length === 'fifth' && line.y === LANDMARKS.knee) ||
+                     (length === 'seventh' && line.y === LANDMARKS.midCalf);
+    const strokeColor = isDanger ? '#e07070' : line.color;
+    const strokeDash = line.dash === 'none' ? '' : line.dash;
+    const strokeW = line.y === hemY ? 2 : (line.y === LANDMARKS.waist ? 1.5 : 1);
+
+    if (line.side === 'left') {
+      g.appendChild(el('line', {
+        x1: leftX, y1: line.y, x2: cx - 65, y2: line.y,
+        stroke: strokeColor, 'stroke-width': strokeW,
+        'stroke-dasharray': strokeDash, opacity: '0.8'
+      }));
+      // Label
+      const lbl = el('text', {
+        x: leftX, y: line.y - 5, 'text-anchor': 'start',
+        'font-size': '10', fill: strokeColor, 'font-family': 'inherit',
+        opacity: '0.9'
+      });
+      lbl.textContent = line.label;
+      g.appendChild(lbl);
+    } else {
+      g.appendChild(el('line', {
+        x1: cx + 65, y1: line.y, x2: rightX, y2: line.y,
+        stroke: strokeColor, 'stroke-width': strokeW,
+        'stroke-dasharray': strokeDash, opacity: '0.8'
+      }));
+      const lbl = el('text', {
+        x: rightX, y: line.y - 5, 'text-anchor': 'end',
+        'font-size': '10', fill: strokeColor, 'font-family': 'inherit',
+        opacity: '0.9'
+      });
+      lbl.textContent = line.label;
+      g.appendChild(lbl);
+    }
+  });
+
+  // Highlight danger zone for bad break points
+  if (length === 'fifth') {
+    // Red highlight at knee area
+    g.appendChild(el('rect', {
+      x: cx - 65, y: LANDMARKS.knee - 8, width: 130, height: 16,
+      fill: 'rgba(224,112,112,0.15)', rx: 4
+    }));
+    g.appendChild(el('text', {
+      x: cx, y: LANDMARKS.knee + 2, 'text-anchor': 'middle',
+      'font-size': '10', fill: '#e07070', 'font-family': 'inherit',
+      'font-weight': '600'
+    })).textContent = '⚠ 腿最宽处截断';
+  }
+  if (length === 'seventh') {
+    g.appendChild(el('rect', {
+      x: cx - 65, y: LANDMARKS.midCalf - 8, width: 130, height: 16,
+      fill: 'rgba(224,112,112,0.15)', rx: 4
+    }));
+    g.appendChild(el('text', {
+      x: cx, y: LANDMARKS.midCalf + 2, 'text-anchor': 'middle',
+      'font-size': '10', fill: '#e07070', 'font-family': 'inherit',
+      'font-weight': '600'
+    })).textContent = '⚠ 小腿最粗处截断';
+  }
+
+  // Ratio annotation between shoulder and waist
+  const topHeight = LANDMARKS.waist - LANDMARKS.shoulder;
+  g.appendChild(el('text', {
+    x: cx + 85, y: (LANDMARKS.shoulder + LANDMARKS.waist) / 2 + 4,
+    'text-anchor': 'start', 'font-size': '10', fill: 'rgba(212,167,116,0.8)',
+    'font-family': 'inherit'
+  })).textContent = `上衣 ${(topHeight / FIG_H * 100).toFixed(0)}%`;
+
+  // Ratio between waist and hem
+  const pantHeight = hemY - LANDMARKS.waist;
+  if (pantHeight > 5) {
+    g.appendChild(el('text', {
+      x: cx + 85, y: (LANDMARKS.waist + hemY) / 2 + 4,
+      'text-anchor': 'start', 'font-size': '10', fill: 'rgba(255,153,102,0.8)',
+      'font-family': 'inherit'
+    })).textContent = `裤装 ${(pantHeight / FIG_H * 100).toFixed(0)}%`;
+  }
+
+  // Exposed skin
+  if (hemY < LANDMARKS.ankle) {
+    const expH = LANDMARKS.ankle - hemY;
+    g.appendChild(el('text', {
+      x: cx + 85, y: (hemY + LANDMARKS.ankle) / 2,
+      'text-anchor': 'start', 'font-size': '10', fill: 'rgba(126,184,201,0.8)',
+      'font-family': 'inherit'
+    })).textContent = `裸露 ${(expH / FIG_H * 100).toFixed(0)}%`;
+  }
+
+  // Golden ratio marker
+  g.appendChild(el('circle', { cx: cx - 60, cy: GOLDEN_Y, r: 3, fill: '#c9a96e' }));
+
+  svg.appendChild(g);
+}
+
+function updateInfoPanel() {
+  const hemY = LENGTH_HEM[state.pantLength];
+  const topPct = ((LANDMARKS.waist - LANDMARKS.shoulder) / FIG_H * 100).toFixed(1);
+  const pantPct = ((hemY - LANDMARKS.waist) / FIG_H * 100).toFixed(1);
+  const exposePct = hemY < LANDMARKS.ankle ? ((LANDMARKS.ankle - hemY) / FIG_H * 100).toFixed(1) : '0';
+  const goldenDiff = Math.abs(hemY - GOLDEN_Y) / FIG_H * 100;
+
+  // Assessment
+  let assessment, assessmentClass;
+  const dangerLengths = { fifth: 'warn', seventh: 'warn' };
+  const goodLengths = { ankle: 'good', full: 'good', hotpants: 'ok' };
+
+  if (dangerLengths[state.pantLength]) {
+    assessment = '⚠ 截断风险 — 分割线处于腿部最宽处，显腿短';
+    assessmentClass = 'warn';
+  } else if (state.pantLength === 'ankle') {
+    assessment = '✓ 推荐 — 脚踝留白形成呼吸点，最安全百搭';
+    assessmentClass = 'good';
+  } else if (state.pantLength === 'full') {
+    assessment = '✓ 稳定 — 单分割线，几何简洁，正式感强';
+    assessmentClass = 'good';
+  } else if (state.pantLength === 'floor') {
+    assessment = '○ 纵向拉伸 — 腿长最大化，需鞋跟配合';
+    assessmentClass = 'ok';
+  } else if (state.pantLength === 'hotpants') {
+    assessment = '○ 腿长暴露 — 最大化裸露，直接展示实际比例';
+    assessmentClass = 'ok';
+  } else {
+    assessment = '—';
+    assessmentClass = 'ok';
+  }
+
+  // For wide/cropwide at seventh
+  if (state.pantLength === 'seventh' && (state.pantStyle === 'cropwide' || state.pantStyle === 'wide')) {
+    assessment = '⚠ 双重风险 — 小腿截断 + 宽口横向扩张';
+    assessmentClass = 'warn';
+  }
+  // Flare at ankle
+  if (state.pantStyle === 'flare' && state.pantLength === 'ankle') {
+    assessment = '○ 注意 — 喇叭裤九分时，脚踝曲线是关键';
+    assessmentClass = 'ok';
+  }
+
+  const styleNames = {
+    straight: '直筒 Straight', wide: '阔腿 Wide', tapered: '锥形 Tapered',
+    slim: '窄脚 Slim', flare: '喇叭 Flare', cropwide: '七分阔腿 Culotte'
+  };
+  const lengthNames = {
+    hotpants: '超短 Hot Pants', fifth: '五分 Mid-Thigh', seventh: '七分 Below-Knee',
+    ankle: '九分 Ankle', full: '全长 Full', floor: '拖地 Floor'
+  };
+  const colorNames = { black: '黑色 Black', white: '白色 White' };
+
+  document.getElementById('selectionSummary').textContent =
+    `${colorNames[state.topColor]}短袖 × ${styleNames[state.pantStyle]}${lengthNames[state.pantLength]}`;
+
+  const topH = (LANDMARKS.waist - LANDMARKS.shoulder).toFixed(0);
+  const pantH = (hemY - LANDMARKS.waist).toFixed(0);
+  const expH = hemY < LANDMARKS.ankle ? (LANDMARKS.ankle - hemY).toFixed(0) : 0;
+
+  document.getElementById('infoGrid').innerHTML = `
+    <div class="info-item">
+      <div class="label">上衣占比 Top</div>
+      <div class="value">${topPct}% <span style="font-size:11px;color:#888">(${topH}px)</span></div>
+    </div>
+    <div class="info-item">
+      <div class="label">裤装占比 Pants</div>
+      <div class="value">${pantPct}% <span style="font-size:11px;color:#888">(${pantH}px)</span></div>
+    </div>
+    <div class="info-item">
+      <div class="label">裸露占比 Exposed</div>
+      <div class="value">${exposePct}% <span style="font-size:11px;color:#888">(${expH}px)</span></div>
+    </div>
+    <div class="info-item">
+      <div class="label">分割线数量 Splits</div>
+      <div class="value">${state.pantLength === 'full' || state.pantLength === 'floor' ? '1 条（最简）' : state.pantLength === 'hotpants' ? '2 条' : '3 条'}</div>
+    </div>
+    <div class="info-item full">
+      <div class="label">几何评估</div>
+      <span class="assessment ${assessmentClass}">${assessment}</span>
+    </div>
+    <div class="info-item full" style="font-size:11px;color:#999;line-height:1.5">
+      <span style="color:#c9a96e;">●</span> 黄金分割点距裤口 ${goldenDiff.toFixed(1)}% 身高
+      &nbsp;|&nbsp; ${STYLE_HEM_WIDTH[state.pantStyle]?.desc || ''}
+    </div>
+  `;
+}
+
+function render() {
+  const svg = document.getElementById('mainSvg');
+  // Clear dynamic groups
+  ['body-group', 'top-group', 'pants-group', 'guide-group'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  });
+
+  // Background grid (subtle)
+  const bgGroup = el('g', { id: 'bg-grid' });
+  // Floor line
+  bgGroup.appendChild(el('line', {
+    x1: 0, y1: FLOOR_Y, x2: 500, y2: FLOOR_Y,
+    stroke: 'rgba(255,255,255,0.08)', 'stroke-width': '1'
+  }));
+  svg.appendChild(bgGroup);
+
+  drawBody(svg);
+  drawTop(svg);
+  drawPants(svg);
+  drawGuideLines(svg);
+  updateInfoPanel();
+}
+
+// ============ EVENT HANDLERS ============
+
+function setTopColor(color) {
+  state.topColor = color;
+  document.querySelectorAll('.btn.color-black, .btn.color-white').forEach(b => {
+    b.classList.toggle('active', b.textContent.includes(color === 'black' ? 'Black' : 'White'));
+  });
+  render();
+}
+
+// Style buttons
+document.getElementById('styleBtns').addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-style]');
+  if (!btn) return;
+  state.pantStyle = btn.dataset.style;
+  document.querySelectorAll('#styleBtns button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Reset cropwide to seventh if selected
+  if (state.pantStyle === 'cropwide' && !['seventh', 'ankle'].includes(state.pantLength)) {
+    state.pantLength = 'seventh';
+    document.querySelectorAll('#lengthBtns button').forEach(b => b.classList.remove('active'));
+    document.querySelector('#lengthBtns button[data-length="seventh"]')?.classList.add('active');
+  }
+  render();
+});
+
+// Length buttons
+document.getElementById('lengthBtns').addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-length]');
+  if (!btn) return;
+  state.pantLength = btn.dataset.length;
+  document.querySelectorAll('#lengthBtns button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+});
+
+// ============ INITIAL RENDER ============
+render();
+</script>
+</body>
+</html>

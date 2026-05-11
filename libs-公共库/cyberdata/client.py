@@ -24,6 +24,41 @@ _TENANT_ID = "1001"
 _USER_ID = "47"
 _TASK_ID = "1990991087752757249"
 _ENV = 5
+# Appended by curl -w after response body (body must not contain this literal).
+_HTTP_SEP = "###CYBERDATA_HTTP###"
+
+
+def _curl_json(r: subprocess.CompletedProcess, step: str) -> dict:
+    """Split curl stdout into body + HTTP status from -w (see run)."""
+    raw = r.stdout or ""
+    if not raw.strip():
+        raise RuntimeError(
+            f"CyberData {step}: empty response (often HTTP 401). "
+            "Refresh jwttoken in ~/.claude/skills/cyberdata-query/auth.json "
+            "(e.g. libs-公共库/cyberdata/refresh_auth_jwt.py)."
+        )
+    if _HTTP_SEP in raw:
+        body, http = raw.rsplit(_HTTP_SEP, 1)
+        http = http.strip()
+    else:
+        body, http = raw, ""
+    if http and http != "200":
+        raise RuntimeError(
+            f"CyberData {step}: HTTP {http}. "
+            "Refresh jwttoken (or cookies if session expired). "
+            f"Body preview: {body[:300]!r}"
+        )
+    if not body.strip():
+        raise RuntimeError(
+            f"CyberData {step}: empty body with HTTP {http or 'unknown'}. "
+            "Refresh jwttoken (often 401)."
+        )
+    try:
+        return json.loads(body)
+    except json.JSONDecodeError as e:
+        raise RuntimeError(
+            f"CyberData {step}: not JSON ({e}). First 300 chars: {body[:300]!r}"
+        ) from None
 
 
 class CyberDataClient:
@@ -46,7 +81,7 @@ class CyberDataClient:
         })
 
         r = subprocess.run(
-            ["curl", "-s", f"{_API_BASE}/api/dev/task/run",
+            ["curl", "-sS", "-w", f"{_HTTP_SEP}%{{http_code}}", f"{_API_BASE}/api/dev/task/run",
              "-H", "accept: application/json, text/plain, */*",
              "-H", "content-type: application/json; charset=UTF-8",
              "-b", self._cookies, "-H", f"jwttoken: {self._jwttoken}",
@@ -56,7 +91,7 @@ class CyberDataClient:
             capture_output=True, text=True, timeout=30,
         )
 
-        resp = json.loads(r.stdout)
+        resp = _curl_json(r, "task/run")
         if resp.get("code") != "200":
             raise RuntimeError(f"Submit failed: {resp}")
 
@@ -72,7 +107,7 @@ class CyberDataClient:
             })
 
             r = subprocess.run(
-                ["curl", "-s", f"{_API_BASE}/api/logger/getQueryLog",
+                ["curl", "-sS", "-w", f"{_HTTP_SEP}%{{http_code}}", f"{_API_BASE}/api/logger/getQueryLog",
                  "-H", "accept: application/json, text/plain, */*",
                  "-H", "content-type: application/json; charset=UTF-8",
                  "-b", self._cookies, "-H", f"jwttoken: {self._jwttoken}",
@@ -82,7 +117,7 @@ class CyberDataClient:
                 capture_output=True, text=True, timeout=30,
             )
 
-            resp = json.loads(r.stdout)
+            resp = _curl_json(r, "getQueryLog")
             if resp.get("code") == "200" and resp.get("data"):
                 columns = resp["data"][0].get("columns", [])
                 if columns and len(columns) >= 1:

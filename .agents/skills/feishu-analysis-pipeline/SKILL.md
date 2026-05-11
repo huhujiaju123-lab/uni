@@ -1,6 +1,6 @@
 ---
 name: feishu-analysis-pipeline
-description: Publish data-analysis outputs as Feishu docs and automatically hand them off to Airy for beautified report generation. Use when the user wants analysis results turned into a 飞书文档, sent to Airy / 艾里, or the whole “分析结果 -> 飞书文档 -> Airy 美化” chain automated.
+description: Publish data-analysis outputs as Feishu docs and automatically hand them off to Airy or Aily for beautified report generation. Use when the user wants analysis results turned into a 飞书文档, sent to Airy / Aily / 艾里, or the whole analysis-to-Feishu-to-Aily beautification chain automated.
 ---
 
 # Feishu Analysis Pipeline
@@ -14,6 +14,8 @@ Use this skill when the user wants the analysis result to land directly in Feish
 3. Returns the published link and Airy handoff status.
 
 Default output is a Feishu doc. When the source material is table-heavy, keep the raw table in the markdown/doc and let Airy turn it into the polished report.
+
+The preferred integration path is direct Aily OpenAPI when `aily_app_id` and an access token are configured. See `references/aily-api.md`.
 
 ## Workflow
 
@@ -37,6 +39,13 @@ Useful flags:
 - `--resource-url https://...`: skip publish and hand off an existing Feishu doc/sheet link
 - `--config /abs/path/to/config.local.json`: use a non-default config
 
+Direct Aily API test call:
+
+```bash
+FEISHU_USER_ACCESS_TOKEN=xxx AILY_APP_ID=spring_xxx__c \
+python3 scripts/call_aily.py --prompt-file /abs/path/to/airy_brief.md
+```
+
 ## Config
 
 Default config path:
@@ -56,3 +65,4 @@ Create it by copying `config.example.json` and filling:
 - Default Feishu app credentials reuse the existing internal app used elsewhere in this workspace.
 - If Airy target config is missing, the script still publishes the doc and reports `airy_status=skipped`.
 - Use this skill after the analysis is finished, not for data querying itself.
+- Do not commit Aily app secrets or access tokens. Use environment variables for tokens.
