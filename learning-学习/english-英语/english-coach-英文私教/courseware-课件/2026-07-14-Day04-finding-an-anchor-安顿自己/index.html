@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026-07-14 Day 04 English Coach - Finding an Anchor</title>
+  <style>
+    :root{--bg:#f5f0e7;--paper:#fffaf2;--card:#fffdf8;--text:#26323a;--muted:#68747d;--line:#e2d8ca;--blue:#426b9f;--green:#4f8069;--orange:#b7793d;--blue2:#e8f0f8;--green2:#edf6f0;--orange2:#fbefe0;--shadow:0 22px 66px rgba(60,47,29,.1);--r:18px}
+    body.dark{--bg:#15191d;--paper:#1d242a;--card:#222a31;--text:#eef3f5;--muted:#a8b3bc;--line:#34404a;--blue:#8db8e8;--green:#99d4b3;--orange:#e2b074;--blue2:#203142;--green2:#20362d;--orange2:#3a2d20;--shadow:0 22px 66px rgba(0,0,0,.3)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 10% 0,rgba(66,107,159,.15),transparent 30%),radial-gradient(circle at 88% 8%,rgba(79,128,105,.13),transparent 28%),var(--bg);color:var(--text);font-family:Charter,Georgia,"PingFang SC","Microsoft YaHei",serif;line-height:1.66}.ui{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}
+    .topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}.topin{max-width:1180px;margin:auto;padding:10px 18px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.prog{display:flex;gap:10px;align-items:center;min-width:0}.track{height:8px;background:var(--line);border-radius:99px;overflow:hidden;flex:1}.fill{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--green));transition:.25s}.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}button{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:99px;padding:8px 12px;cursor:pointer;font-size:13px}button:hover{border-color:var(--blue);transform:translateY(-1px)}button.primary{background:var(--blue);color:#fff;border-color:var(--blue)}button.done{background:var(--green2);color:var(--green);border-color:var(--green)}
+    nav{max-width:1180px;margin:auto;padding:0 18px 10px;display:flex;gap:8px;overflow:auto}nav a{text-decoration:none;color:var(--muted);font-size:13px;white-space:nowrap;border:1px solid var(--line);border-radius:99px;padding:7px 11px;background:color-mix(in srgb,var(--card) 70%,transparent)}nav a:hover{color:var(--blue);border-color:var(--blue)}
+    main{max-width:1180px;margin:auto;padding:28px 18px 80px}section{margin:40px 0;scroll-margin-top:112px}h1,h2,h3{line-height:1.15;margin:0}h1{font-size:clamp(35px,6vw,70px);letter-spacing:-.03em}h2{font-size:clamp(25px,4vw,38px);margin-bottom:16px}h3{font-size:20px;margin-bottom:8px}p{margin:8px 0}.cn,.muted{color:var(--muted)}.hero{border:1px solid var(--line);border-radius:28px;padding:36px;background:linear-gradient(135deg,var(--paper),color-mix(in srgb,var(--green2) 62%,var(--paper)));box-shadow:var(--shadow);display:grid;grid-template-columns:1.1fr .9fr;gap:26px;align-items:center}.eyebrow{font:700 13px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--blue);letter-spacing:.08em;text-transform:uppercase}.summary{font-size:19px;color:var(--muted);max-width:690px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.chip{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:7px 12px;color:var(--muted);font-size:13px}.visual{min-height:300px;border-radius:24px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;overflow:hidden}.grid{display:grid;gap:16px}.two{grid-template-columns:repeat(2,minmax(0,1fr))}.three{grid-template-columns:repeat(3,minmax(0,1fr))}.auto{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.04)}.blue{background:var(--blue2)}.green{background:var(--green2)}.orange{background:var(--orange2)}
+    .review-card b{display:block;font-size:18px}.timeline{display:grid;gap:14px}.titem{display:grid;grid-template-columns:54px 1fr;gap:14px;align-items:start}.icon{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:var(--blue2);font-size:25px}.expr .en{font-size:19px;font-weight:800}.small{font-size:13px;color:var(--muted)}.quote{font-size:24px;line-height:1.35;font-weight:800}.center{text-align:center;padding:24px;border-radius:18px;background:var(--orange2);border:1px solid var(--line)}.branches{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.branch{border:1px dashed color-mix(in srgb,var(--blue) 55%,var(--line));border-radius:16px;padding:14px;background:var(--card)}.compare{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid var(--line);border-radius:16px;background:var(--card)}.compare th,.compare td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.compare th{background:var(--blue2)}.compare tr:last-child td{border-bottom:0}.ipa{font-size:28px;color:var(--blue);font-weight:800}
+    details{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:14px 16px}details+details{margin-top:10px}summary{cursor:pointer;font-weight:800}.practice{border-left:4px solid var(--orange)}.backtop{position:fixed;right:18px;bottom:18px;z-index:30;display:none}.backtop.show{display:inline-flex}@media(max-width:860px){.hero,.two,.three{grid-template-columns:1fr}.hero{padding:24px}.topin{grid-template-columns:1fr}.actions{justify-content:flex-start}}@media print{body{background:#fff;color:#000}.topbar,.backtop,button,nav{display:none!important}main{max-width:none;padding:0}section{break-inside:avoid;margin:22px 0}.card,.hero{box-shadow:none;border-color:#ccc}}
+  </style>
+</head>
+<body>
+  <div class="topbar ui">
+    <div class="topin">
+      <div class="prog"><span class="muted">Learning Progress</span><div class="track"><div class="fill" id="fill"></div></div><span id="pct" class="muted">0%</span></div>
+      <div class="actions"><button id="theme">🌙 Dark</button><button id="openAll">全部展开</button><button id="closeAll">全部收起</button><button onclick="window.print()">打印 / PDF</button></div>
+    </div>
+    <nav><a href="#cover">Cover</a><a href="#quick">3-Min Review</a><a href="#story">Story</a><a href="#upgrade">Original → Natural</a><a href="#expressions">Expressions</a><a href="#word">Deep Word</a><a href="#fixes">Fixes</a><a href="#practice">Practice</a><a href="#speak">Speak</a><a href="#growth">Growth</a></nav>
+  </div>
+  <main>
+    <section id="cover" class="hero">
+      <div>
+        <div class="eyebrow">English Coach · Day 04 · 2026-07-14</div>
+        <h1>Finding an Anchor</h1>
+        <p class="summary">从“刷手机”到“安顿自己”：用英语表达忙碌、空虚、失联、沉淀和人生锚点。</p>
+        <div class="chips ui"><span class="chip">settle down</span><span class="chip">let things sink in</span><span class="chip">anchor</span><span class="chip">lose touch with myself</span><span class="chip">slow down</span><span class="chip">vivid memories</span></div>
+      </div>
+      <div class="visual">
+        <svg width="430" height="300" viewBox="0 0 430 300" role="img" aria-label="settled mind and anchor">
+          <rect width="430" height="300" fill="none"/>
+          <path d="M60 214 C115 185 160 230 215 205 S315 170 370 205" fill="none" stroke="var(--green)" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="215" cy="112" r="62" fill="var(--blue2)" stroke="var(--blue)" stroke-width="3"/>
+          <path d="M215 56 v96 M179 98 h72 M188 154 c18 29 42 38 72 0" fill="none" stroke="var(--blue)" stroke-width="9" stroke-linecap="round"/>
+          <path d="M150 235 C190 254 240 254 280 235" fill="none" stroke="var(--orange)" stroke-width="5" stroke-linecap="round"/>
+          <text x="215" y="270" text-anchor="middle" font-size="20" fill="var(--text)">a settled mind is an unhurried one</text>
+        </svg>
+      </div>
+    </section>
+
+    <section id="quick">
+      <h2>3-Minute Review｜快速复习</h2>
+      <div class="grid auto">
+        <div class="card review-card"><b>Every day feels the same.</b><p class="cn">每天都像重复的一天。</p></div>
+        <div class="card review-card"><b>Time flies by, but nothing really stays with me.</b><p class="cn">时间过得很快，但没有什么真正留下来。</p></div>
+        <div class="card review-card"><b>I don't feel deeply connected to myself.</b><p class="cn">我没有和自己建立很深的连接。</p></div>
+        <div class="card review-card"><b>I need time to let things sink in.</b><p class="cn">我需要时间让事情沉淀。</p></div>
+        <div class="card review-card"><b>Maybe I need to learn how to slow down.</b><p class="cn">也许我需要学习怎么慢下来。</p></div>
+      </div>
+    </section>
+
+    <section id="story">
+      <h2>Today’s Story｜今日情境</h2>
+      <div class="timeline">
+        <div class="titem card"><div class="icon">📱</div><div><h3>I keep scrolling when I have free time.</h3><p class="cn">一有空就刷手机，停不下来。</p></div></div>
+        <div class="titem card"><div class="icon">🔁</div><div><h3>Everything online feels repetitive.</h3><p class="cn">社交媒体越来越同质化、重复。</p></div></div>
+        <div class="titem card"><div class="icon">🕳️</div><div><h3>It makes me feel empty.</h3><p class="cn">越刷越空。</p></div></div>
+        <div class="titem card"><div class="icon">👀</div><div><h3>I'm watching other people's lives more than living my own.</h3><p class="cn">注意力被别人的生活占据。</p></div></div>
+        <div class="titem card"><div class="icon">⚓</div><div><h3>I need an anchor.</h3><p class="cn">需要一个能让自己稳定下来的锚点。</p></div></div>
+        <div class="titem card"><div class="icon">🌿</div><div><h3>A settled mind isn't empty. It's unhurried.</h3><p class="cn">安顿不是脑子空白，而是不再匆忙。</p></div></div>
+      </div>
+    </section>
+
+    <section id="upgrade">
+      <h2>Original → Natural｜表达升级</h2>
+      <table class="compare">
+        <thead><tr><th>Original</th><th>More Natural</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Every day feels similar.</td><td><b>Every day feels the same.</b></td><td>更口语、更自然。</td></tr>
+          <tr><td>Time flies so fast, I can't remember.</td><td><b>Time flies by, but nothing really stays with me.</b></td><td>把“快”和“没有留下来”都说完整。</td></tr>
+          <tr><td>I'm paying attention to others.</td><td><b>I'm spending more time watching other people's lives than living my own.</b></td><td>更有画面，也更贴近真实心理状态。</td></tr>
+          <tr><td>I don't have deep relationship with myself.</td><td><b>I don't feel deeply connected to myself.</b></td><td>connected to myself 比 relationship with myself 自然。</td></tr>
+          <tr><td>I don't have time to settle.</td><td><b>I don't have time to let things sink in.</b></td><td>sink in 表示“真正进入心里、沉淀下来”。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="expressions">
+      <h2>Key Expressions｜核心表达</h2>
+      <div class="grid auto" id="exprs"></div>
+    </section>
+
+    <section id="word">
+      <h2>Deep Word｜词汇深挖</h2>
+      <div class="card">
+        <div class="center">
+          <div class="eyebrow">Deep Phrase</div>
+          <h2>let things sink in</h2>
+          <p><b>To give an experience enough time to truly enter your mind and feelings.</b></p>
+          <p class="cn">不是“沉下去”，而是“经历真正进入心里，开始被理解和吸收”。</p>
+        </div>
+        <div class="branches" style="margin-top:16px">
+          <div class="branch"><h3>News</h3><p>It took a while for the news to sink in.</p></div>
+          <div class="branch"><h3>Experience</h3><p>I need time to let the day sink in.</p></div>
+          <div class="branch"><h3>Learning</h3><p>I need to review it slowly so it can sink in.</p></div>
+          <div class="branch"><h3>Life</h3><p>Meaning comes from letting experiences stay with you.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="fixes">
+      <h2>Fixes｜发音 / 用词 / 语法</h2>
+      <div class="grid three">
+        <div class="card blue"><h3>feel + adjective</h3><p>I feel fulfilled.<br>I feel content.<br>I feel empty.</p><p class="cn">比 I have a feeling... 更自然。</p></div>
+        <div class="card green"><h3>Pronunciation</h3><p><b>fulfilled</b> <span class="ipa">/fʊlˈfɪld/</span></p><p class="cn">重音在 FILLED，不读 full-filled。</p></div>
+        <div class="card orange"><h3>Mindset</h3><p class="quote">A settled mind isn't an empty mind. It's an unhurried one.</p></div>
+      </div>
+      <table class="compare" style="margin-top:16px">
+        <thead><tr><th>English</th><th>中文</th><th>Feeling</th></tr></thead>
+        <tbody><tr><td>Happy</td><td>开心</td><td>情绪</td></tr><tr><td>Content</td><td>满足、幸福</td><td>状态</td></tr><tr><td>Fulfilled</td><td>充实</td><td>人生价值感</td></tr></tbody>
+      </table>
+    </section>
+
+    <section id="practice">
+      <h2>Mini Practice｜即时练习</h2>
+      <div class="grid">
+        <details class="practice"><summary>填空：I don't have time to let things ______ in.</summary><p><b>Answer:</b> sink</p><p class="cn">let things sink in = 让事情沉淀。</p></details>
+        <details class="practice"><summary>改写：Every day feels similar.</summary><p><b>Answer:</b> Every day feels the same.</p></details>
+        <details class="practice"><summary>表达：我和自己失联了。</summary><p><b>Answer:</b> I've lost touch with myself.</p></details>
+        <details class="practice"><summary>选择：content 更接近哪种感觉？</summary><p><b>Answer:</b> 满足、幸福的状态，不只是短暂开心。</p></details>
+        <details class="practice"><summary>表达：也许我不需要更多经历，而需要更多时间吸收它们。</summary><p><b>Answer:</b> Maybe I don't need more experiences. I just need more time to absorb them.</p></details>
+      </div>
+    </section>
+
+    <section id="speak">
+      <h2>Speak It Yourself｜开口挑战</h2>
+      <div class="card green">
+        <p>用英文说 40 秒：为什么你想少刷手机、给生活留下一个 anchor？</p>
+        <p><b>Keywords:</b> scrolling, repetitive, empty, other people's lives, slow down, let things sink in, anchor</p>
+      </div>
+      <details style="margin-top:14px"><summary>查看参考答案</summary><p>I feel fulfilled at work, and I feel content when I am with my daughter. But when I have free time, I often start scrolling. Everything online feels repetitive, and it makes me feel empty. I am spending more time watching other people's lives than living my own. Maybe I do not need more experiences. I just need more time to absorb them and let things sink in. My daughter is one of the anchors in my life, and I want to learn how to slow down.</p></details>
+    </section>
+
+    <section id="growth">
+      <h2>Growth Note｜成长记录</h2>
+      <div class="grid three">
+        <div class="card"><h3>Observation</h3><p>今天开始用英语表达更细腻的心理状态：空虚、失联、沉淀、安顿。</p></div>
+        <div class="card"><h3>Progress</h3><p>已经能把抽象中文感受升级成自然英文句子，而不是只找单词翻译。</p></div>
+        <div class="card"><h3>Next Step</h3><p>每天用一句 <b>Today, I want to remember...</b> 给当天留下一个 anchor。</p></div>
+      </div>
+    </section>
+  </main>
+  <button class="backtop primary ui" id="top">↑ Top</button>
+  <script>
+    const storagePrefix='day04';
+    const expressions=[
+      ['Every day feels the same.','每天都像重复的一天。','daily life','Every day feels the same, even though I am busy.'],
+      ['Time flies by, but nothing really stays with me.','时间过得很快，但没有什么真正留下来。','memory','Time flies by, but nothing really stays with me at the end of the day.'],
+      ['I am spending more time watching other people\\'s lives than living my own.','我花更多时间看别人的生活，而不是过自己的生活。','social media','I am spending more time watching other people\\'s lives than living my own.'],
+      ['I do not feel deeply connected to myself.','我没有和自己建立很深的连接。','self connection','Lately, I do not feel deeply connected to myself.'],
+      ['I have lost touch with myself.','我和自己失联了。','self connection','I have lost touch with what really matters to me.'],
+      ['I do not have time to let things sink in.','我没有时间让事情沉淀。','reflection','I need a few quiet minutes to let things sink in.'],
+      ['Maybe I need to learn how to slow down.','也许我需要学习怎么慢下来。','mindset','Maybe I need to learn how to slow down instead of filling every pause.'],
+      ['Maybe I do not need more experiences. I just need more time to absorb them.','也许我不需要更多经历，只需要更多时间吸收它们。','reflection','Maybe I do not need more experiences. I just need more time to absorb them.'],
+      ['A settled mind is not an empty mind. It is an unhurried one.','安顿下来的心不是空的，而是不再匆忙的。','golden sentence','A settled mind is not an empty mind. It is an unhurried one.']
+    ];
+    const exprs=document.getElementById('exprs');
+    expressions.forEach((x,i)=>{const id=storagePrefix+'-expr-'+i,done=localStorage.getItem(id)==='1',d=document.createElement('div');d.className='card expr';d.innerHTML=`<div class="en">${x[0]}</div><div class="cn">${x[1]}</div><div class="small"><b>Scene:</b> ${x[2]}</div><div class="small"><b>Example:</b> ${x[3]}</div><button class="${done?'done':''}" data-id="${id}">${done?'已掌握':'标记已掌握'}</button>`;exprs.appendChild(d)});
+    function progress(){let done=expressions.filter((_,i)=>localStorage.getItem(storagePrefix+'-expr-'+i)==='1').length,p=Math.round(done/expressions.length*100);document.getElementById('fill').style.width=p+'%';document.getElementById('pct').textContent=p+'%'}
+    exprs.onclick=e=>{if(e.target.matches('button[data-id]')){let id=e.target.dataset.id,d=localStorage.getItem(id)==='1';localStorage.setItem(id,d?'0':'1');e.target.classList.toggle('done',!d);e.target.textContent=!d?'已掌握':'标记已掌握';progress()}};
+    document.getElementById('openAll').onclick=()=>document.querySelectorAll('details').forEach(d=>d.open=true);
+    document.getElementById('closeAll').onclick=()=>document.querySelectorAll('details').forEach(d=>d.open=false);
+    const theme=document.getElementById('theme');
+    function applyTheme(){let dark=localStorage.getItem(storagePrefix+'-theme')==='dark';document.body.classList.toggle('dark',dark);theme.textContent=dark?'☀️ Light':'🌙 Dark'}
+    theme.onclick=()=>{localStorage.setItem(storagePrefix+'-theme',localStorage.getItem(storagePrefix+'-theme')==='dark'?'light':'dark');applyTheme()};
+    const topBtn=document.getElementById('top');onscroll=()=>topBtn.classList.toggle('show',scrollY>500);topBtn.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+    applyTheme();progress();
+  </script>
+</body>
+</html>

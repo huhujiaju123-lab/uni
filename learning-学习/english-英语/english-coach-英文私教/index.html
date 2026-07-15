@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Coach 学习总目录</title>
+  <style>
+    :root {
+      --bg: #f6f1e8;
+      --paper: #fffaf4;
+      --card: #fffdfa;
+      --text: #27323a;
+      --muted: #6d7880;
+      --line: #e3d8c8;
+      --blue: #3f6b9d;
+      --green: #4f8069;
+      --orange: #b67638;
+      --blue-soft: #e8f0f8;
+      --green-soft: #edf6f0;
+      --orange-soft: #fbefe0;
+      --shadow: 0 24px 70px rgba(73, 55, 32, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(63, 107, 157, 0.16), transparent 30%),
+        radial-gradient(circle at 90% 10%, rgba(79, 128, 105, 0.12), transparent 28%),
+        var(--bg);
+      color: var(--text);
+      font-family: Charter, Georgia, "PingFang SC", "Microsoft YaHei", serif;
+      line-height: 1.65;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .ui {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 250, 244, 0.88);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .nav {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .nav a,
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 253, 250, 0.72);
+      padding: 7px 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav a:hover,
+    .link:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 36px 20px 84px;
+    }
+
+    section {
+      margin: 44px 0;
+      scroll-margin-top: 86px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.14;
+    }
+
+    h1 {
+      max-width: 860px;
+      font-size: clamp(38px, 6vw, 76px);
+      letter-spacing: -0.04em;
+    }
+
+    h2 {
+      margin-bottom: 18px;
+      font-size: clamp(25px, 4vw, 40px);
+      letter-spacing: -0.02em;
+    }
+
+    h3 {
+      font-size: 20px;
+    }
+
+    p {
+      margin: 8px 0;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 28px;
+      align-items: center;
+      padding: 36px;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: linear-gradient(135deg, var(--paper), rgba(232, 240, 248, 0.7));
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      color: var(--blue);
+      font: 800 13px/1.2 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .summary {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 19px;
+    }
+
+    .hero-art {
+      min-height: 300px;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: var(--card);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .stat {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 253, 250, 0.78);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 28px;
+      line-height: 1;
+      color: var(--blue);
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .days {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--card);
+      box-shadow: 0 12px 36px rgba(45, 35, 22, 0.055);
+      overflow: hidden;
+    }
+
+    .day-head {
+      padding: 20px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(135deg, var(--blue-soft), var(--paper));
+    }
+
+    .day-head.green {
+      background: linear-gradient(135deg, var(--green-soft), var(--paper));
+    }
+
+    .day-head.orange {
+      background: linear-gradient(135deg, var(--orange-soft), var(--paper));
+    }
+
+    .day-body {
+      padding: 18px 20px 20px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0 0;
+    }
+
+    .links {
+      display: grid;
+      gap: 9px;
+      margin-top: 16px;
+    }
+
+    .link {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 250, 244, 0.58);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+      font-size: 14px;
+    }
+
+    .link span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pathways {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .path {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--card);
+    }
+
+    .path b {
+      color: var(--green);
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      gap: 14px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 24px;
+      top: 12px;
+      bottom: 12px;
+      width: 2px;
+      background: var(--line);
+    }
+
+    .step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 50px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .num {
+      position: relative;
+      z-index: 1;
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      background: var(--blue);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .step-content {
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--card);
+    }
+
+    .backtop {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      display: none;
+      border: 1px solid var(--blue);
+      border-radius: 999px;
+      background: var(--blue);
+      color: #fff;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+
+    .backtop.show {
+      display: inline-flex;
+    }
+
+    @media (max-width: 820px) {
+      .topbar-inner,
+      .hero {
+        display: block;
+      }
+
+      .nav {
+        margin-top: 10px;
+      }
+
+      .hero {
+        padding: 24px;
+      }
+
+      .hero-art {
+        margin-top: 22px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .topbar,
+      .backtop {
+        display: none !important;
+      }
+
+      main {
+        max-width: none;
+        padding: 0;
+      }
+
+      .card,
+      .hero,
+      .path,
+      .step-content {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar ui">
+    <div class="topbar-inner">
+      <a class="brand" href="./index.html">English Coach 学习总目录</a>
+      <nav class="nav" aria-label="学习目录导航">
+        <a href="#days">按天复习</a>
+        <a href="#paths">按主题复习</a>
+        <a href="#system">学习系统</a>
+        <a href="#review">复习库</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div>
+        <div class="eyebrow">English Coach · Learning Hub</div>
+        <h1>把每天唯一的课后复习材料串成一条学习路径。</h1>
+        <p class="summary">
+          这里是 English Coach 的本地总目录。以后新增 Day04、Day05 时，每天只接入一个课后复习 HTML，方便按天回看，也能按表达、词汇、发音、薄弱项反复复习。
+        </p>
+        <div class="stats ui">
+          <div class="stat"><strong>5</strong><span>Lessons</span></div>
+          <div class="stat"><strong>5</strong><span>Scenes</span></div>
+          <div class="stat"><strong>5</strong><span>Deep Words</span></div>
+          <div class="stat"><strong>1</strong><span>Review Bank</span></div>
+        </div>
+      </div>
+      <div class="hero-art" aria-label="English Coach learning path illustration">
+        <svg width="430" height="310" viewBox="0 0 430 310" role="img">
+          <rect width="430" height="310" fill="none"/>
+          <path d="M66 222 C118 132, 172 250, 222 152 S314 68, 366 138 C390 164, 382 210, 334 234 C292 260, 206 252, 158 266" fill="none" stroke="#3f6b9d" stroke-width="8" stroke-linecap="round"/>
+          <g>
+            <circle cx="66" cy="222" r="34" fill="#e8f0f8" stroke="#3f6b9d" stroke-width="3"/>
+            <text x="66" y="228" text-anchor="middle" font-size="18" fill="#27323a">Day01</text>
+          </g>
+          <g>
+            <circle cx="222" cy="152" r="38" fill="#edf6f0" stroke="#4f8069" stroke-width="3"/>
+            <text x="222" y="158" text-anchor="middle" font-size="18" fill="#27323a">Day02</text>
+          </g>
+          <g>
+            <circle cx="366" cy="138" r="36" fill="#fbefe0" stroke="#b67638" stroke-width="3"/>
+            <text x="366" y="144" text-anchor="middle" font-size="18" fill="#27323a">Day03</text>
+          </g>
+          <g>
+            <circle cx="334" cy="234" r="34" fill="#edf6f0" stroke="#4f8069" stroke-width="3"/>
+            <text x="334" y="240" text-anchor="middle" font-size="18" fill="#27323a">Day04</text>
+          </g>
+          <g>
+            <circle cx="158" cy="266" r="32" fill="#e8f0f8" stroke="#3f6b9d" stroke-width="3"/>
+            <text x="158" y="272" text-anchor="middle" font-size="18" fill="#27323a">Day05</text>
+          </g>
+          <rect x="112" y="34" width="202" height="46" rx="23" fill="#fffaf4" stroke="#e3d8c8"/>
+          <text x="213" y="63" text-anchor="middle" font-size="18" fill="#27323a">Review Bank</text>
+          <path d="M206 80 V118" stroke="#4f8069" stroke-width="4" stroke-linecap="round"/>
+          <path d="M238 80 C282 94, 322 106, 346 122" stroke="#b67638" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </section>
+
+    <section id="days">
+      <h2>按天复习｜Lessons</h2>
+      <div class="grid days">
+        <article class="card">
+          <div class="day-head">
+            <div class="eyebrow">2026-07-10 · Day 01</div>
+            <h3>Driving to Work on a Rainy Day</h3>
+            <p class="muted">雨天开车去上班</p>
+            <div class="meta ui">
+              <span class="pill">pedal</span>
+              <span class="pill">on and off</span>
+              <span class="pill">pull away</span>
+            </div>
+          </div>
+          <div class="day-body">
+            <p>从真实通勤场景学习天气、红绿灯、起步、雨刷和汽车部件表达。</p>
+            <div class="links">
+              <a class="link" href="./courseware-课件/2026-07-10-Day01-driving-rainy-雨天开车通勤/index.html">打开复习材料 <span>HTML</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="day-head green">
+            <div class="eyebrow">2026-07-10 · Day 02</div>
+            <h3>Pretend Food, Beans & Passion Fruit</h3>
+            <p class="muted">过家家、豆子与百香果</p>
+            <div class="meta ui">
+              <span class="pill">texture</span>
+              <span class="pill">pretend play</span>
+              <span class="pill">parenting English</span>
+            </div>
+          </div>
+          <div class="day-body">
+            <p>把亲子生活变成英语素材，用 texture 建立口感、触感和材质的词汇网络。</p>
+            <div class="links">
+              <a class="link" href="./courseware-课件/2026-07-10-Day02-pretend-food-beans-passion-fruit-过家家豆子百香果/index.html">打开复习材料 <span>HTML</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="day-head orange">
+            <div class="eyebrow">2026-07-11 · Day 03</div>
+            <h3>Morning Routine & Anchor</h3>
+            <p class="muted">早晨流程与 Anchor</p>
+            <div class="meta ui">
+              <span class="pill">anchor</span>
+              <span class="pill">core image</span>
+              <span class="pill">own the words</span>
+            </div>
+          </div>
+          <div class="day-body">
+            <p>从“怎么说英语”进入“怎么学习英语”，用 anchor 理解核心画面和词汇网络。</p>
+            <div class="links">
+              <a class="link" href="./courseware-课件/2026-07-11-Day03-morning-routine-anchor-早晨流程与anchor/index.html">打开复习材料 <span>HTML</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="day-head green">
+            <div class="eyebrow">2026-07-14 · Day 04</div>
+            <h3>Finding an Anchor</h3>
+            <p class="muted">从刷手机到安顿自己</p>
+            <div class="meta ui">
+              <span class="pill">settle down</span>
+              <span class="pill">sink in</span>
+              <span class="pill">slow down</span>
+            </div>
+          </div>
+          <div class="day-body">
+            <p>用英语表达忙碌、空虚、失联、沉淀和人生锚点，把抽象心理状态说自然。</p>
+            <div class="links">
+              <a class="link" href="./courseware-课件/2026-07-14-Day04-finding-an-anchor-安顿自己/index.html">打开复习材料 <span>HTML</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="day-head">
+            <div class="eyebrow">2026-07-15 · Day 05</div>
+            <h3>Driving & Plants</h3>
+            <p class="muted">日常驾驶与植物</p>
+            <div class="meta ui">
+              <span class="pill">chunks</span>
+              <span class="pill">change lanes</span>
+              <span class="pill">perk up</span>
+            </div>
+          </div>
+          <div class="day-body">
+            <p>用“画面 → chunk → 口语”的方式描述驾驶动线、交通动作和植物细节。</p>
+            <div class="links">
+              <a class="link" href="./courseware-课件/2026-07-15-Day05-driving-plants-驾驶与植物/index.html">打开复习材料 <span>HTML</span></a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="paths">
+      <h2>按主题复习｜Study Paths</h2>
+      <div class="grid pathways">
+        <div class="path">
+          <h3>真实场景表达</h3>
+          <p class="muted">Real-life Expression</p>
+          <p><b>Day01</b> 通勤与天气 → <b>Day02</b> 亲子食物探索 → <b>Day03</b> 学习方法表达 → <b>Day04</b> 心理状态表达 → <b>Day05</b> 画面化 chunk 表达。</p>
+        </div>
+        <div class="path">
+          <h3>One Deep Word</h3>
+          <p class="muted">词汇深挖路径</p>
+          <p><b>pedal</b> 脚踩装置 → <b>texture</b> 口感/触感 → <b>anchor</b> 稳定/固定 → <b>sink in</b> 沉淀吸收 → <b>chunk</b> 整块表达。</p>
+        </div>
+        <div class="path">
+          <h3>亲子英语</h3>
+          <p class="muted">Parenting English</p>
+          <p>从 Day02 开始沉淀“和孩子互动时能直接说出口”的生活英语。</p>
+        </div>
+        <div class="path">
+          <h3>英语思维</h3>
+          <p class="muted">English Thinking</p>
+          <p>从中文翻译转向核心画面和真实心理状态：What’s the picture behind this word?</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="system">
+      <h2>学习系统｜How To Use</h2>
+      <div class="timeline">
+        <div class="step">
+          <div class="num">1</div>
+          <div class="step-content">
+            <h3>打开当天唯一复习材料</h3>
+            <p class="muted">从快速复习开始，再看表达升级、Deep Word、练习和成长记录。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <div class="step-content">
+            <h3>复习核心表达</h3>
+            <p class="muted">重点看原句到自然表达，以及可直接复用的句子。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <div class="step-content">
+            <h3>查看成长记录</h3>
+            <p class="muted">成长记录已压缩进同一个 HTML，不再单独分散查看。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">4</div>
+          <div class="step-content">
+            <h3>定期回到复习库</h3>
+            <p class="muted">表达、词汇、发音和薄弱项仍集中维护，用于跨天复习。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="review">
+      <h2>复习库｜Review Bank</h2>
+      <div class="grid pathways">
+        <a class="path" href="./progress-tracker-学习进度.md">
+          <h3>学习进度</h3>
+          <p class="muted">Progress Tracker</p>
+        </a>
+        <a class="path" href="./review-bank-复习库/natural-expressions-地道表达.md">
+          <h3>地道表达</h3>
+          <p class="muted">Natural Expressions</p>
+        </a>
+        <a class="path" href="./review-bank-复习库/vocabulary-bank-词汇库.md">
+          <h3>词汇库</h3>
+          <p class="muted">Vocabulary Bank</p>
+        </a>
+        <a class="path" href="./review-bank-复习库/pronunciation-notes-发音记录.md">
+          <h3>发音记录</h3>
+          <p class="muted">Pronunciation Notes</p>
+        </a>
+        <a class="path" href="./review-bank-复习库/weak-areas-薄弱项.md">
+          <h3>薄弱项</h3>
+          <p class="muted">Weak Areas</p>
+        </a>
+        <a class="path" href="./courseware-课件/README.md">
+          <h3>课件索引</h3>
+          <p class="muted">Courseware Index</p>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <button class="backtop ui" id="backtop">↑ Top</button>
+
+  <script>
+    const backtop = document.getElementById("backtop");
+    window.addEventListener("scroll", () => {
+      backtop.classList.toggle("show", window.scrollY > 520);
+    });
+    backtop.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
+</body>
+</html>
