@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+raw/
+contexts/
+bridge-outbox/
+task-prompts/
+task-outbox/
+feishu-push-outbox/
+pending-missing-minutes.md
