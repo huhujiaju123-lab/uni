@@ -1,0 +1,27 @@
+{
+  "owner": {
+    "name": "李宵霄",
+    "open_id": "ou_17aa56f8a8a7650051d1fed93a956831"
+  },
+  "chats": [
+    {
+      "name": "美国业务部",
+      "chat_id": "oc_3d2c0d335d8175cea3f3fd21456f9a46"
+    },
+    {
+      "name": "美国数据小群",
+      "chat_id": "oc_88d5b162c1b9a12d38a781a64403f827"
+    }
+  ],
+  "scan": {
+    "limit_per_chat": 100,
+    "probe_page_size": 1,
+    "page_size": 20,
+    "lookback_hours": 72
+  },
+  "output": {
+    "create_feishu_todo": false,
+    "create_feishu_calendar": false,
+    "send_feishu_digest": false
+  }
+}

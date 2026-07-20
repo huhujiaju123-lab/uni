@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.xiaoxiao.message-action-inbox.hourly</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/xiaoxiao/Vibe coding/operations-运营分析/message-action-inbox-消息行动收集/scripts/hourly_message_action_scan.py</string>
+    <string>--limit</string>
+    <string>100</string>
+    <string>--send-card</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>LARK_CLI_BIN</key>
+    <string>/Users/xiaoxiao/.nvm/versions/node/v24.13.0/bin/lark-cli</string>
+    <key>PATH</key>
+    <string>/Users/xiaoxiao/.nvm/versions/node/v24.13.0/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>LARKSUITE_CLI_NO_UPDATE_NOTIFIER</key>
+    <string>1</string>
+    <key>LARKSUITE_CLI_NO_SKILLS_NOTIFIER</key>
+    <string>1</string>
+  </dict>
+  <key>WorkingDirectory</key>
+  <string>/Users/xiaoxiao/Vibe coding/operations-运营分析/message-action-inbox-消息行动收集</string>
+  <key>StartCalendarInterval</key>
+  <array>
+    <dict>
+      <key>Hour</key>
+      <integer>22</integer>
+      <key>Minute</key>
+      <integer>0</integer>
+    </dict>
+    <dict>
+      <key>Hour</key>
+      <integer>0</integer>
+      <key>Minute</key>
+      <integer>0</integer>
+    </dict>
+    <dict>
+      <key>Hour</key>
+      <integer>2</integer>
+      <key>Minute</key>
+      <integer>0</integer>
+    </dict>
+    <dict>
+      <key>Hour</key>
+      <integer>4</integer>
+      <key>Minute</key>
+      <integer>0</integer>
+    </dict>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/Users/xiaoxiao/Vibe coding/operations-运营分析/message-action-inbox-消息行动收集/state/launchd.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/xiaoxiao/Vibe coding/operations-运营分析/message-action-inbox-消息行动收集/state/launchd.err.log</string>
+</dict>
+</plist>
